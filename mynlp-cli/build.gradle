@@ -1,0 +1,19 @@
+plugins {
+    id 'org.springframework.boot' version '1.5.8.RELEASE'
+}
+
+apply plugin: 'idea'
+
+
+bootRepackage {
+    mainClass = 'com.mayabot.nlp.cli.Application'
+    executable = true
+}
+
+dependencies {
+    compile("org.springframework.boot:spring-boot-starter:1.5.8.RELEASE")
+    compile group: 'com.google.guava', name: 'guava', version: '23.0'
+
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+
+}

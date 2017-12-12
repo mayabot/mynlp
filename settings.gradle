@@ -1,0 +1,16 @@
+
+String dirName = rootProject.projectDir.name
+rootProject.name = dirName
+
+List projects = [
+        'mynlp-core',
+        'mynlp-dependency',
+        'mynlp-segment',
+        'mynlp-package',
+        'mynlp-pinyin',
+        'mynlp-cli'
+]
+
+
+include projects.toArray(new String[0])
+

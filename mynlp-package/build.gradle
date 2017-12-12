@@ -1,0 +1,58 @@
+plugins {
+    id 'com.github.johnrengelman.shadow' version '2.0.1'
+}
+
+apply plugin: 'maven-publish'
+apply plugin: 'idea'
+apply plugin: 'java'
+apply plugin: 'eclipse'
+
+
+group = 'com.mayabot.mynlp'
+version = '1.0.0-snapshot'
+description = """MyNlp"""
+
+
+dependencies {
+    compile project(':mynlp-segment')
+
+    //shadow 'com.google.guava:guava:22.0'
+}
+
+
+shadowJar {
+
+    //configurations = [project.configurations.compile]
+    relocate 'com.google', 'com.mayabot.t.google'
+    relocate 'org.apache.commons.lang3', 'com.mayabot.t.lang3'
+    relocate 'org.fusesource', 'com.mayabot.t.fusesource'
+
+    relocate 'org.xerial.snappy', 'com.mayabot.t.snappy'
+    relocate 'com.esotericsoftware', 'com.mayabot.t.esotericsoftware'
+    relocate 'org.objenesis', 'com.mayabot.t.objenesis'
+    relocate 'org.codehaus.mojo', 'com.mayabot.t.mojo'
+
+}
+
+
+
+publishing {
+    publications {
+
+        nlpJava(MavenPublication) {
+            from components.java
+
+        }
+
+        shadow(MavenPublication) { publication ->
+
+            project.shadow.component(publication)
+
+            pom.withXml {
+                asNode().appendNode('description',
+                        'A demonstration of maven POM customization')
+
+            }
+        }
+    }
+}
