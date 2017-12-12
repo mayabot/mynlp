@@ -1,0 +1,53 @@
+
+apply plugin: 'idea'
+apply plugin: 'eclipse'
+
+group = 'com.mayabot.mynlp'
+version = '0.0.1-snapshot'
+description = """MyNlp"""
+
+ext{
+    guava_version = "19.0"
+}
+
+
+idea {
+    project {
+        vcs = 'Git'
+    }
+}
+
+subprojects {
+    description = "Maya Nlp subproject ${project.path}"
+
+    group = 'com.mayabot.mynlp'
+    version = '0.0.1-snapshot'
+
+    if(path == ":data") {
+
+    }else{
+
+        apply plugin: 'java'
+        apply plugin: 'maven-publish'
+
+
+        project.plugins.withType(JavaBasePlugin) {
+            publishing {
+                publications {
+                    myJava(MavenPublication) {
+                        from components.java
+                    }
+                }
+            }
+        }
+
+        project.afterEvaluate {
+            if(plugins.hasPlugin('java')){
+                sourceCompatibility = 1.8
+                targetCompatibility = 1.8
+            }
+        }
+    }
+}
+
+
