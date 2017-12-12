@@ -1,0 +1,40 @@
+{
+  "default":{
+    "wordnetIniter":"core",
+    "bestPath": "viterbi",
+    "pipeline":[
+      "customDict",
+      "mq",
+      "ml",
+      {
+        "type":"pattern",
+        "pattern":"\\d+"
+      },
+      {
+        "type":"optimizeNet",
+        "list":["person","place","organization"]
+      },
+      "correction",
+      "speechTagging"
+    ]
+  },
+  "crf":{
+    "wordnetIniter":"crf",
+    "bestPath": "viterbi",
+    "pipeline":[
+      "customDict",
+      "mq",
+      "ml",
+      {
+        "type":"pattern",
+        "pattern":"\\d+"
+      },
+      {
+        "type":"optimizeNet",
+        "list":["person","place","organization"]
+      },
+      "correction",
+      "speechTagging"
+    ]
+  }
+}
