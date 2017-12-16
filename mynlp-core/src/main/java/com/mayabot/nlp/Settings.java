@@ -58,6 +58,12 @@ public class Settings {
     public static final String KEY_WORK_DIR = "mynlp.work.dir";
     public static final String KEY_WORK_DIR_NAME = "mynlp.work.name";
 
+
+    public <T> T get(Setting<T> setting){
+        String value = get(setting.getKey(), setting.getDefaultValue());
+        return setting.getParse().apply(value);
+    }
+
     /**
      * 从遇到的第一个文件开始。
      * 2. classpath://maya_nlp.yml
@@ -167,7 +173,11 @@ public class Settings {
     }
 
     public List<String> getAsList(String setting) {
-        String obj = get(setting);
+        return getAsList(setting, null);
+    }
+
+    public List<String> getAsList(String setting,String default_) {
+        String obj = get(setting,default_);
 
         if (obj == null) {
             return null;
@@ -175,6 +185,8 @@ public class Settings {
 
         return Splitter.on(',').omitEmptyStrings().trimResults().splitToList((String) obj);
     }
+
+
 
 
     /**

@@ -17,8 +17,12 @@
 
 package com.mayabot.nlp.segment;
 
-import com.google.inject.Injector;
+import com.mayabot.nlp.segment.wordnet.Wordpath;
 
-public interface ComponentProvider<T> {
-    T create(Injector inject);
+public interface WordpathProcessor {
+    /**
+     * @param wordPath
+     * @return 一般对传入的wordPath修改，返回对象本身
+     */
+    Wordpath process(Wordpath wordPath);
 }

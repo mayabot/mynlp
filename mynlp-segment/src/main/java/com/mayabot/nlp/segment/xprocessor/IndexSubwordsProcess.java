@@ -17,11 +17,10 @@
 
 package com.mayabot.nlp.segment.xprocessor;
 
-import com.google.inject.Singleton;
-import com.mayabot.nlp.segment.WordPathProcessor;
+import com.mayabot.nlp.segment.WordpathProcessor;
 import com.mayabot.nlp.segment.wordnet.Vertex;
 import com.mayabot.nlp.segment.wordnet.VertexRow;
-import com.mayabot.nlp.segment.wordnet.WordPath;
+import com.mayabot.nlp.segment.wordnet.Wordpath;
 import com.mayabot.nlp.segment.wordnet.Wordnet;
 
 import java.util.Iterator;
@@ -35,10 +34,10 @@ import java.util.Iterator;
  * <p>
  * 是不是每种情况都要切分出来。
  */
-public class IndexSubwordsProcess implements WordPathProcessor {
+public class IndexSubwordsProcess implements WordpathProcessor {
 
     @Override
-    public WordPath process(WordPath wordPath) {
+    public Wordpath process(Wordpath wordPath) {
 
         final Wordnet wordnet = wordPath.getWordnet();
 

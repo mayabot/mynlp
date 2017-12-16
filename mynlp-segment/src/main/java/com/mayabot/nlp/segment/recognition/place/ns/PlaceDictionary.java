@@ -18,17 +18,16 @@ package com.mayabot.nlp.segment.recognition.place.ns;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.mayabot.nlp.ResourceLoader;
-import com.mayabot.nlp.Settings;
+import com.mayabot.nlp.Environment;
 import com.mayabot.nlp.collection.ahocorasick.AhoCoraickDoubleArrayTrieBuilder;
 import com.mayabot.nlp.collection.ahocorasick.AhoCorasickDoubleArrayTrie;
 import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
+import com.mayabot.nlp.resources.MynlpResource;
 import com.mayabot.nlp.segment.corpus.tag.NSTag;
 import com.mayabot.nlp.segment.dictionary.EnumTransformMatrix;
-import com.mayabot.nlp.segment.wordnet.WordPath;
+import com.mayabot.nlp.segment.wordnet.Wordpath;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.TreeMap;
 
@@ -40,9 +39,7 @@ import java.util.TreeMap;
 @Singleton
 public class PlaceDictionary {
 
-    final static String tsfile = "place" + File.separator + "ns.tr.txt";
-
-    InternalLogger logger = InternalLoggerFactory.getInstance(WordPath.class);
+    InternalLogger logger = InternalLoggerFactory.getInstance(Wordpath.class);
 
 
     /**
@@ -62,13 +59,15 @@ public class PlaceDictionary {
     private AhoCorasickDoubleArrayTrie<NSPattern> trie;
 
     @Inject
-    public PlaceDictionary(NSDictionary dictionary, Settings settings, ResourceLoader resourceLoader) throws IOException {
+    public PlaceDictionary(NSDictionary dictionary, Environment environment) throws IOException {
         this.dictionary = dictionary;
 
         long start = System.currentTimeMillis();
 
+        MynlpResource resource = environment.loadResource("org.dict.tr", "inner://dictionary/place/ns.tr.txt");
+
         //转移矩阵
-        transformMatrixDictionary = new EnumTransformMatrix<>(tsfile, resourceLoader);
+        transformMatrixDictionary = new EnumTransformMatrix<>(resource);
 
         // AC tree
         {

@@ -15,7 +15,7 @@
  *
  */
 
-package com.mayabot.nlp.segment;
+package com.mayabot.nlp.segment.utils;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -50,10 +50,10 @@ public class VertexHelper {
 
     /**
      * 生成线程安全的起始节点
-     *
+     * begin
      * @return
      */
-    public Vertex newBigin() {
+    public Vertex newBegin() {
         Vertex v = new Vertex(1);
         //FIXME 这个的属性是不是可以直接使用核心词典里面的属性
         v.setWordInfo(coreDictionary.Begin_WORD_ID, CoreDictionary.TAG_BIGIN, bigin_attr);

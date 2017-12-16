@@ -37,8 +37,6 @@ import com.mayabot.nlp.utils.CharacterHelper;
 public class CrfOriginalSegment implements WordnetInitializer {
 
 
-    private final CRFModelComponent crfModelCompent;
-
     private final CRFSegmentModel crfModel;
 
     public static CrfOriginalSegment build(Injector injector){
@@ -47,13 +45,7 @@ public class CrfOriginalSegment implements WordnetInitializer {
 
     @Inject
     public CrfOriginalSegment( CRFModelComponent crfModelComponent) {
-        this.crfModelCompent = crfModelComponent;
-
-        try {
-            crfModel = this.crfModelCompent.load();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        this.crfModel = crfModelComponent.getCrfSegmentModel();
     }
 
     @Override

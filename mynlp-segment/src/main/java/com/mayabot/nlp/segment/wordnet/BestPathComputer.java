@@ -23,5 +23,5 @@ package com.mayabot.nlp.segment.wordnet;
  * @author jimichan
  */
 public interface BestPathComputer {
-    WordPath select(Wordnet wordnet);
+    Wordpath select(Wordnet wordnet);
 }

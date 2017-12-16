@@ -391,7 +391,7 @@ public class Wordnet implements CharSequence {
     /**
      * 标记优化网络的路径，根据目前的最优路径来标记
      */
-    public void tagOptimizeNetVertex(WordPath wordPath) {
+    public void tagOptimizeNetVertex(Wordpath wordPath) {
         //目前最有路径上的点，标记为优化网络
         Iterator<Vertex> ite = wordPath.iteratorBestPath();
         while (ite.hasNext()) {

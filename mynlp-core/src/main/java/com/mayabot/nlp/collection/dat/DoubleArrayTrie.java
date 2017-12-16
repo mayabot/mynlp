@@ -17,29 +17,49 @@ package com.mayabot.nlp.collection.dat;
 
 import com.mayabot.nlp.collection.Trie;
 
-import java.io.Serializable;
+import java.io.DataInput;
+import java.io.DataOutput;
+import java.io.IOException;
 import java.util.*;
+import java.util.function.BiConsumer;
+import java.util.function.Function;
+
+import static com.mayabot.nlp.utils.DataInOutputUtils.*;
 
 /**
  * 双数组Trie树。
  * 字典树，
  * 用数字存放values。也就是每个项目都是有个整数id。
  */
-public class DoubleArrayTrie<T> implements Serializable, Trie<T> {
+public class DoubleArrayTrie<T> implements Trie<T> {
 
-    private static final long serialVersionUID = 1L;
+
+    public static <T> void write(
+            DoubleArrayTrie<T> dat, DataOutput out,BiConsumer<T,DataOutput> biConsumer
+    ) throws IOException {
+        writeIntArray(dat.check, out);
+        writeIntArray(dat.base, out);
+        writeArrayList(dat.values,biConsumer, out);
+    }
+
+    public static <T> DoubleArrayTrie<T> read(
+            DataInput in, Function<DataInput,T> supplier) throws IOException {
+        int[] check = readIntArray(in);
+        int[] base = readIntArray(in);
+        ArrayList<T> values = readArrayList(in, supplier);
+        return new DoubleArrayTrie(values, check, base);
+    }
 
     ArrayList<T> values;
     int check[];
     int base[];
 
-    DoubleArrayTrie(ArrayList<T> values, int[] check, int[] base) {
+    protected DoubleArrayTrie(ArrayList<T> values, int[] check, int[] base) {
         super();
         this.values = values;
         this.check = check;
         this.base = base;
     }
-
 
     /**
      * DAT的搜索器
