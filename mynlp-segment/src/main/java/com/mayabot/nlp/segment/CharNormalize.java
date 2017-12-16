@@ -17,6 +17,6 @@
 
 package com.mayabot.nlp.segment;
 
-public interface CharFilter {
-    void filter(char[] text);
+public interface CharNormalize {
+    void normal(char[] text);
 }

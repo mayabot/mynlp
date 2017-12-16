@@ -16,23 +16,22 @@
  */
 package com.mayabot.nlp.segment.dictionary;
 
-import com.google.common.base.Charsets;
 import com.google.common.base.Splitter;
-import com.google.common.hash.Hashing;
-import com.google.common.io.ByteSource;
+import com.google.common.io.ByteArrayDataOutput;
+import com.google.common.io.ByteStreams;
 import com.mayabot.nlp.Environment;
-import com.mayabot.nlp.ResourceLoader;
-import com.mayabot.nlp.Settings;
-import com.mayabot.nlp.collection.ValueSerializer;
+import com.mayabot.nlp.caching.MynlpCacheable;
 import com.mayabot.nlp.collection.dat.DoubleArrayTrie;
 import com.mayabot.nlp.collection.dat.DoubleArrayTrieBuilder;
-import com.mayabot.nlp.collection.dat.DoubleArrayTrieSerializer;
 import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
+import com.mayabot.nlp.resources.MynlpResource;
+import com.mayabot.nlp.utils.CharSourceLineReader;
 
-import java.io.File;
+import java.io.*;
 import java.util.List;
 import java.util.TreeMap;
+import java.util.regex.Pattern;
 
 /**
  * 通用的词典，对应固定格式的词典，但是标签可以泛型化
@@ -40,99 +39,81 @@ import java.util.TreeMap;
  * @author hankcs
  * @author jimichan
  */
-public abstract class CommonDictionary<V> {
+public abstract class CommonDictionary<V> implements MynlpCacheable {
 
     protected InternalLogger logger = InternalLoggerFactory.getInstance(this.getClass());
 
-    private final ResourceLoader resourceLoader;
 
     private final Environment environment;
 
     private DoubleArrayTrie<V> trie;
 
-    abstract public V parseLine(List<String> pars);
-
-    abstract public String dicFilePath();
-
-    abstract public ValueSerializer<V> valueSerializer();
-
-    Settings setting;
-
-    public CommonDictionary( Settings setting, ResourceLoader resourceLoader
-            , Environment environment) {
-        this.setting = setting;
-        this.resourceLoader = resourceLoader;
+    public CommonDictionary(Environment environment) throws Exception {
         this.environment = environment;
 
-        try {
-            this.init(setting);
-        } catch (Throwable e) {
-            logger.error("e",e);
-
-            throw new RuntimeException(e);
-        }
+        this.restore();
     }
 
-    private void init(Settings setting) throws Exception {
-        Splitter splitter = Splitter.on(' ').omitEmptyStrings();
+    @Override
+    public File cacheFileName() {
+        String hash = environment.getMynlpResourceFactory().load(dicFilePath()).hash();
 
-        // 如果存在bin文件
-        ByteSource source = resourceLoader.loadDictionary(dicFilePath());
-
-        File binfile = new File(environment.getWorkDirPath(), source.hash(Hashing.murmur3_128()).toString());
-
-
-        if (binfile.exists() && binfile.canRead()) {
-            long t1 = System.currentTimeMillis();
-            // load from bin
-            DoubleArrayTrieSerializer<V> ds = new DoubleArrayTrieSerializer<>();
-            ds.setSerializer(valueSerializer());
-            this.trie = ds.read(binfile);
-            long t2 = System.currentTimeMillis();
-
-            logger.info("核心词典开始加载:" + binfile.getAbsolutePath() + " use time " + (t2 - t1) + " ms");
-        } else if (!source.isEmpty()) {
-            // load from txt filed
-            TreeMap<String, V> map = new TreeMap<>();
-            long t1 = System.currentTimeMillis();
-
-            source.asCharSource(Charsets.UTF_8).readLines().stream().
-                    map(splitter::splitToList).
-                    filter(params -> !params.isEmpty())
-                    .forEach(params -> {
-                        List<String> attrs = params.subList(1, params.size());
-                        V attribute = parseLine(attrs);
-                        map.put(params.get(0), attribute);
-                    });
-
-            filtermap(map);
-            long t2 = System.currentTimeMillis();
-
-            System.out.println((this.getClass().getSimpleName() + " load tree map use time " + (t2 - t1)));
-            System.out.println(this.getClass().getSimpleName() + " tree map size " + map.size());
-
-            DoubleArrayTrieBuilder<V> builder = new DoubleArrayTrieBuilder<>();
-            this.trie = builder.build(map);
-
-            long t3 = System.currentTimeMillis();
-            System.out.println(this.getClass().getSimpleName() + " build dat trie use time " + (t3 - t2));
-
-            DoubleArrayTrieSerializer<V> ds = new DoubleArrayTrieSerializer<>();
-            ds.setBatchSize(5000);
-            ds.setSerializer(valueSerializer());
-            ds.write(this.trie, binfile);
-
-            long t4 = System.currentTimeMillis();
-
-            System.out.println(this.getClass().getSimpleName() + " write tire to bin format use time " + (t4 - t3));
-        } else {
-            throw new RuntimeException("not found dir file " + dicFilePath());
-        }
+        return new File(environment.getWorkDir(), hash + "." + this.getClass().getSimpleName());
     }
+
+    protected abstract String dicFilePath();
+
+    protected abstract V parseLine(List<String> pars);
+
+    protected abstract void writeItem(V a, DataOutput out);
+
+    protected abstract V readItem(DataInput in);
 
     protected void filtermap(TreeMap<String, V> map) {
 
     }
+
+    @Override
+    public void saveToCache(OutputStream out) throws Exception {
+        ByteArrayDataOutput dataOutput = ByteStreams.newDataOutput();
+
+        DoubleArrayTrie.write(trie, dataOutput, this::writeItem);
+
+        out.write(dataOutput.toByteArray());
+    }
+
+    @Override
+    public void readFromCache(InputStream inputStream) throws Exception {
+        DataInput dataInput = new DataInputStream(inputStream);
+        this.trie = DoubleArrayTrie.read(dataInput, this::readItem);
+    }
+
+    @Override
+    public void loadFromRealData() throws Exception {
+        TreeMap<String, V> map = new TreeMap<>();
+        long t1 = System.currentTimeMillis();
+
+        MynlpResource resource = environment.getMynlpResourceFactory().load(dicFilePath());
+
+        Splitter splitter = Splitter.on(Pattern.compile("\\s"));
+        try (CharSourceLineReader reader = resource.openLineReader()) {
+            while (reader.hasNext()) {
+                String line = reader.next();
+                List<String> params = splitter.splitToList(line);
+                if (!params.isEmpty()) {
+                    List<String> attrs = params.subList(1, params.size());
+                    V attribute = parseLine(attrs);
+                    map.put(params.get(0), attribute);
+                }
+            }
+        }
+
+        filtermap(map);
+
+        DoubleArrayTrieBuilder<V> builder = new DoubleArrayTrieBuilder<>();
+        this.trie = builder.build(map);
+    }
+
 
     /**
      * 查询一个单词

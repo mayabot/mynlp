@@ -1,10 +1,14 @@
-package com.mayabot.nlp.segment;
+package com.mayabot.nlp.segment.analyzer;
+
+import com.mayabot.nlp.segment.MyTerm;
+import com.mayabot.nlp.segment.MyAnalyzer;
 
 import java.io.Reader;
+import java.util.Iterator;
 
 public abstract class WrapMyAnalyzer implements MyAnalyzer {
 
-    private MyAnalyzer myAnalyzer;
+    protected MyAnalyzer myAnalyzer;
 
     public WrapMyAnalyzer(MyAnalyzer myAnalyzer) {
         this.myAnalyzer = myAnalyzer;
@@ -15,4 +19,8 @@ public abstract class WrapMyAnalyzer implements MyAnalyzer {
         return myAnalyzer.reset(reader);
     }
 
+    @Override
+    public Iterator<MyTerm> iterator() {
+        return myAnalyzer.iterator();
+    }
 }

@@ -17,14 +17,14 @@
 
 package com.mayabot.nlp.segment.dictionary;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.primitives.Ints;
-import com.mayabot.nlp.collection.ValueSerializer;
 import com.mayabot.nlp.segment.corpus.tag.Nature;
 
-import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.DataInput;
+import java.io.DataOutput;
+import java.io.IOException;
 import java.util.Map;
 
 /**
@@ -34,16 +34,55 @@ import java.util.Map;
  *
  * @author jimichan
  */
-public final class NatureAttribute implements Serializable {
-
-    private static final long serialVersionUID = 1L;
+public final class NatureAttribute {
 
     private ImmutableMap<Nature, Integer> map = ImmutableMap.of();
 
     private int totalFrequency;
+
     private Map.Entry<Nature, Integer> one;
 
     private NatureAttribute() {
+
+    }
+
+    public static void write(NatureAttribute a, DataOutput out) {
+        try {
+            out.writeInt(a.totalFrequency);
+
+            JSONArray array = new JSONArray();
+            for (Map.Entry<Nature, Integer> x : a.map.entrySet()) {
+                array.add(x.getKey().ord);
+                array.add(x.getValue());
+            }
+
+            out.writeUTF(array.toJSONString());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static NatureAttribute read(DataInput in) {
+        try {
+            NatureAttribute attribute = new NatureAttribute();
+            attribute.totalFrequency = in.readInt();
+            String json = in.readUTF();
+            JSONArray array = JSON.parseArray(json);
+
+            ImmutableMap.Builder<Nature, Integer> builder = ImmutableMap.builder();
+            for (int i = 0; i < array.size(); i += 2) {
+                int ord = array.getIntValue(i);
+                Integer freq = array.getInteger(i + 1);
+
+                builder.put(Nature.valueOf(ord), freq);
+            }
+
+            attribute.map = builder.build();
+
+            return attribute;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
     }
 
@@ -65,7 +104,6 @@ public final class NatureAttribute implements Serializable {
 
     public static NatureAttribute create() {
         return new NatureAttribute();
-
     }
 
     public static NatureAttribute create(Nature nature, int frequency) {
@@ -129,79 +167,6 @@ public final class NatureAttribute implements Serializable {
 //        }
         return map.toString();
     }
-
-
-    private void writeObject(java.io.ObjectOutputStream out)
-            throws IOException {
-
-    }
-
-    private void readObject(java.io.ObjectInputStream in)
-            throws IOException, ClassNotFoundException {
-
-    }
-
-    private void readObjectNoData()
-            throws ObjectStreamException {
-
-    }
-
-
-    /**
-     * 当NatureAttribute被持久化或读取的时候，提供一个统一的序列化或反序列化的工具
-     */
-    public final static ValueSerializer<NatureAttribute> valueSerializer = new ValueSerializer<NatureAttribute>() {
-
-        @Override
-        public byte[] serializer(List<NatureAttribute> sublist) throws IOException {
-            ByteArrayOutputStream bbs = new ByteArrayOutputStream();
-
-            bbs.write(Ints.toByteArray(sublist.size()));
-            for (NatureAttribute att : sublist) {
-
-                bbs.write(Ints.toByteArray(att.totalFrequency));
-                bbs.write(Ints.toByteArray(att.map.size()));
-
-                for (Map.Entry<Nature, Integer> e : att.map.entrySet()) {
-                    bbs.write(Ints.toByteArray(e.getKey().ord)); // 应该是ord编号
-                    bbs.write(Ints.toByteArray(e.getValue()));
-                }
-            }
-            bbs.flush();
-            return bbs.toByteArray();
-        }
-
-        @Override
-        public List<NatureAttribute> unserializer(byte[] data) throws IOException, ClassNotFoundException {
-            ByteArrayInputStream in = new ByteArrayInputStream(data);
-            byte[] buffer = new byte[4];
-            in.read(buffer);
-            int size = Ints.fromByteArray(buffer);
-            List<NatureAttribute> list = new ArrayList<>();
-            for (int i = 0; i < size; i++) {
-                in.read(buffer);
-                int totalFrequency = Ints.fromByteArray(buffer);
-                in.read(buffer);
-                int natureLen = Ints.fromByteArray(buffer);
-
-                ImmutableMap.Builder<Nature, Integer> builder = ImmutableMap.builder();
-                NatureAttribute att = new NatureAttribute();
-                for (int j = 0; j < natureLen; j++) {
-                    in.read(buffer);
-                    Nature nature = Nature.valueOf(Ints.fromByteArray(buffer));
-                    in.read(buffer);
-                    int frequency = Ints.fromByteArray(buffer);
-                    builder.put(nature, frequency);
-                }
-
-                att.map = builder.build();
-                att.totalFrequency = totalFrequency;
-
-                list.add(att);
-            }
-            return list;
-        }
-    };
 
 
     public int getTotalFrequency() {

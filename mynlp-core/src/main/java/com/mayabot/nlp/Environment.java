@@ -19,18 +19,20 @@ package com.mayabot.nlp;
 
 import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
+import com.mayabot.nlp.resources.MynlpResource;
+import com.mayabot.nlp.resources.MynlpResourceFactory;
 import com.mayabot.nlp.utils.PathUtils;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import static com.mayabot.nlp.Settings.KEY_DATA_DIR;
-import static com.mayabot.nlp.Settings.KEY_WORK_DIR;
-import static com.mayabot.nlp.Settings.KEY_WORK_DIR_NAME;
+import static com.mayabot.nlp.Settings.*;
 
-public class Environment{
+public class Environment {
 
     private final Settings settings;
+
 
     private final String dataPath;//word dir ./data
 
@@ -39,33 +41,45 @@ public class Environment{
      */
 //    private final Path tmpFile = PathUtils.get(System.getProperty("java.io.tmpdir"));
 
-    private final ResourceLoader resourceLoader;
-
     private final File workDirPath;
 
     private InternalLogger logger = InternalLoggerFactory.getInstance(Environment.class);
 
+
+    private final MynlpResourceFactory mynlpResourceFactory;
+
     public Environment(Settings settings) {
         this.settings = settings;
 
-        dataPath = settings.get(KEY_DATA_DIR, System.getProperty(KEY_DATA_DIR,"data"));
+        dataPath = settings.get(KEY_DATA_DIR, System.getProperty(KEY_DATA_DIR, "data"));
 
-        resourceLoader = new ResourceLoader(dataPath);
-
-        String workDir = settings.get(KEY_WORK_DIR, System.getProperty(KEY_WORK_DIR,"java.io.tmpdir"));
-        String wordDirName = settings.get(KEY_WORK_DIR_NAME,
-                System.getProperty(KEY_WORK_DIR_NAME,"mynlp"));
-        String workDirPath = workDir+File.separator+wordDirName;
+        String workDir = settings.get(KEY_WORK_DIR, System.getProperty(KEY_WORK_DIR, "java.io.tmpdir"));
+        String workDirName = settings.get(KEY_WORK_DIR_NAME,
+                System.getProperty(KEY_WORK_DIR_NAME, "mynlp"));
+        String workDirPath = workDir + File.separator + workDirName;
 
         //replace java.io.tmpdir
-        workDirPath = workDirPath.replace("java.io.tmpdir",PathUtils.get(System.getProperty("java.io.tmpdir")).toAbsolutePath().toString());
+        workDirPath = workDirPath.replace("java.io.tmpdir", PathUtils.get(System.getProperty("java.io.tmpdir")).toAbsolutePath().toString());
 
         this.workDirPath = Paths.get(workDirPath).toFile();
 
         this.workDirPath.mkdirs();
 
-        logger.info("Mynlp work dir path {}",this.workDirPath.getAbsolutePath());
-        logger.info("Mynlp data dir path {}",new File(dataPath).getAbsolutePath());
+
+        mynlpResourceFactory = new MynlpResourceFactory(this.getDataPath());
+
+        logger.info("Mynlp work dir path {}", this.workDirPath.getAbsolutePath());
+        logger.info("Mynlp data dir path {}", new File(dataPath).getAbsolutePath());
+    }
+
+    public MynlpResource loadResource(String setting, String defaultPath) {
+        String url = this.getSettings().get(setting, defaultPath);
+        return this.mynlpResourceFactory.load(url);
+    }
+
+    public MynlpResource loadResource(Setting<String> setting) {
+        String url = this.getSettings().get(setting);
+        return this.mynlpResourceFactory.load(url);
     }
 
     public File getWorkDirPath() {
@@ -80,7 +94,12 @@ public class Environment{
         return settings;
     }
 
-    public ResourceLoader getResourceLoader() {
-        return resourceLoader;
+    public Path getDataPath() {
+        return Paths.get(new File(dataPath).getAbsolutePath());
     }
+
+    public MynlpResourceFactory getMynlpResourceFactory() {
+        return mynlpResourceFactory;
+    }
+
 }

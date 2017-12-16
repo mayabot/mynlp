@@ -37,9 +37,9 @@ import java.util.function.Consumer;
  * 使用切分符号来表达单词路径的切分，而不是采用List。
  * 这个数据结构具有非常好的性质，而且性能和空间优越
  */
-public class WordPath {
+public class Wordpath {
 
-    static InternalLogger logger = InternalLoggerFactory.getInstance(WordPath.class);
+    static InternalLogger logger = InternalLoggerFactory.getInstance(Wordpath.class);
 
     private BitSet bitSet;
 
@@ -49,7 +49,7 @@ public class WordPath {
 
     private final BestPathComputer computer;
 
-    public WordPath(Wordnet wordnet,BestPathComputer computer) {
+    public Wordpath(Wordnet wordnet, BestPathComputer computer) {
         this.wordnet = wordnet;
         this.length = wordnet.length();
         this.bitSet = new BitSet(length);
@@ -205,7 +205,7 @@ public class WordPath {
         }
 
         public boolean next() {
-            int nextSplitIndex = WordPath.this.bitSet.nextSetBit(i);
+            int nextSplitIndex = Wordpath.this.bitSet.nextSetBit(i);
 
             if (i >= length) {
                 return false;

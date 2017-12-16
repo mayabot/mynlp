@@ -16,9 +16,18 @@
  */
 package com.mayabot.nlp.collection.ahocorasick;
 
+import com.mayabot.nlp.utils.DataInOutputUtils;
+
+import java.io.DataInput;
+import java.io.DataOutput;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.BiConsumer;
+import java.util.function.Function;
+
+import static com.mayabot.nlp.utils.DataInOutputUtils.*;
 
 /**
  * 基于双数组Trie树的AhoCorasick自动机
@@ -26,335 +35,344 @@ import java.util.List;
  * @author hankcs
  */
 public class AhoCorasickDoubleArrayTrie<V> {
-	/**
-	 * 双数组值check
-	 */
-	 int check[];
+    /**
+     * 双数组值check
+     */
+    int check[];
 
-	/**
-	 * 双数组之base
-	 */
-	 int base[];
+    /**
+     * 双数组之base
+     */
+    int base[];
 
-	/**
-	 * fail表
-	 */
-	 int fail[];
-	/**
-	 * 输出表
-	 */
-	 int[][] output;
-	/**
-	 * 保存value
-	 */
-	 ArrayList<V> values;
+    /**
+     * fail表
+     */
+    int fail[];
+    /**
+     * 输出表
+     */
+    int[][] output;
+    /**
+     * 保存value
+     */
+    ArrayList<V> values;
 
-	/**
-	 * 每个key的长度
-	 */
-	int[] keylength;
-	
-	AhoCorasickDoubleArrayTrie() {
-		
-	}
+    /**
+     * 每个key的长度
+     */
+    int[] keylength;
 
-	/**
-	 * 匹配母文本
-	 *
-	 * @param text
-	 *            一些文本
-	 * @return 一个pair列表
-	 */
-	public List<Hit<V>> parseText(CharSequence text) {
-		int position = 1;
-		int currentState = 0;
-		List<Hit<V>> collectedEmits = new LinkedList<Hit<V>>();
-		for (int i = 0; i < text.length(); ++i) {
-			currentState = getState(currentState, text.charAt(i));
-			storeEmits(position, currentState, collectedEmits);
-			++position;
-		}
+    AhoCorasickDoubleArrayTrie() {
 
-		return collectedEmits;
-	}
+    }
 
-	/**
-	 * 处理文本
-	 *
-	 * @param text
-	 *            文本
-	 * @param processor
-	 *            处理器
-	 */
-	public void parseText(CharSequence text, IHit<V> processor) {
-		int position = 1;
-		int currentState = 0;
-		for (int i = 0; i < text.length(); ++i) {
-			currentState = getState(currentState, text.charAt(i));
-			int[] hitArray = output[currentState];
-			if (hitArray != null) {
-				for (int hit : hitArray) {
-					processor.hit(position - keylength[hit], position, values.get(hit));
-				}
-			}
-			++position;
-		}
-	}
+    public static <T extends DataInOutputUtils> void write(
+            AhoCorasickDoubleArrayTrie<T> dat, DataOutput out, BiConsumer<T, DataOutput> biConsumer) throws IOException {
+        writeIntArray(dat.check, out);
+        writeIntArray(dat.base, out);
+        writeIntArray(dat.fail, out);
+        writeArrayList(dat.values, biConsumer, out);
+        writeIntArray(dat.output, out);
 
-	/**
-	 * 处理文本
-	 *
-	 * @param text
-	 * @param processor
-	 */
-	public void parseText(char[] text, IHit<V> processor) {
-		int position = 1;
-		int currentState = 0;
-		for (char c : text) {
-			currentState = getState(currentState, c);
-			int[] hitArray = output[currentState];
-			if (hitArray != null) {
-				for (int hit : hitArray) {
-					processor.hit(position - keylength[hit], position, values.get(hit));
-				}
-			}
-			++position;
-		}
-	}
+    }
 
-	/**
-	 * 处理文本
-	 *
-	 * @param text
-	 * @param processor
-	 */
-	public void parseText(char[] text, IHitFull<V> processor) {
-		int position = 1;
-		int currentState = 0;
-		for (char c : text) {
-			currentState = getState(currentState, c);
-			int[] hitArray = output[currentState];
-			if (hitArray != null) {
-				for (int hit : hitArray) {
-					processor.hit(position - keylength[hit], position, values.get(hit), hit);
-				}
-			}
-			++position;
-		}
-	}
+    public static <T extends DataInOutputUtils> AhoCorasickDoubleArrayTrie<T> read(DataInput in, Function<DataInput, T> function) throws IOException {
+        AhoCorasickDoubleArrayTrie x = new AhoCorasickDoubleArrayTrie();
 
-	/**
-	 * 获取值
-	 *
-	 * @param key
-	 *            键
-	 * @return
-	 */
-	public V get(String key) {
-		int index = exactMatchSearch(key);
-		if (index >= 0) {
-			return values.get(index);
-		}
+        x.check = readIntArray(in);
+        x.base = readIntArray(in);
+        x.fail = readIntArray(in);
+        x.values = readArrayList(in, function);
+        x.output = readDoubleIntArray(in);
+        return x;
+    }
 
-		return null;
-	}
+    /**
+     * 匹配母文本
+     *
+     * @param text 一些文本
+     * @return 一个pair列表
+     */
+    public List<Hit<V>> parseText(CharSequence text) {
+        int position = 1;
+        int currentState = 0;
+        List<Hit<V>> collectedEmits = new LinkedList<Hit<V>>();
+        for (int i = 0; i < text.length(); ++i) {
+            currentState = getState(currentState, text.charAt(i));
+            storeEmits(position, currentState, collectedEmits);
+            ++position;
+        }
 
-	/**
-	 * 更新某个键对应的值
-	 *
-	 * @param key
-	 *            键
-	 * @param value
-	 *            值
-	 * @return 是否成功（失败的原因是没有这个键）
-	 */
-	public boolean set(String key, V value) {
-		int index = exactMatchSearch(key);
-		if (index >= 0) {
-			values.set(index, value);
-			return true;
-		}
+        return collectedEmits;
+    }
 
-		return false;
-	}
+    /**
+     * 处理文本
+     *
+     * @param text      文本
+     * @param processor 处理器
+     */
+    public void parseText(CharSequence text, IHit<V> processor) {
+        int position = 1;
+        int currentState = 0;
+        for (int i = 0; i < text.length(); ++i) {
+            currentState = getState(currentState, text.charAt(i));
+            int[] hitArray = output[currentState];
+            if (hitArray != null) {
+                for (int hit : hitArray) {
+                    processor.hit(position - keylength[hit], position, values.get(hit));
+                }
+            }
+            ++position;
+        }
+    }
 
-	/**
-	 * 从值数组中提取下标为index的值<br>
-	 * 注意为了效率，此处不进行参数校验
-	 *
-	 * @param index
-	 *            下标
-	 * @return 值
-	 */
-	public V get(int index) {
-		return values.get(index);
-	}
+    /**
+     * 处理文本
+     *
+     * @param text
+     * @param processor
+     */
+    public void parseText(char[] text, IHit<V> processor) {
+        int position = 1;
+        int currentState = 0;
+        for (char c : text) {
+            currentState = getState(currentState, c);
+            int[] hitArray = output[currentState];
+            if (hitArray != null) {
+                for (int hit : hitArray) {
+                    processor.hit(position - keylength[hit], position, values.get(hit));
+                }
+            }
+            ++position;
+        }
+    }
 
-	/**
-	 * 转移状态，支持failure转移
-	 *
-	 * @param currentState
-	 * @param character
-	 * @return
-	 */
-	private int getState(int currentState, char character) {
-		int newCurrentState = transitionWithRoot(currentState, character); // 先按success跳转
-		while (newCurrentState == -1) // 跳转失败的话，按failure跳转
-		{
-			currentState = fail[currentState];
-			newCurrentState = transitionWithRoot(currentState, character);
-		}
-		return newCurrentState;
-	}
+    /**
+     * 处理文本
+     *
+     * @param text
+     * @param processor
+     */
+    public void parseText(char[] text, IHitFull<V> processor) {
+        int position = 1;
+        int currentState = 0;
+        for (char c : text) {
+            currentState = getState(currentState, c);
+            int[] hitArray = output[currentState];
+            if (hitArray != null) {
+                for (int hit : hitArray) {
+                    processor.hit(position - keylength[hit], position, values.get(hit), hit);
+                }
+            }
+            ++position;
+        }
+    }
 
-	/**
-	 * 保存输出
-	 *
-	 * @param position
-	 * @param currentState
-	 * @param collectedEmits
-	 */
-	private void storeEmits(int position, int currentState,
-			List<Hit<V>> collectedEmits) {
-		int[] hitArray = output[currentState];
-		if (hitArray != null) {
-			for (int hit : hitArray) {
-				collectedEmits.add(new Hit<V>(position - keylength[hit], position,
-						values.get(hit)));
-			}
-		}
-	}
+    /**
+     * 获取值
+     *
+     * @param key 键
+     * @return
+     */
+    public V get(String key) {
+        int index = exactMatchSearch(key);
+        if (index >= 0) {
+            return values.get(index);
+        }
 
-	/**
-	 * 转移状态
-	 *
-	 * @param current
-	 * @param c
-	 * @return
-	 */
-	protected int transition(int current, char c) {
-		int b = current;
-		int p;
+        return null;
+    }
 
-		p = b + c + 1;
-		if (b == check[p])
-			b = base[p];
-		else
-			return -1;
+    /**
+     * 更新某个键对应的值
+     *
+     * @param key   键
+     * @param value 值
+     * @return 是否成功（失败的原因是没有这个键）
+     */
+    public boolean set(String key, V value) {
+        int index = exactMatchSearch(key);
+        if (index >= 0) {
+            values.set(index, value);
+            return true;
+        }
 
-		p = b;
-		return p;
-	}
+        return false;
+    }
 
-	/**
-	 * c转移，如果是根节点则返回自己
-	 *
-	 * @param nodePos
-	 * @param c
-	 * @return
-	 */
-	protected int transitionWithRoot(int nodePos, char c) {
-		int b = base[nodePos];
-		int p;
+    /**
+     * 从值数组中提取下标为index的值<br>
+     * 注意为了效率，此处不进行参数校验
+     *
+     * @param index 下标
+     * @return 值
+     */
+    public V get(int index) {
+        return values.get(index);
+    }
 
-		p = b + c + 1;
-		if (b != check[p]) {
-			if (nodePos == 0)
-				return 0;
-			return -1;
-		}
+    /**
+     * 转移状态，支持failure转移
+     *
+     * @param currentState
+     * @param character
+     * @return
+     */
+    private int getState(int currentState, char character) {
+        int newCurrentState = transitionWithRoot(currentState, character); // 先按success跳转
+        while (newCurrentState == -1) // 跳转失败的话，按failure跳转
+        {
+            currentState = fail[currentState];
+            newCurrentState = transitionWithRoot(currentState, character);
+        }
+        return newCurrentState;
+    }
 
-		return p;
-	}
+    /**
+     * 保存输出
+     *
+     * @param position
+     * @param currentState
+     * @param collectedEmits
+     */
+    private void storeEmits(int position, int currentState,
+                            List<Hit<V>> collectedEmits) {
+        int[] hitArray = output[currentState];
+        if (hitArray != null) {
+            for (int hit : hitArray) {
+                collectedEmits.add(new Hit<V>(position - keylength[hit], position,
+                        values.get(hit)));
+            }
+        }
+    }
 
-	/**
-	 * 精确匹配
-	 *
-	 * @param key
-	 *            键
-	 * @return 值的下标
-	 */
-	public int exactMatchSearch(String key) {
-		return exactMatchSearch(key, 0, 0, 0);
-	}
+    /**
+     * 转移状态
+     *
+     * @param current
+     * @param c
+     * @return
+     */
+    protected int transition(int current, char c) {
+        int b = current;
+        int p;
 
-	/**
-	 * 精确匹配
-	 *
-	 * @param key
-	 * @param pos
-	 * @param len
-	 * @param nodePos
-	 * @return
-	 */
-	private int exactMatchSearch(String key, int pos, int len, int nodePos) {
-		if (len <= 0)
-			len = key.length();
-		if (nodePos <= 0)
-			nodePos = 0;
+        p = b + c + 1;
+        if (b == check[p])
+            b = base[p];
+        else
+            return -1;
 
-		int result = -1;
+        p = b;
+        return p;
+    }
 
-		int b = base[nodePos];
-		int p;
+    /**
+     * c转移，如果是根节点则返回自己
+     *
+     * @param nodePos
+     * @param c
+     * @return
+     */
+    protected int transitionWithRoot(int nodePos, char c) {
+        int b = base[nodePos];
+        int p;
 
-		for (int i = pos; i < len; i++) {
-			p = b + (int) (key.codePointAt(i)) + 1;
-			if (b == check[p])
-				b = base[p];
-			else
-				return result;
-		}
+        p = b + c + 1;
+        if (b != check[p]) {
+            if (nodePos == 0)
+                return 0;
+            return -1;
+        }
 
-		p = b;
-		int n = base[p];
-		if (b == check[p] && n < 0) {
-			result = -n - 1;
-		}
-		return result;
-	}
+        return p;
+    }
 
-	/**
-	 * 精确查询
-	 *
-	 * @param keyChars
-	 *            键的char数组
-	 * @param pos
-	 *            char数组的起始位置
-	 * @param len
-	 *            键的长度
-	 * @param nodePos
-	 *            开始查找的位置（本参数允许从非根节点查询）
-	 * @return 查到的节点代表的value ID，负数表示不存在
-	 */
-	int exactMatchSearch(char[] keyChars, int pos, int len, int nodePos) {
-		int result = -1;
+    /**
+     * 精确匹配
+     *
+     * @param key 键
+     * @return 值的下标
+     */
+    public int exactMatchSearch(String key) {
+        return exactMatchSearch(key, 0, 0, 0);
+    }
 
-		int b = base[nodePos];
-		int p;
+    /**
+     * 精确匹配
+     *
+     * @param key
+     * @param pos
+     * @param len
+     * @param nodePos
+     * @return
+     */
+    private int exactMatchSearch(String key, int pos, int len, int nodePos) {
+        if (len <= 0)
+            len = key.length();
+        if (nodePos <= 0)
+            nodePos = 0;
 
-		for (int i = pos; i < len; i++) {
-			p = b + (int) (keyChars[i]) + 1;
-			if (b == check[p])
-				b = base[p];
-			else
-				return result;
-		}
+        int result = -1;
 
-		p = b;
-		int n = base[p];
-		if (b == check[p] && n < 0) {
-			result = -n - 1;
-		}
-		return result;
-	}
+        int b = base[nodePos];
+        int p;
 
-	/**
-	 * 大小，即包含多少个模式串
-	 *
-	 * @return
-	 */
-	public int size() {
-		return values.size();
-	}
+        for (int i = pos; i < len; i++) {
+            p = b + (int) (key.codePointAt(i)) + 1;
+            if (b == check[p])
+                b = base[p];
+            else
+                return result;
+        }
+
+        p = b;
+        int n = base[p];
+        if (b == check[p] && n < 0) {
+            result = -n - 1;
+        }
+        return result;
+    }
+
+    /**
+     * 精确查询
+     *
+     * @param keyChars 键的char数组
+     * @param pos      char数组的起始位置
+     * @param len      键的长度
+     * @param nodePos  开始查找的位置（本参数允许从非根节点查询）
+     * @return 查到的节点代表的value ID，负数表示不存在
+     */
+    int exactMatchSearch(char[] keyChars, int pos, int len, int nodePos) {
+        int result = -1;
+
+        int b = base[nodePos];
+        int p;
+
+        for (int i = pos; i < len; i++) {
+            p = b + (int) (keyChars[i]) + 1;
+            if (b == check[p])
+                b = base[p];
+            else
+                return result;
+        }
+
+        p = b;
+        int n = base[p];
+        if (b == check[p] && n < 0) {
+            result = -n - 1;
+        }
+        return result;
+    }
+
+    /**
+     * 大小，即包含多少个模式串
+     *
+     * @return
+     */
+    public int size() {
+        return values.size();
+    }
 }

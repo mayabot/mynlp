@@ -21,10 +21,10 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.mayabot.nlp.collection.dat.DATMatcher;
 import com.mayabot.nlp.collection.dat.DoubleArrayTrie;
-import com.mayabot.nlp.segment.WordPathProcessor;
-import com.mayabot.nlp.segment.dictionary.HumanAdjustDictionary;
+import com.mayabot.nlp.segment.WordpathProcessor;
+import com.mayabot.nlp.segment.dictionary.CorrectionDictionary;
 import com.mayabot.nlp.segment.wordnet.Vertex;
-import com.mayabot.nlp.segment.wordnet.WordPath;
+import com.mayabot.nlp.segment.wordnet.Wordpath;
 
 /**
  * 人工纠错。
@@ -34,25 +34,25 @@ import com.mayabot.nlp.segment.wordnet.WordPath;
  * Created by jimichan on 2017/7/3.
  */
 @Singleton
-public class CorrectionXProcessor implements WordPathProcessor {
+public class CorrectionXProcessor implements WordpathProcessor {
 
-    private final HumanAdjustDictionary dictionary;
+    private final CorrectionDictionary dictionary;
 
     @Inject
     public CorrectionXProcessor(
-            HumanAdjustDictionary dictionary) {
+            CorrectionDictionary dictionary) {
         this.dictionary = dictionary;
     }
 
     @Override
-    public WordPath process(WordPath wordPath) {
+    public Wordpath process(Wordpath wordPath) {
 
-        DoubleArrayTrie<HumanAdjustDictionary.AdjustWord> dat = dictionary.getDoubleArrayTrie();
+        DoubleArrayTrie<CorrectionDictionary.AdjustWord> dat = dictionary.getDoubleArrayTrie();
         if(dat==null){
             return wordPath;
         }
 
-        DATMatcher<HumanAdjustDictionary.AdjustWord> datSearch
+        DATMatcher<CorrectionDictionary.AdjustWord> datSearch
                 = dat.match(wordPath.getWordnet().getCharArray(), 0);
 
 
@@ -65,7 +65,7 @@ public class CorrectionXProcessor implements WordPathProcessor {
 
             //wordPath.combine()
 
-            HumanAdjustDictionary.AdjustWord adjsutword = datSearch.getValue();
+            CorrectionDictionary.AdjustWord adjsutword = datSearch.getValue();
 
             for (int len : adjsutword.getWords()) {
 

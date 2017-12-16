@@ -18,16 +18,15 @@ package com.mayabot.nlp.segment.recognition.org.nt;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.mayabot.nlp.ResourceLoader;
-import com.mayabot.nlp.Settings;
+import com.mayabot.nlp.Environment;
 import com.mayabot.nlp.collection.ahocorasick.AhoCoraickDoubleArrayTrieBuilder;
 import com.mayabot.nlp.collection.ahocorasick.AhoCorasickDoubleArrayTrie;
 import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
+import com.mayabot.nlp.resources.MynlpResource;
 import com.mayabot.nlp.segment.corpus.tag.NTTag;
 import com.mayabot.nlp.segment.dictionary.EnumTransformMatrix;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.TreeMap;
 
@@ -38,8 +37,6 @@ import java.util.TreeMap;
  */
 @Singleton
 public class OrganizationDictionary {
-
-    final static String tsfile = "organization" + File.separator + "nt.tr.txt";
 
     private InternalLogger logger = InternalLoggerFactory.getInstance(this.getClass());
 
@@ -59,13 +56,16 @@ public class OrganizationDictionary {
     private AhoCorasickDoubleArrayTrie<String> trie;
 
     @Inject
-    public OrganizationDictionary(NTDictionary dictionary, Settings settings, ResourceLoader resourceLoader) throws IOException {
+    public OrganizationDictionary(NTDictionary dictionary, Environment environment) throws IOException {
         this.dictionary = dictionary;
 
         long start = System.currentTimeMillis();
 
+        MynlpResource resource = environment.loadResource("org.dict.tr", "inner://dictionary/organization/nt.tr.txt");
+
+
         //转移矩阵
-        transformMatrixDictionary = new EnumTransformMatrix<>(tsfile, resourceLoader);
+        transformMatrixDictionary = new EnumTransformMatrix<>(resource);
 
         // AC tree
         {

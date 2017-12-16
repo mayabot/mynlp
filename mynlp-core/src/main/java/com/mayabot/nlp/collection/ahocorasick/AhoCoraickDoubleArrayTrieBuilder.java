@@ -17,6 +17,8 @@
 
 package com.mayabot.nlp.collection.ahocorasick;
 
+import com.mayabot.nlp.utils.DataInOutputUtils;
+
 import java.util.*;
 import java.util.concurrent.LinkedBlockingDeque;
 
@@ -210,7 +212,7 @@ public class AhoCoraickDoubleArrayTrieBuilder<V> {
     /**
      * 拓展数组
      *
-     * @param newSize
+     * @param new_capacity
      * @return
      */
     private void resize(int new_capacity)

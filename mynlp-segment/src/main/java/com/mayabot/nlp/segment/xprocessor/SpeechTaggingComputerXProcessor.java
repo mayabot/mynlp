@@ -22,11 +22,11 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.mayabot.nlp.algorithm.SimpleViterbi;
 import com.mayabot.nlp.collection.TransformMatrix;
-import com.mayabot.nlp.segment.WordPathProcessor;
+import com.mayabot.nlp.segment.WordpathProcessor;
 import com.mayabot.nlp.segment.corpus.tag.Nature;
 import com.mayabot.nlp.segment.dictionary.core.CoreDictionaryTransformMatrixDictionary;
 import com.mayabot.nlp.segment.wordnet.Vertex;
-import com.mayabot.nlp.segment.wordnet.WordPath;
+import com.mayabot.nlp.segment.wordnet.Wordpath;
 
 /**
  * 词性分析计算
@@ -34,7 +34,7 @@ import com.mayabot.nlp.segment.wordnet.WordPath;
  * @author jimichan
  */
 @Singleton
-public class SpeechTaggingComputerXProcessor implements WordPathProcessor {
+public class SpeechTaggingComputerXProcessor implements WordpathProcessor {
 
     private TransformMatrix transformMatrix;
 
@@ -55,7 +55,7 @@ public class SpeechTaggingComputerXProcessor implements WordPathProcessor {
     }
 
     @Override
-    public WordPath process(WordPath wordPath) {
+    public Wordpath process(Wordpath wordPath) {
         simpleViterbi.viterbi(wordPath.getBestPathWithBE());
         return wordPath;
     }

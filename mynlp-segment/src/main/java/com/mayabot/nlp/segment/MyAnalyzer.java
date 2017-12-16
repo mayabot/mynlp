@@ -17,7 +17,12 @@
 
 package com.mayabot.nlp.segment;
 
+import com.google.common.collect.Iterators;
+import com.google.common.collect.Lists;
+
 import java.io.Reader;
+import java.io.StringReader;
+import java.util.List;
 
 /**
  * 一个分词器。
@@ -31,4 +36,19 @@ public interface MyAnalyzer extends Iterable<MyTerm> {
     MyTerm next();
 
     MyAnalyzer reset(Reader reader);
+
+    default MyAnalyzer reset(String text) {
+        return this.reset(new StringReader(text));
+    }
+
+
+    /**
+     * 一个便捷的方法，获得分词结果
+     *
+     * @return
+     */
+    default List<String> toWords() {
+        return Lists.newArrayList(Iterators.transform(iterator(), MyTerm::getWord));
+    }
+
 }

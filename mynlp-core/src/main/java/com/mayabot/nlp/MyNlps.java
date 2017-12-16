@@ -26,6 +26,7 @@ import com.google.inject.spi.TypeEncounter;
 import com.google.inject.spi.TypeListener;
 import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
+import com.mayabot.nlp.resources.MynlpResourceFactory;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -54,6 +55,8 @@ public class MyNlps {
 
         Environment environment = new Environment(settings);
 
+
+
         ArrayList<Module> modules = Lists.newArrayList();
 
         modules.add(new AbstractModule() {
@@ -62,8 +65,7 @@ public class MyNlps {
 
                 bind(Settings.class).toInstance(settings);
                 bind(Environment.class).toInstance(environment);
-                bind(ResourceLoader.class).toInstance(environment.getResourceLoader());
-
+                bind(MynlpResourceFactory.class).toInstance(environment.getMynlpResourceFactory());
 
                 //process initialize interface
                 bindListener(new AbstractMatcher<TypeLiteral<?>>() {

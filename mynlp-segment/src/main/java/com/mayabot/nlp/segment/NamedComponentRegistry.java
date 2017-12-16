@@ -86,15 +86,15 @@ public class NamedComponentRegistry {
         register("organization", OptimizeProcessor.class, OrganizationRecognition::build);
 
         // x process
-        register("subindex", WordPathProcessor.class, injector -> new IndexSubwordsProcess());
-        register("mq", WordPathProcessor.class, injector -> injector.getInstance(MergeNumberQuantifierPreProcessor.class));
-        register("ml", WordPathProcessor.class, injector -> injector.getInstance(MergeNumberAndLetterPreProcess.class));
-        register("speechTagging", WordPathProcessor.class, injector -> injector.getInstance(SpeechTaggingComputerXProcessor.class));
-        register("correction", WordPathProcessor.class, injector -> injector.getInstance(CorrectionXProcessor.class));
-        register("customDict", WordPathProcessor.class, injector -> injector.getInstance(CustomDictionaryXProcess.class));
-        register("pattern", WordPathProcessor.class, injector -> new CommonPatternWordPathProcessor());
+        register("subindex", WordpathProcessor.class, injector -> new IndexSubwordsProcess());
+        register("mq", WordpathProcessor.class, injector -> injector.getInstance(MergeNumberQuantifierPreProcessor.class));
+        register("ml", WordpathProcessor.class, injector -> injector.getInstance(MergeNumberAndLetterPreProcess.class));
+        register("speechTagging", WordpathProcessor.class, injector -> injector.getInstance(SpeechTaggingComputerXProcessor.class));
+        register("correction", WordpathProcessor.class, injector -> injector.getInstance(CorrectionXProcessor.class));
+        register("customDict", WordpathProcessor.class, injector -> injector.getInstance(CustomDictionaryXProcess.class));
+        register("pattern", WordpathProcessor.class, injector -> new CommonPatternWordPathProcessor());
 
-        register("optimizeNet", WordPathProcessor.class, injector -> injector.getInstance(OptimizeNetWordPathProcessor.class));
+        register("optimizeNet", WordpathProcessor.class, injector -> injector.getInstance(OptimizeWordPathProcessor.class));
     }
 
 }

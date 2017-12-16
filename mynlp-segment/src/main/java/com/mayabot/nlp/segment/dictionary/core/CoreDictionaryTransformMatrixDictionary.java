@@ -16,16 +16,15 @@
  */
 package com.mayabot.nlp.segment.dictionary.core;
 
-import com.google.common.io.ByteSource;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.mayabot.nlp.ResourceLoader;
-import com.mayabot.nlp.Settings;
+import com.mayabot.nlp.Environment;
+import com.mayabot.nlp.Setting;
 import com.mayabot.nlp.collection.TransformMatrix;
 import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
+import com.mayabot.nlp.resources.MynlpResource;
 
-import java.io.File;
 import java.io.IOException;
 
 /**
@@ -36,18 +35,21 @@ public class CoreDictionaryTransformMatrixDictionary {
 
     private TransformMatrix transformMatrixDictionary;
 
-    final String file = "core" + File.separator + "CoreNatureDictionary.tr.txt";
+
+    public final Setting<String> coreDictTrSetting =
+            Setting.stringSetting("core.dict.tr", "inner://dictionary/core/CoreNatureDictionary.tr.txt");
 
     protected InternalLogger logger = InternalLoggerFactory.getInstance(this.getClass());
 
     @Inject
-    public CoreDictionaryTransformMatrixDictionary(Settings settings, ResourceLoader resourceLoader) throws IOException {
+    public CoreDictionaryTransformMatrixDictionary(Environment environment) throws IOException {
         transformMatrixDictionary = new TransformMatrix();
         long t1 = System.currentTimeMillis();
-        ByteSource source = resourceLoader.loadDictionary(file);
-        transformMatrixDictionary.load(source);
+
+        MynlpResource resource = environment.loadResource(coreDictTrSetting);
+        transformMatrixDictionary.load(resource.openInputStream());
         long t2 = System.currentTimeMillis();
-        logger.info("加载核心词典词性转移矩阵" + file + "成功，耗时：" + (t2 - t1)
+        logger.info("加载核心词典词性转移矩阵" + resource + "成功，耗时：" + (t2 - t1)
                 + " ms");
     }
 

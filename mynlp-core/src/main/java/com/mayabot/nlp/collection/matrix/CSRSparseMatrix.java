@@ -17,6 +17,24 @@ public class CSRSparseMatrix implements Serializable {
     private int[] values;
 
 
+    public CSRSparseMatrix(int[] rowOffset, int[] columnIndices, int[] values) {
+        this.rowOffset = rowOffset;
+        this.columnIndices = columnIndices;
+        this.values = values;
+    }
+
+    public int[] getRowOffset() {
+        return rowOffset;
+    }
+
+    public int[] getColumnIndices() {
+        return columnIndices;
+    }
+
+    public int[] getValues() {
+        return values;
+    }
+
     public CSRSparseMatrix(TreeBasedTable<Integer, Integer, Integer> table, int totalRow) {
         int size = table.size();
         values = new int[size];
