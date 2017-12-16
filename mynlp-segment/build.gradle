@@ -3,7 +3,8 @@ description='分词'
 
 dependencies{
     compile project(':mynlp-core')
-    compile 'com.google.code.gson:gson:2.8.0'
+// https://mvnrepository.com/artifact/com.alibaba/fastjson
+    compile group: 'com.alibaba', name: 'fastjson', version: '1.2.42'
 
     testCompile 'junit:junit:4.12'
 }

@@ -17,15 +17,16 @@
 
 package com.mayabot.nlp.segment.xprocessor;
 
+import com.google.common.collect.ImmutableList;
 import com.google.inject.Inject;
 import com.mayabot.nlp.collection.dat.DATMatcher;
 import com.mayabot.nlp.collection.dat.DoubleArrayTrie;
-import com.mayabot.nlp.segment.WordPathProcessor;
+import com.mayabot.nlp.segment.WordpathProcessor;
 import com.mayabot.nlp.segment.dictionary.CustomDictionary;
 import com.mayabot.nlp.segment.dictionary.NatureAttribute;
 import com.mayabot.nlp.segment.dictionary.core.CoreDictionary;
 import com.mayabot.nlp.segment.wordnet.Vertex;
-import com.mayabot.nlp.segment.wordnet.WordPath;
+import com.mayabot.nlp.segment.wordnet.Wordpath;
 import com.mayabot.nlp.segment.wordnet.Wordnet;
 
 /**
@@ -38,7 +39,7 @@ import com.mayabot.nlp.segment.wordnet.Wordnet;
  * @author jimichan
  * @author fred
  */
-public class CustomDictionaryXProcess implements WordPathProcessor {
+public class CustomDictionaryXProcess implements WordpathProcessor {
 
     private CustomDictionary dictionary;
 
@@ -51,11 +52,11 @@ public class CustomDictionaryXProcess implements WordPathProcessor {
     }
 
     @Override
-    public WordPath process(WordPath wordPath) {
+    public Wordpath process(Wordpath wordPath) {
         Wordnet wordnet = wordPath.getWordnet();
         boolean change = false;
         char[] text = wordnet.getCharArray();
-        for (DoubleArrayTrie<NatureAttribute> d : dictionary.allDict()) {
+        for (DoubleArrayTrie<NatureAttribute> d : ImmutableList.of(dictionary.getDat())) {
             if (d == null) {
                 continue;
             }

@@ -18,13 +18,11 @@
 package com.mayabot.nlp.segment.xprocessor;
 
 import com.google.inject.Inject;
-import com.google.inject.Injector;
-import com.google.inject.Singleton;
-import com.mayabot.nlp.segment.WordPathProcessor;
+import com.mayabot.nlp.segment.WordpathProcessor;
 import com.mayabot.nlp.segment.corpus.tag.Nature;
 import com.mayabot.nlp.segment.dictionary.NatureAttribute;
 import com.mayabot.nlp.segment.wordnet.Vertex;
-import com.mayabot.nlp.segment.wordnet.WordPath;
+import com.mayabot.nlp.segment.wordnet.Wordpath;
 import com.mayabot.nlp.segment.wordnet.Wordnet;
 
 import java.util.regex.MatchResult;
@@ -37,7 +35,7 @@ import java.util.regex.Pattern;
  * url
  * email
  */
-public class CommonPatternWordPathProcessor implements WordPathProcessor {
+public class CommonPatternWordPathProcessor implements WordpathProcessor {
 
     Pattern allPattern;
 
@@ -59,7 +57,7 @@ public class CommonPatternWordPathProcessor implements WordPathProcessor {
 
 
     @Override
-    public WordPath process(WordPath wordPath) {
+    public Wordpath process(Wordpath wordPath) {
 
         boolean change = false;
         Wordnet wordnet = wordPath.getWordnet();

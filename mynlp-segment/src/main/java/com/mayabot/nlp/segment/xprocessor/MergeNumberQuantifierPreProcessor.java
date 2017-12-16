@@ -21,12 +21,12 @@ import com.google.inject.Inject;
 import com.mayabot.nlp.fst.FST;
 import com.mayabot.nlp.fst.FstMatcher;
 import com.mayabot.nlp.fst.FstNode;
-import com.mayabot.nlp.segment.WordPathProcessor;
+import com.mayabot.nlp.segment.WordpathProcessor;
 import com.mayabot.nlp.segment.corpus.tag.Nature;
 import com.mayabot.nlp.segment.dictionary.NatureAttribute;
 import com.mayabot.nlp.segment.dictionary.core.CoreDictionary;
 import com.mayabot.nlp.segment.wordnet.Vertex;
-import com.mayabot.nlp.segment.wordnet.WordPath;
+import com.mayabot.nlp.segment.wordnet.Wordpath;
 
 import java.util.regex.Pattern;
 
@@ -37,7 +37,7 @@ import static com.mayabot.nlp.segment.wordnet.Vertexs.hasNature;
  *
  * @author Fred
  */
-public class MergeNumberQuantifierPreProcessor implements WordPathProcessor {
+public class MergeNumberQuantifierPreProcessor implements WordpathProcessor {
 
     private CoreDictionary coreDictionary;
 
@@ -62,7 +62,7 @@ public class MergeNumberQuantifierPreProcessor implements WordPathProcessor {
 
 
     @Override
-    public WordPath process(WordPath wordPath) {
+    public Wordpath process(Wordpath wordPath) {
         FstMatcher<Vertex, Vertex> m = fst.newMatcher(wordPath.getBestPathWithBE());
 
         boolean find = false;

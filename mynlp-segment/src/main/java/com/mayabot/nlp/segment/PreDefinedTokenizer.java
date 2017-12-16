@@ -1,8 +1,9 @@
 package com.mayabot.nlp.segment;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
-import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.net.URL;
@@ -20,7 +21,7 @@ public class PreDefinedTokenizer {
         try {
             String json = Resources.asCharSource(resourceAsStream, Charsets.UTF_8).read();
 
-            Map<String,Object> map1 = new Gson().fromJson(json, Map.class);
+            Map<String, Object> map1 = (JSONObject) JSON.parse(json);
 
             configMap = map1;
 
@@ -45,7 +46,7 @@ public class PreDefinedTokenizer {
 
     public static MyTokenizer get(String name) {
         return map.computeIfAbsent(name, n -> {
-            Map<String,Object> config = (Map)configMap.get(n);
+            Map<String, Object> config = (Map) configMap.get(n);
             return WordnetTokenizerFactory.get().build(config);
         });
     }

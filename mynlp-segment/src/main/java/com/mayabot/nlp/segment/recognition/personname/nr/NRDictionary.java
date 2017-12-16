@@ -16,18 +16,18 @@
  */
 package com.mayabot.nlp.segment.recognition.personname.nr;
 
+import com.alibaba.fastjson.TypeReference;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.mayabot.nlp.Environment;
-import com.mayabot.nlp.ResourceLoader;
-import com.mayabot.nlp.Settings;
-import com.mayabot.nlp.collection.ValueSerializer;
 import com.mayabot.nlp.segment.corpus.dictionary.item.EnumFreqPair;
 import com.mayabot.nlp.segment.corpus.tag.NRTag;
 import com.mayabot.nlp.segment.dictionary.CommonDictionary;
 
-import java.io.File;
+import java.io.DataInput;
+import java.io.DataOutput;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 一个好用的人名词典
@@ -37,13 +37,10 @@ import java.util.List;
 @Singleton
 public class NRDictionary extends CommonDictionary<EnumFreqPair<NRTag>> {
 
-    final static String file = "person" + File.separator + "nr.txt";
-
     @Inject
-    public NRDictionary(Settings setting, ResourceLoader resourceLoader, Environment environment) {
-        super(setting, resourceLoader, environment);
+    public NRDictionary(Environment environment) throws Exception {
+        super(environment);
     }
-
 
     @Override
     public EnumFreqPair<NRTag> parseLine(List<String> pars) {
@@ -52,12 +49,24 @@ public class NRDictionary extends CommonDictionary<EnumFreqPair<NRTag>> {
 
     @Override
     public String dicFilePath() {
-        return file;
+        return "inner://dictionary/person/nr.txt";
     }
 
     @Override
-    public ValueSerializer<EnumFreqPair<NRTag>> valueSerializer() {
-        return ValueSerializer.jdk();
+    protected void writeItem(EnumFreqPair<NRTag> a, DataOutput out) {
+        a.writeItem(out);
+    }
+
+    final static TypeReference<Map<NRTag, Integer>> typeReference = new TypeReference<Map<NRTag, Integer>>() {
+    };
+
+    @Override
+    protected EnumFreqPair<NRTag> readItem(DataInput in) {
+        EnumFreqPair<NRTag> pair = new EnumFreqPair<>();
+
+        pair.readItem(in, typeReference);
+
+        return pair;
     }
 
 }

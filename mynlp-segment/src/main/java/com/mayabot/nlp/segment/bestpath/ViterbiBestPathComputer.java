@@ -42,7 +42,7 @@ public class ViterbiBestPathComputer implements BestPathComputer {
     }
 
     @Override
-    public WordPath select(Wordnet wordnet) {
+    public Wordpath select(Wordnet wordnet) {
 
         // 第一行的From肯定来自Start节点
         for (Vertex v : wordnet.getRow(0)) {
@@ -151,7 +151,7 @@ public class ViterbiBestPathComputer implements BestPathComputer {
         }
 
         //从后到前，获得完整的路径
-        WordPath wordPath = new WordPath(wordnet,this);
+        Wordpath wordPath = new Wordpath(wordnet,this);
         Vertex point = wordnet.getEndRow().getFirst();
         while (point != null) {
             wordPath.combine(point);

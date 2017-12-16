@@ -45,3 +45,4 @@ mynlp_work/**
 
 **/model/dependency
 **/model/segment
+/temp/

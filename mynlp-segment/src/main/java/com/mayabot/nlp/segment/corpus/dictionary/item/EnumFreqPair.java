@@ -16,28 +16,63 @@
  */
 package com.mayabot.nlp.segment.corpus.dictionary.item;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.TypeReference;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.primitives.Ints;
+import com.mayabot.nlp.segment.corpus.tag.NTTag;
 
-import java.io.Serializable;
+import java.io.DataInput;
+import java.io.DataOutput;
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
+import java.util.regex.Pattern;
 
 /**
  * 对标签-频次的封装
  *
  * @author hankcs
  */
-public class EnumFreqPair<E extends Enum> implements Serializable {
-
-    private static final long serialVersionUID = 1;
+public class EnumFreqPair<E extends Enum> {
 
     private ImmutableMap<E, Integer> labelMap = ImmutableMap.of();
 
     public EnumFreqPair() {
+    }
+
+    public void writeItem( DataOutput out) {
+        try {
+            int size = labelMap.size();
+
+            if(size ==0 ){
+                out.writeUTF("{}");
+            }else if(size ==1){
+                Map.Entry<E, Integer> next = labelMap.entrySet().iterator().next();
+                String name = next.getKey().name();
+                Integer f = next.getValue();
+                out.writeUTF(String.format("{\""+name+"\":"+f+"}"));
+            }else{
+                out.writeUTF(JSON.toJSONString(labelMap));
+            }
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void readItem(DataInput in,TypeReference<Map<E, Integer>> typeReference){
+        try {
+            String json = in.readUTF();
+            Map<E, Integer> map = JSON.parseObject(json, typeReference);
+
+            this.labelMap = ImmutableMap.copyOf(map);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public EnumFreqPair(E... labels) {

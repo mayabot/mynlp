@@ -22,15 +22,15 @@ import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
+import com.mayabot.nlp.segment.utils.VertexHelper;
 import com.mayabot.nlp.segment.wordnet.BestPathComputer;
 import com.mayabot.nlp.segment.wordnet.Vertex;
-import com.mayabot.nlp.segment.wordnet.WordPath;
+import com.mayabot.nlp.segment.wordnet.Wordpath;
 import com.mayabot.nlp.segment.wordnet.Wordnet;
 
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * 一个基于词图的流水线 要求里面所有的组件都是无状态的，线程安全的类
@@ -50,7 +50,7 @@ public class WordnetTokenizer implements MyTokenizer {
     /**
      * 处理器网络
      */
-    private List<WordPathProcessor> wordPathProcessors = Lists.newArrayList();
+    private List<WordpathProcessor> wordPathProcessors = Lists.newArrayList();
 
     private BestPathComputer bestPathComputer;
 
@@ -82,9 +82,9 @@ public class WordnetTokenizer implements MyTokenizer {
         wordnetInitializer.initialize(wordnet);
 
         //选择一个路径出来(第一次不严谨的分词结果)
-        WordPath wordPath = bestPathComputer.select(wordnet);
+        Wordpath wordPath = bestPathComputer.select(wordnet);
 
-        for (WordPathProcessor xProcessor : wordPathProcessors) {
+        for (WordpathProcessor xProcessor : wordPathProcessors) {
             wordPath = xProcessor.process(wordPath);
         }
 
@@ -100,7 +100,7 @@ public class WordnetTokenizer implements MyTokenizer {
      */
     private Wordnet initEmptyWordNet(char[] text) {
         Wordnet wordnet = new Wordnet(text);
-        wordnet.getBeginRow().put(vertexHelper.newBigin());
+        wordnet.getBeginRow().put(vertexHelper.newBegin());
         wordnet.getEndRow().put(vertexHelper.newEnd());
         return wordnet;
     }
@@ -112,7 +112,7 @@ public class WordnetTokenizer implements MyTokenizer {
      * @param wordPath
      * @return
      */
-    protected LinkedList<MyTerm> path2TermList(WordPath wordPath) {
+    protected LinkedList<MyTerm> path2TermList(Wordpath wordPath) {
         Iterator<Vertex> vertexIterator = wordPath.iteratorBestPath();
         LinkedList<MyTerm> resultList = Lists.newLinkedList();
         while (vertexIterator.hasNext()) {
@@ -140,7 +140,7 @@ public class WordnetTokenizer implements MyTokenizer {
         return wordnetInitializer;
     }
 
-    public List<WordPathProcessor> getWordPathProcessors() {
+    public List<WordpathProcessor> getWordPathProcessors() {
         return wordPathProcessors;
     }
 
@@ -148,7 +148,7 @@ public class WordnetTokenizer implements MyTokenizer {
         this.wordnetInitializer = wordnetInitializer;
     }
 
-    void setWordPathProcessors(List<WordPathProcessor> wordPathProcessors) {
+    void setWordPathProcessors(List<WordpathProcessor> wordPathProcessors) {
         this.wordPathProcessors = wordPathProcessors;
     }
 

@@ -23,6 +23,7 @@ import com.mayabot.nlp.segment.wordnet.Wordnet;
 /**
  * 预先处理器。
  * 识别器,优化网络
+ * 多个识别器直接可能产生冲突。在优化网络里面，进行小范围竞争
  * @author jimichan
  */
 public interface OptimizeProcessor {
@@ -32,6 +33,5 @@ public interface OptimizeProcessor {
      * @return true 产生了新的节点 false没有动作发生
      */
     boolean process(Vertex[] pathWithBE, Wordnet wordnet);
-
 
 }

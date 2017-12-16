@@ -17,7 +17,12 @@
 package com.mayabot.nlp.segment.model.crf;
 
 
-import java.util.LinkedList;
+import com.mayabot.nlp.collection.dat.DoubleArrayTrie;
+import com.mayabot.nlp.collection.dat.DoubleArrayTrieBuilder;
+import com.mayabot.nlp.logging.InternalLogger;
+import com.mayabot.nlp.logging.InternalLoggerFactory;
+
+import java.util.*;
 
 /**
  * 静态CRF分词模型.
@@ -25,8 +30,12 @@ import java.util.LinkedList;
  * 训练出来的
  *
  * @author hankcs
+ * @author jimichan
+ *
  */
 public final class CRFSegmentModel extends CRFModel {
+
+    protected static InternalLogger logger = InternalLoggerFactory.getInstance(CRFSegmentModel.class);
 
     private int idM;
     private int idE;
@@ -38,6 +47,93 @@ public final class CRFSegmentModel extends CRFModel {
     CRFSegmentModel() {
     }
 
+    public static CRFSegmentModel loadFromCrfPlusText(Iterator<String> txtReader) {
+        CRFSegmentModel model = new CRFSegmentModel();
+
+        Iterator<String> lineIterator = txtReader;
+
+
+        if (!lineIterator.hasNext()) return null;
+
+        logger.info(lineIterator.next());   // verson
+
+        logger.info(lineIterator.next());   // cost-factor
+        int maxid = Integer.parseInt(lineIterator.next().substring("maxid:".length()).trim());
+        logger.info(lineIterator.next());   // xsize
+
+        lineIterator.next();    // blank
+
+
+        String line;
+        int id = 0;
+        model.tag2id = new HashMap<String, Integer>();
+        while ((line = lineIterator.next()).length() != 0) {
+            model.tag2id.put(line, id);
+            ++id;
+        }
+        model.id2tag = new String[model.tag2id.size()];
+        final int size = model.id2tag.length;
+        for (Map.Entry<String, Integer> entry : model.tag2id.entrySet()) {
+            model.id2tag[entry.getValue()] = entry.getKey();
+        }
+        TreeMap<String, FeatureFunction> featureFunctionMap = new TreeMap<String, FeatureFunction>();  // 构建trie树的时候用
+        List<FeatureFunction> featureFunctionList = new LinkedList<FeatureFunction>(); // 读取权值的时候用
+        model.featureTemplateList = new LinkedList<FeatureTemplate>();
+        while ((line = lineIterator.next()).length() != 0) {
+            if (!"B".equals(line)) {
+                FeatureTemplate featureTemplate = FeatureTemplate.create(line);
+                model.featureTemplateList.add(featureTemplate);
+            } else {
+                model.matrix = new double[size][size];
+            }
+        }
+
+        if (model.matrix != null) {
+            lineIterator.next();    // 0 B
+        }
+
+        while (lineIterator.hasNext()) {
+            line = lineIterator.next();
+            if (line.isEmpty()) {
+                break;
+            }
+            String[] args = line.split(" ", 2);
+            char[] charArray = args[1].toCharArray();
+            FeatureFunction featureFunction = new FeatureFunction(charArray, size);
+            featureFunctionMap.put(args[1], featureFunction);
+            featureFunctionList.add(featureFunction);
+        }
+
+        if (model.matrix != null) {
+            for (int i = 0; i < size; i++) {
+                for (int j = 0; j < size; j++) {
+                    model.matrix[i][j] = Double.parseDouble(lineIterator.next());
+                }
+            }
+        }
+
+        for (FeatureFunction featureFunction : featureFunctionList) {
+            for (int i = 0; i < size; i++) {
+                featureFunction.w[i] = Double.parseDouble(lineIterator.next());
+            }
+        }
+
+        if (lineIterator.hasNext()) {
+            logger.warn("CRF 文本读取有残留，可能会出问题！");
+        }
+
+        logger.info("开始构建trie树");
+
+        DoubleArrayTrie<FeatureFunction> trie = new DoubleArrayTrieBuilder().build(featureFunctionMap);
+        model.setFeatureFunctionTrie(trie);
+
+        model.onLoadTxtFinished();
+
+        logger.info("完成构建trie树 feature size " + featureFunctionMap.size());
+
+        return model;
+
+    }
 
     /**
      * 初始化几个常量

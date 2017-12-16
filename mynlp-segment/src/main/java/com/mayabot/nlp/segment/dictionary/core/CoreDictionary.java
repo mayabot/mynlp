@@ -16,24 +16,22 @@
  */
 package com.mayabot.nlp.segment.dictionary.core;
 
-import com.google.common.base.Charsets;
-import com.google.common.base.Preconditions;
-import com.google.common.hash.Hashing;
-import com.google.common.io.ByteSource;
+import com.google.common.io.ByteArrayDataOutput;
+import com.google.common.io.ByteStreams;
+import com.google.common.io.Files;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.mayabot.nlp.Environment;
-import com.mayabot.nlp.ResourceLoader;
-import com.mayabot.nlp.Settings;
+import com.mayabot.nlp.Setting;
+import com.mayabot.nlp.caching.MynlpCacheable;
 import com.mayabot.nlp.collection.dat.DATMatcher;
 import com.mayabot.nlp.collection.dat.DoubleArrayTrie;
 import com.mayabot.nlp.collection.dat.DoubleArrayTrieBuilder;
-import com.mayabot.nlp.collection.dat.DoubleArrayTrieSerializer;
-import com.mayabot.nlp.logging.InternalLogger;
-import com.mayabot.nlp.logging.InternalLoggerFactory;
+import com.mayabot.nlp.resources.MynlpResource;
 import com.mayabot.nlp.segment.dictionary.NatureAttribute;
+import com.mayabot.nlp.utils.CharSourceLineReader;
 
-import java.io.File;
+import java.io.*;
 import java.util.TreeMap;
 
 /**
@@ -50,10 +48,8 @@ import java.util.TreeMap;
  * </pre>
  */
 @Singleton
-public class CoreDictionary {
+public class CoreDictionary implements MynlpCacheable {
 
-
-//    public final int String TAG_PLACE_WORD_ID;
     /**
      * 句子的开始 begin
      */
@@ -104,6 +100,7 @@ public class CoreDictionary {
      */
     public final static String TAG_PEOPLE = "未##人";
 
+
     // 一些特殊的WORD_ID
     /**
      * 始##始
@@ -134,36 +131,29 @@ public class CoreDictionary {
     public final int NX_WORD_ID;
 
     public final int XX_WORD_ID;
-    private final ResourceLoader resourceLoader;
+
     private final Environment environment;
 
+//    private InternalLogger logger = InternalLoggerFactory.getInstance(CoreDictionary.class);
 
-    private InternalLogger logger = InternalLoggerFactory.getInstance(CoreDictionary.class);
-
-    final String file = "core" + File.separator + "CoreNatureDictionary.txt";
-
-//    private Settings setting;
+    public final Setting<String> coreDictSetting =
+            Setting.stringSetting("core.dict", "inner://dictionary/core/CoreNatureDictionary.txt");
 
     private DoubleArrayTrie<NatureAttribute> trie;
 
     //public static final int totalFrequency = 221894;
 
-    public int MAX_FREQUENCY;
+    public int MAX_FREQUENCY = 221894;
 
     @Inject
-    public CoreDictionary( Settings setting
-            , ResourceLoader resourceLoader
-            , Environment environment) throws Exception {
-//        this.setting = setting;
-        this.resourceLoader = resourceLoader;
+    public CoreDictionary(Environment environment) throws Exception {
         this.environment = environment;
 
-        this.init();
+        this.restore();
 
         //计算出预编译的量
         Begin_WORD_ID = getWordID(TAG_BIGIN);
         End_WORD_ID = getWordID(TAG_END);
-
 
         XX_WORD_ID = getWordID(TAG_OTHER);
 
@@ -176,60 +166,78 @@ public class CoreDictionary {
         NX_WORD_ID = getWordID(TAG_PROPER);
     }
 
-    private void init() throws Exception {
-        // 如果存在bin文件
-        ByteSource source = resourceLoader.loadDictionary(file);
 
-        Preconditions.checkNotNull(source,"not found core dictionary");
+    @Override
+    public void loadFromRealData() throws Exception {
+        MynlpResource dictResource = environment.loadResource(coreDictSetting);
 
-        File binFile = new File(environment.getWorkDir(), source.hash(Hashing.murmur3_128()).toString());
+        TreeMap<String, NatureAttribute> map = new TreeMap<>();
 
-        if (binFile.exists() && binFile.canRead()) {
-            long t1 = System.currentTimeMillis();
-            // load from bin
-            DoubleArrayTrieSerializer<NatureAttribute> ds = new DoubleArrayTrieSerializer<>();
-            ds.setSerializer(NatureAttribute.valueSerializer);
-            this.trie = ds.read(binFile);
-            long t2 = System.currentTimeMillis();
+        int maxFreq = 0;
 
-            logger.info("核心词典开始加载 from cache:"
-                    + binFile.getAbsolutePath()
-                    + " use time " + (t2 - t1) + " ms");
-        } else if (!source.isEmpty()) {
-            // load from txt
-            TreeMap<String, NatureAttribute> map = new TreeMap<>();
-            long t1 = System.currentTimeMillis();
+        try (CharSourceLineReader reader = dictResource.openLineReader()) {
+            while (reader.hasNext()) {
+                String line = reader.next();
 
-            source.asCharSource(Charsets.UTF_8).readLines().stream()
-                    .map(line -> line.split("\\s"))
-                    .forEach(param -> {
-                        NatureAttribute attribute = NatureAttribute.create(param);
-                        map.put(param[0], attribute);
-                        MAX_FREQUENCY += attribute.getTotalFrequency();
-                    });
+                String[] param = line.split("\\s");
 
-            long t2 = System.currentTimeMillis();
-
-            System.out.println("core dictionary build tree map size " + map.size() + "  use time " + (t2 - t1));
-
-            DoubleArrayTrieBuilder<NatureAttribute> builder = new DoubleArrayTrieBuilder<>();
-            this.trie = (DoubleArrayTrie<NatureAttribute>) builder.build(map);
-
-            long t3 = System.currentTimeMillis();
-            System.out.println("core dictionary build dat trie use time " + (t3 - t2));
-
-            DoubleArrayTrieSerializer<NatureAttribute> ds = new DoubleArrayTrieSerializer<>();
-            ds.setBatchSize(5000);
-            ds.setSerializer(NatureAttribute.valueSerializer);
-            ds.write(this.trie, binFile);
-            long t4 = System.currentTimeMillis();
-
-            System.out.println("write tire use time " + (t4 - t3));
-        } else {
-            throw new RuntimeException("not found dict file "
-                    + file);
+                NatureAttribute attribute = NatureAttribute.create(param);
+                map.put(param[0], attribute);
+                maxFreq += attribute.getTotalFrequency();
+            }
         }
+
+        this.MAX_FREQUENCY = maxFreq;
+
+        if (map.isEmpty()) {
+            throw new RuntimeException("not found core dict file ");
+        }
+        this.trie = new DoubleArrayTrieBuilder().build(map);
     }
+
+    @Override
+    public File cacheFileName() {
+        String hash = environment.loadResource(coreDictSetting).hash();
+        return new File(environment.getWorkDir(), "core.dict."+hash);
+    }
+
+    public void saveToCache(OutputStream out) throws Exception {
+        DataOutputStream dataOutput = new DataOutputStream(out);
+
+        dataOutput.writeInt(MAX_FREQUENCY);
+        DoubleArrayTrie.write(trie, dataOutput,NatureAttribute::write);
+
+        dataOutput.flush();
+
+    }
+
+    public void readFromCache(InputStream inputStream) throws Exception {
+        DataInput dataInput = new DataInputStream(inputStream);
+
+        this.MAX_FREQUENCY = dataInput.readInt();
+        this.trie = DoubleArrayTrie.read(dataInput, NatureAttribute::read);
+    }
+
+    public static void main(String[] args) throws IOException {
+
+        File temp = new File("temp/mynlp/dec4fa6cdecf95af4d4d3b0195b330dd.core.dict");
+
+//        ByteArrayOutputStream out = new ByteArrayOutputStream();
+
+//        DataOutputStream dataOutput = new DataOutputStream(Files.asByteSink(temp).openBufferedStream());
+//
+//        dataOutput.writeInt(25114638);
+//        dataOutput.flush();
+
+//        ByteArrayInputStream in = new ByteArrayInputStream(out.toByteArray());
+
+        DataInputStream dataInputStream = new DataInputStream(Files.asByteSource(temp).openBufferedStream());
+
+        System.out.println(dataInputStream.readInt());
+
+
+    }
+
 
     /**
      * 获取条目
@@ -288,7 +296,7 @@ public class CoreDictionary {
      * @return
      */
     public boolean contains(String key) {
-        return trie.indexOf(key)>=0;
+        return trie.indexOf(key) >= 0;
     }
 
     /**
@@ -305,7 +313,7 @@ public class CoreDictionary {
         return trie.match(text, offset);
     }
 
-    public int size(){
+    public int size() {
         return trie.size();
     }
 }

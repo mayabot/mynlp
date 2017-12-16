@@ -16,12 +16,13 @@
  */
 package com.mayabot.nlp.segment.dictionary;
 
-import com.mayabot.nlp.ResourceLoader;
 import com.mayabot.nlp.collection.TransformMatrix;
 import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
+import com.mayabot.nlp.resources.MynlpResource;
 
 import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * 转移矩阵词典
@@ -34,12 +35,12 @@ public class EnumTransformMatrix<E extends Enum<E>> {
 
     private TransformMatrix transformMatrix;
 
-    public EnumTransformMatrix(String file, ResourceLoader resourceLoader) throws IOException {
+    public EnumTransformMatrix(MynlpResource resource) throws IOException {
         transformMatrix = new TransformMatrix();
-        long t1 = System.currentTimeMillis();
-        transformMatrix.load(resourceLoader.loadDictionary(file));
-        long t2 = System.currentTimeMillis();
-        logger.info("加载核" + file + "转移矩阵" + file + "成功，耗时：" + (t2 - t1) + " ms");
+
+        try(InputStream in = resource.openInputStream()){
+            transformMatrix.load(in);
+        }
     }
 
     public int getFrequency(E from, E to) {

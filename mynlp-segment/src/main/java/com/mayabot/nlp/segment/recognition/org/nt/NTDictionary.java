@@ -17,18 +17,18 @@
 
 package com.mayabot.nlp.segment.recognition.org.nt;
 
+import com.alibaba.fastjson.TypeReference;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.mayabot.nlp.Environment;
-import com.mayabot.nlp.ResourceLoader;
-import com.mayabot.nlp.Settings;
-import com.mayabot.nlp.collection.ValueSerializer;
 import com.mayabot.nlp.segment.corpus.dictionary.item.EnumFreqPair;
 import com.mayabot.nlp.segment.corpus.tag.NTTag;
 import com.mayabot.nlp.segment.dictionary.CommonDictionary;
 
-import java.io.File;
+import java.io.DataInput;
+import java.io.DataOutput;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author jimichan
@@ -36,11 +36,9 @@ import java.util.List;
 @Singleton
 public class NTDictionary extends CommonDictionary<EnumFreqPair<NTTag>> {
 
-    final static String file = "organization" + File.separator + "nt.txt";
-
     @Inject
-    public NTDictionary(Settings setting, ResourceLoader resourceLoader, Environment environment) {
-        super(setting, resourceLoader, environment);
+    public NTDictionary(Environment environment) throws Exception {
+        super(environment);
     }
 
     @Override
@@ -50,11 +48,22 @@ public class NTDictionary extends CommonDictionary<EnumFreqPair<NTTag>> {
 
     @Override
     public String dicFilePath() {
-        return file;
+        return "inner://dictionary/organization/nt.txt";
     }
 
     @Override
-    public ValueSerializer<EnumFreqPair<NTTag>> valueSerializer() {
-        return ValueSerializer.jdk();
+    protected void writeItem(EnumFreqPair<NTTag> a, DataOutput out) {
+            a.writeItem(out);
+    }
+
+    final static TypeReference<Map<NTTag, Integer>> typeReference = new TypeReference<Map<NTTag, Integer>>() {};
+
+    @Override
+    protected EnumFreqPair<NTTag> readItem(DataInput in) {
+        EnumFreqPair<NTTag> pair = new EnumFreqPair<>();
+
+        pair.readItem(in, typeReference);
+
+        return pair;
     }
 }
