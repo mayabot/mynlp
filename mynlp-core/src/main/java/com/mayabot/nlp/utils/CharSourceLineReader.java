@@ -23,12 +23,12 @@ import com.google.common.io.LineReader;
 
 import java.io.Reader;
 
-public class FileLineReader extends AbstractIterator<String> implements AutoCloseable {
+public class CharSourceLineReader extends AbstractIterator<String> implements AutoCloseable {
 
     private final Reader reader;
     private final LineReader lineReader;
 
-    public FileLineReader(CharSource charSource) {
+    public CharSourceLineReader(CharSource charSource) {
         try {
             reader = charSource.openStream();
         } catch (Exception e) {
@@ -53,7 +53,11 @@ public class FileLineReader extends AbstractIterator<String> implements AutoClos
     }
 
     @Override
-    public void close() throws Exception {
-        reader.close();
+    public void close(){
+        try {
+            reader.close();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }

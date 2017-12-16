@@ -18,12 +18,12 @@ package com.mayabot.nlp.segment.recognition.personname.nr;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.mayabot.nlp.ResourceLoader;
-import com.mayabot.nlp.Settings;
+import com.mayabot.nlp.Environment;
 import com.mayabot.nlp.collection.ahocorasick.AhoCoraickDoubleArrayTrieBuilder;
 import com.mayabot.nlp.collection.ahocorasick.AhoCorasickDoubleArrayTrie;
 import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
+import com.mayabot.nlp.resources.MynlpResource;
 import com.mayabot.nlp.segment.corpus.tag.NRTag;
 import com.mayabot.nlp.segment.dictionary.EnumTransformMatrix;
 
@@ -55,13 +55,15 @@ public class PersonDictionary {
     private AhoCorasickDoubleArrayTrie<NRPattern> trie;
 
     @Inject
-    public PersonDictionary(NRDictionary dictionary, Settings settings, ResourceLoader resourceLoader) throws IOException {
+    public PersonDictionary(NRDictionary dictionary, Environment environment) throws IOException {
         this.dictionary = dictionary;
 
         long start = System.currentTimeMillis();
 
+        MynlpResource resource = environment.loadResource("org.dict.tr", "inner://dictionary/person/nr.tr.txt");
+
         //转移矩阵
-        transformMatrixDictionary = new EnumTransformMatrix<>(tsfile, resourceLoader);
+        transformMatrixDictionary = new EnumTransformMatrix<>(resource);
 
         // AC tree
         {

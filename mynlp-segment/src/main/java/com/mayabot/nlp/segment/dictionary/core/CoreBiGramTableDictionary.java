@@ -17,22 +17,19 @@
 
 package com.mayabot.nlp.segment.dictionary.core;
 
-import com.google.common.base.Charsets;
 import com.google.common.collect.TreeBasedTable;
-import com.google.common.hash.Hashing;
-import com.google.common.io.ByteSink;
-import com.google.common.io.ByteSource;
-import com.google.common.io.Files;
-import com.google.common.io.LineProcessor;
 import com.google.common.primitives.Ints;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.mayabot.nlp.Environment;
-import com.mayabot.nlp.ResourceLoader;
-import com.mayabot.nlp.Settings;
+import com.mayabot.nlp.Setting;
+import com.mayabot.nlp.caching.MynlpCacheable;
 import com.mayabot.nlp.collection.matrix.CSRSparseMatrix;
 import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
+import com.mayabot.nlp.resources.MynlpResource;
+import com.mayabot.nlp.utils.CharSourceLineReader;
+import com.mayabot.nlp.utils.DataInOutputUtils;
 
 import java.io.*;
 import java.util.regex.Matcher;
@@ -46,62 +43,66 @@ import java.util.regex.Pattern;
  * @author jimichan
  */
 @Singleton
-public class CoreBiGramTableDictionary {
+public class CoreBiGramTableDictionary implements MynlpCacheable {
+
+    private final Environment environment;
 
     private CSRSparseMatrix matrix;
 
-    private Settings setting;
-
-    final String BiGramDictionaryPath = "core" + File.separator + "CoreNatureDictionary.ngram.txt";
+    public final Setting<String> coreDictNgramSetting =
+            Setting.stringSetting("core.dict.ngram", "inner://dictionary/core/CoreNatureDictionary.ngram.txt");
 
     protected InternalLogger logger = InternalLoggerFactory.getInstance(this.getClass());
 
-    private CoreDictionary coreDictionary;
+    private final CoreDictionary coreDictionary;
 
     @Inject
-    public CoreBiGramTableDictionary(Settings setting,
-                                     CoreDictionary coreDictionary, ResourceLoader resourceLoader
-            , Environment environment) throws
-            IOException {
-        this.setting = setting;
+    public CoreBiGramTableDictionary(CoreDictionary coreDictionary, Environment environment) throws
+            Exception {
         this.coreDictionary = coreDictionary;
-        logger.info("开始加载核心二元接续词典" + BiGramDictionaryPath);
+        this.environment = environment;
 
-
-        ByteSource source = resourceLoader.loadDictionary(BiGramDictionaryPath);
-
-        File binCacheFile = new File(environment.getWorkDir(), "core.nature.ngram." + source.hash(Hashing.murmur3_128()).toString() + ".bin");
-
-        long t1 = System.currentTimeMillis();
-        if (binCacheFile.exists() && binCacheFile.canRead()) {
-            try {
-                matrix = this.loadFromBinFile(Files.asByteSource(binCacheFile));
-                logger.info("加载核心二元接续词典完成[From Cache]，用时" + (System.currentTimeMillis() - t1) + " ms");
-                return;
-            } catch (Exception e) {
-                logger.warn( "", e);
-            }
-        }
-        if (matrix == null) {
-            matrix = loadFromTxt(source);
-            saveBinFile(matrix, Files.asByteSink(binCacheFile));
-        }
-
-        logger.info("加载核心二元接续词典完成，用时" + (System.currentTimeMillis() - t1) + " ms");
+        this.restore();
     }
 
+    @Override
+    public File cacheFileName() {
+        String hash = environment.loadResource(coreDictNgramSetting).hash();
+        return new File(environment.getWorkDir(), hash + ".core.ngram.dict");
+    }
 
-    private CSRSparseMatrix loadFromTxt(ByteSource source) throws IOException {
+    @Override
+    public void saveToCache(OutputStream out) throws Exception {
 
-        TreeBasedTable<Integer, Integer, Integer> table = source.asCharSource(Charsets.UTF_8).readLines(new LineProcessor<TreeBasedTable<Integer, Integer, Integer>>() {
+        DataOutput dataOutputStream = new DataOutputStream(out);
 
-            TreeBasedTable<Integer, Integer, Integer> table = TreeBasedTable.create();
+        DataInOutputUtils.writeIntArray(matrix.getColumnIndices(), dataOutputStream);
+        DataInOutputUtils.writeIntArray(matrix.getRowOffset(), dataOutputStream);
+        DataInOutputUtils.writeIntArray(matrix.getValues(), dataOutputStream);
 
-            Pattern pattern = Pattern.compile("^(.+)@(.+)\\s+(\\d+)$");
-            //——@费县	1
+        out.flush();
+    }
 
-            @Override
-            public boolean processLine(String line) throws IOException {
+    @Override
+    public void readFromCache(InputStream inputStream) throws Exception {
+        DataInput dataInput = new DataInputStream(inputStream);
+        int[] columnIndices = DataInOutputUtils.readIntArray(dataInput);
+        int[] rowOffset = DataInOutputUtils.readIntArray(dataInput);
+        int[] values = DataInOutputUtils.readIntArray(dataInput);
+        this.matrix = new CSRSparseMatrix(rowOffset, columnIndices, values);
+
+    }
+
+    @Override
+    public void loadFromRealData() throws Exception {
+        MynlpResource source = environment.loadResource(coreDictNgramSetting);
+
+        TreeBasedTable<Integer, Integer, Integer> table = TreeBasedTable.create();
+
+        Pattern pattern = Pattern.compile("^(.+)@(.+)\\s+(\\d+)$");
+        try (CharSourceLineReader reader = source.openLineReader()) {
+            while (reader.hasNext()) {
+                String line = reader.next();
 
                 Matcher matcher = pattern.matcher(line);
                 if (matcher.find()) {
@@ -116,75 +117,12 @@ public class CoreBiGramTableDictionary {
                         }
                     }
                 }
-                return true;
             }
-
-            @Override
-            public TreeBasedTable<Integer, Integer, Integer> getResult() {
-                return table;
-            }
-        });
+        }
 
         CSRSparseMatrix matrix = new CSRSparseMatrix(table, coreDictionary.size());
 
-        return matrix;
-
-    }
-
-//
-//    private void saveBinFile(CSRSparseMatrix matrix,ByteSink outSink) {
-//
-//        FSTConfiguration fstConfiguration = FSTConfiguration.createStructConfiguration();
-//
-//        try (OutputStream out = outSink.openBufferedStream()) {
-//            FSTObjectOutput objectOutput = fstConfiguration.getObjectOutput(out);
-//            objectOutput.writeObject(matrix);
-//            objectOutput.flush();
-//        } catch (Exception e) {
-//            throw new RuntimeException(e);
-//        }
-//
-//    }
-//
-//    private CSRSparseMatrix loadFromBinFile(ByteSource source) throws IOException {
-//
-//        FSTConfiguration fstConfiguration = FSTConfiguration.createStructConfiguration();
-//
-//        try (FSTObjectInput objectInput = fstConfiguration.getObjectInput(source.openBufferedStream())) {
-//
-//            CSRSparseMatrix matrix = (CSRSparseMatrix) objectInput.readObject();
-//
-//            return matrix;
-//        } catch (Exception e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
-
-    private void saveBinFile(CSRSparseMatrix matrix, ByteSink outSink) {
-
-
-        try (OutputStream out = outSink.openBufferedStream()) {
-            ObjectOutputStream outputStream = new ObjectOutputStream(out);
-
-            outputStream.writeObject(matrix);
-
-            outputStream.flush();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-
-    }
-
-    private CSRSparseMatrix loadFromBinFile(ByteSource source) throws Exception {
-
-        try (ObjectInputStream objectInput = new ObjectInputStream(source.openBufferedStream())) {
-
-            CSRSparseMatrix matrix = (CSRSparseMatrix) objectInput.readObject();
-
-            return matrix;
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        this.matrix = matrix;
     }
 
     /**

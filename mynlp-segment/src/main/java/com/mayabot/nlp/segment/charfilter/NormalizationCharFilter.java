@@ -17,7 +17,7 @@
 
 package com.mayabot.nlp.segment.charfilter;
 
-import com.mayabot.nlp.segment.CharFilter;
+import com.mayabot.nlp.segment.CharNormalize;
 
 /**
  * 负责 全角-半角的转换。
@@ -25,10 +25,10 @@ import com.mayabot.nlp.segment.CharFilter;
  *
  * @author fred
  */
-public class NormalizationCharFilter implements CharFilter {
+public class NormalizationCharFilter implements CharNormalize {
 
     @Override
-    public void filter(char[] text) {
+    public void normal(char[] text) {
 
     }
 

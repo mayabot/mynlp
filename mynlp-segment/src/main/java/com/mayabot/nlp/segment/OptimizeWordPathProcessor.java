@@ -4,7 +4,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.mayabot.nlp.segment.wordnet.Vertex;
-import com.mayabot.nlp.segment.wordnet.WordPath;
+import com.mayabot.nlp.segment.wordnet.Wordpath;
 import com.mayabot.nlp.segment.wordnet.Wordnet;
 
 import java.util.List;
@@ -13,14 +13,14 @@ import java.util.Map;
 /**
  * 优化网络处理器
  */
-public class OptimizeNetWordPathProcessor implements WordPathProcessor,WordPathProcessorIniter {
+public class OptimizeWordPathProcessor implements WordpathProcessor,WordpathProcessorIniter {
 
     private final NamedComponentRegistry registry;
 
     private List<OptimizeProcessor> optimizeProcessorList = Lists.newArrayList();
 
     @Inject
-    public OptimizeNetWordPathProcessor(NamedComponentRegistry registry){
+    public OptimizeWordPathProcessor(NamedComponentRegistry registry){
         this.registry = registry;
     }
 
@@ -39,7 +39,7 @@ public class OptimizeNetWordPathProcessor implements WordPathProcessor,WordPathP
 
     @Override
 
-    public WordPath process(WordPath wordPath) {
+    public Wordpath process(Wordpath wordPath) {
 
         Wordnet wordnet = wordPath.getWordnet();
 

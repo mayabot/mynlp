@@ -20,6 +20,7 @@ package com.mayabot.nlp.collection;
 import com.google.common.base.Splitter;
 import com.google.common.collect.*;
 import com.google.common.io.ByteSource;
+import com.mayabot.nlp.resources.MynlpResource;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -71,10 +72,6 @@ public class TransformMatrix {
 	 */
 	public Table<String, String, Double> transititon_probability;
 
-	public boolean load(ByteSource source) throws IOException {
-
-		return load(source.openBufferedStream());
-	}
 
 	public double getTP(String a,String b){
 
@@ -85,6 +82,21 @@ public class TransformMatrix {
 			return 0;
 		}
 		return d.doubleValue();
+	}
+
+
+	public boolean load(ByteSource source) throws IOException {
+		try(InputStream inputStream = source.openBufferedStream()){
+			return load(inputStream);
+		}
+	}
+
+	public boolean load(MynlpResource resource) throws IOException {
+
+		try(InputStream inputStream = resource.openInputStream()){
+			return load(inputStream);
+		}
+
 	}
 
 	public boolean load(InputStream in) throws IOException {

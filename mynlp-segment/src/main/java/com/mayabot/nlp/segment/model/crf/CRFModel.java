@@ -22,7 +22,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-
 /**
  * @author hankcs
  */
@@ -30,7 +29,7 @@ public class CRFModel {
     /**
      * 标签和id的相互转换
      */
-    Map<String, Integer> tag2id;
+    protected Map<String, Integer> tag2id;
     /**
      * id转标签
      */
@@ -38,11 +37,12 @@ public class CRFModel {
     /**
      * 特征函数
      */
-    Trie<FeatureFunction> featureFunctionTrie;
+    protected Trie<FeatureFunction> featureFunctionTrie;
+
     /**
      * 特征模板
      */
-    List<FeatureTemplate> featureTemplateList;
+    protected List<FeatureTemplate> featureTemplateList;
     /**
      * tag的二元转移矩阵，适用于BiGram Feature
      */

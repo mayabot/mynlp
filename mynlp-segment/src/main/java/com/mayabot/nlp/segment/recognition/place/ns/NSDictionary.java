@@ -17,27 +17,25 @@
 
 package com.mayabot.nlp.segment.recognition.place.ns;
 
+import com.alibaba.fastjson.TypeReference;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.mayabot.nlp.Environment;
-import com.mayabot.nlp.ResourceLoader;
-import com.mayabot.nlp.Settings;
-import com.mayabot.nlp.collection.ValueSerializer;
 import com.mayabot.nlp.segment.corpus.dictionary.item.EnumFreqPair;
 import com.mayabot.nlp.segment.corpus.tag.NSTag;
 import com.mayabot.nlp.segment.dictionary.CommonDictionary;
 
-import java.io.File;
+import java.io.DataInput;
+import java.io.DataOutput;
 import java.util.List;
+import java.util.Map;
 
 @Singleton
 public class NSDictionary extends CommonDictionary<EnumFreqPair<NSTag>> {
 
-    final static String file = "place" + File.separator + "ns.txt";
-
     @Inject
-    public NSDictionary(Settings setting, ResourceLoader resourceLoader, Environment environment) {
-        super( setting, resourceLoader, environment);
+    public NSDictionary(Environment environment) throws Exception {
+        super(environment);
     }
 
     @Override
@@ -47,11 +45,23 @@ public class NSDictionary extends CommonDictionary<EnumFreqPair<NSTag>> {
 
     @Override
     public String dicFilePath() {
-        return file;
+        return "inner://dictionary/place/ns.txt";
     }
 
     @Override
-    public ValueSerializer<EnumFreqPair<NSTag>> valueSerializer() {
-        return ValueSerializer.jdk();
+    protected void writeItem(EnumFreqPair<NSTag> a, DataOutput out) {
+        a.writeItem(out);
+    }
+
+    final static TypeReference<Map<NSTag, Integer>> typeReference = new TypeReference<Map<NSTag, Integer>>() {
+    };
+
+    @Override
+    protected EnumFreqPair<NSTag> readItem(DataInput in) {
+        EnumFreqPair<NSTag> pair = new EnumFreqPair<>();
+
+        pair.readItem(in, typeReference);
+
+        return pair;
     }
 }

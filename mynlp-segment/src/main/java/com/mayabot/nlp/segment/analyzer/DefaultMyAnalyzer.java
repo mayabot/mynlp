@@ -15,11 +15,13 @@
  *
  */
 
-package com.mayabot.nlp.segment;
+package com.mayabot.nlp.segment.analyzer;
 
 import com.google.common.collect.AbstractIterator;
-import com.google.common.collect.Iterators;
-import com.google.common.collect.Lists;
+import com.mayabot.nlp.segment.CharNormalize;
+import com.mayabot.nlp.segment.MyAnalyzer;
+import com.mayabot.nlp.segment.MyTerm;
+import com.mayabot.nlp.segment.MyTokenizer;
 import com.mayabot.nlp.utils.ParagraphReader;
 import com.mayabot.nlp.utils.ParagraphReaderSmart;
 
@@ -28,7 +30,6 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.List;
 
 /**
  * 分词器通用实现。有状态。无创建成本。非线程安全.
@@ -38,7 +39,7 @@ import java.util.List;
  *
  * @author jimichan
  */
-public class CommonAnalyzer implements MyAnalyzer, Iterable<MyTerm> {
+public class DefaultMyAnalyzer implements MyAnalyzer, Iterable<MyTerm> {
 
     private MyTokenizer tokenizer;
 
@@ -56,12 +57,14 @@ public class CommonAnalyzer implements MyAnalyzer, Iterable<MyTerm> {
 
     private LinkedList<MyTerm> buffer = null;
 
+    private CharNormalize charNormalize;
+
     /**
      * 构造函数
      * @param reader 需要分词的数据源
      * @param tokenizer 具体的分词器
      */
-    public CommonAnalyzer(Reader reader, MyTokenizer tokenizer) {
+    public DefaultMyAnalyzer(Reader reader, MyTokenizer tokenizer) {
         this.reset(reader);
         this.tokenizer = tokenizer;
     }
@@ -71,7 +74,7 @@ public class CommonAnalyzer implements MyAnalyzer, Iterable<MyTerm> {
      * @param text 需要分词的String文本
      * @param tokenizer 具体的分词器
      */
-    public CommonAnalyzer(String text, MyTokenizer tokenizer) {
+    public DefaultMyAnalyzer(String text, MyTokenizer tokenizer) {
         this.reset(new StringReader(text));
         this.tokenizer = tokenizer;
     }
@@ -81,7 +84,7 @@ public class CommonAnalyzer implements MyAnalyzer, Iterable<MyTerm> {
      * 需要调用reset方法设置分词信息来源
      * @param tokenizer 具体的分词器
      */
-    public CommonAnalyzer(MyTokenizer tokenizer) {
+    public DefaultMyAnalyzer(MyTokenizer tokenizer) {
         this.reset(new StringReader(""));
         this.tokenizer = tokenizer;
     }
@@ -115,7 +118,10 @@ public class CommonAnalyzer implements MyAnalyzer, Iterable<MyTerm> {
 
                 char[] text = paragraph.toCharArray();
 
-                //TODO 这里插入CharFilter的操作
+                if (charNormalize != null) {
+                    charNormalize.normal(text);
+                }
+
                 this.buffer = tokenizer.token(text);
             }
         }
@@ -134,7 +140,7 @@ public class CommonAnalyzer implements MyAnalyzer, Iterable<MyTerm> {
      * @param reader
      * @return
      */
-    public CommonAnalyzer reset(Reader reader) {
+    public DefaultMyAnalyzer reset(Reader reader) {
         this.paragraphReader = new ParagraphReaderSmart(reader); //智能分段器
         baseOffset = 0;
         lastTextLength = -1;
@@ -146,7 +152,7 @@ public class CommonAnalyzer implements MyAnalyzer, Iterable<MyTerm> {
         return new AbstractIterator<MyTerm>() {
             @Override
             protected MyTerm computeNext() {
-                MyTerm n = CommonAnalyzer.this.next();
+                MyTerm n = DefaultMyAnalyzer.this.next();
                 if (n != null) {
                     return n;
                 } else {
@@ -156,22 +162,12 @@ public class CommonAnalyzer implements MyAnalyzer, Iterable<MyTerm> {
         };
     }
 
-    /**
-     * 重置String作为分词源.
-     * @param text
-     * @return
-     */
-    public CommonAnalyzer reset(String text) {
-        return this.reset(new StringReader(text));
+    public CharNormalize getCharNormalize() {
+        return charNormalize;
     }
 
-    /**
-     * 一个便捷的方法，获得分词结果
-     *
-     * @return
-     */
-    public List<String> toWords() {
-        return Lists.newArrayList(Iterators.transform(iterator(), MyTerm::getWord));
+    public void setCharNormalize(CharNormalize charNormalize) {
+        this.charNormalize = charNormalize;
     }
 
 }
