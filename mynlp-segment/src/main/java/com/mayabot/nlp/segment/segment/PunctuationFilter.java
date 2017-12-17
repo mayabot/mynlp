@@ -1,7 +1,7 @@
-package com.mayabot.nlp.segment.analyzer;
+package com.mayabot.nlp.segment.segment;
 
-import com.mayabot.nlp.segment.MyTerm;
-import com.mayabot.nlp.segment.MyAnalyzer;
+import com.mayabot.nlp.segment.MynlpTerm;
+import com.mayabot.nlp.segment.MynlpSegment;
 import com.mayabot.nlp.utils.Characters;
 
 /**
@@ -10,11 +10,11 @@ import com.mayabot.nlp.utils.Characters;
 public class PunctuationFilter extends WrapMyAnalyzerFilter {
 
     @Override
-    boolean accept(MyTerm term) {
+    boolean accept(MynlpTerm term) {
         return !Characters.isPunctuation(term.word.charAt(0));
     }
 
-    public PunctuationFilter(MyAnalyzer myAnalyzer) {
+    public PunctuationFilter(MynlpSegment myAnalyzer) {
         super(myAnalyzer);
     }
 }

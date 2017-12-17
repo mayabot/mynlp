@@ -1,8 +1,12 @@
-package com.mayabot.nlp.segment;
+package com.mayabot.nlp.segment.xprocessor;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
+import com.mayabot.nlp.segment.NamedComponentRegistry;
+import com.mayabot.nlp.segment.OptimizeProcessor;
+import com.mayabot.nlp.segment.WordpathProcessor;
+import com.mayabot.nlp.segment.WordpathProcessorIniter;
 import com.mayabot.nlp.segment.wordnet.Vertex;
 import com.mayabot.nlp.segment.wordnet.Wordpath;
 import com.mayabot.nlp.segment.wordnet.Wordnet;
