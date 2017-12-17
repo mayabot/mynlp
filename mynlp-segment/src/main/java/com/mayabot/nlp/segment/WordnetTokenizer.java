@@ -119,14 +119,14 @@ public class WordnetTokenizer implements MyTokenizer {
             Vertex vertex = vertexIterator.next();
 
             MyTerm term = new MyTerm(vertex.realWord(), vertex.guessNature());
-            term.offset = vertex.getRowNum();
+            term.setOffset(vertex.getRowNum());
 
             if (vertex.subWords != null) {
-                term.subword = Lists.newArrayListWithCapacity(vertex.subWords.size());
+                term.setSubword(Lists.newArrayListWithCapacity(vertex.subWords.size()));
                 for (Vertex subWord : vertex.subWords) {
                     MyTerm sub = new MyTerm(subWord.realWord(), null);
-                    sub.offset = subWord.getRowNum();
-                    term.subword.add(sub);
+                    sub.setOffset(subWord.getRowNum());
+                    term.getSubword().add(sub);
                 }
             }
 

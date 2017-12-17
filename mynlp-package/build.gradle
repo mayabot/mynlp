@@ -8,8 +8,8 @@ apply plugin: 'java'
 apply plugin: 'eclipse'
 
 
-group = 'com.mayabot.mynlp'
-version = '1.0.0-snapshot'
+//group = 'com.mayabot.mynlp'
+//version = '1.0.0-snapshot'
 description = """MyNlp"""
 
 
@@ -25,6 +25,7 @@ shadowJar {
     //configurations = [project.configurations.compile]
     relocate 'com.google', 'com.mayabot.t.google'
     relocate 'org.apache.commons.lang3', 'com.mayabot.t.lang3'
+    relocate 'com.alibaba', 'com.mayabot.t.alibaba'
     relocate 'org.fusesource', 'com.mayabot.t.fusesource'
 
     relocate 'org.xerial.snappy', 'com.mayabot.t.snappy'

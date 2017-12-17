@@ -34,14 +34,14 @@ import com.mayabot.nlp.segment.wordnet.Wordpath;
  * @author jimichan
  */
 @Singleton
-public class SpeechTaggingComputerXProcessor implements WordpathProcessor {
+public class PartOfSpeechTaggingComputerXProcessor implements WordpathProcessor {
 
     private TransformMatrix transformMatrix;
 
     private SimpleViterbi<Nature, Vertex> simpleViterbi;
 
     @Inject
-    SpeechTaggingComputerXProcessor(CoreDictionaryTransformMatrixDictionary matrixDictionary) {
+    PartOfSpeechTaggingComputerXProcessor(CoreDictionaryTransformMatrixDictionary matrixDictionary) {
         this.transformMatrix = matrixDictionary.getTransformMatrixDictionary();
 
         simpleViterbi = new SimpleViterbi<>(
