@@ -22,11 +22,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * 一个切词器接口。和Analyzer的差别是Tokenizer只需要关心把一句话或一小段有限的文本分词完成。
- * 改切词器，应该是个无状态，而且可以多线程安全.
+ * 一个切词器接口。和Segment的差别是Tokenizer只需要关心把一句话或一小段有限的文本分词完成。
+ * 改切词器，是个无状态，而且可以多线程安全。
  * 所以一个固定的算法的切分。只需要一个实例
  */
-public interface MyTokenizer {
+public interface MynlpTokenizer {
 
     /**
      * 返回LinkedList是方便上层进行一个个戳去
@@ -34,7 +34,7 @@ public interface MyTokenizer {
      * @param text
      * @return
      */
-    LinkedList<MyTerm> token(char[] text);
+    LinkedList<MynlpTerm> token(char[] text);
 
     /**
      * 便捷方法。不适用于超大文本

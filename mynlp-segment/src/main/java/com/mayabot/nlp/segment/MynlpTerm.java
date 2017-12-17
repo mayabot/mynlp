@@ -21,11 +21,11 @@ import com.mayabot.nlp.segment.corpus.tag.Nature;
 import java.util.List;
 
 /**
- * 一个单词，用户可以直接访问此单词的全部属性
- *
- * @author hankcs
+ * 一个词切分单元，用户可以直接访问此单词的全部属性
+ * 改类类名以后不可以修改
+ * @author jimichan
  */
-public class MyTerm {
+public final class MynlpTerm {
     /**
      * 词语
      */
@@ -44,7 +44,7 @@ public class MyTerm {
     /**
      * 索引分词，切分子词
      */
-    private List<MyTerm> subword;
+    private List<MynlpTerm> subword;
 
     /**
      * 构造一个单词
@@ -52,12 +52,12 @@ public class MyTerm {
      * @param word   词语
      * @param nature 词性
      */
-    public MyTerm(String word, Nature nature) {
+    public MynlpTerm(String word, Nature nature) {
         this.word = word;
         this.nature = nature;
     }
 
-    public MyTerm(String word) {
+    public MynlpTerm(String word) {
         this.word = word;
     }
 
@@ -69,7 +69,7 @@ public class MyTerm {
         return offset;
     }
 
-    public List<MyTerm> getSubword() {
+    public List<MynlpTerm> getSubword() {
         return subword;
     }
 
@@ -82,7 +82,7 @@ public class MyTerm {
         this.offset = offset;
     }
 
-    public void setSubword(List<MyTerm> subword) {
+    public void setSubword(List<MynlpTerm> subword) {
         this.subword = subword;
     }
 

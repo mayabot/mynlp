@@ -1,17 +1,17 @@
-package com.mayabot.nlp.segment.analyzer;
+package com.mayabot.nlp.segment.segment;
 
-import com.mayabot.nlp.segment.MyAnalyzer;
-import com.mayabot.nlp.segment.MyTerm;
+import com.mayabot.nlp.segment.MynlpSegment;
+import com.mayabot.nlp.segment.MynlpTerm;
 
 public abstract class WrapMyAnalyzerFilter extends WrapMyAnalyzer {
 
-    public WrapMyAnalyzerFilter(MyAnalyzer myAnalyzer) {
+    public WrapMyAnalyzerFilter(MynlpSegment myAnalyzer) {
         super(myAnalyzer);
     }
 
     @Override
-    public MyTerm next() {
-        MyTerm next = myAnalyzer.next();
+    public MynlpTerm next() {
+        MynlpTerm next = myAnalyzer.next();
         while (next != null) {
             if(accept(next)){
                 return next;
@@ -22,5 +22,5 @@ public abstract class WrapMyAnalyzerFilter extends WrapMyAnalyzer {
         return null;
     }
 
-     abstract boolean accept(MyTerm term);
+     abstract boolean accept(MynlpTerm term);
 }

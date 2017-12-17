@@ -37,7 +37,7 @@ import java.util.List;
  *
  * @author jimichan
  */
-public class WordnetTokenizer implements MyTokenizer {
+public class WordnetTokenizer implements MynlpTokenizer {
 
 
     private static InternalLogger logger = InternalLoggerFactory.getInstance(WordnetTokenizer.class);
@@ -69,7 +69,7 @@ public class WordnetTokenizer implements MyTokenizer {
     }
 
     @Override
-    public LinkedList<MyTerm> token(char[] text) {
+    public LinkedList<MynlpTerm> token(char[] text) {
 
         if (text.length == 0) { // 处理为空的特殊情况
             return Lists.newLinkedList();
@@ -112,19 +112,19 @@ public class WordnetTokenizer implements MyTokenizer {
      * @param wordPath
      * @return
      */
-    protected LinkedList<MyTerm> path2TermList(Wordpath wordPath) {
+    protected LinkedList<MynlpTerm> path2TermList(Wordpath wordPath) {
         Iterator<Vertex> vertexIterator = wordPath.iteratorBestPath();
-        LinkedList<MyTerm> resultList = Lists.newLinkedList();
+        LinkedList<MynlpTerm> resultList = Lists.newLinkedList();
         while (vertexIterator.hasNext()) {
             Vertex vertex = vertexIterator.next();
 
-            MyTerm term = new MyTerm(vertex.realWord(), vertex.guessNature());
+            MynlpTerm term = new MynlpTerm(vertex.realWord(), vertex.guessNature());
             term.setOffset(vertex.getRowNum());
 
             if (vertex.subWords != null) {
                 term.setSubword(Lists.newArrayListWithCapacity(vertex.subWords.size()));
                 for (Vertex subWord : vertex.subWords) {
-                    MyTerm sub = new MyTerm(subWord.realWord(), null);
+                    MynlpTerm sub = new MynlpTerm(subWord.realWord(), null);
                     sub.setOffset(subWord.getRowNum());
                     term.getSubword().add(sub);
                 }
