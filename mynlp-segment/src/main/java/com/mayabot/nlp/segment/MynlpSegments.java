@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * MynlpSegments 是mynlp-segment模块对外门面。此后只可以
+ * MynlpSegments 是mynlp-segment模块对外门面。此后只可以增加方法
  */
 public final class MynlpSegments {
 
