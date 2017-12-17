@@ -31,13 +31,13 @@ import java.util.List;
  *
  * @author jimichan
  */
-public interface MyAnalyzer extends Iterable<MyTerm> {
+public interface MynlpSegment extends Iterable<MynlpTerm> {
 
-    MyTerm next();
+    MynlpTerm next();
 
-    MyAnalyzer reset(Reader reader);
+    MynlpSegment reset(Reader reader);
 
-    default MyAnalyzer reset(String text) {
+    default MynlpSegment reset(String text) {
         return this.reset(new StringReader(text));
     }
 
@@ -48,7 +48,7 @@ public interface MyAnalyzer extends Iterable<MyTerm> {
      * @return
      */
     default List<String> toWords() {
-        return Lists.newArrayList(Iterators.transform(iterator(), MyTerm::getWord));
+        return Lists.newArrayList(Iterators.transform(iterator(), MynlpTerm::getWord));
     }
 
 }
