@@ -30,6 +30,7 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 
 /**
  * 分词器通用实现。有状态。无创建成本。非线程安全.
@@ -39,7 +40,7 @@ import java.util.LinkedList;
  *
  * @author jimichan
  */
-public class DefaultMyAnalyzer implements MyAnalyzer, Iterable<MyTerm> {
+public class DefaultMyAnalyzer implements MyAnalyzer {
 
     private MyTokenizer tokenizer;
 
@@ -57,11 +58,12 @@ public class DefaultMyAnalyzer implements MyAnalyzer, Iterable<MyTerm> {
 
     private LinkedList<MyTerm> buffer = null;
 
-    private CharNormalize charNormalize;
+    private List<CharNormalize> charNormalize;
 
     /**
      * 构造函数
-     * @param reader 需要分词的数据源
+     *
+     * @param reader    需要分词的数据源
      * @param tokenizer 具体的分词器
      */
     public DefaultMyAnalyzer(Reader reader, MyTokenizer tokenizer) {
@@ -71,7 +73,8 @@ public class DefaultMyAnalyzer implements MyAnalyzer, Iterable<MyTerm> {
 
     /**
      * 构造函数
-     * @param text 需要分词的String文本
+     *
+     * @param text      需要分词的String文本
      * @param tokenizer 具体的分词器
      */
     public DefaultMyAnalyzer(String text, MyTokenizer tokenizer) {
@@ -82,6 +85,7 @@ public class DefaultMyAnalyzer implements MyAnalyzer, Iterable<MyTerm> {
     /**
      * 构造函数.
      * 需要调用reset方法设置分词信息来源
+     *
      * @param tokenizer 具体的分词器
      */
     public DefaultMyAnalyzer(MyTokenizer tokenizer) {
@@ -91,6 +95,7 @@ public class DefaultMyAnalyzer implements MyAnalyzer, Iterable<MyTerm> {
 
     /**
      * 返回下一个词项，如果到达最后的结果，那么返回null
+     *
      * @return
      */
     public MyTerm next() {
@@ -119,7 +124,9 @@ public class DefaultMyAnalyzer implements MyAnalyzer, Iterable<MyTerm> {
                 char[] text = paragraph.toCharArray();
 
                 if (charNormalize != null) {
-                    charNormalize.normal(text);
+                    for (CharNormalize normalize : charNormalize) {
+                        normalize.normal(text);
+                    }
                 }
 
                 this.buffer = tokenizer.token(text);
@@ -129,7 +136,7 @@ public class DefaultMyAnalyzer implements MyAnalyzer, Iterable<MyTerm> {
         MyTerm term = buffer.pop();
 
         if (baseOffset != 0) { //补充偏移量
-            term.offset += baseOffset;
+            term.setOffset(term.getOffset() + baseOffset);
         }
         return term;
     }
@@ -162,11 +169,11 @@ public class DefaultMyAnalyzer implements MyAnalyzer, Iterable<MyTerm> {
         };
     }
 
-    public CharNormalize getCharNormalize() {
+    public List<CharNormalize> getCharNormalize() {
         return charNormalize;
     }
 
-    public void setCharNormalize(CharNormalize charNormalize) {
+    public void setCharNormalize(List<CharNormalize> charNormalize) {
         this.charNormalize = charNormalize;
     }
 

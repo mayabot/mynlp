@@ -29,22 +29,22 @@ public class MyTerm {
     /**
      * 词语
      */
-    public String word;
+    public final String word;
 
     /**
      * 词性
      */
-    public Nature nature;
+    private Nature nature;
 
     /**
      * 在文本中的起始位置（需开启分词器的offset选项）
      */
-    public int offset;
+    private int offset;
 
     /**
      * 索引分词，切分子词
      */
-    public List<MyTerm> subword;
+    private List<MyTerm> subword;
 
     /**
      * 构造一个单词
@@ -55,6 +55,46 @@ public class MyTerm {
     public MyTerm(String word, Nature nature) {
         this.word = word;
         this.nature = nature;
+    }
+
+    public MyTerm(String word) {
+        this.word = word;
+    }
+
+    public Nature getNature() {
+        return nature;
+    }
+
+    public int getOffset() {
+        return offset;
+    }
+
+    public List<MyTerm> getSubword() {
+        return subword;
+    }
+
+    public String getWord() {
+        return word;
+    }
+
+
+    public void setOffset(int offset) {
+        this.offset = offset;
+    }
+
+    public void setSubword(List<MyTerm> subword) {
+        this.subword = subword;
+    }
+
+
+
+    /**
+     * 长度
+     *
+     * @return
+     */
+    public int length() {
+        return word.length();
     }
 
     @Override
@@ -75,19 +115,6 @@ public class MyTerm {
         }
 
         return sb.toString();
-    }
-
-    public String getWord() {
-        return word;
-    }
-
-    /**
-     * 长度
-     *
-     * @return
-     */
-    public int length() {
-        return word.length();
     }
 
 }
