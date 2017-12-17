@@ -7,14 +7,14 @@ import com.mayabot.nlp.utils.Characters;
 /**
  * 过滤标点符号
  */
-public class MyAnalyzerFilterPunctuation extends WrapMyAnalyzerFilter {
+public class PunctuationFilter extends WrapMyAnalyzerFilter {
 
     @Override
     boolean accept(MyTerm term) {
         return !Characters.isPunctuation(term.word.charAt(0));
     }
 
-    public MyAnalyzerFilterPunctuation(MyAnalyzer myAnalyzer) {
+    public PunctuationFilter(MyAnalyzer myAnalyzer) {
         super(myAnalyzer);
     }
 }
