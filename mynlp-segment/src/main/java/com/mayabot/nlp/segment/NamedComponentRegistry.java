@@ -89,7 +89,7 @@ public class NamedComponentRegistry {
         register("subindex", WordpathProcessor.class, injector -> new IndexSubwordsProcess());
         register("mq", WordpathProcessor.class, injector -> injector.getInstance(MergeNumberQuantifierPreProcessor.class));
         register("ml", WordpathProcessor.class, injector -> injector.getInstance(MergeNumberAndLetterPreProcess.class));
-        register("speechTagging", WordpathProcessor.class, injector -> injector.getInstance(SpeechTaggingComputerXProcessor.class));
+        register("speechTagging", WordpathProcessor.class, injector -> injector.getInstance(PartOfSpeechTaggingComputerXProcessor.class));
         register("correction", WordpathProcessor.class, injector -> injector.getInstance(CorrectionXProcessor.class));
         register("customDict", WordpathProcessor.class, injector -> injector.getInstance(CustomDictionaryXProcess.class));
         register("pattern", WordpathProcessor.class, injector -> new CommonPatternWordPathProcessor());
