@@ -15,13 +15,13 @@
  *
  */
 
-package com.mayabot.nlp.segment.analyzer;
+package com.mayabot.nlp.segment.segment;
 
 import com.google.common.collect.AbstractIterator;
 import com.mayabot.nlp.segment.CharNormalize;
-import com.mayabot.nlp.segment.MyAnalyzer;
-import com.mayabot.nlp.segment.MyTerm;
-import com.mayabot.nlp.segment.MyTokenizer;
+import com.mayabot.nlp.segment.MynlpSegment;
+import com.mayabot.nlp.segment.MynlpTerm;
+import com.mayabot.nlp.segment.MynlpTokenizer;
 import com.mayabot.nlp.utils.ParagraphReader;
 import com.mayabot.nlp.utils.ParagraphReaderSmart;
 
@@ -40,9 +40,9 @@ import java.util.List;
  *
  * @author jimichan
  */
-public class DefaultMyAnalyzer implements MyAnalyzer {
+public class DefaultMyAnalyzer implements MynlpSegment {
 
-    private MyTokenizer tokenizer;
+    private MynlpTokenizer tokenizer;
 
     private ParagraphReader paragraphReader;
 
@@ -56,7 +56,7 @@ public class DefaultMyAnalyzer implements MyAnalyzer {
      */
     private int lastTextLength = -1;
 
-    private LinkedList<MyTerm> buffer = null;
+    private LinkedList<MynlpTerm> buffer = null;
 
     private List<CharNormalize> charNormalize;
 
@@ -66,7 +66,7 @@ public class DefaultMyAnalyzer implements MyAnalyzer {
      * @param reader    需要分词的数据源
      * @param tokenizer 具体的分词器
      */
-    public DefaultMyAnalyzer(Reader reader, MyTokenizer tokenizer) {
+    public DefaultMyAnalyzer(Reader reader, MynlpTokenizer tokenizer) {
         this.reset(reader);
         this.tokenizer = tokenizer;
     }
@@ -77,7 +77,7 @@ public class DefaultMyAnalyzer implements MyAnalyzer {
      * @param text      需要分词的String文本
      * @param tokenizer 具体的分词器
      */
-    public DefaultMyAnalyzer(String text, MyTokenizer tokenizer) {
+    public DefaultMyAnalyzer(String text, MynlpTokenizer tokenizer) {
         this.reset(new StringReader(text));
         this.tokenizer = tokenizer;
     }
@@ -88,7 +88,7 @@ public class DefaultMyAnalyzer implements MyAnalyzer {
      *
      * @param tokenizer 具体的分词器
      */
-    public DefaultMyAnalyzer(MyTokenizer tokenizer) {
+    public DefaultMyAnalyzer(MynlpTokenizer tokenizer) {
         this.reset(new StringReader(""));
         this.tokenizer = tokenizer;
     }
@@ -98,7 +98,7 @@ public class DefaultMyAnalyzer implements MyAnalyzer {
      *
      * @return
      */
-    public MyTerm next() {
+    public MynlpTerm next() {
 
         if (buffer == null || buffer.isEmpty()) {
 
@@ -133,7 +133,7 @@ public class DefaultMyAnalyzer implements MyAnalyzer {
             }
         }
 
-        MyTerm term = buffer.pop();
+        MynlpTerm term = buffer.pop();
 
         if (baseOffset != 0) { //补充偏移量
             term.setOffset(term.getOffset() + baseOffset);
@@ -155,11 +155,11 @@ public class DefaultMyAnalyzer implements MyAnalyzer {
     }
 
     @Override
-    public Iterator<MyTerm> iterator() {
-        return new AbstractIterator<MyTerm>() {
+    public Iterator<MynlpTerm> iterator() {
+        return new AbstractIterator<MynlpTerm>() {
             @Override
-            protected MyTerm computeNext() {
-                MyTerm n = DefaultMyAnalyzer.this.next();
+            protected MynlpTerm computeNext() {
+                MynlpTerm n = DefaultMyAnalyzer.this.next();
                 if (n != null) {
                     return n;
                 } else {

@@ -10,14 +10,17 @@ import java.net.URL;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class PreDefinedTokenizer {
+/**
+ * MynlpSegments 是mynlp-segment模块对外门面。此后只可以
+ */
+public final class MynlpSegments {
 
-    static ConcurrentHashMap<String, MyTokenizer> map = new ConcurrentHashMap<>();
+    static ConcurrentHashMap<String, MynlpTokenizer> map = new ConcurrentHashMap<>();
     static Map<String, Object> configMap = null;
 
     static {
 
-        URL resourceAsStream = PreDefinedTokenizer.class.getClassLoader().getResource("META-INF/tokenizers.json");
+        URL resourceAsStream = MynlpSegments.class.getClassLoader().getResource("META-INF/tokenizers.json");
         try {
             String json = Resources.asCharSource(resourceAsStream, Charsets.UTF_8).read();
 
@@ -30,21 +33,21 @@ public class PreDefinedTokenizer {
         }
     }
 
-    public static MyTokenizer getDefault() {
+    public static MynlpTokenizer getDefault() {
         return get("default");
     }
 
-    public static MyTokenizer nlp() {
+    public static MynlpTokenizer nlp() {
         return get("default");
     }
 
 
-    public static MyTokenizer crf() {
+    public static MynlpTokenizer crf() {
         return get("crf");
     }
 
 
-    public static MyTokenizer get(String name) {
+    public static MynlpTokenizer get(String name) {
         return map.computeIfAbsent(name, n -> {
             Map<String, Object> config = (Map) configMap.get(n);
             return WordnetTokenizerFactory.get().build(config);
