@@ -42,7 +42,7 @@ public class ViterbiTest {
 //            System.out.println(String.format("%d : %s",it.offset,it.word));
 //        });
         tokenizer.token(line.toCharArray()).forEach(
-            System.out::println);
+                System.out::println);
     }
 
     @Test

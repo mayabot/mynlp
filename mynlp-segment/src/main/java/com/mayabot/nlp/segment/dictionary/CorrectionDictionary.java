@@ -18,11 +18,9 @@
 package com.mayabot.nlp.segment.dictionary;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 import com.google.common.base.Charsets;
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.hash.Hashing;
 import com.google.common.io.ByteArrayDataOutput;
@@ -36,13 +34,10 @@ import com.mayabot.nlp.collection.dat.DoubleArrayTrieBuilder;
 import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
 import com.mayabot.nlp.resources.MynlpResource;
-import com.mayabot.nlp.segment.corpus.tag.Nature;
 import com.mayabot.nlp.utils.CharSourceLineReader;
-import com.mayabot.nlp.utils.DataInOutputUtils;
 
 import java.io.*;
 import java.util.List;
-import java.util.Map;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
@@ -76,7 +71,7 @@ public class CorrectionDictionary implements MynlpCacheable {
         this.environment = environment;
 
         List<String> resourceUrls = environment.getSettings().getAsList(
-                "correction.dict","inner://dictionary/correction/adjust.txt");
+                "correction.dict", "inner://dictionary/correction/adjust.txt");
 
         if (resourceUrls.isEmpty()) {
             return;
@@ -110,7 +105,7 @@ public class CorrectionDictionary implements MynlpCacheable {
     public void saveToCache(OutputStream out) throws Exception {
         ByteArrayDataOutput dataOutput = ByteStreams.newDataOutput();
 
-        DoubleArrayTrie.write(doubleArrayTrie, dataOutput,AdjustWord::write);
+        DoubleArrayTrie.write(doubleArrayTrie, dataOutput, AdjustWord::write);
 
         out.write(dataOutput.toByteArray());
     }
@@ -156,7 +151,8 @@ public class CorrectionDictionary implements MynlpCacheable {
     public static void main(String[] args) {
         JSON.toJSONString("[3,1]");
     }
-    public static class AdjustWord{
+
+    public static class AdjustWord {
         String path;
         String raw;
         List<Integer> words = Lists.newArrayListWithExpectedSize(4);

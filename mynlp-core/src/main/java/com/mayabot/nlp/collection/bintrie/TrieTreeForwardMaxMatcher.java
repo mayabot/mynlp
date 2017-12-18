@@ -117,7 +117,7 @@ public class TrieTreeForwardMaxMatcher<T> implements TrieTreeMatcher<T> {
                     case AbstractTrieNode.Status_End:
                         this.offset = this.root;
                         //this.str = new String(this.chars, this.root, this.i - this.root + 1);
-                        this.str = this.text.substring(this.root,this.i + 1);
+                        this.str = this.text.substring(this.root, this.i + 1);
                         String temp = this.str;
 
                         if ((this.root > 0) && (isE(this.text.charAt(this.root - 1))) && (isE(this.str.charAt(0)))) {

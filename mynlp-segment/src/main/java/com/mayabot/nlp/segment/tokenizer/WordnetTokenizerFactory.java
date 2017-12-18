@@ -1,4 +1,4 @@
-package com.mayabot.nlp.segment;
+package com.mayabot.nlp.segment.tokenizer;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -11,6 +11,9 @@ import com.google.inject.Singleton;
 import com.mayabot.nlp.MyNlps;
 import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
+import com.mayabot.nlp.segment.NamedComponentRegistry;
+import com.mayabot.nlp.segment.WordnetInitializer;
+import com.mayabot.nlp.segment.WordpathProcessor;
 import com.mayabot.nlp.segment.wordnet.BestPathComputer;
 
 import java.util.ArrayList;
@@ -36,6 +39,7 @@ public class WordnetTokenizerFactory {
 
     /**
      * Just building 延迟初始化，所以向NamedComponentRegistry注册新的注解需要asEagerSingleton
+     *
      * @return
      */
     public static WordnetTokenizerFactory get() {
@@ -59,10 +63,7 @@ public class WordnetTokenizerFactory {
         for (PipelineItem item : builder.getPipelineItem()) {
 
             WordpathProcessor pro = registry.getInstance(item.type, WordpathProcessor.class);
-
-            if (pro instanceof WordpathProcessorIniter) {
-                ((WordpathProcessorIniter) pro).init(item.config);
-            }
+            pro.initConfig(item.config);
 
         }
 
@@ -149,7 +150,7 @@ public class WordnetTokenizerFactory {
         String type;
         Map<String, Object> config = ImmutableMap.of();
 
-        public PipelineItem(){
+        public PipelineItem() {
 
         }
 

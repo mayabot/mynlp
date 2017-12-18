@@ -35,17 +35,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.function.Supplier;
-import java.util.logging.Logger;
 
 /**
  * 系统属性 mynlp.conf 可以配置配置文件加载的目录,默认当前工作目录的conf
+ *
  * @author jimichan
  */
 public class Settings {
 
     private static final InternalLogger logger = InternalLoggerFactory.getInstance(Settings.class);
 
-    private Map<String, String > settings = ImmutableMap.of();
+    private Map<String, String> settings = ImmutableMap.of();
 
     public final static Settings EMPTY = new Settings(Maps.newHashMap());
 
@@ -59,7 +59,7 @@ public class Settings {
     public static final String KEY_WORK_DIR_NAME = "mynlp.work.name";
 
 
-    public <T> T get(Setting<T> setting){
+    public <T> T get(Setting<T> setting) {
         String value = get(setting.getKey(), setting.getDefaultValue());
         return setting.getParse().apply(value);
     }
@@ -73,10 +73,10 @@ public class Settings {
      */
     public static Settings build() {
 
-        String configPath = System.getProperty(KEY_CONF_DIR,"conf");
+        String configPath = System.getProperty(KEY_CONF_DIR, "conf");
         Path configDir = Paths.get(configPath);
 
-        logger.info("Mynlp config path {}",configDir.toAbsolutePath().toString());
+        logger.info("Mynlp config path {}", configDir.toAbsolutePath().toString());
 
         List<Supplier<InputStream>> list = Lists.newArrayList(
 
@@ -120,7 +120,7 @@ public class Settings {
                 }
         );
 
-        Map<String,String> map = Maps.newHashMap();
+        Map<String, String> map = Maps.newHashMap();
 
         for (Supplier<InputStream> supplier : list) {
             InputStream in = supplier.get();
@@ -176,8 +176,8 @@ public class Settings {
         return getAsList(setting, null);
     }
 
-    public List<String> getAsList(String setting,String default_) {
-        String obj = get(setting,default_);
+    public List<String> getAsList(String setting, String default_) {
+        String obj = get(setting, default_);
 
         if (obj == null) {
             return null;
@@ -187,19 +187,17 @@ public class Settings {
     }
 
 
-
-
     /**
      * A settings that are filtered (and key is removed) with the specified prefix.
      */
     public Settings getByPrefix(String prefix) {
-        if(!prefix.endsWith(".")){
+        if (!prefix.endsWith(".")) {
             prefix += ".";
         }
         String _prefix = prefix;
         Map<String, String> sub = Maps.filterKeys(settings, key -> key.startsWith(_prefix));
 
-        HashMap<String, String > result = Maps.newHashMap();
+        HashMap<String, String> result = Maps.newHashMap();
 
         for (Map.Entry<String, String> entry : sub.entrySet()) {
             result.put(entry.getKey().substring(_prefix.length()), entry.getValue());
@@ -230,7 +228,7 @@ public class Settings {
      * returns the default value provided.
      */
     public Double getAsDouble(String setting, Double defaultValue) {
-        String  sValue = get(setting);
+        String sValue = get(setting);
         if (sValue == null) {
             return defaultValue;
         }
@@ -246,7 +244,7 @@ public class Settings {
      * returns the default value provided.
      */
     public Integer getAsInt(String setting, Integer defaultValue) {
-        String  sValue = get(setting);
+        String sValue = get(setting);
         if (sValue == null) {
             return defaultValue;
         }
@@ -262,7 +260,7 @@ public class Settings {
      * returns the default value provided.
      */
     public Long getAsLong(String setting, Long defaultValue) {
-        String  sValue = get(setting);
+        String sValue = get(setting);
         if (sValue == null) {
             return defaultValue;
         }

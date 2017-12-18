@@ -18,50 +18,51 @@
 package com.mayabot.nlp.collection.bintrie;
 
 /**
- * @author jimichan
  * @param <T>
+ * @author jimichan
  */
 public interface BinTrieNode<T> {
 
-	BinTrieNode<T> addChildNode(BinTrieNode<T> nodeToInsert);
+    BinTrieNode<T> addChildNode(BinTrieNode<T> nodeToInsert);
 
-	BinTrieNode<T> findChild(char c);
+    BinTrieNode<T> findChild(char c);
 
-	byte getStatus();
+    byte getStatus();
 
-	T getValue();
+    T getValue();
 
-	int compareTo(char c);
-	
-	boolean contains(char c);
+    int compareTo(char c);
+
+    boolean contains(char c);
 
 
-	default BinTrieNode<T> findNode(char[] keyWord) {
-		BinTrieNode<T> point = this;
-		for (int j = 0; j < keyWord.length; j++) {
-			point = point.findChild(keyWord[j]);
-			if(point==null){
-				return null;
-			}
-		}
-		return point;
-	}
+    default BinTrieNode<T> findNode(char[] keyWord) {
+        BinTrieNode<T> point = this;
+        for (int j = 0; j < keyWord.length; j++) {
+            point = point.findChild(keyWord[j]);
+            if (point == null) {
+                return null;
+            }
+        }
+        return point;
+    }
 
-	/**
-	 *  寻找到这个路径的最后一个节点
-	 * @param key
-	 * @return
-	 */
-	default BinTrieNode<T> findNode(CharSequence key){
-		BinTrieNode<T> branch = this;
-		int len = key.length();
-		for (int i = 0; i < len; i++) {
-			char _char = key.charAt(i);
-			if (branch == null)
-				return null;
-			branch = branch.findChild(_char);
-		}
-		return branch;
-	}
+    /**
+     * 寻找到这个路径的最后一个节点
+     *
+     * @param key
+     * @return
+     */
+    default BinTrieNode<T> findNode(CharSequence key) {
+        BinTrieNode<T> branch = this;
+        int len = key.length();
+        for (int i = 0; i < len; i++) {
+            char _char = key.charAt(i);
+            if (branch == null)
+                return null;
+            branch = branch.findChild(_char);
+        }
+        return branch;
+    }
 
 }

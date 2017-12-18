@@ -2,13 +2,14 @@ package com.mayabot.nlp.utils;
 
 import com.mayabot.nlp.collection.utils.MyInts;
 
-import java.io.*;
+import java.io.DataInput;
+import java.io.DataOutput;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 public interface DataInOutputUtils {
-
 
 
     static void writeIntArray(int[][] array, DataOutput output) throws IOException {
@@ -44,8 +45,6 @@ public interface DataInOutputUtils {
         output.writeInt(bytes.length);
         output.write(bytes);
     }
-
-
 
 
     static ArrayList<String> readStringArrayList(DataInput input) throws IOException {

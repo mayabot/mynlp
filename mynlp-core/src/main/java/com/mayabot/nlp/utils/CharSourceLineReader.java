@@ -53,7 +53,7 @@ public class CharSourceLineReader extends AbstractIterator<String> implements Au
     }
 
     @Override
-    public void close(){
+    public void close() {
         try {
             reader.close();
         } catch (Exception e) {
