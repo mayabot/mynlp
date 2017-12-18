@@ -1,7 +1,6 @@
 package com.mayabot.nlp.resources;
 
 import com.google.common.base.Charsets;
-import com.google.common.hash.Hashing;
 import com.google.common.io.ByteSource;
 import com.google.common.io.CharSource;
 import com.google.common.io.Files;
@@ -13,7 +12,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
-import java.util.Iterator;
 import java.util.zip.ZipInputStream;
 
 public class FileMynlpResource implements MynlpResource {

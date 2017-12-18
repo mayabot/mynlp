@@ -27,7 +27,7 @@ public class CrfTest {
     @Test
     public void test() {
 
-        System.setProperty(Settings.KEY_WORK_DIR,"temp");
+        System.setProperty(Settings.KEY_WORK_DIR, "temp");
 
         MynlpTokenizer tokenizer = MynlpSegments.crf();
 

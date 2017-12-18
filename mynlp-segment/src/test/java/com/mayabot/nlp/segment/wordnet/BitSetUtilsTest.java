@@ -17,7 +17,6 @@
 
 package com.mayabot.nlp.segment.wordnet;
 
-import com.mayabot.nlp.segment.wordnet.BitSetUtils;
 import org.junit.Test;
 
 import java.util.BitSet;

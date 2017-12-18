@@ -16,15 +16,15 @@
  */
 
 package com.mayabot.nlp.collection.ahocorasick;
-public interface IHitFull<V>
-    {
-        /**
-         * 命中一个模式串
-         *
-         * @param begin 模式串在母文本中的起始位置
-         * @param end   模式串在母文本中的终止位置
-         * @param value 模式串对应的值
-         * @param index 模式串对应的值的下标
-         */
-        void hit(int begin, int end, V value, int index);
-    }
+
+public interface IHitFull<V> {
+    /**
+     * 命中一个模式串
+     *
+     * @param begin 模式串在母文本中的起始位置
+     * @param end   模式串在母文本中的终止位置
+     * @param value 模式串对应的值
+     * @param index 模式串对应的值的下标
+     */
+    void hit(int begin, int end, V value, int index);
+}

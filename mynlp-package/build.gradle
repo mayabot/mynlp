@@ -7,7 +7,6 @@ apply plugin: 'idea'
 apply plugin: 'java'
 apply plugin: 'eclipse'
 
-
 //group = 'com.mayabot.mynlp'
 //version = '1.0.0-snapshot'
 description = """MyNlp"""

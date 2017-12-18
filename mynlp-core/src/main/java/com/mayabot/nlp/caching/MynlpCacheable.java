@@ -5,11 +5,6 @@ import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
 
 import java.io.*;
-import java.nio.ByteBuffer;
-import java.nio.MappedByteBuffer;
-import java.nio.channels.FileChannel;
-import java.util.zip.GZIPInputStream;
-import java.util.zip.GZIPOutputStream;
 
 public interface MynlpCacheable {
 
@@ -39,8 +34,8 @@ public interface MynlpCacheable {
 
                 long t1 = System.currentTimeMillis();
 
-                try(
-                        InputStream in = new BufferedInputStream(Files.asByteSource(cache).openStream(),64*1024)){
+                try (
+                        InputStream in = new BufferedInputStream(Files.asByteSource(cache).openStream(), 64 * 1024)) {
                     readFromCache(in);
                 }
 
@@ -62,9 +57,8 @@ public interface MynlpCacheable {
 
             _logger.info("restore from real data success, use time " + (t2 - t1) + " ms");
 
-            if (!loadFromBin&&cache != null) {
+            if (!loadFromBin && cache != null) {
                 long t3 = System.currentTimeMillis();
-
 
 
                 try (OutputStream outputStream = new BufferedOutputStream(Files.asByteSink(cache).openStream(), 64 * 1024)) {

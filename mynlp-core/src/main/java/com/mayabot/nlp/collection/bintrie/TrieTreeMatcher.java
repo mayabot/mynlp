@@ -33,6 +33,7 @@ public interface TrieTreeMatcher<T> {
 
     /**
      * 得到全部参数
+     *
      * @return
      */
     T getParams();

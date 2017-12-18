@@ -27,7 +27,7 @@ public class MultiWordnetInit implements WordnetInitializer {
 
     private List<WordnetInitializer> list;
 
-    public MultiWordnetInit(WordnetInitializer... list){
+    public MultiWordnetInit(WordnetInitializer... list) {
         this.list = Lists.newArrayList(list);
     }
 

@@ -6,10 +6,9 @@ import com.google.inject.Inject;
 import com.mayabot.nlp.segment.NamedComponentRegistry;
 import com.mayabot.nlp.segment.OptimizeProcessor;
 import com.mayabot.nlp.segment.WordpathProcessor;
-import com.mayabot.nlp.segment.WordpathProcessorIniter;
 import com.mayabot.nlp.segment.wordnet.Vertex;
-import com.mayabot.nlp.segment.wordnet.Wordpath;
 import com.mayabot.nlp.segment.wordnet.Wordnet;
+import com.mayabot.nlp.segment.wordnet.Wordpath;
 
 import java.util.List;
 import java.util.Map;
@@ -17,22 +16,22 @@ import java.util.Map;
 /**
  * 优化网络处理器
  */
-public class OptimizeWordPathProcessor implements WordpathProcessor,WordpathProcessorIniter {
+public class OptimizeWordPathProcessor implements WordpathProcessor {
 
     private final NamedComponentRegistry registry;
 
     private List<OptimizeProcessor> optimizeProcessorList = Lists.newArrayList();
 
     @Inject
-    public OptimizeWordPathProcessor(NamedComponentRegistry registry){
+    public OptimizeWordPathProcessor(NamedComponentRegistry registry) {
         this.registry = registry;
     }
 
     @Override
-    public void init(Map<String, Object> map) {
+    public void initConfig(Map<String, Object> map) {
         List<String> list = (List) map.get("list");
 
-        Preconditions.checkArgument(!list.isEmpty(),"");
+        Preconditions.checkArgument(!list.isEmpty(), "");
 
         for (String name : list) {
             OptimizeProcessor pr = registry.getInstance(name, OptimizeProcessor.class);

@@ -20,8 +20,7 @@ package com.mayabot.nlp.collection.ahocorasick;
 /**
  * 命中一个模式串的处理方法
  */
-public interface IHit<V>
-{
+public interface IHit<V> {
     /**
      * 命中一个模式串
      *

@@ -44,7 +44,7 @@ import static com.mayabot.nlp.segment.corpus.tag.NTTag.Z;
 @Singleton
 public class OrganizationRecognition implements OptimizeProcessor {
 
-    public static OrganizationRecognition build(Injector injector){
+    public static OrganizationRecognition build(Injector injector) {
         return injector.getInstance(OrganizationRecognition.class);
     }
 

@@ -7,7 +7,7 @@ public class LowerCaseCharNormalize implements CharNormalize {
 
     @Override
     public void normal(char[] text) {
-        CharacterUtils.toLowerCase(text,0,text.length);
+        CharacterUtils.toLowerCase(text, 0, text.length);
     }
 
 }

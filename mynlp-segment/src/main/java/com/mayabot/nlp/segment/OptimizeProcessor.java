@@ -24,6 +24,7 @@ import com.mayabot.nlp.segment.wordnet.Wordnet;
  * 预先处理器。
  * 识别器,优化网络
  * 多个识别器直接可能产生冲突。在优化网络里面，进行小范围竞争
+ *
  * @author jimichan
  */
 public interface OptimizeProcessor {

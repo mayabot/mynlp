@@ -25,7 +25,9 @@ class Log4J2Logger extends ExtendedLoggerWrapper implements InternalLogger {
 
     private static final long serialVersionUID = 5485418394879791397L;
 
-    /** {@linkplain AbstractInternalLogger#EXCEPTION_MESSAGE} */
+    /**
+     * {@linkplain AbstractInternalLogger#EXCEPTION_MESSAGE}
+     */
     private static final String EXCEPTION_MESSAGE = "Unexpected exception:";
 
     Log4J2Logger(Logger logger) {

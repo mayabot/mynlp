@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
+import com.mayabot.nlp.segment.tokenizer.WordnetTokenizerFactory;
 
 import java.io.IOException;
 import java.net.URL;
@@ -15,7 +16,9 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public final class MynlpSegments {
 
+
     static ConcurrentHashMap<String, MynlpTokenizer> map = new ConcurrentHashMap<>();
+
     static Map<String, Object> configMap = null;
 
     static {
@@ -31,6 +34,16 @@ public final class MynlpSegments {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+
+    /**
+     * 切词器工厂
+     *
+     * @return
+     */
+    public static WordnetTokenizerFactory tokenizerFactory() {
+        return WordnetTokenizerFactory.get();
     }
 
     public static MynlpTokenizer getDefault() {
