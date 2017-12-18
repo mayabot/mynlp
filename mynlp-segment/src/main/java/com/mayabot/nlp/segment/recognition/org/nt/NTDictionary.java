@@ -53,10 +53,11 @@ public class NTDictionary extends CommonDictionary<EnumFreqPair<NTTag>> {
 
     @Override
     protected void writeItem(EnumFreqPair<NTTag> a, DataOutput out) {
-            a.writeItem(out);
+        a.writeItem(out);
     }
 
-    final static TypeReference<Map<NTTag, Integer>> typeReference = new TypeReference<Map<NTTag, Integer>>() {};
+    final static TypeReference<Map<NTTag, Integer>> typeReference = new TypeReference<Map<NTTag, Integer>>() {
+    };
 
     @Override
     protected EnumFreqPair<NTTag> readItem(DataInput in) {

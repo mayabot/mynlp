@@ -7,14 +7,14 @@ dependencies {
 
 //    compile group: 'de.ruedigermoeller', name: 'fst', version: '2.56'
 
-    compile group: 'com.google.guava', name: 'guava', version:"$guava_version"
+    compile group: 'com.google.guava', name: 'guava', version: "$guava_version"
     compile group: 'com.google.inject', name: 'guice', version: '4.1.0'
 
     // logs
-    compileOnly (group: "org.slf4j",name:"slf4j-api",version:"1.7.21")
-    compileOnly (group: "commons-logging",name:"commons-logging",version:"1.2")
-    compileOnly (group: "org.apache.logging.log4j",name:"log4j-api",version:"2.6.2")
-    compileOnly (group: "log4j",name:"log4j",version:"1.2.17")
+    compileOnly(group: "org.slf4j", name: "slf4j-api", version: "1.7.21")
+    compileOnly(group: "commons-logging", name: "commons-logging", version: "1.2")
+    compileOnly(group: "org.apache.logging.log4j", name: "log4j-api", version: "2.6.2")
+    compileOnly(group: "log4j", name: "log4j", version: "1.2.17")
 
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }

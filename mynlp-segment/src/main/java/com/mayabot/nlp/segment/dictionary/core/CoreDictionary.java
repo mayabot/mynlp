@@ -16,8 +16,6 @@
  */
 package com.mayabot.nlp.segment.dictionary.core;
 
-import com.google.common.io.ByteArrayDataOutput;
-import com.google.common.io.ByteStreams;
 import com.google.common.io.Files;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -198,14 +196,14 @@ public class CoreDictionary implements MynlpCacheable {
     @Override
     public File cacheFileName() {
         String hash = environment.loadResource(coreDictSetting).hash();
-        return new File(environment.getWorkDir(), "core.dict."+hash);
+        return new File(environment.getWorkDir(), "core.dict." + hash);
     }
 
     public void saveToCache(OutputStream out) throws Exception {
         DataOutputStream dataOutput = new DataOutputStream(out);
 
         dataOutput.writeInt(MAX_FREQUENCY);
-        DoubleArrayTrie.write(trie, dataOutput,NatureAttribute::write);
+        DoubleArrayTrie.write(trie, dataOutput, NatureAttribute::write);
 
         dataOutput.flush();
 

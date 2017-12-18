@@ -22,8 +22,8 @@ import com.mayabot.nlp.segment.WordpathProcessor;
 import com.mayabot.nlp.segment.corpus.tag.Nature;
 import com.mayabot.nlp.segment.dictionary.NatureAttribute;
 import com.mayabot.nlp.segment.wordnet.Vertex;
-import com.mayabot.nlp.segment.wordnet.Wordpath;
 import com.mayabot.nlp.segment.wordnet.Wordnet;
+import com.mayabot.nlp.segment.wordnet.Wordpath;
 
 import java.util.regex.MatchResult;
 import java.util.regex.Matcher;

@@ -12,7 +12,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.nio.charset.Charset;
-import java.util.Iterator;
 import java.util.zip.ZipInputStream;
 
 public class URLMynlpResource implements MynlpResource {
@@ -59,18 +58,18 @@ public class URLMynlpResource implements MynlpResource {
 
         CharSource charSource = byteSource.asCharSource(charset);
 
-            return new CharSourceLineReader(charSource);
+        return new CharSourceLineReader(charSource);
     }
 
     private ByteSource unzipSource(ByteSource byteSource) {
-            return new ByteSource() {
-                @Override
-                public InputStream openStream() throws IOException {
-                    ZipInputStream zipInputStream = new ZipInputStream(byteSource.openBufferedStream());
-                    zipInputStream.getNextEntry();//一个zip里面就一个文件
-                    return zipInputStream;
-                }
-            };
+        return new ByteSource() {
+            @Override
+            public InputStream openStream() throws IOException {
+                ZipInputStream zipInputStream = new ZipInputStream(byteSource.openBufferedStream());
+                zipInputStream.getNextEntry();//一个zip里面就一个文件
+                return zipInputStream;
+            }
+        };
     }
 
     @Override

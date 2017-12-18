@@ -19,17 +19,17 @@ package com.mayabot.nlp.collection;
 
 /**
  * 字典树接口
- * 
+ *
  * @author jimichan
  */
 public interface Trie<T> {
-	
-	T get(char[] key);
 
-	T get(CharSequence key);
-	
-	T get(char[] key, int offset, int len) ;
+    T get(char[] key);
 
-	boolean containsKey(String key);
+    T get(CharSequence key);
+
+    T get(char[] key, int offset, int len);
+
+    boolean containsKey(String key);
 
 }

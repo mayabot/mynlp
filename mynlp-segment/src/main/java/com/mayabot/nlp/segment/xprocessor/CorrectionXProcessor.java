@@ -48,7 +48,7 @@ public class CorrectionXProcessor implements WordpathProcessor {
     public Wordpath process(Wordpath wordPath) {
 
         DoubleArrayTrie<CorrectionDictionary.AdjustWord> dat = dictionary.getDoubleArrayTrie();
-        if(dat==null){
+        if (dat == null) {
             return wordPath;
         }
 

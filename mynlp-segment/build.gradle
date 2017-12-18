@@ -1,7 +1,6 @@
+description = '分词'
 
-description='分词'
-
-dependencies{
+dependencies {
     compile project(':mynlp-core')
     compile group: 'com.alibaba', name: 'fastjson', version: '1.2.42'
     testCompile 'junit:junit:4.12'

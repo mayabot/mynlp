@@ -7,7 +7,7 @@ import org.junit.Test;
 public class MakeCrfFileRunnerTest {
 
     @Test
-    public void test(){
+    public void test() {
         String text = "";
     }
 }

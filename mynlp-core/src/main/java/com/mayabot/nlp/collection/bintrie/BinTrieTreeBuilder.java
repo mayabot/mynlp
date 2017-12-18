@@ -25,7 +25,7 @@ public enum BinTrieTreeBuilder {
         return new BinTrieTree<>(rootUseMap, nodeFactory);
     }
 
-    public <T> BinTrieTree<T> build(Map<String, T> map ) {
+    public <T> BinTrieTree<T> build(Map<String, T> map) {
 
         BinTrieTree tree = new BinTrieTree<>(rootUseMap, nodeFactory);
 
@@ -37,23 +37,24 @@ public enum BinTrieTreeBuilder {
 
     /**
      * 每行的格式 word[空格]args
+     *
      * @param lines
      * @param transFun
      * @param <T>
      * @return
      */
-    public <T> BinTrieTree<T> build(String split, Iterable<String> lines , Function<String[],T> transFun) {
+    public <T> BinTrieTree<T> build(String split, Iterable<String> lines, Function<String[], T> transFun) {
 
         BinTrieTree<T> tree = new BinTrieTree<>(rootUseMap, nodeFactory);
 
         final String[] empty = new String[0];
-        for(String line : lines){
+        for (String line : lines) {
             String[] list = line.split(split);
             if (list.length == 1) {
-                tree.put(list[0],transFun.apply(empty));
-            }else{
-                String[] sublist = new String[list.length-1];
-                System.arraycopy(list,1,sublist,0,sublist.length);
+                tree.put(list[0], transFun.apply(empty));
+            } else {
+                String[] sublist = new String[list.length - 1];
+                System.arraycopy(list, 1, sublist, 0, sublist.length);
                 tree.put(list[0], transFun.apply(sublist));
             }
         }

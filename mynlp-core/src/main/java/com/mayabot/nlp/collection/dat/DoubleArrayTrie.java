@@ -35,15 +35,15 @@ public class DoubleArrayTrie<T> implements Trie<T> {
 
 
     public static <T> void write(
-            DoubleArrayTrie<T> dat, DataOutput out,BiConsumer<T,DataOutput> biConsumer
+            DoubleArrayTrie<T> dat, DataOutput out, BiConsumer<T, DataOutput> biConsumer
     ) throws IOException {
         writeIntArray(dat.check, out);
         writeIntArray(dat.base, out);
-        writeArrayList(dat.values,biConsumer, out);
+        writeArrayList(dat.values, biConsumer, out);
     }
 
     public static <T> DoubleArrayTrie<T> read(
-            DataInput in, Function<DataInput,T> supplier) throws IOException {
+            DataInput in, Function<DataInput, T> supplier) throws IOException {
         int[] check = readIntArray(in);
         int[] base = readIntArray(in);
         ArrayList<T> values = readArrayList(in, supplier);

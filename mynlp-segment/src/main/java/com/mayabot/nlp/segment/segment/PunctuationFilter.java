@@ -1,7 +1,7 @@
 package com.mayabot.nlp.segment.segment;
 
-import com.mayabot.nlp.segment.MynlpTerm;
 import com.mayabot.nlp.segment.MynlpSegment;
+import com.mayabot.nlp.segment.MynlpTerm;
 import com.mayabot.nlp.utils.Characters;
 
 /**

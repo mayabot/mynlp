@@ -50,7 +50,7 @@ public class AtomSegmenter implements WordnetInitializer {
 
     public final FST<VertexRow> fst;
 
-    public static AtomSegmenter build(Injector injector){
+    public static AtomSegmenter build(Injector injector) {
         //Just In Time
         return injector.getInstance(AtomSegmenter.class);
     }

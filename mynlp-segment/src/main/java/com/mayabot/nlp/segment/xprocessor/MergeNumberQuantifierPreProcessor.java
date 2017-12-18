@@ -50,12 +50,12 @@ public class MergeNumberQuantifierPreProcessor implements WordpathProcessor {
         fst = new FST<>();
 
         FstNode<Vertex> shuzi = fst.start().to("shuzi",
-                (index, vertex) -> hasNature(vertex,Nature.m));
+                (index, vertex) -> hasNature(vertex, Nature.m));
 
         final Pattern pattern = Pattern.compile("kg|mm|平方");
 
         FstNode<Vertex> danwei = shuzi.to("danwei",
-                (index, vertex) -> hasNature(vertex,Nature.q) || pattern.matcher(vertex.realWord()).matches());
+                (index, vertex) -> hasNature(vertex, Nature.q) || pattern.matcher(vertex.realWord()).matches());
 
         danwei.to("$", (index, vertex) -> true);
     }

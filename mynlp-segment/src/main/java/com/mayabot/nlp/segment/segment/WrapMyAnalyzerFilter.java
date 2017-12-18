@@ -13,14 +13,14 @@ public abstract class WrapMyAnalyzerFilter extends WrapMyAnalyzer {
     public MynlpTerm next() {
         MynlpTerm next = myAnalyzer.next();
         while (next != null) {
-            if(accept(next)){
+            if (accept(next)) {
                 return next;
-            }else{
+            } else {
                 next = myAnalyzer.next();
             }
         }
         return null;
     }
 
-     abstract boolean accept(MynlpTerm term);
+    abstract boolean accept(MynlpTerm term);
 }

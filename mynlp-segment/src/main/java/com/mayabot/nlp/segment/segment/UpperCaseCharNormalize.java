@@ -7,7 +7,7 @@ public class UpperCaseCharNormalize implements CharNormalize {
 
     @Override
     public void normal(char[] text) {
-        CharacterUtils.toUpperCase(text,0,text.length);
+        CharacterUtils.toUpperCase(text, 0, text.length);
     }
-    
+
 }

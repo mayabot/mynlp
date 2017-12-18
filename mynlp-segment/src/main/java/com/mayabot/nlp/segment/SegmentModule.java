@@ -18,24 +18,13 @@
 package com.mayabot.nlp.segment;
 
 import com.google.inject.AbstractModule;
-import com.google.inject.Inject;
-import com.mayabot.nlp.segment.bestpath.ViterbiBestPathComputer;
-import com.mayabot.nlp.segment.recognition.org.OrganizationRecognition;
-import com.mayabot.nlp.segment.recognition.personname.PersonRecognition;
-import com.mayabot.nlp.segment.recognition.place.PlaceRecognition;
-import com.mayabot.nlp.segment.wordnetiniter.AtomSegmenter;
-import com.mayabot.nlp.segment.wordnetiniter.ConvertAbstractWord;
-import com.mayabot.nlp.segment.wordnetiniter.CoreDictionaryOriginalSegment;
-import com.mayabot.nlp.segment.wordnetiniter.MultiWordnetInit;
-import com.mayabot.nlp.segment.wordnetiniter.crf.CrfOriginalSegment;
-import com.mayabot.nlp.segment.xprocessor.*;
 
 /**
  * 切词器模块
  *
  * @author jimichan
  */
-public class AnalyzerModule extends AbstractModule {
+public class SegmentModule extends AbstractModule {
 
     @Override
     protected void configure() {

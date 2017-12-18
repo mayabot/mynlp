@@ -17,15 +17,13 @@
 
 package com.mayabot.nlp.collection.ahocorasick;
 
-import com.mayabot.nlp.utils.DataInOutputUtils;
-
 import java.util.*;
 import java.util.concurrent.LinkedBlockingDeque;
 
 
 public class AhoCoraickDoubleArrayTrieBuilder<V> {
 
-	   /**
+    /**
      * 根节点，仅仅用于构建过程
      */
     private State rootState = new State();
@@ -45,32 +43,31 @@ public class AhoCoraickDoubleArrayTrieBuilder<V> {
      * 键值对的大小
      */
 //    private int keySize;
-    
-    private int size;
-    
-    private AhoCorasickDoubleArrayTrie<V> trie = new AhoCorasickDoubleArrayTrie<V>();
-    
-    final int default_capacity = 1024*1024; // 1M
-	
-	private int array_capacity = default_capacity;
 
-    public AhoCoraickDoubleArrayTrieBuilder(){
-    	used = new BitSet();
+    private int size;
+
+    private AhoCorasickDoubleArrayTrie<V> trie = new AhoCorasickDoubleArrayTrie<V>();
+
+    final int default_capacity = 1024 * 1024; // 1M
+
+    private int array_capacity = default_capacity;
+
+    public AhoCoraickDoubleArrayTrieBuilder() {
+        used = new BitSet();
     }
-    
+
     /**
      * 由一个排序好的map创建
      */
     @SuppressWarnings("unchecked")
-    public AhoCorasickDoubleArrayTrie<V> build(TreeMap<String, V> map)
-    {
+    public AhoCorasickDoubleArrayTrie<V> build(TreeMap<String, V> map) {
         // 把值保存下来
         trie.values = new ArrayList<V>(map.values());
         trie.keylength = new int[trie.values.size()];
-        
+
         trie.base = new int[array_capacity];
         trie.check = new int[array_capacity];
-        
+
         Set<String> keySet = map.keySet();
         // 构建二分trie树
         addAllKeyword(keySet);
@@ -82,7 +79,7 @@ public class AhoCoraickDoubleArrayTrieBuilder<V> {
         loseWeight();
         return trie;
     }
-    
+
     /**
      * 获取直接相连的子节点
      *
@@ -90,16 +87,13 @@ public class AhoCoraickDoubleArrayTrieBuilder<V> {
      * @param siblings （子）兄弟节点
      * @return 兄弟节点个数
      */
-    private int fetch(State parent, List<Map.Entry<Integer, State>> siblings)
-    {
-        if (parent.isAcceptable())
-        {
+    private int fetch(State parent, List<Map.Entry<Integer, State>> siblings) {
+        if (parent.isAcceptable()) {
             State fakeNode = new State(-(parent.getDepth() + 1));  // 此节点是parent的子节点，同时具备parent的输出
             fakeNode.addEmit(parent.getLargestValueId());
             siblings.add(new AbstractMap.SimpleEntry<Integer, State>(0, fakeNode));
         }
-        for (Map.Entry<Character, State> entry : parent.getSuccess().entrySet())
-        {
+        for (Map.Entry<Character, State> entry : parent.getSuccess().entrySet()) {
             siblings.add(new AbstractMap.SimpleEntry<Integer, State>(entry.getKey() + 1, entry.getValue()));
         }
         return siblings.size();
@@ -111,11 +105,9 @@ public class AhoCoraickDoubleArrayTrieBuilder<V> {
      * @param keyword 键
      * @param index   值的下标
      */
-    private void addKeyword(String keyword, int index)
-    {
+    private void addKeyword(String keyword, int index) {
         State currentState = this.rootState;
-        for (Character character : keyword.toCharArray())
-        {
+        for (Character character : keyword.toCharArray()) {
             currentState = currentState.addState(character);
         }
         currentState.addEmit(index);
@@ -127,11 +119,9 @@ public class AhoCoraickDoubleArrayTrieBuilder<V> {
      *
      * @param keywordSet
      */
-    private void addAllKeyword(Collection<String> keywordSet)
-    {
+    private void addAllKeyword(Collection<String> keywordSet) {
         int i = 0;
-        for (String keyword : keywordSet)
-        {
+        for (String keyword : keywordSet) {
             addKeyword(keyword, i++);
         }
     }
@@ -139,34 +129,29 @@ public class AhoCoraickDoubleArrayTrieBuilder<V> {
     /**
      * 建立failure表
      */
-    private void constructFailureStates()
-    {
-    	trie.fail = new int[size + 1];
-    	trie.fail[1] = trie.base[0];
-    	trie.output = new int[size + 1][];
+    private void constructFailureStates() {
+        trie.fail = new int[size + 1];
+        trie.fail[1] = trie.base[0];
+        trie.output = new int[size + 1][];
         Queue<State> queue = new LinkedBlockingDeque<State>();
 
         // 第一步，将深度为1的节点的failure设为根节点
-        for (State depthOneState : this.rootState.getStates())
-        {
+        for (State depthOneState : this.rootState.getStates()) {
             depthOneState.setFailure(this.rootState, trie.fail);
             queue.add(depthOneState);
             constructOutput(depthOneState);
         }
 
         // 第二步，为深度 > 1 的节点建立failure表，这是一个bfs
-        while (!queue.isEmpty())
-        {
+        while (!queue.isEmpty()) {
             State currentState = queue.remove();
 
-            for (Character transition : currentState.getTransitions())
-            {
+            for (Character transition : currentState.getTransitions()) {
                 State targetState = currentState.nextState(transition);
                 queue.add(targetState);
 
                 State traceFailureState = currentState.failure();
-                while (traceFailureState.nextState(transition) == null)
-                {
+                while (traceFailureState.nextState(transition) == null) {
                     traceFailureState = traceFailureState.failure();
                 }
                 State newFailureState = traceFailureState.nextState(transition);
@@ -180,21 +165,18 @@ public class AhoCoraickDoubleArrayTrieBuilder<V> {
     /**
      * 建立output表
      */
-    private void constructOutput(State targetState)
-    {
+    private void constructOutput(State targetState) {
         Collection<Integer> emit = targetState.emit();
         if (emit == null || emit.size() == 0) return;
         int output[] = new int[emit.size()];
         Iterator<Integer> it = emit.iterator();
-        for (int i = 0; i < output.length; ++i)
-        {
+        for (int i = 0; i < output.length; ++i) {
             output[i] = it.next();
         }
         trie.output[targetState.getIndex()] = output;
     }
 
-    private void buildDoubleArrayTrie(Set<String> keySet)
-    {
+    private void buildDoubleArrayTrie(Set<String> keySet) {
         progress = 0;
         //keySize = keySet.size();
         resize(65536 * 32); // 32个双字节
@@ -215,24 +197,23 @@ public class AhoCoraickDoubleArrayTrieBuilder<V> {
      * @param new_capacity
      * @return
      */
-    private void resize(int new_capacity)
-    {
-    	if(new_capacity<=array_capacity){
-			return;
-		}
-		if(new_capacity-array_capacity < 1024*64){ //64K
-			new_capacity = array_capacity+1024*64;
-		}
-		int[] base2 = new int[new_capacity];
-		int[] check2 = new int[new_capacity];
-		
-		System.arraycopy(trie.base, 0, base2, 0, array_capacity);
-		System.arraycopy(trie.check, 0, check2, 0, array_capacity);
-		
-		trie.base = base2;
-		trie.check = check2;
+    private void resize(int new_capacity) {
+        if (new_capacity <= array_capacity) {
+            return;
+        }
+        if (new_capacity - array_capacity < 1024 * 64) { //64K
+            new_capacity = array_capacity + 1024 * 64;
+        }
+        int[] base2 = new int[new_capacity];
+        int[] check2 = new int[new_capacity];
 
-		array_capacity = new_capacity;
+        System.arraycopy(trie.base, 0, base2, 0, array_capacity);
+        System.arraycopy(trie.check, 0, check2, 0, array_capacity);
+
+        trie.base = base2;
+        trie.check = check2;
+
+        array_capacity = new_capacity;
     }
 
     /**
@@ -241,8 +222,7 @@ public class AhoCoraickDoubleArrayTrieBuilder<V> {
      * @param siblings 等待插入的兄弟节点
      * @return 插入位置
      */
-    private int insert(List<Map.Entry<Integer, State>> siblings)
-    {
+    private int insert(List<Map.Entry<Integer, State>> siblings) {
         int begin = 0;
         int pos = Math.max(siblings.get(0).getKey() + 1, nextCheckPos) - 1;
         int nonzero_num = 0;
@@ -253,30 +233,25 @@ public class AhoCoraickDoubleArrayTrieBuilder<V> {
 
         outer:
         // 此循环体的目标是找出满足base[begin + a1...an]  == 0的n个空闲空间,a1...an是siblings中的n个节点
-        while (true)
-        {
+        while (true) {
             pos++;
 
             if (array_capacity <= pos)
                 resize(pos + 1);
 
-            if (trie.check[pos] != 0)
-            {
+            if (trie.check[pos] != 0) {
                 nonzero_num++;
                 continue;
-            }
-            else if (first == 0)
-            {
+            } else if (first == 0) {
                 nextCheckPos = pos;
                 first = 1;
             }
 
             begin = pos - siblings.get(0).getKey(); // 当前位置离第一个兄弟节点的距离
-            if (array_capacity <= (begin + siblings.get(siblings.size() - 1).getKey()))
-            {
+            if (array_capacity <= (begin + siblings.get(siblings.size() - 1).getKey())) {
                 // progress can be zero // 防止progress产生除零错误
-              //  double l = (1.05 > 1.0 * keySize / (progress + 1)) ? 1.05 : 1.0 * keySize / (progress + 1);
-                resize((begin + siblings.get(siblings.size() - 1).getKey())+64*1024);
+                //  double l = (1.05 > 1.0 * keySize / (progress + 1)) ? 1.05 : 1.0 * keySize / (progress + 1);
+                resize((begin + siblings.get(siblings.size() - 1).getKey()) + 64 * 1024);
             }
 
             if (used.get(begin))
@@ -301,22 +276,18 @@ public class AhoCoraickDoubleArrayTrieBuilder<V> {
 
         size = (size > begin + siblings.get(siblings.size() - 1).getKey() + 1) ? size : begin + siblings.get(siblings.size() - 1).getKey() + 1;
 
-        for (Map.Entry<Integer, State> sibling : siblings)
-        {
+        for (Map.Entry<Integer, State> sibling : siblings) {
             trie.check[begin + sibling.getKey()] = begin;
         }
 
-        for (Map.Entry<Integer, State> sibling : siblings)
-        {
+        for (Map.Entry<Integer, State> sibling : siblings) {
             List<Map.Entry<Integer, State>> new_siblings = new ArrayList<Map.Entry<Integer, State>>(sibling.getValue().getSuccess().entrySet().size() + 1);
 
             if (fetch(sibling.getValue(), new_siblings) == 0)  // 一个词的终止且不为其他词的前缀，其实就是叶子节点
             {
-            	trie.base[begin + sibling.getKey()] = (-sibling.getValue().getLargestValueId() - 1);
+                trie.base[begin + sibling.getKey()] = (-sibling.getValue().getLargestValueId() - 1);
                 progress++;
-            }
-            else
-            {
+            } else {
                 int h = insert(new_siblings);   // dfs
                 trie.base[begin + sibling.getKey()] = h;
             }
@@ -328,8 +299,7 @@ public class AhoCoraickDoubleArrayTrieBuilder<V> {
     /**
      * 释放空闲的内存
      */
-    private void loseWeight()
-    {
+    private void loseWeight() {
         int nbase[] = new int[size + 65535];
         System.arraycopy(trie.base, 0, nbase, 0, size);
         trie.base = nbase;
@@ -338,5 +308,5 @@ public class AhoCoraickDoubleArrayTrieBuilder<V> {
         System.arraycopy(trie.check, 0, ncheck, 0, size);
         trie.check = ncheck;
     }
-    
+
 }
