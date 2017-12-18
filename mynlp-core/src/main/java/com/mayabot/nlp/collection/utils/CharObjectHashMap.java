@@ -27,10 +27,14 @@ import java.util.*;
  */
 public class CharObjectHashMap<V> implements CharObjectMap<V> {
 
-    /** Default initial capacity. Used if not specified in the constructor */
+    /**
+     * Default initial capacity. Used if not specified in the constructor
+     */
     public static final int DEFAULT_CAPACITY = 8;
 
-    /** Default load factor. Used if not specified in the constructor */
+    /**
+     * Default load factor. Used if not specified in the constructor
+     */
     public static final float DEFAULT_LOAD_FACTOR = 0.5f;
 
     /**
@@ -39,10 +43,14 @@ public class CharObjectHashMap<V> implements CharObjectMap<V> {
      */
     private static final Object NULL_VALUE = new Object();
 
-    /** The maximum number of elements allowed without allocating more space. */
+    /**
+     * The maximum number of elements allowed without allocating more space.
+     */
     private int maxSize;
 
-    /** The load factor for the map. Used to calculate {@link #maxSize}. */
+    /**
+     * The load factor for the map. Used to calculate {@link #maxSize}.
+     */
     private final float loadFactor;
 
     private char[] keys;
@@ -82,7 +90,7 @@ public class CharObjectHashMap<V> implements CharObjectMap<V> {
 
         // Allocate the arrays.
         keys = new char[capacity];
-        @SuppressWarnings({ "unchecked", "SuspiciousArrayCast" })
+        @SuppressWarnings({"unchecked", "SuspiciousArrayCast"})
         V[] temp = (V[]) new Object[capacity];
         values = temp;
 
@@ -111,7 +119,7 @@ public class CharObjectHashMap<V> implements CharObjectMap<V> {
         int startIndex = hashIndex(key);
         int index = startIndex;
 
-        for (;;) {
+        for (; ; ) {
             if (values[index] == null) {
                 // Found empty slot, use it.
                 keys[index] = key;
@@ -332,7 +340,7 @@ public class CharObjectHashMap<V> implements CharObjectMap<V> {
         int startIndex = hashIndex(key);
         int index = startIndex;
 
-        for (;;) {
+        for (; ; ) {
             if (values[index] == null) {
                 // It's available, so no chance that this value exists anywhere in the map.
                 return -1;
@@ -360,7 +368,7 @@ public class CharObjectHashMap<V> implements CharObjectMap<V> {
      * Returns the hash code for the key.
      */
     private static int hashCode(char key) {
-       return (int) key;
+        return (int) key;
     }
 
     /**
@@ -378,7 +386,7 @@ public class CharObjectHashMap<V> implements CharObjectMap<V> {
         size++;
 
         if (size > maxSize) {
-            if(keys.length == Integer.MAX_VALUE) {
+            if (keys.length == Integer.MAX_VALUE) {
                 throw new IllegalStateException("Max capacity reached at size=" + size);
             }
 
@@ -412,7 +420,7 @@ public class CharObjectHashMap<V> implements CharObjectMap<V> {
             char key = keys[i];
             int bucket = hashIndex(key);
             if (i < bucket && (bucket <= nextFree || nextFree <= i) ||
-                bucket <= nextFree && nextFree <= i) {
+                    bucket <= nextFree && nextFree <= i) {
                 // Move the displaced entry "back" to the first available position.
                 keys[nextFree] = key;
                 values[nextFree] = value;
@@ -444,7 +452,7 @@ public class CharObjectHashMap<V> implements CharObjectMap<V> {
         V[] oldVals = values;
 
         keys = new char[newCapacity];
-        @SuppressWarnings({ "unchecked", "SuspiciousArrayCast" })
+        @SuppressWarnings({"unchecked", "SuspiciousArrayCast"})
         V[] temp = (V[]) new Object[newCapacity];
         values = temp;
 
@@ -460,7 +468,7 @@ public class CharObjectHashMap<V> implements CharObjectMap<V> {
                 char oldKey = oldKeys[i];
                 int index = hashIndex(oldKey);
 
-                for (;;) {
+                for (; ; ) {
                     if (values[index] == null) {
                         keys[index] = oldKey;
                         values[index] = oldVal;
@@ -489,7 +497,7 @@ public class CharObjectHashMap<V> implements CharObjectMap<V> {
                     sb.append(", ");
                 }
                 sb.append(keyToString(keys[i])).append('=').append(value == this ? "(this Map)" :
-                    toExternal(value));
+                        toExternal(value));
                 first = false;
             }
         }
@@ -541,7 +549,7 @@ public class CharObjectHashMap<V> implements CharObjectMap<V> {
         @Override
         public boolean retainAll(Collection<?> retainedKeys) {
             boolean changed = false;
-            for(Iterator<PrimitiveEntry<V>> iter = entries().iterator(); iter.hasNext(); ) {
+            for (Iterator<PrimitiveEntry<V>> iter = entries().iterator(); iter.hasNext(); ) {
                 PrimitiveEntry<V> entry = iter.next();
                 if (!retainedKeys.contains(entry.key())) {
                     changed = true;
@@ -716,12 +724,13 @@ public class CharObjectHashMap<V> implements CharObjectMap<V> {
      * Fast method of finding the next power of 2 greater than or equal to the supplied value.
      * <p>This method will do runtime bounds checking and call {@link #findNextPositivePowerOfTwo(int)} if within a
      * valid range.
+     *
      * @param value from which to search for next power of 2
      * @return The next power of 2 or the value itself if it is a power of 2.
      * <p>Special cases for return values are as follows:
      * <ul>
-     *     <li>{@code <= 0} -> 1</li>
-     *     <li>{@code >= 2^30} -> 2^30</li>
+     * <li>{@code <= 0} -> 1</li>
+     * <li>{@code >= 2^30} -> 2^30</li>
      * </ul>
      */
     public static int safeFindNextPositivePowerOfTwo(final int value) {
@@ -731,7 +740,7 @@ public class CharObjectHashMap<V> implements CharObjectMap<V> {
 
     /**
      * Fast method of finding the next power of 2 greater than or equal to the supplied value.
-     *
+     * <p>
      * <p>If the value is {@code <= 0} then 1 will be returned.
      * This method is not suitable for {@link Integer#MIN_VALUE} or numbers greater than 2^30.
      *

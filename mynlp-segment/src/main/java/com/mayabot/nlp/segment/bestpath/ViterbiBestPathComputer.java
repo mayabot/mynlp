@@ -151,7 +151,7 @@ public class ViterbiBestPathComputer implements BestPathComputer {
         }
 
         //从后到前，获得完整的路径
-        Wordpath wordPath = new Wordpath(wordnet,this);
+        Wordpath wordPath = new Wordpath(wordnet, this);
         Vertex point = wordnet.getEndRow().getFirst();
         while (point != null) {
             wordPath.combine(point);

@@ -1,6 +1,5 @@
 package com.mayabot.nlp;
 
-import com.google.common.primitives.Booleans;
 import com.google.common.primitives.Ints;
 
 import java.util.function.Function;
@@ -11,9 +10,9 @@ public class Setting<T> {
 
     private String defaultValue;
 
-    private Function<String,T> parse;
+    private Function<String, T> parse;
 
-    private Setting(){
+    private Setting() {
 
     }
 
@@ -37,18 +36,18 @@ public class Setting<T> {
         return setting;
     }
 
-    public static Setting<String> stringSetting(String key, String  value) {
+    public static Setting<String> stringSetting(String key, String value) {
         Setting<String> setting = new Setting<>();
         setting.key = key;
-        setting.defaultValue = value ;
+        setting.defaultValue = value;
         setting.parse = Function.identity();
         return setting;
     }
 
-    public static Setting<Boolean> newBoolSetting(String key,String  value) {
+    public static Setting<Boolean> newBoolSetting(String key, String value) {
         Setting<Boolean> setting = new Setting<>();
         setting.key = key;
-        setting.defaultValue = value+"" ;
+        setting.defaultValue = value + "";
         setting.parse = v -> v.equalsIgnoreCase("true");
         return setting;
     }

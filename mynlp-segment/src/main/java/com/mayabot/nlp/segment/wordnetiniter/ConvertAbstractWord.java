@@ -117,5 +117,4 @@ public class ConvertAbstractWord implements WordnetInitializer {
     }
 
 
-
 }

@@ -28,8 +28,6 @@ import java.util.function.Function;
 /**
  * DAT 构建器
  *
- *
- *
  * @author jimichan
  */
 public class DoubleArrayTrieBuilder<V> {

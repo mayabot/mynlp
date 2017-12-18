@@ -2,9 +2,6 @@ package com.mayabot.nlp.resources;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-import com.mayabot.nlp.Environment;
 
 import java.nio.file.Path;
 import java.util.Map;
@@ -16,7 +13,7 @@ public class MynlpResourceFactory {
 
     Map<String, Function<String, ? extends MynlpResource>> map = Maps.newHashMap();
 
-    public MynlpResourceFactory(Path dataDir){
+    public MynlpResourceFactory(Path dataDir) {
         map.put("inner", path -> new InnerMynlpResource(dataDir, path));
     }
 
@@ -57,6 +54,7 @@ public class MynlpResourceFactory {
      * inner://dict/abc/dt.txt
      * redis://words/ww
      * mongo://abc
+     *
      * @param url
      * @return
      */

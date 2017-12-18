@@ -15,8 +15,8 @@
  *
  */
 
-description='句法分析'
+description = '句法分析'
 
-dependencies{
+dependencies {
     compile project(':mynlp-core')
 }

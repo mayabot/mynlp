@@ -23,6 +23,7 @@ import java.util.List;
 /**
  * 一个词切分单元，用户可以直接访问此单词的全部属性
  * 改类类名以后不可以修改
+ *
  * @author jimichan
  */
 public final class MynlpTerm {
@@ -46,6 +47,8 @@ public final class MynlpTerm {
      */
     private List<MynlpTerm> subword;
 
+    private String customFlag;
+
     /**
      * 构造一个单词
      *
@@ -56,6 +59,7 @@ public final class MynlpTerm {
         this.word = word;
         this.nature = nature;
     }
+
 
     public MynlpTerm(String word) {
         this.word = word;
@@ -77,7 +81,6 @@ public final class MynlpTerm {
         return word;
     }
 
-
     public void setOffset(int offset) {
         this.offset = offset;
     }
@@ -86,7 +89,13 @@ public final class MynlpTerm {
         this.subword = subword;
     }
 
+    public String getCustomFlag() {
+        return customFlag;
+    }
 
+    public void setCustomFlag(String customFlag) {
+        this.customFlag = customFlag;
+    }
 
     /**
      * 长度

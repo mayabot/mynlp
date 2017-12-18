@@ -1,4 +1,3 @@
-
 String dirName = rootProject.projectDir.name
 rootProject.name = dirName
 

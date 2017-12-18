@@ -1,4 +1,4 @@
-package com.mayabot.nlp.segment;
+package com.mayabot.nlp.segment.tokenizer;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -16,7 +16,7 @@ public class WordnetTokenizerBuilder {
     private String wordnetIniter;
     private List<WordnetTokenizerFactory.PipelineItem> pipelineItem = Lists.newArrayList();
 
-    private WordnetTokenizerBuilder(){
+    private WordnetTokenizerBuilder() {
 
     }
 
@@ -36,7 +36,7 @@ public class WordnetTokenizerBuilder {
         this.pipelineItem = pipelineItem;
     }
 
-    public static WordnetTokenizerBuilder create(){
+    public static WordnetTokenizerBuilder create() {
         return new WordnetTokenizerBuilder();
     }
 
@@ -50,20 +50,20 @@ public class WordnetTokenizerBuilder {
         return this;
     }
 
-    public WordnetTokenizerBuilder add(String type){
+    public WordnetTokenizerBuilder add(String type) {
         pipelineItem.add(new WordnetTokenizerFactory.PipelineItem(type));
         return this;
     }
 
-    public WordnetTokenizerBuilder add(String type, Map<String,Object> config){
-        pipelineItem.add(new WordnetTokenizerFactory.PipelineItem(type,config));
+    public WordnetTokenizerBuilder add(String type, Map<String, Object> config) {
+        pipelineItem.add(new WordnetTokenizerFactory.PipelineItem(type, config));
         return this;
     }
 
-    public WordnetTokenizerBuilder addOptimizeNetWordPathProcessor(List<String> plist){
-        HashMap<String , Object> map = Maps.newHashMap();
+    public WordnetTokenizerBuilder addOptimizeNetWordPathProcessor(List<String> plist) {
+        HashMap<String, Object> map = Maps.newHashMap();
         map.put("list", plist);
-        pipelineItem.add(new WordnetTokenizerFactory.PipelineItem("optimizeNet",map));
+        pipelineItem.add(new WordnetTokenizerFactory.PipelineItem("optimizeNet", map));
         return this;
     }
 

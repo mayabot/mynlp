@@ -67,7 +67,7 @@ public class CustomDictionary implements MynlpCacheable {
 
         List<String> resourceUrls = setting.getAsList("custom.dictionary.path");
 
-        if (resourceUrls==null || resourceUrls.isEmpty()) {
+        if (resourceUrls == null || resourceUrls.isEmpty()) {
             return;
         }
         // inner://dictionary/custom/abc.txt
@@ -100,7 +100,7 @@ public class CustomDictionary implements MynlpCacheable {
     public void saveToCache(OutputStream out) throws Exception {
         ByteArrayDataOutput dataOutput = ByteStreams.newDataOutput();
 
-        DoubleArrayTrie.write(dat, dataOutput,NatureAttribute::write);
+        DoubleArrayTrie.write(dat, dataOutput, NatureAttribute::write);
 
         out.write(dataOutput.toByteArray());
     }

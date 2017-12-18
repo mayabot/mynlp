@@ -6,6 +6,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Table;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
+import com.google.inject.Singleton;
 import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
 import com.mayabot.nlp.segment.bestpath.ViterbiBestPathComputer;
@@ -26,7 +27,8 @@ import java.util.function.Function;
 /**
  * 注册wordnet 分词器的组件
  */
-public class NamedComponentRegistry {
+@Singleton
+public final class NamedComponentRegistry {
 
     static InternalLogger logger = InternalLoggerFactory.getInstance(NamedComponentRegistry.class);
 
@@ -35,7 +37,7 @@ public class NamedComponentRegistry {
     private Table<String, Class, Function> table = HashBasedTable.create();
 
     @Inject
-    public NamedComponentRegistry( Injector injector ) {
+    public NamedComponentRegistry(Injector injector) {
         this.injector = injector;
         initDefaultComponents();
     }
@@ -52,7 +54,7 @@ public class NamedComponentRegistry {
 
     public <T> T getInstance(String name, Class<T> clazz) {
         Function<Injector, T> factory = getFactory(name, clazz);
-        Preconditions.checkNotNull(factory,"Not found name "+name+" class "+clazz );
+        Preconditions.checkNotNull(factory, "Not found name " + name + " class " + clazz);
         T apply = factory.apply(injector);
         Preconditions.checkNotNull(apply);
         return apply;

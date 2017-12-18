@@ -22,8 +22,7 @@ package com.mayabot.nlp.collection.ahocorasick;
  *
  * @param <V>
  */
-public class Hit<V>
-{
+public class Hit<V> {
     /**
      * 模式串在母文本中的起始位置
      */
@@ -37,16 +36,14 @@ public class Hit<V>
      */
     public final V value;
 
-    public Hit(int begin, int end, V value)
-    {
+    public Hit(int begin, int end, V value) {
         this.begin = begin;
         this.end = end;
         this.value = value;
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return String.format("[%d:%d]=%s", begin, end, value);
     }
 }

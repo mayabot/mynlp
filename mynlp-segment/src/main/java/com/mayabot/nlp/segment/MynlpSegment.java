@@ -17,11 +17,13 @@
 
 package com.mayabot.nlp.segment;
 
+import com.google.common.collect.AbstractIterator;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
 
 import java.io.Reader;
 import java.io.StringReader;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -41,13 +43,28 @@ public interface MynlpSegment extends Iterable<MynlpTerm> {
         return this.reset(new StringReader(text));
     }
 
+    @Override
+    default Iterator<MynlpTerm> iterator() {
+        return new AbstractIterator<MynlpTerm>() {
+            @Override
+            protected MynlpTerm computeNext() {
+                MynlpTerm n = next();
+                if (n != null) {
+                    return n;
+                } else {
+                    return endOfData();
+                }
+            }
+        };
+    }
+
 
     /**
      * 一个便捷的方法，获得分词结果
      *
      * @return
      */
-    default List<String> toWords() {
+    default List<String> toList() {
         return Lists.newArrayList(Iterators.transform(iterator(), MynlpTerm::getWord));
     }
 

@@ -55,7 +55,7 @@ public class PlaceRecognition implements OptimizeProcessor {
     final NatureAttribute place_natureAttribute;
 
 
-    public static PlaceRecognition build(Injector injector){
+    public static PlaceRecognition build(Injector injector) {
         return injector.getInstance(PlaceRecognition.class);
     }
 

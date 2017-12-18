@@ -39,12 +39,12 @@ public class CrfOriginalSegment implements WordnetInitializer {
 
     private final CRFSegmentModel crfModel;
 
-    public static CrfOriginalSegment build(Injector injector){
+    public static CrfOriginalSegment build(Injector injector) {
         return injector.getInstance(CrfOriginalSegment.class);
     }
 
     @Inject
-    public CrfOriginalSegment( CRFModelComponent crfModelComponent) {
+    public CrfOriginalSegment(CRFModelComponent crfModelComponent) {
         this.crfModel = crfModelComponent.getCrfSegmentModel();
     }
 

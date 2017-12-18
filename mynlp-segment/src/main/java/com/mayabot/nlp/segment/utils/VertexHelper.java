@@ -51,6 +51,7 @@ public class VertexHelper {
     /**
      * 生成线程安全的起始节点
      * begin
+     *
      * @return
      */
     public Vertex newBegin() {

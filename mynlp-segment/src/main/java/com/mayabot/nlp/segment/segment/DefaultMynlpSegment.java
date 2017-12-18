@@ -17,7 +17,9 @@
 
 package com.mayabot.nlp.segment.segment;
 
-import com.google.common.collect.AbstractIterator;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import com.mayabot.nlp.segment.CharNormalize;
 import com.mayabot.nlp.segment.MynlpSegment;
 import com.mayabot.nlp.segment.MynlpTerm;
@@ -28,9 +30,10 @@ import com.mayabot.nlp.utils.ParagraphReaderSmart;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
+import java.util.function.Consumer;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 /**
  * 分词器通用实现。有状态。无创建成本。非线程安全.
@@ -40,7 +43,7 @@ import java.util.List;
  *
  * @author jimichan
  */
-public class DefaultMyAnalyzer implements MynlpSegment {
+public class DefaultMynlpSegment implements MynlpSegment {
 
     private MynlpTokenizer tokenizer;
 
@@ -59,6 +62,7 @@ public class DefaultMyAnalyzer implements MynlpSegment {
     private LinkedList<MynlpTerm> buffer = null;
 
     private List<CharNormalize> charNormalize;
+    private Reader reader;
 
     /**
      * 构造函数
@@ -66,10 +70,11 @@ public class DefaultMyAnalyzer implements MynlpSegment {
      * @param reader    需要分词的数据源
      * @param tokenizer 具体的分词器
      */
-    public DefaultMyAnalyzer(Reader reader, MynlpTokenizer tokenizer) {
+    public DefaultMynlpSegment(Reader reader, MynlpTokenizer tokenizer) {
         this.reset(reader);
         this.tokenizer = tokenizer;
     }
+
 
     /**
      * 构造函数
@@ -77,9 +82,23 @@ public class DefaultMyAnalyzer implements MynlpSegment {
      * @param text      需要分词的String文本
      * @param tokenizer 具体的分词器
      */
-    public DefaultMyAnalyzer(String text, MynlpTokenizer tokenizer) {
+    public DefaultMynlpSegment(String text, MynlpTokenizer tokenizer) {
         this.reset(new StringReader(text));
         this.tokenizer = tokenizer;
+    }
+
+    /**
+     * 指定消费者来访问所有的词。底层可以使用多核线程来进行优化速度
+     *
+     * @param action
+     */
+    @Override
+    public void forEach(Consumer<? super MynlpTerm> action) {
+        // 之后改造成支持使用Stream函数，改造成支持多线程并发的版本
+        Objects.requireNonNull(action);
+        for (MynlpTerm t : this) {
+            action.accept(t);
+        }
     }
 
     /**
@@ -88,7 +107,7 @@ public class DefaultMyAnalyzer implements MynlpSegment {
      *
      * @param tokenizer 具体的分词器
      */
-    public DefaultMyAnalyzer(MynlpTokenizer tokenizer) {
+    public DefaultMynlpSegment(MynlpTokenizer tokenizer) {
         this.reset(new StringReader(""));
         this.tokenizer = tokenizer;
     }
@@ -147,26 +166,24 @@ public class DefaultMyAnalyzer implements MynlpSegment {
      * @param reader
      * @return
      */
-    public DefaultMyAnalyzer reset(Reader reader) {
+    public DefaultMynlpSegment reset(Reader reader) {
+        close();
+        this.reader = reader;
+
         this.paragraphReader = new ParagraphReaderSmart(reader); //智能分段器
         baseOffset = 0;
         lastTextLength = -1;
         return this;
     }
 
-    @Override
-    public Iterator<MynlpTerm> iterator() {
-        return new AbstractIterator<MynlpTerm>() {
-            @Override
-            protected MynlpTerm computeNext() {
-                MynlpTerm n = DefaultMyAnalyzer.this.next();
-                if (n != null) {
-                    return n;
-                } else {
-                    return endOfData();
-                }
+    public void close() {
+        if (reader != null) {
+            try {
+                reader.close();
+            } catch (IOException e) {
+                throw new RuntimeException("", e);
             }
-        };
+        }
     }
 
     public List<CharNormalize> getCharNormalize() {
@@ -177,4 +194,31 @@ public class DefaultMyAnalyzer implements MynlpSegment {
         this.charNormalize = charNormalize;
     }
 
+
+    public static void main(String[] args) {
+
+        List<Integer> xlist = Lists.newArrayList();
+        for (int i = 0; i < 100000; i++) {
+            xlist.add(i);
+        }
+
+        Spliterator<Integer> spliterator = Iterables.concat(xlist).spliterator();
+
+
+        Set<String> xset = Sets.newHashSet();
+
+        Stream<Double> stream = StreamSupport.stream(spliterator, true).map(
+                num -> {
+                    double r = num / 2.0;
+                    xset.add(Thread.currentThread().getName());
+                    return r;
+                });
+
+        Iterator<Double> iterator = stream.iterator();
+        while (iterator.hasNext()) {
+            System.out.println(iterator.next());
+        }
+
+        System.out.println(xset);
+    }
 }

@@ -38,7 +38,7 @@ public class EnumTransformMatrix<E extends Enum<E>> {
     public EnumTransformMatrix(MynlpResource resource) throws IOException {
         transformMatrix = new TransformMatrix();
 
-        try(InputStream in = resource.openInputStream()){
+        try (InputStream in = resource.openInputStream()) {
             transformMatrix.load(in);
         }
     }

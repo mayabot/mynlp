@@ -19,10 +19,16 @@ package com.mayabot.nlp.segment;
 
 import com.mayabot.nlp.segment.wordnet.Wordpath;
 
+import java.util.Map;
+
 public interface WordpathProcessor {
     /**
      * @param wordPath
      * @return 一般对传入的wordPath修改，返回对象本身
      */
     Wordpath process(Wordpath wordPath);
+
+    default void initConfig(Map<String, Object> map) {
+
+    }
 }

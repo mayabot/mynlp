@@ -20,8 +20,8 @@ package com.mayabot.nlp.segment.xprocessor;
 import com.mayabot.nlp.segment.WordpathProcessor;
 import com.mayabot.nlp.segment.wordnet.Vertex;
 import com.mayabot.nlp.segment.wordnet.VertexRow;
-import com.mayabot.nlp.segment.wordnet.Wordpath;
 import com.mayabot.nlp.segment.wordnet.Wordnet;
+import com.mayabot.nlp.segment.wordnet.Wordpath;
 
 import java.util.Iterator;
 

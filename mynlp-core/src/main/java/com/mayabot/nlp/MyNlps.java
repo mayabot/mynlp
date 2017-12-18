@@ -56,7 +56,6 @@ public class MyNlps {
         Environment environment = new Environment(settings);
 
 
-
         ArrayList<Module> modules = Lists.newArrayList();
 
         modules.add(new AbstractModule() {
@@ -109,7 +108,7 @@ public class MyNlps {
             while (resources.hasMoreElements()) {
                 URL url = resources.nextElement();
 
-                logger.info("Found mynlp.factories {}",url.toString() );
+                logger.info("Found mynlp.factories {}", url.toString());
 
                 BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream(), "utf-8"));
 
@@ -126,7 +125,7 @@ public class MyNlps {
                 reader.close();
             }
 
-            return set.stream().filter(line->!line.trim().isEmpty()).map(clazzName -> {
+            return set.stream().filter(line -> !line.trim().isEmpty()).map(clazzName -> {
                 try {
                     Class<? extends Module> clazz = (Class<? extends Module>) Class.forName(clazzName.trim());
 

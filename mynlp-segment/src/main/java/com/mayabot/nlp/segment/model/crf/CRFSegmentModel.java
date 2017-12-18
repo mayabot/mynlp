@@ -31,7 +31,6 @@ import java.util.*;
  *
  * @author hankcs
  * @author jimichan
- *
  */
 public final class CRFSegmentModel extends CRFModel {
 

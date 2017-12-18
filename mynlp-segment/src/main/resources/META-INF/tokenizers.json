@@ -1,37 +1,45 @@
 {
-  "default":{
-    "wordnetIniter":"core",
+  "default": {
+    "wordnetIniter": "core",
     "bestPath": "viterbi",
-    "pipeline":[
+    "pipeline": [
       "customDict",
       "mq",
       "ml",
       {
-        "type":"pattern",
-        "pattern":"\\d+"
+        "type": "pattern",
+        "pattern": "\\d+"
       },
       {
-        "type":"optimizeNet",
-        "list":["person","place","organization"]
+        "type": "optimizeNet",
+        "list": [
+          "person",
+          "place",
+          "organization"
+        ]
       },
       "correction",
       "speechTagging"
     ]
   },
-  "crf":{
-    "wordnetIniter":"crf",
+  "crf": {
+    "wordnetIniter": "crf",
     "bestPath": "viterbi",
-    "pipeline":[
+    "pipeline": [
       "customDict",
       "mq",
       "ml",
       {
-        "type":"pattern",
-        "pattern":"\\d+"
+        "type": "pattern",
+        "pattern": "\\d+"
       },
       {
-        "type":"optimizeNet",
-        "list":["person","place","organization"]
+        "type": "optimizeNet",
+        "list": [
+          "person",
+          "place",
+          "organization"
+        ]
       },
       "correction",
       "speechTagging"
