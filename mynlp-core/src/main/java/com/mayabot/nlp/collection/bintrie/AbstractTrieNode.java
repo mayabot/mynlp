@@ -51,6 +51,7 @@ public abstract class AbstractTrieNode<V> implements BinTrieNode<V> {
 
     public abstract List<AbstractTrieNode<V>> getChildren();
 
+    @Override
     public String toString() {
         return this._char + "[" + this.status + "]";
     }
@@ -87,9 +88,11 @@ public abstract class AbstractTrieNode<V> implements BinTrieNode<V> {
         return this._char;
     }
 
+    @Override
     public int compareTo(char c) {
-        if (this._char > c)
+        if (this._char > c) {
             return 1;
+        }
         if (this._char < c) {
             return -1;
         }
@@ -124,12 +127,13 @@ public abstract class AbstractTrieNode<V> implements BinTrieNode<V> {
             int mid = (low + high) >>> 1;
             int cmp = branches[mid].compareTo(_char);
 
-            if (cmp < 0)
+            if (cmp < 0) {
                 low = mid + 1;
-            else if (cmp > 0)
+            } else if (cmp > 0) {
                 high = mid - 1;
-            else
+            } else {
                 return mid; // key found
+            }
         }
         return -(low + 1); // key not found.
     }

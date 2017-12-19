@@ -7,7 +7,6 @@ List projects = [
         'mynlp-segment',
         'mynlp-package',
         'mynlp-pinyin',
-        'mynlp-word2vec',
         'mynlp-cli'
 ]
 

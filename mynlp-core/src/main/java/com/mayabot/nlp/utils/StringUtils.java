@@ -29,16 +29,20 @@ public class StringUtils {
     public static final String PATTERN = "&|[\uFE30-\uFFA0]|‘’|“”";
 
     public static String replaceSpecialtyStr(String str, String pattern, String replace) {
-        if (isBlankOrNull(pattern))
+        if (isBlankOrNull(pattern)) {
             pattern = "\\s*|\t|\r|\n";//去除字符串中空格、换行、制表
-        if (isBlankOrNull(replace))
+        }
+        if (isBlankOrNull(replace)) {
             replace = "";
+        }
         return Pattern.compile(pattern).matcher(str).replaceAll(replace);
 
     }
 
     public static boolean isBlankOrNull(String str) {
-        if (null == str) return true;
+        if (null == str) {
+            return true;
+        }
         //return str.length()==0?true:false;
         return str.length() == 0;
     }
@@ -47,7 +51,9 @@ public class StringUtils {
      * 清除数字和空格
      */
     public static String cleanBlankOrDigit(String str) {
-        if (isBlankOrNull(str)) return "null";
+        if (isBlankOrNull(str)) {
+            return "null";
+        }
         return Pattern.compile("\\d|\\s").matcher(str).replaceAll("");
     }
 

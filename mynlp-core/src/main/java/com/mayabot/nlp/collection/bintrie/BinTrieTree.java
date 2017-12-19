@@ -110,13 +110,15 @@ public class BinTrieTree<T> implements Trie<T>, BinTrieNode<T> {
         return new TrieTreeAllMatcher<>(this, text);
     }
 
+    @Override
     public boolean containsKey(String key) {
         BinTrieNode<T> branch = this;
         int len = key.length();
         for (int i = 0; i < len; i++) {
             char _char = key.charAt(i);
-            if (branch == null)
+            if (branch == null) {
                 return false;
+            }
             branch = branch.findChild(_char);
         }
 
@@ -137,8 +139,9 @@ public class BinTrieTree<T> implements Trie<T>, BinTrieNode<T> {
         int len = key.length;
         for (int i = 0; i < len; i++) {
             char _char = key[i];
-            if (branch == null)
+            if (branch == null) {
                 return null;
+            }
             branch = branch.findChild(_char);
         }
 
@@ -158,8 +161,9 @@ public class BinTrieTree<T> implements Trie<T>, BinTrieNode<T> {
         BinTrieNode<T> branch = this;
         for (int i = offset; i < len; i++) {
             char _char = key[i];
-            if (branch == null)
+            if (branch == null) {
                 return null;
+            }
             branch = branch.findChild(_char);
         }
 
@@ -174,6 +178,7 @@ public class BinTrieTree<T> implements Trie<T>, BinTrieNode<T> {
         return branch.getValue();
     }
 
+    @Override
     public T get(CharSequence key) {
         BinTrieNode<T> branch = findNode(key);
 
@@ -246,8 +251,9 @@ public class BinTrieTree<T> implements Trie<T>, BinTrieNode<T> {
         char[] chars = key.toCharArray();
 
         for (int i = 0; i < chars.length; i++) {
-            if (branch == null)
+            if (branch == null) {
                 return;
+            }
             if (chars.length == i + 1) {
                 branch.addChildNode(nodeFactory.create(chars[i], Status_Null, null));
             }
@@ -431,6 +437,7 @@ public class BinTrieTree<T> implements Trie<T>, BinTrieNode<T> {
 
     // //////////////////////////////以下是作为NODE的行为////////////////////////////////////////////
 
+    @Override
     public boolean contains(char c) {
         if (rootChildUseMap) {
             return childrenMap.containsKey(c);
@@ -439,6 +446,7 @@ public class BinTrieTree<T> implements Trie<T>, BinTrieNode<T> {
         }
     }
 
+    @Override
     public BinTrieNode<T> addChildNode(BinTrieNode<T> n) {
 
         AbstractTrieNode<T> node = ((AbstractTrieNode<T>) n);
@@ -474,6 +482,7 @@ public class BinTrieTree<T> implements Trie<T>, BinTrieNode<T> {
         return oldNode;
     }
 
+    @Override
     public AbstractTrieNode<T> findChild(char c) {
         if (rootChildUseMap) {
             return childrenMap.get(c);

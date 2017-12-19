@@ -76,7 +76,9 @@ public class SimpleItem {
 
     public int getFrequency(String label) {
         Integer frequency = labelMap.get(label);
-        if (frequency == null) return 0;
+        if (frequency == null) {
+            return 0;
+        }
         return frequency;
     }
 
@@ -95,13 +97,17 @@ public class SimpleItem {
     }
 
     public static SimpleItem create(String param) {
-        if (param == null) return null;
+        if (param == null) {
+            return null;
+        }
         String[] array = param.split(" ");
         return create(array);
     }
 
-    public static SimpleItem create(String param[]) {
-        if (param.length % 2 == 1) return null;
+    public static SimpleItem create(String[] param) {
+        if (param.length % 2 == 1) {
+            return null;
+        }
         SimpleItem item = new SimpleItem();
         int natureCount = (param.length) / 2;
         for (int i = 0; i < natureCount; ++i) {

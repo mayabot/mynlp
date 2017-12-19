@@ -46,6 +46,7 @@ public class URLMynlpResource implements MynlpResource {
 
     }
 
+    @Override
     public CharSourceLineReader openLineReader() {
 
         boolean zip = url.toString().endsWith(".zip");

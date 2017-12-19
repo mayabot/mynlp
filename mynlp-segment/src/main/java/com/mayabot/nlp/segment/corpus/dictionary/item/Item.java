@@ -68,15 +68,21 @@ public class Item extends SimpleItem {
      * @return
      */
     public static Item create(String param) {
-        if (param == null) return null;
+        if (param == null) {
+            return null;
+        }
         String mark = "\\s";    // 分隔符，历史格式用空格，但是现在觉得用制表符比较好
-        if (param.indexOf('\t') > 0) mark = "\t";
+        if (param.indexOf('\t') > 0) {
+            mark = "\t";
+        }
         String[] array = param.split(mark);
         return create(array);
     }
 
-    public static Item create(String param[]) {
-        if (param.length % 2 == 0) return null;
+    public static Item create(String[] param) {
+        if (param.length % 2 == 0) {
+            return null;
+        }
         Item item = new Item(param[0]);
         int natureCount = (param.length - 1) / 2;
         for (int i = 0; i < natureCount; ++i) {
