@@ -97,6 +97,7 @@ public class ParagraphReaderSmart implements ParagraphReader {
      * @return
      * @throws IOException
      */
+    @Override
     public String next() throws IOException {
         StringBuilder result = new StringBuilder(max);
 

@@ -117,6 +117,7 @@ public class DefaultMynlpSegment implements MynlpSegment {
      *
      * @return
      */
+    @Override
     public MynlpTerm next() {
 
         if (buffer == null || buffer.isEmpty()) {
@@ -166,6 +167,7 @@ public class DefaultMynlpSegment implements MynlpSegment {
      * @param reader
      * @return
      */
+    @Override
     public DefaultMynlpSegment reset(Reader reader) {
         close();
         this.reader = reader;

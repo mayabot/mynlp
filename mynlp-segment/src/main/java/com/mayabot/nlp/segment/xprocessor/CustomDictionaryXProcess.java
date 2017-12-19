@@ -53,10 +53,17 @@ public class CustomDictionaryXProcess implements WordpathProcessor {
 
     @Override
     public Wordpath process(Wordpath wordPath) {
+
+        DoubleArrayTrie<NatureAttribute> dat = dictionary.getDat();
+        if (dat == null) {
+            return wordPath;
+        }
+
         Wordnet wordnet = wordPath.getWordnet();
         boolean change = false;
         char[] text = wordnet.getCharArray();
-        for (DoubleArrayTrie<NatureAttribute> d : ImmutableList.of(dictionary.getDat())) {
+
+        for (DoubleArrayTrie<NatureAttribute> d : ImmutableList.of(dat)) {
             if (d == null) {
                 continue;
             }
@@ -70,9 +77,6 @@ public class CustomDictionaryXProcess implements WordpathProcessor {
                 int length = datSearch.getLength();
 
                 //FIXME 这里的效率没有直接跳转的那么高
-
-                //int wordId = datSearch.getIndex();
-
                 // 需要检测是否真的联合了多个词汇
                 boolean willCutOtherWords = wordPath.willCutOtherWords(offset, length);
 
@@ -83,7 +87,8 @@ public class CustomDictionaryXProcess implements WordpathProcessor {
                         NatureAttribute attr = datSearch.getValue();
 
                         Vertex v = wordPath.combine(offset, length);
-                        v.setWordInfo(coreDictionary.X_WORD_ID, CoreDictionary.TAG_CLUSTER, attr); //没有等效果词
+                        //没有等效果词
+                        v.setWordInfo(coreDictionary.X_WORD_ID, CoreDictionary.TAG_CLUSTER, attr);
                         change = true;
                     } else {
                         //FIXME 要不要覆盖attr.

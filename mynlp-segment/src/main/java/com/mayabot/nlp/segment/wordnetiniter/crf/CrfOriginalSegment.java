@@ -100,7 +100,7 @@ public class CrfOriginalSegment implements WordnetInitializer {
 
 
     public String[][] atomSegmentToTable(char[] sentence) {
-        String table[][] = new String[sentence.length][3];
+        String[][] table = new String[sentence.length][3];
         int size = 0;
         final int maxLen = sentence.length - 1;
         final StringBuilder sbAtom = new StringBuilder();

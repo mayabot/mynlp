@@ -8,8 +8,12 @@ public class MakeCrfFileRunner implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        if (args.length == 0) return;
-        if (!args[0].equals("crf")) return;
+        if (args.length == 0) {
+            return;
+        }
+        if (!args[0].equals("crf")) {
+            return;
+        }
 
         System.out.println("haha");
 

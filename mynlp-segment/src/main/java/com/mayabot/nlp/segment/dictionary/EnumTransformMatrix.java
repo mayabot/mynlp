@@ -55,6 +55,7 @@ public class EnumTransformMatrix<E extends Enum<E>> {
         return transformMatrix.getTotalFrequency();
     }
 
+    @Override
     public String toString() {
         return transformMatrix.toString();
     }

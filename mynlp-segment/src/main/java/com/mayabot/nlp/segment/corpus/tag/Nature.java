@@ -40,8 +40,12 @@ public class Nature {
     private Nature(String name, int ord) {
         this.name = name;
         this.ord = ord;
-        if (map.put(name, this) != null) throw new RuntimeException();
-        if (intmap.put(ord, this) != null) throw new RuntimeException();
+        if (map.put(name, this) != null) {
+            throw new RuntimeException();
+        }
+        if (intmap.put(ord, this) != null) {
+            throw new RuntimeException();
+        }
     }
 
     public Nature registe(String name, int ord) {
@@ -1571,12 +1575,15 @@ public class Nature {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null)
+        }
+        if (obj == null) {
             return false;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()) {
             return false;
+        }
         Nature other = (Nature) obj;
         return ord == other.ord;
     }

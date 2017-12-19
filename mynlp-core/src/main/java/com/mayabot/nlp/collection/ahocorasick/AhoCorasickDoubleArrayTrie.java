@@ -38,17 +38,17 @@ public class AhoCorasickDoubleArrayTrie<V> {
     /**
      * 双数组值check
      */
-    int check[];
+    int[] check;
 
     /**
      * 双数组之base
      */
-    int base[];
+    int[] base;
 
     /**
      * fail表
      */
-    int fail[];
+    int[] fail;
     /**
      * 输出表
      */
@@ -260,10 +260,11 @@ public class AhoCorasickDoubleArrayTrie<V> {
         int p;
 
         p = b + c + 1;
-        if (b == check[p])
+        if (b == check[p]) {
             b = base[p];
-        else
+        } else {
             return -1;
+        }
 
         p = b;
         return p;
@@ -282,8 +283,9 @@ public class AhoCorasickDoubleArrayTrie<V> {
 
         p = b + c + 1;
         if (b != check[p]) {
-            if (nodePos == 0)
+            if (nodePos == 0) {
                 return 0;
+            }
             return -1;
         }
 
@@ -310,10 +312,12 @@ public class AhoCorasickDoubleArrayTrie<V> {
      * @return
      */
     private int exactMatchSearch(String key, int pos, int len, int nodePos) {
-        if (len <= 0)
+        if (len <= 0) {
             len = key.length();
-        if (nodePos <= 0)
+        }
+        if (nodePos <= 0) {
             nodePos = 0;
+        }
 
         int result = -1;
 
@@ -322,10 +326,11 @@ public class AhoCorasickDoubleArrayTrie<V> {
 
         for (int i = pos; i < len; i++) {
             p = b + (int) (key.codePointAt(i)) + 1;
-            if (b == check[p])
+            if (b == check[p]) {
                 b = base[p];
-            else
+            } else {
                 return result;
+            }
         }
 
         p = b;
@@ -353,10 +358,11 @@ public class AhoCorasickDoubleArrayTrie<V> {
 
         for (int i = pos; i < len; i++) {
             p = b + (int) (keyChars[i]) + 1;
-            if (b == check[p])
+            if (b == check[p]) {
                 b = base[p];
-            else
+            } else {
                 return result;
+            }
         }
 
         p = b;

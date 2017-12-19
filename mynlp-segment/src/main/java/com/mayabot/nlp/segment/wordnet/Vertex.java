@@ -192,7 +192,9 @@ public class Vertex extends VertexExt {
      * @return
      */
     public Nature guessNature() {
-        if (guaseNature != null) return guaseNature;
+        if (guaseNature != null) {
+            return guaseNature;
+        }
 
         if (natureAttribute == null) {
             return null;
@@ -262,12 +264,15 @@ public class Vertex extends VertexExt {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null)
+        }
+        if (obj == null) {
             return false;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()) {
             return false;
+        }
         Vertex other = (Vertex) obj;
         return length == other.length;
     }

@@ -44,6 +44,7 @@ public class FileMynlpResource implements MynlpResource {
         return byteSource.openBufferedStream();
     }
 
+    @Override
     public CharSourceLineReader openLineReader() {
 
         boolean zip = file.getName().endsWith(".zip");

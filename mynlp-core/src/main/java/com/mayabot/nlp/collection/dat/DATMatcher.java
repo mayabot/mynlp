@@ -77,10 +77,11 @@ public class DATMatcher<V> {
         // A trick，如果文本长度为0的话，调用next()时，会带来越界的问题。
         // 所以我要在第一次调用next()的时候触发begin == arrayLength进而返回false。
         // 当然也可以改成begin >= arrayLength，不过我觉得操作符>=的效率低于==
-        if (arrayLength == 0)
+        if (arrayLength == 0) {
             begin = -1;
-        else
+        } else {
             begin = offset;
+        }
     }
 
     /**
@@ -97,8 +98,9 @@ public class DATMatcher<V> {
             if (i == arrayLength) // 指针到头了，将起点往前挪一个，重新开始，状态归零
             {
                 ++begin;
-                if (begin == arrayLength)
+                if (begin == arrayLength) {
                     break;
+                }
                 i = begin;
                 b = dat.base[0];
             }
@@ -106,12 +108,14 @@ public class DATMatcher<V> {
             // char[i] + 1
             if (b == dat.check[p]) // base[char[i-1]] == check[base[char[i-1]] +
                 // char[i] + 1]
+            {
                 b = dat.base[p]; // 转移成功
-            else {
+            } else {
                 i = begin; // 转移失败，也将起点往前挪一个，重新开始，状态归零
                 ++begin;
-                if (begin == arrayLength)
+                if (begin == arrayLength) {
                     break;
+                }
                 b = dat.base[0];
                 continue;
             }
