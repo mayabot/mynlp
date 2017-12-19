@@ -35,8 +35,8 @@ public class DoubleArrayTrieBuilder<V> {
     final int default_capacity = 1024 * 1024; // 1M
 
     private int array_capacity = default_capacity;
-    protected int check[] = new int[default_capacity];
-    protected int base[] = new int[default_capacity];
+    protected int[] check = new int[default_capacity];
+    protected int[] base = new int[default_capacity];
 
     /**
      * base 和 check 的大小
@@ -140,24 +140,27 @@ public class DoubleArrayTrieBuilder<V> {
      * @return 插入位置
      */
     private int insert(List<Node> siblings) {
-        if (error_ < 0)
+        if (error_ < 0) {
             return 0;
+        }
 
         int begin = 0;
         int pos = Math.max(siblings.get(0).code + 1, nextCheckPos) - 1;
         int nonzero_num = 0;
         int first = 0;
 
-        if (array_capacity <= pos)
+        if (array_capacity <= pos) {
             resize(pos + 1);
+        }
 
         outer:
         // 此循环体的目标是找出满足base[begin + a1...an] == 0的n个空闲空间,a1...an是siblings中的n个节点
         while (true) {
             pos++;
 
-            if (array_capacity <= pos)
+            if (array_capacity <= pos) {
                 resize(pos + 1);
+            }
 
             if (check[pos] != 0) {
                 nonzero_num++;
@@ -176,12 +179,15 @@ public class DoubleArrayTrieBuilder<V> {
                 resize(begin + siblings.get(siblings.size() - 1).code + Character.MAX_VALUE);
             }
 
-            if (used.get(begin))
+            if (used.get(begin)) {
                 continue;
+            }
 
-            for (int i = 1; i < siblings.size(); i++)
-                if (check[begin + siblings.get(i).code] != 0)
+            for (int i = 1; i < siblings.size(); i++) {
+                if (check[begin + siblings.get(i).code] != 0) {
                     continue outer;
+                }
+            }
 
             break;
         }
@@ -192,8 +198,9 @@ public class DoubleArrayTrieBuilder<V> {
         // 'next_check_pos' and 'check' is greater than some constant value
         // (e.g. 0.9),
         // new 'next_check_pos' index is written by 'check'.
-        if (1.0 * nonzero_num / (pos - nextCheckPos + 1) >= 0.95)
+        if (1.0 * nonzero_num / (pos - nextCheckPos + 1) >= 0.95) {
             nextCheckPos = pos; // 从位置 next_check_pos 开始到 pos
+        }
         // 间，如果已占用的空间在95%以上，下次插入节点时，直接从 pos 位置处开始查找
 
         used.set(begin); //used[begin]=true
@@ -242,20 +249,23 @@ public class DoubleArrayTrieBuilder<V> {
      * @return 兄弟节点个数
      */
     private int fetch(Node parent, List<Node> siblings) {
-        if (error_ < 0)
+        if (error_ < 0) {
             return 0;
+        }
 
         int prev = 0;
 
         for (int i = parent.left; i < parent.right; i++) {
-            if (keyList.get(i).length() < parent.depth)
+            if (keyList.get(i).length() < parent.depth) {
                 continue;
+            }
 
             String tmp = keyList.get(i);
 
             int cur = 0;
-            if (tmp.length() != parent.depth)
+            if (tmp.length() != parent.depth) {
                 cur = (int) tmp.charAt(parent.depth) + 1;
+            }
 
             if (prev > cur) {
                 error_ = -3;
@@ -267,8 +277,9 @@ public class DoubleArrayTrieBuilder<V> {
                 tmp_node.depth = parent.depth + 1;
                 tmp_node.code = cur;
                 tmp_node.left = i;
-                if (siblings.size() != 0)
+                if (siblings.size() != 0) {
                     siblings.get(siblings.size() - 1).right = i;
+                }
 
                 siblings.add(tmp_node);
             }
@@ -276,8 +287,9 @@ public class DoubleArrayTrieBuilder<V> {
             prev = cur;
         }
 
-        if (siblings.size() != 0)
+        if (siblings.size() != 0) {
             siblings.get(siblings.size() - 1).right = parent.right;
+        }
 
         return siblings.size();
     }

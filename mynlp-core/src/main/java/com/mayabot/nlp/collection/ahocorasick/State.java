@@ -105,7 +105,9 @@ public class State {
      * @return
      */
     public Integer getLargestValueId() {
-        if (emits == null || emits.size() == 0) return null;
+        if (emits == null || emits.size() == 0) {
+            return null;
+        }
 
         return emits.iterator().next();
     }
@@ -153,7 +155,7 @@ public class State {
      *
      * @param failState
      */
-    public void setFailure(State failState, int fail[]) {
+    public void setFailure(State failState, int[] fail) {
         this.failure = failState;
         fail[index] = failState.index;
     }

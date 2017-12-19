@@ -30,7 +30,9 @@ public class Table {
 
     @Override
     public String toString() {
-        if (v == null) return "null";
+        if (v == null) {
+            return "null";
+        }
         final StringBuilder sb = new StringBuilder(v.length * v[0].length * 2);
         for (String[] line : v) {
             for (String element : line) {
@@ -49,8 +51,12 @@ public class Table {
      * @return
      */
     public String get(int x, int y) {
-        if (x < 0) return HEAD + x;
-        if (x >= v.length) return HEAD + "+" + (x - v.length + 1);
+        if (x < 0) {
+            return HEAD + x;
+        }
+        if (x >= v.length) {
+            return HEAD + "+" + (x - v.length + 1);
+        }
 
         return v[x][y];
     }

@@ -75,13 +75,13 @@ public class WordnetTokenizer implements MynlpTokenizer {
     @Override
     public LinkedList<MynlpTerm> token(char[] text) {
 
-        if (text.length == 0) { // 处理为空的特殊情况
+        // 处理为空的特殊情况
+        if (text.length == 0) {
             return Lists.newLinkedList();
         }
 
         //构建一个空的Wordnet对象
         final Wordnet wordnet = initEmptyWordNet(text);
-
 
         wordnetInitializer.initialize(wordnet);
 

@@ -196,8 +196,9 @@ public class PersonRecognition implements OptimizeProcessor {
 
                         switch (value) {
                             case BCD:
-                                if (name.charAt(0) == name.charAt(2))
+                                if (name.charAt(0) == name.charAt(2)) {
                                     return; // 姓和最后一个名不可能相等的
+                                }
                         }
                         if (isBadCase(name)) {
                             return;
@@ -222,8 +223,9 @@ public class PersonRecognition implements OptimizeProcessor {
 
                         switch (value) {
                             case BCD:
-                                if (name.charAt(0) == name.charAt(2))
+                                if (name.charAt(0) == name.charAt(2)) {
                                     return; // 姓和最后一个名不可能相等的
+                                }
                         }
                         if (isBadCase(name)) {
                             return;
@@ -299,8 +301,9 @@ public class PersonRecognition implements OptimizeProcessor {
      */
     private boolean isBadCase(String name) {
         EnumFreqPair<NRTag> nrEnumFreqPair = personDictionary.getDictionary().get(name);
-        if (nrEnumFreqPair == null)
+        if (nrEnumFreqPair == null) {
             return false;
+        }
         return nrEnumFreqPair.containsLabel(A);
     }
 

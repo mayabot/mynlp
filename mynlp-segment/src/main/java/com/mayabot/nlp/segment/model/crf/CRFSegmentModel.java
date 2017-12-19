@@ -52,7 +52,9 @@ public final class CRFSegmentModel extends CRFModel {
         Iterator<String> lineIterator = txtReader;
 
 
-        if (!lineIterator.hasNext()) return null;
+        if (!lineIterator.hasNext()) {
+            return null;
+        }
 
         logger.info(lineIterator.next());   // verson
 

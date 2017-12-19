@@ -188,8 +188,9 @@ public class PlaceRecognition implements OptimizeProcessor {
      */
     private boolean isBadCase(String name) {
         EnumFreqPair<NSTag> nrEnumFreqPair = personDictionary.getDictionary().get(name);
-        if (nrEnumFreqPair == null)
+        if (nrEnumFreqPair == null) {
             return false;
+        }
         return nrEnumFreqPair.containsLabel(Z);
     }
 

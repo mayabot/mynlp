@@ -36,6 +36,7 @@ class WordNetToStringBuilder {
         this.showAttr = showAttr;
     }
 
+    @Override
     public String toString() {
 
         BitSet noover = this.wordnet.findNoOverWords();

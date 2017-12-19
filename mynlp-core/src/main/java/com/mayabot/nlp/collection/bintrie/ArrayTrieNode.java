@@ -37,6 +37,7 @@ public class ArrayTrieNode<T> extends AbstractTrieNode<T> {
         this.value = value;
     }
 
+    @Override
     public List<AbstractTrieNode<T>> getChildren() {
         if (children == null) {
             return null;
@@ -56,6 +57,7 @@ public class ArrayTrieNode<T> extends AbstractTrieNode<T> {
      * @param c
      * @return
      */
+    @Override
     @SuppressWarnings({"unchecked", "rawtypes"})
     public BinTrieNode<T> addChildNode(BinTrieNode<T> c) {
 
@@ -101,6 +103,7 @@ public class ArrayTrieNode<T> extends AbstractTrieNode<T> {
      * @param c
      * @return
      */
+    @Override
     public ArrayTrieNode<T> findChild(char c) {
         if (this.children == null) {
             return null;
@@ -118,6 +121,7 @@ public class ArrayTrieNode<T> extends AbstractTrieNode<T> {
      * @param c
      * @return
      */
+    @Override
     public boolean contains(char c) {
         if (this.children == null) {
             return false;

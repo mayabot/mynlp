@@ -182,8 +182,10 @@ public class TransformMatrix {
     public int getFrequency(String from, String to) {
 
         Integer v = matrix.get(from, to);
-
-        return v;
+        if (v == null) {
+            return 0;
+        }
+        return v.intValue();
     }
 
     /**
@@ -195,9 +197,10 @@ public class TransformMatrix {
     public long getTotalFrequency(String from) {
         Long v = total.get(from);
         if (v == null) {
-            return 0; //FIXME 这里会不会有问题
+            //FIXME 这里会不会有问题
+            return 0;
         }
-        return v;
+        return v.longValue();
     }
 
     /**

@@ -209,8 +209,9 @@ public class OrganizationRecognition implements OptimizeProcessor {
      */
     private boolean isBadCase2(String name) {
         EnumFreqPair<NTTag> nrEnumFreqPair = dictionary.getDictionary().get(name);
-        if (nrEnumFreqPair == null)
+        if (nrEnumFreqPair == null) {
             return false;
+        }
         return nrEnumFreqPair.containsLabel(Z);
     }
 
