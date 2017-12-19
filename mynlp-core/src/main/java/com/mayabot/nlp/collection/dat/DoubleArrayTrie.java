@@ -51,8 +51,8 @@ public class DoubleArrayTrie<T> implements Trie<T> {
     }
 
     ArrayList<T> values;
-    int check[];
-    int base[];
+    int[] check;
+    int[] base;
 
     protected DoubleArrayTrie(ArrayList<T> values, int[] check, int[] base) {
         super();
@@ -89,9 +89,11 @@ public class DoubleArrayTrie<T> implements Trie<T> {
 
     public int getNonzeroSize() {
         int result = 0;
-        for (int i = 0; i < check.length; ++i)
-            if (check[i] != 0)
+        for (int i = 0; i < check.length; ++i) {
+            if (check[i] != 0) {
                 ++result;
+            }
+        }
         return result;
     }
 
@@ -106,10 +108,12 @@ public class DoubleArrayTrie<T> implements Trie<T> {
     }
 
     public int indexOf(CharSequence key, int pos, int len, int nodePos) {
-        if (len <= 0)
+        if (len <= 0) {
             len = key.length();
-        if (nodePos <= 0)
+        }
+        if (nodePos <= 0) {
             nodePos = 0;
+        }
 
         int result = -1;
 
@@ -118,10 +122,11 @@ public class DoubleArrayTrie<T> implements Trie<T> {
 
         for (int i = pos; i < pos + len; i++) {
             p = b + (int) (key.charAt(i)) + 1;
-            if (b == check[p])
+            if (b == check[p]) {
                 b = base[p];
-            else
+            } else {
                 return result;
+            }
         }
 
         p = b;
@@ -156,10 +161,12 @@ public class DoubleArrayTrie<T> implements Trie<T> {
      */
 
     public int indexOf(char[] keyChars, int pos, int len, int nodePos) {
-        if (len <= 0)
+        if (len <= 0) {
             len = keyChars.length;
-        if (nodePos <= 0)
+        }
+        if (nodePos <= 0) {
             nodePos = 0;
+        }
 
         int result = -1;
 
@@ -168,10 +175,11 @@ public class DoubleArrayTrie<T> implements Trie<T> {
 
         for (int i = pos; i < len + pos; i++) {
             p = b + (int) (keyChars[i]) + 1;
-            if (b == check[p])
+            if (b == check[p]) {
                 b = base[p];
-            else
+            } else {
                 return result;
+            }
         }
 
         p = b;
@@ -189,6 +197,7 @@ public class DoubleArrayTrie<T> implements Trie<T> {
      * @param key 键
      * @return 值
      */
+    @Override
     public T get(CharSequence key) {
         int index = indexOf(key);
         if (index >= 0) {
@@ -207,6 +216,7 @@ public class DoubleArrayTrie<T> implements Trie<T> {
         return null;
     }
 
+    @Override
     public T get(char[] key) {
         int index = indexOf(key, 0, key.length, 0);
         if (index >= 0) {
@@ -216,6 +226,7 @@ public class DoubleArrayTrie<T> implements Trie<T> {
         return null;
     }
 
+    @Override
     public T get(char[] key, int offset, int len) {
 
         int index = indexOf(key, offset, len, 0);
@@ -259,9 +270,11 @@ public class DoubleArrayTrie<T> implements Trie<T> {
             // char[i] + 1
             if (b == check[p]) // base[char[i-1]] == check[base[char[i-1]] +
                 // char[i] + 1]
+            {
                 b = base[p];
-            else
+            } else {
                 return result;
+            }
             p = b;
             n = base[p];
             if (b == check[p] && n < 0) // base[p] == check[p] && base[p] < 0
@@ -303,9 +316,11 @@ public class DoubleArrayTrie<T> implements Trie<T> {
             // char[i] + 1
             if (b == check[p]) // base[char[i-1]] == check[base[char[i-1]] +
                 // char[i] + 1]
+            {
                 b = base[p];
-            else
+            } else {
                 return result;
+            }
             p = b;
             n = base[p];
             if (b == check[p] && n < 0) // base[p] == check[p] && base[p] < 0
@@ -343,9 +358,11 @@ public class DoubleArrayTrie<T> implements Trie<T> {
             p = b + (int) (keyChars[i]) + 1;    // 状态转移 p = base[char[i-1]] + char[i] + 1
             // 下面这句可能产生下标越界，不如改为if (p < size && b == check[p])，或者多分配一些内存
             if (b == check[p])                  // base[char[i-1]] == check[base[char[i-1]] + char[i] + 1]
+            {
                 b = base[p];
-            else
+            } else {
                 return result;
+            }
         }
 
         p = b;
@@ -408,6 +425,7 @@ public class DoubleArrayTrie<T> implements Trie<T> {
 //    }
 
 
+    @Override
     public boolean containsKey(String key) {
         return indexOf(key) >= 0;
     }
@@ -434,10 +452,11 @@ public class DoubleArrayTrie<T> implements Trie<T> {
 
         for (int i = 0; i < path.length; ++i) {
             p = b + (int) (path[i]) + 1;
-            if (b == check[p])
+            if (b == check[p]) {
                 b = base[p];
-            else
+            } else {
                 return -1;
+            }
         }
 
         p = b;
@@ -457,10 +476,11 @@ public class DoubleArrayTrie<T> implements Trie<T> {
         int p;
 
         p = b + (int) (c) + 1;
-        if (b == check[p])
+        if (b == check[p]) {
             b = base[p];
-        else
+        } else {
             return -1;
+        }
 
         return b;
     }
@@ -478,10 +498,11 @@ public class DoubleArrayTrie<T> implements Trie<T> {
 
         for (int i = 0; i < path.length(); ++i) {
             p = b + (int) (path.charAt(i)) + 1;
-            if (b == check[p])
+            if (b == check[p]) {
                 b = base[p];
-            else
+            } else {
                 return -1;
+            }
         }
 
         p = b;
@@ -496,8 +517,9 @@ public class DoubleArrayTrie<T> implements Trie<T> {
      * @return 对应的值，null表示不输出
      */
     public T output(int state) {
-        if (state < 0)
+        if (state < 0) {
             return null;
+        }
         int n = base[state];
         if (state == check[state] && n < 0) {
             return values.get(-n - 1);
@@ -517,10 +539,11 @@ public class DoubleArrayTrie<T> implements Trie<T> {
         int p;
 
         p = b + c + 1;
-        if (b == check[p])
+        if (b == check[p]) {
             b = base[p];
-        else
+        } else {
             return -1;
+        }
 
         p = b;
         return p;

@@ -59,6 +59,7 @@ public class CustomCharSequence implements CharSequence {
         return new CustomCharSequence(text, start + offset, end - start);
     }
 
+    @Override
     public String toString() {
         return new String(text, offset, length);
     }

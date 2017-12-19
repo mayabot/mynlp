@@ -69,7 +69,9 @@ public class CRFModel {
      */
     public void tag(Table table) {
         int size = table.size();
-        if (size == 0) return;
+        if (size == 0) {
+            return;
+        }
         int tagSize = id2tag.length;
         double[][] net = new double[size][tagSize];
         for (int i = 0; i < size; ++i) {
@@ -137,7 +139,9 @@ public class CRFModel {
         for (FeatureTemplate featureTemplate : featureTemplateList) {
             char[] o = featureTemplate.generateParameter(table, current);
             FeatureFunction featureFunction = featureFunctionTrie.get(o);
-            if (featureFunction == null) continue;
+            if (featureFunction == null) {
+                continue;
+            }
             scoreList.add(featureFunction.w);
         }
 

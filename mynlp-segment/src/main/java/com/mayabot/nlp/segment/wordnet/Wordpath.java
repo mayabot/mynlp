@@ -292,6 +292,7 @@ public class Wordpath {
         return false;
     }
 
+    @Override
     public String toString() {
         int last = bitSet.length() - 1;
         StringBuilder sb = new StringBuilder();

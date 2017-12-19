@@ -404,6 +404,7 @@ public class Wordnet implements CharSequence {
      * 根据当前的最优路径，设定已经选择的最优路径中的Vertext的最优网络标记为true
      */
     //
+    @Override
     public String toString() {
         return new WordNetToStringBuilder(this, false).toString();
     }

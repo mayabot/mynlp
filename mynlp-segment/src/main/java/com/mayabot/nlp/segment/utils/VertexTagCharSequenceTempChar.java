@@ -55,6 +55,7 @@ public class VertexTagCharSequenceTempChar implements CharSequence {
         return new VertexTagCharSequenceTempChar(text, start + offset, end - start);
     }
 
+    @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         for (int i = offset; i < length + offset; i++) {

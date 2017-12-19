@@ -199,6 +199,7 @@ public class CoreDictionary implements MynlpCacheable {
         return new File(environment.getWorkDir(), "core.dict." + hash);
     }
 
+    @Override
     public void saveToCache(OutputStream out) throws Exception {
         DataOutputStream dataOutput = new DataOutputStream(out);
 
@@ -209,6 +210,7 @@ public class CoreDictionary implements MynlpCacheable {
 
     }
 
+    @Override
     public void readFromCache(InputStream inputStream) throws Exception {
         DataInput dataInput = new DataInputStream(inputStream);
 
@@ -282,8 +284,9 @@ public class CoreDictionary implements MynlpCacheable {
      */
     public int getTermFrequency(String term) {
         NatureAttribute attribute = get(term);
-        if (attribute == null)
+        if (attribute == null) {
             return 0;
+        }
         return attribute.getTotalFrequency();
     }
 

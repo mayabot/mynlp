@@ -44,6 +44,7 @@ public class HashTrieNode<T> extends AbstractTrieNode<T> {
         this.value = param;
     }
 
+    @Override
     public List<AbstractTrieNode<T>> getChildren() {
         if (map == null) {
             return null;
@@ -58,6 +59,7 @@ public class HashTrieNode<T> extends AbstractTrieNode<T> {
      * @param c
      * @return
      */
+    @Override
     @SuppressWarnings({"unchecked", "rawtypes"})
     public BinTrieNode<T> addChildNode(BinTrieNode<T> c) {
         AbstractTrieNode<T> child = ((AbstractTrieNode<T>) c);
@@ -96,6 +98,7 @@ public class HashTrieNode<T> extends AbstractTrieNode<T> {
      * @param c
      * @return
      */
+    @Override
     public HashTrieNode<T> findChild(char c) {
         if (map != null) {
             return map.get(c);
@@ -109,6 +112,7 @@ public class HashTrieNode<T> extends AbstractTrieNode<T> {
      * @param c
      * @return
      */
+    @Override
     public boolean contains(char c) {
         if (map != null) {
             return map.containsKey(c);

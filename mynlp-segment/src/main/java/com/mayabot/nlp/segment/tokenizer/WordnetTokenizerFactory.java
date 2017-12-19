@@ -3,6 +3,7 @@ package com.mayabot.nlp.segment.tokenizer;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
@@ -22,6 +23,7 @@ import java.util.Map;
 
 /**
  * 根据JSON配置文件产生一个WordnetTokenizer对象
+ * @author jimichan
  */
 @Singleton
 public class WordnetTokenizerFactory {
@@ -60,12 +62,17 @@ public class WordnetTokenizerFactory {
         wordNetTokenizer.setBestPathComputer(registry.getInstance(builder.getBestPath(), BestPathComputer.class));
         wordNetTokenizer.setWordnetInitializer(registry.getInstance(builder.getWordnetIniter(), WordnetInitializer.class));
 
+        final List<WordpathProcessor> wordpathProcessors = Lists.newArrayList();
+
         for (PipelineItem item : builder.getPipelineItem()) {
 
             WordpathProcessor pro = registry.getInstance(item.type, WordpathProcessor.class);
             pro.initConfig(item.config);
 
+            wordpathProcessors.add(pro);
         }
+
+        wordNetTokenizer.setWordPathProcessors(ImmutableList.copyOf(wordpathProcessors));
 
         wordNetTokenizer.check();
 

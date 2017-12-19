@@ -97,6 +97,7 @@ public class CustomDictionary implements MynlpCacheable {
         return new File(environment.getWorkDir(), hash + ".custom.dict");
     }
 
+    @Override
     public void saveToCache(OutputStream out) throws Exception {
         ByteArrayDataOutput dataOutput = ByteStreams.newDataOutput();
 
@@ -105,6 +106,7 @@ public class CustomDictionary implements MynlpCacheable {
         out.write(dataOutput.toByteArray());
     }
 
+    @Override
     public void readFromCache(InputStream inputStream) throws Exception {
         DataInput dataInput = new DataInputStream(inputStream);
         this.dat = DoubleArrayTrie.read(dataInput, NatureAttribute::read);

@@ -167,8 +167,10 @@ public class AhoCoraickDoubleArrayTrieBuilder<V> {
      */
     private void constructOutput(State targetState) {
         Collection<Integer> emit = targetState.emit();
-        if (emit == null || emit.size() == 0) return;
-        int output[] = new int[emit.size()];
+        if (emit == null || emit.size() == 0) {
+            return;
+        }
+        int[] output = new int[emit.size()];
         Iterator<Integer> it = emit.iterator();
         for (int i = 0; i < output.length; ++i) {
             output[i] = it.next();
@@ -228,16 +230,18 @@ public class AhoCoraickDoubleArrayTrieBuilder<V> {
         int nonzero_num = 0;
         int first = 0;
 
-        if (array_capacity <= pos)
+        if (array_capacity <= pos) {
             resize(pos + 1);
+        }
 
         outer:
         // 此循环体的目标是找出满足base[begin + a1...an]  == 0的n个空闲空间,a1...an是siblings中的n个节点
         while (true) {
             pos++;
 
-            if (array_capacity <= pos)
+            if (array_capacity <= pos) {
                 resize(pos + 1);
+            }
 
             if (trie.check[pos] != 0) {
                 nonzero_num++;
@@ -254,12 +258,15 @@ public class AhoCoraickDoubleArrayTrieBuilder<V> {
                 resize((begin + siblings.get(siblings.size() - 1).getKey()) + 64 * 1024);
             }
 
-            if (used.get(begin))
+            if (used.get(begin)) {
                 continue;
+            }
 
-            for (int i = 1; i < siblings.size(); i++)
-                if (trie.check[begin + siblings.get(i).getKey()] != 0)
+            for (int i = 1; i < siblings.size(); i++) {
+                if (trie.check[begin + siblings.get(i).getKey()] != 0) {
                     continue outer;
+                }
+            }
 
             break;
         }
@@ -270,8 +277,9 @@ public class AhoCoraickDoubleArrayTrieBuilder<V> {
         // 'next_check_pos' and 'check' is greater than some constant value
         // (e.g. 0.9),
         // new 'next_check_pos' index is written by 'check'.
-        if (1.0 * nonzero_num / (pos - nextCheckPos + 1) >= 0.95)
+        if (1.0 * nonzero_num / (pos - nextCheckPos + 1) >= 0.95) {
             nextCheckPos = pos; // 从位置 next_check_pos 开始到 pos 间，如果已占用的空间在95%以上，下次插入节点时，直接从 pos 位置处开始查找
+        }
         used.set(begin);
 
         size = (size > begin + siblings.get(siblings.size() - 1).getKey() + 1) ? size : begin + siblings.get(siblings.size() - 1).getKey() + 1;
@@ -300,11 +308,11 @@ public class AhoCoraickDoubleArrayTrieBuilder<V> {
      * 释放空闲的内存
      */
     private void loseWeight() {
-        int nbase[] = new int[size + 65535];
+        int[] nbase = new int[size + 65535];
         System.arraycopy(trie.base, 0, nbase, 0, size);
         trie.base = nbase;
 
-        int ncheck[] = new int[size + 65535];
+        int[] ncheck = new int[size + 65535];
         System.arraycopy(trie.check, 0, ncheck, 0, size);
         trie.check = ncheck;
     }

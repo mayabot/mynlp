@@ -339,10 +339,11 @@ public class VertexRow implements Iterable<Vertex> {
         newNode.next = succ;
         succ.prev = newNode;
 
-        if (pred == null)
+        if (pred == null) {
             first = newNode;
-        else
+        } else {
             pred.next = newNode;
+        }
         size++;
     }
 

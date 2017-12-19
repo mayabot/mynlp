@@ -59,6 +59,7 @@ public class TrieTreeForwardMaxMatcher<T> implements TrieTreeMatcher<T> {
      *
      * @return
      */
+    @Override
     public String next() {
         String temp = this.frontWordNext();
         while (EMPTY_STRING.equals(temp)) {
@@ -171,6 +172,7 @@ public class TrieTreeForwardMaxMatcher<T> implements TrieTreeMatcher<T> {
      * @param i
      * @return
      */
+    @Override
     public String getParam(int i) {
         if (param != null) {
             if (param instanceof String[]) {
@@ -191,10 +193,12 @@ public class TrieTreeForwardMaxMatcher<T> implements TrieTreeMatcher<T> {
      *
      * @return
      */
+    @Override
     public T getParams() {
         return this.param;
     }
 
+    @Override
     public int getOffset() {
         return offset;
     }

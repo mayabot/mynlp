@@ -58,8 +58,9 @@ public interface BinTrieNode<T> {
         int len = key.length();
         for (int i = 0; i < len; i++) {
             char _char = key.charAt(i);
-            if (branch == null)
+            if (branch == null) {
                 return null;
+            }
             branch = branch.findChild(_char);
         }
         return branch;
