@@ -80,14 +80,14 @@ public class CSRSparseMatrix implements Serializable {
      */
     public int get(int row, int col) {
         if (row < 0 || col < 0) {
-            return -1;
+            return 0;
         }
 
 
         int off = rowOffset[row];
         int end = rowOffset[row + 1];
         if (off == end) {
-            return -1;
+            return 0;
         }
 
         //columnIndices
@@ -97,7 +97,7 @@ public class CSRSparseMatrix implements Serializable {
             return values[index];
         }
 
-        return -1;
+        return 0;
     }
 
 

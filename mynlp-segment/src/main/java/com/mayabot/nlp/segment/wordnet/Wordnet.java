@@ -50,9 +50,11 @@ public class Wordnet implements CharSequence {
      */
     final VertexRow[] slotList;
 
-    private final VertexRow begin; // 启始行 下标 -1
+    // 启始行 下标 -1
+    private final VertexRow begin;
 
-    private final VertexRow end; // 结尾行 下标 charSize
+    // 结尾行 下标 charSize
+    private final VertexRow end;
 
     /**
      * 原始句子对应的数组
@@ -93,7 +95,8 @@ public class Wordnet implements CharSequence {
         this.begin = new VertexRow(-1, this);
         this.end = new VertexRow(charSize, this);
 
-        slotList = new VertexRow[charSize]; // 创建一个空的数组
+        // 创建一个空的数组
+        slotList = new VertexRow[charSize];
         //初始化数组里面的对象,提前初始化好
         for (int i = 0; i < charSize; i++) {
             slotList[i] = new VertexRow(i, this);
@@ -344,7 +347,7 @@ public class Wordnet implements CharSequence {
 
 
     /**
-     * 访问网络里面所有的Vertex节点
+     * 访问网络里面所有的Vertex节点. 从后向前了
      *
      * @param consumer
      */
@@ -352,10 +355,8 @@ public class Wordnet implements CharSequence {
         for (int i = slotList.length - 1; i >= 0; i--) {
             VertexRow row = slotList[i];
             if (row != null) {
-                Vertex node = row.getFirst();
-                while ((node != null)) {
-                    consumer.accept(node);
-                    node = node.next;
+                for (Vertex v = row.first(); v != null; v = v.next()) {
+                    consumer.accept(v);
                 }
             }
         }
@@ -390,9 +391,9 @@ public class Wordnet implements CharSequence {
 
     /**
      * 标记优化网络的路径，根据目前的最优路径来标记
+     * 目前最有路径上的点，标记为优化网络
      */
     public void tagOptimizeNetVertex(Wordpath wordPath) {
-        //目前最有路径上的点，标记为优化网络
         Iterator<Vertex> ite = wordPath.iteratorBestPath();
         while (ite.hasNext()) {
             Vertex node = ite.next();
@@ -401,9 +402,8 @@ public class Wordnet implements CharSequence {
     }
 
     /**
-     * 根据当前的最优路径，设定已经选择的最优路径中的Vertext的最优网络标记为true
+     * 根据当前的最优路径，设定已经选择的最优路径中的Vertex的最优网络标记为true
      */
-    //
     @Override
     public String toString() {
         return new WordNetToStringBuilder(this, false).toString();

@@ -15,7 +15,7 @@
  *
  */
 
-package com.mayabot.nlp.segment.wordnetiniter.crf;
+package com.mayabot.nlp.segment.wordnetiniter;
 
 import com.google.inject.Inject;
 import com.google.inject.Injector;

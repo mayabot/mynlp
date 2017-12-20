@@ -18,7 +18,7 @@ import com.mayabot.nlp.segment.wordnetiniter.AtomSegmenter;
 import com.mayabot.nlp.segment.wordnetiniter.ConvertAbstractWord;
 import com.mayabot.nlp.segment.wordnetiniter.CoreDictionaryOriginalSegment;
 import com.mayabot.nlp.segment.wordnetiniter.MultiWordnetInit;
-import com.mayabot.nlp.segment.wordnetiniter.crf.CrfOriginalSegment;
+import com.mayabot.nlp.segment.wordnetiniter.CrfOriginalSegment;
 import com.mayabot.nlp.segment.xprocessor.*;
 
 import java.util.Map;
