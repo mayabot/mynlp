@@ -46,14 +46,14 @@ public class IndexSubwordsProcess implements WordpathProcessor {
         while (path.hasNext()) {
             Vertex word = path.next();
 
-            if (word.length() <= 2) {
+            if (word.length <= 2) {
                 continue;
             }
 
-            final int lastIndex = word.length() + word.getRowNum();
+            final int lastIndex = word.length + word.getRowNum();
 
             int from = word.getRowNum();
-            int to = from + word.length();
+            int to = from + word.length;
 
             for (int i = from; i < to; i++) {
                 VertexRow row = wordnet.getRow(i);
@@ -62,7 +62,7 @@ public class IndexSubwordsProcess implements WordpathProcessor {
                 while (small != null) {
                     try {
 
-                        if (small.length() > 1 && i + small.length() <= lastIndex && small != word) { //大于1的词，并且在范围内
+                        if (small.length > 1 && i + small.length() <= lastIndex && small != word) { //大于1的词，并且在范围内
 
                             // System.out.println(small.realWord());
 

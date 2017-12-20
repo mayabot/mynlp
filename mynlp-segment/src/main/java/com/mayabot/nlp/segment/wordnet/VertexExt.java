@@ -42,10 +42,14 @@ public class VertexExt {
 //    public double adjustWeight;
 
     /**
-     * 优化网络的节点标记
+     * 优化网络的节点标记.
+     *
      */
     private boolean optimize = false;
 
+    /**
+     * 当网络状态为优化网络。那么之后新增的词，比较为true
+     */
     private boolean optimizeNewNode = false;
 
 //    public boolean change = false;
@@ -209,6 +213,10 @@ public class VertexExt {
         return optimizeNewNode;
     }
 
+    /**
+     * 当网络状态为优化网络。那么之后新增的词，比较为true
+     * @param optimizeNewNode
+     */
     public void setOptimizeNewNode(boolean optimizeNewNode) {
         this.optimizeNewNode = optimizeNewNode;
     }
