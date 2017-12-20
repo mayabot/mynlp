@@ -401,4 +401,5 @@ public class VertexRow implements Iterable<Vertex> {
     public boolean isNotEmtpy() {
         return first != null;
     }
+
 }

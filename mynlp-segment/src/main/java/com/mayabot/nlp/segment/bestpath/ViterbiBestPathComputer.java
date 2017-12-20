@@ -17,13 +17,15 @@
 
 package com.mayabot.nlp.segment.bestpath;
 
+import com.google.common.base.Preconditions;
+import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.mayabot.nlp.segment.corpus.tag.Nature;
-import com.mayabot.nlp.segment.dictionary.NatureAttribute;
 import com.mayabot.nlp.segment.dictionary.core.CoreBiGramTableDictionary;
 import com.mayabot.nlp.segment.wordnet.*;
 import com.mayabot.nlp.utils.Predefine;
+
+import java.util.List;
 
 /**
  * 基于核心词典的bi词之前的共出现的次数，采用viterbi选择出一个概率最大的path
@@ -41,124 +43,139 @@ public class ViterbiBestPathComputer implements BestPathComputer {
         this.coreBiGramTableDictionary = coreBiGramTableDictionary;
     }
 
+    /**
+     * -1	¤ 	|		BEGIN
+     * 0	这 	|		这 {rzv=54791}(4.070759440936601)		[Y]这里 {rzs=3843}(4.579405126197817)
+     * 1	里 	|		里 {f=16722}(12.46164245387843)
+     * 2	有 	|		有 {vyou=85663}(7.544684832432196)		[Y]有关 {vn=5733, v=2741}(15.203678100804673)
+     * 3	关 	|		关 {n=1388}(15.503126753728335)		[Y]关天[未##人] {nr=607718, nrf=113445}		[Y]关天培[未##人] {nr=607718, nrf=113445}
+     * 4	天 	|		[Y]天 {qt=8660}(25.26417248000554)
+     * 5	培 	|		[Y]培 {v=78}(5.8510305753092355)
+     * 6	的 	|		[Y]的 {ude1=857740}(3.1812404559835485)
+     * 7	烈 	|		烈 {a=43}(52.56616577195564)		[Y]烈士 {nnt=146}(8.849262104347634)
+     * 8	士 	|		士 {ng=132}(64.16173487214445)
+     * 9	. 	|		[Y]. {w=10000}(20.401302810184667)
+     * 10	龚 	|		[Y]龚 {nz=33}(30.329012216428193)		[Y]龚学[未##人] {nr=607718, nrf=113445}(30.329012216428193)		[Y]龚学平[未##人] {nr=607718, nrf=113445}(30.329012216428193)
+     * 11	学 	|		[Y]学 {v=1824}(41.928910055744744)
+     * 12	平 	|		[Y]平 {v=1007}(36.18004279173743)		[Y]平等 {a=542}(36.18004279173743)
+     * 13	等 	|		[Y]等 {udeng=59855}(34.67881357497878)
+     * 14	领 	|		领 {v=721}(108.06111850914337)		[Y]领导 {n=7055}(40.92071359722565)
+     * 15	导 	|		导 {vg=216, v=74}(119.39983526854556)
+     * 16	, 	|		[Y], {w=10000}(51.12282609430713)
+     * 17	  	|		[Y]  {w=10000}(61.05053550055065)
+     * 18	邓 	|		[Y]邓 {nz=285}(70.97824490679417)		[Y]邓颖[未##人] {nr=607718, nrf=113445}(70.97824490679417)		[Y]邓颖超[未##人] {nr=607718, nrf=113445}(70.97824490679417)
+     * 19	颖 	|		[Y]颖 {nz=35}(82.47439493108307)
+     * 20	超 	|		[Y]超 {v=2397}(76.82927548210341)		[Y]超生 {vi=449, vn=34}(76.82927548210341)
+     * 21	生 	|		[Y]生 {v=2977, vn=431}(76.82927548210341)		[Y]生前[未##时] {t=757118}(75.13792938558636)
+     * 22	前 	|		前 {f=16954}(172.6354017910788)
+     * 23	¶ 	|		END
+     *
+     * @param wordnet
+     * @return
+     */
+
+    /**
+     * 在原因的path基础上。多个识别器做了修改。
+     * 1. 合成词
+     * 2. 截断+合成
+     *
+     * @param wordnet
+     * @return
+     */
+
     @Override
     public Wordpath select(Wordnet wordnet) {
 
+        //从第二个字符节点开始，一直到最后一个字符
+        final int charSize = wordnet.getCharSizeLength();
+
+        final boolean optimizeNet = wordnet.isOptimizeNet();
+
+        if (optimizeNet) {
+            // AB C D => A BCD
+            // AB CD => ABC D
+            // A B CD => ABC D
+            // AB C DE => A BCD E
+            // TODO 没有覆盖 AB C DE => A BCD E 这个情况
+            // TODO  AB CD => A BC D
+            for (int i = 0; i < charSize; i++) {
+
+                final VertexRow row = wordnet.row(i);
+
+                for (Vertex node = row.first(); node != null; node = node.next()) {
+
+                    final VertexRow toRow = wordnet.row(i + node.length);
+                    boolean hasOptimizeNode = false;
+                    boolean hasOptimizeNewNode = false;
+
+                    for(Vertex n = toRow.first();n!=null;n = n.getNext()) {
+                        if(n.isOptimize()){
+                            hasOptimizeNode = true;
+                        }
+                        if (n.isOptimizeNewNode()) {
+                            hasOptimizeNewNode = true;
+                        }
+                    }
+
+                    if (node.isOptimize()) {
+                        if (node.isOptimizeNewNode()) {
+                            //龚学 平等  => 龚学平 等
+                            //如果被跳转后，不是优化网络节点
+                            if (!hasOptimizeNode) {
+                                for (Vertex n = toRow.first(); n != null; n = n.getNext()) {
+                                    if (!n.isOptimize()) {
+                                        n.setOptimize(true);
+                                        n.setOptimizeNewNode(true);
+                                    }
+                                }
+                            }
+                        }
+
+                    } else {
+                        // 有关 天 陪 => 有 关天培
+                        // 当前不是优化节点。但是去调整到有优化新节点的
+                        if (hasOptimizeNewNode) {
+                            node.setOptimize(true);
+                            node.setOptimizeNewNode(true);
+                        }
+                    }
+                }
+            }
+        }
+
         // 第一行的From肯定来自Start节点
-        for (Vertex v : wordnet.getRow(0)) {
+
+        for (Vertex v = wordnet.getRow(0).first(); v != null; v = v.next()) {
             updateFrom(wordnet, v, wordnet.getBeginRow().getFirst());
         }
 
-        //从第二个字符节点开始，一直到最后一个字符
-        int charSize = wordnet.getCharSizeLength();
+
         for (int i = 0; i < charSize; i++) {
-            VertexRow row = wordnet.row(i);
+
+            final VertexRow row = wordnet.row(i);
+
             if (row.isEmpty()) {
                 continue;
             }
 
-            boolean isOptimizeNet = wordnet.isOptimizeNet();
+            for (Vertex node = row.first(); node != null; node = node.next()) {
 
-            Vertex _f = row.first();
-            do {
-                final Vertex node = _f;
-                _f = _f.next();
-
-
-                if (node.from == null) {
-
-                    if (isOptimizeNet && node.isOptimize() && row.getRowNum() > -1) {
-                        //这种情况很难发生
-                        final int rowNum = row.getRowNum();
-                        double weight = Double.MAX_VALUE;
-                        Vertex from = null;
-                        int count = 0;
-                        for (int k = row.getRowNum() - 1; k >= 0; k--) {
-                            VertexRow pre = wordnet.getRow(k);
-                            if (!pre.isEmpty()) {
-                                Vertex f = pre.getFirst();
-                                while (f != null) {
-                                    if (k + f.length() == rowNum) {
-                                        if (f.weight < weight) {
-                                            weight = f.weight;
-                                            from = f;
-                                        }
-                                    }
-                                    f = f.next();
-                                }
-
-                            }
-                            count++;
-                            if (count > 10) { // 最大不要超过10
-                                break;
-                            }
-                        }
-                        node.from = from;
-                    }
-
-                    if (node.from == null) {
-                        continue;
-                    }
+                if(node.from == null || (optimizeNet && !node.isOptimize())){
                     continue;
                 }
 
-                // 如果在优化网络的模式下，非优化节点，就不要去计算了，当他们不存在。
-                // 不知道会不会有问题
-                if (isOptimizeNet && !node.isOptimize()) {
-                    // 优化网络 少去计算
-//                     System.out.println("--"+node.realWord());
-                    continue;
-                }
+                final VertexRow toRow = wordnet.row(i + node.length);
 
-                //检查后驱
-
-
-                VertexRow toRow = wordnet.row(i + node.getLength());
-
-                //自动弥补
-                if (toRow.isEmpty()) {
-                    Vertex one = new Vertex(1, -1, null, NatureAttribute.create(Nature.x, 1));
-                    toRow.put(one);
-                }
-
-
-                if (!toRow.isEmpty()) {
-                    Vertex ___f = toRow.first();
-                    do {
-                        final Vertex to = ___f;
-                        ___f = ___f.next();
-
-
-                        // 表明是优化网络中新增的节点
-                        if (isOptimizeNet) {// 处理新节点无后的情况,保证连贯性
-                            if (node.isOptimizeNewNode() && !to.isOptimize()) {
-                                to.setOptimize(true);
-                            }
-
-                            if (!to.isOptimize()) {
-                                // 优化网络 少去计算
-                                continue;
-                            }
-                        }
-
+                if (toRow.first() != null) {
+                    for (Vertex to = toRow.first(); to != null; to = to.next()) {
                         updateFrom(wordnet, to, node);
-
-                    } while (___f != null);
+                    }
                 }
+            }
 
-
-            } while (_f != null);
         }
 
-        //从后到前，获得完整的路径
-        Wordpath wordPath = new Wordpath(wordnet, this);
-        Vertex point = wordnet.getEndRow().getFirst();
-        while (point != null) {
-            wordPath.combine(point);
-            point = point.from;
-        }
-
-        return wordPath;
+        return buildPath(wordnet);
     }
 
 
@@ -211,7 +228,35 @@ public class ViterbiBestPathComputer implements BestPathComputer {
             value = -value;
         }
 
+
         return value;
+    }
+
+
+    /**
+     * 从后到前。根据权重获取最优路径
+     *
+     * @param wordnet
+     * @return
+     */
+    private Wordpath buildPath(Wordnet wordnet) {
+        //从后到前，获得完整的路径
+        Wordpath wordPath = new Wordpath(wordnet, this);
+
+        Vertex last = null;
+
+        Vertex point = wordnet.getEndRow().first();
+
+        while (point != null) {
+            last = point;
+            wordPath.combine(point);
+            point = point.from;
+        }
+
+        // 最后一个point必定指向start节点
+        Preconditions.checkState(last == wordnet.getBeginRow().first(), "非完整路径");
+
+        return wordPath;
     }
 
 }

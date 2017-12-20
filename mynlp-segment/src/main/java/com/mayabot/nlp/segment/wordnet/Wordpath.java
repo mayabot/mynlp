@@ -276,19 +276,6 @@ public class Wordpath {
         if (!bitSet.get(to)) {
             return true;
         }
-//
-//        //中间有没有切分
-//        int c = 0;
-//        for (int i = from; i <= to - 1; i++) {
-//            if (bitSet.get(i)) {
-//                c++;
-//            }
-//        }
-//        if (c == 0) {
-//            //中间没有切分，本来就是一个词
-//            return false;
-//        }
-
         return false;
     }
 

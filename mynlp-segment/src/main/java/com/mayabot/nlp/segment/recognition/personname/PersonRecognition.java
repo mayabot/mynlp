@@ -135,11 +135,11 @@ public class PersonRecognition implements OptimizeProcessor {
                 if ('U' == tag) {
                     //first abstractWord
                     tagMapOffset[++point] = v.realWordOffset();
-                    tagMapLength[point] = v.length() - 1;
+                    tagMapLength[point] = v.length - 1;
                     tagchar[point] = 'K';
 
                     // second abstractWord
-                    tagMapOffset[++point] = v.realWordOffset() + v.length() - 1;
+                    tagMapOffset[++point] = v.realWordOffset() + v.length - 1;
                     tagMapLength[point] = 1;
                     tagchar[point] = 'B';
 
@@ -157,12 +157,12 @@ public class PersonRecognition implements OptimizeProcessor {
 
                     // second abstractWord
                     tagMapOffset[++point] = v.realWordOffset() + 1;
-                    tagMapLength[point] = v.length() - 1;
+                    tagMapLength[point] = v.length - 1;
                     tagchar[point] = 'L';
 
                 } else {
                     tagMapOffset[++point] = v.realWordOffset();
-                    tagMapLength[point] = v.length();
+                    tagMapLength[point] = v.length;
                     tagchar[point] = v.getTempChar();
                 }
             }
@@ -268,13 +268,13 @@ public class PersonRecognition implements OptimizeProcessor {
 
         for (int i = 1; i < pathWithBE.length - 1; i++) {
             Vertex vertex = pathWithBE[i];
-            EnumFreqPair<NRTag> nrEnumFreqPair = nrDictionary.get(text, vertex.realWordOffset(), vertex.length());
+            EnumFreqPair<NRTag> nrEnumFreqPair = nrDictionary.get(text, vertex.realWordOffset(), vertex.length);
 
             if (nrEnumFreqPair == null) {
                 Nature nature = vertex.guessNature();
                 if (Nature.nr.equals(nature)) {
                     // 有些双名实际上可以构成更长的三名
-                    if (vertex.natureAttribute.getTotalFrequency() <= 1000 && vertex.length() == 2) {
+                    if (vertex.natureAttribute.getTotalFrequency() <= 1000 && vertex.length == 2) {
                         nrEnumFreqPair = EnumFreqPair.create(NRTag.X, NRTag.G);
                     } else {
                         nrEnumFreqPair = new EnumFreqPair<>(NRTag.A, a_total_freq);
