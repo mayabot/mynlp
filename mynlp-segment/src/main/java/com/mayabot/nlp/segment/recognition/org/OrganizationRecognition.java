@@ -186,7 +186,7 @@ public class OrganizationRecognition implements OptimizeProcessor {
                 if (vertex.abstractWord != null) {
                     nrEnumFreqPair = ntDictionary.get(vertex.abstractWord);
                 } else {
-                    nrEnumFreqPair = ntDictionary.get(text, vertex.realWordOffset(), vertex.length());
+                    nrEnumFreqPair = ntDictionary.get(text, vertex.realWordOffset(), vertex.length);
                 }
 
                 if (nrEnumFreqPair == null) {

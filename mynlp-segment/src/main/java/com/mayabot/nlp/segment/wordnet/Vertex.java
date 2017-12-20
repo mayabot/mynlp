@@ -37,7 +37,7 @@ public class Vertex extends VertexExt {
     /**
      * realword词的长度占位。short类型已经够用了
      */
-    int length = 1;
+    public final int length;
 
     /**
      * 归属的链表
@@ -95,7 +95,7 @@ public class Vertex extends VertexExt {
     /**
      * 复制一个等效的新节点对象，除了length和wordinfo之外没有复制
      *
-     * @param node
+     * @param node 复制的节点
      */
     public Vertex(Vertex node) {
         this.length = node.length;
@@ -325,5 +325,9 @@ public class Vertex extends VertexExt {
             subWords = new ArrayList<>(length);
         }
         subWords.add(sub);
+    }
+
+    public Vertex getNext() {
+        return next;
     }
 }

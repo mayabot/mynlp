@@ -154,7 +154,7 @@ public class PlaceRecognition implements OptimizeProcessor {
             Vertex vertex = pathWithBE[i];
 
             if (Nature.ns.equals(vertex.guessNature()) && vertex.natureAttribute.getTotalFrequency() <= 1000) {
-                if (vertex.length() <= 3) {
+                if (vertex.length <= 3) {
                     vertex.setTempObj(new EnumFreqPair<>(H, G)); // 二字地名，认为其可以再接一个后缀或前缀
                 } else {
                     vertex.setTempObj(new EnumFreqPair<>(G));// 否则只可以再加后缀
@@ -166,7 +166,7 @@ public class PlaceRecognition implements OptimizeProcessor {
             if (vertex.abstractWord != null) {
                 nrEnumFreqPair = nrDictionary.get(vertex.abstractWord);
             } else {
-                nrEnumFreqPair = nrDictionary.get(text, vertex.realWordOffset(), vertex.length());
+                nrEnumFreqPair = nrDictionary.get(text, vertex.realWordOffset(), vertex.length);
             }
 
 

@@ -21,7 +21,8 @@ package com.mayabot.nlp.utils;
  */
 public class Predefine {
 
-    public static final int MAX_FREQUENCY = 25146057; // 现在总词频25146057
+    //// 现在总词频25146057
+    public static final int MAX_FREQUENCY = 25146057;
     /**
      * Smoothing 平滑因子
      */
