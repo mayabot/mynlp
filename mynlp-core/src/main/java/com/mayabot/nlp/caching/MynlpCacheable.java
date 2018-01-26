@@ -1,3 +1,19 @@
+/*
+ * Copyright 2018 mayabot.com authors. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.mayabot.nlp.caching;
 
 import com.google.common.io.Files;
@@ -23,7 +39,7 @@ public interface MynlpCacheable {
 
     default void restore() throws Exception {
 
-        InternalLogger _logger = InternalLoggerFactory.getInstance(this.getClass());
+        InternalLogger logger = InternalLoggerFactory.getInstance(this.getClass());
 
         boolean success = false;
         File cache = cacheFileName();
@@ -43,10 +59,9 @@ public interface MynlpCacheable {
 
                 success = true;
                 loadFromBin = true;
-                _logger.info("restore from cache file success, use time " + (t2 - t1) + " ms");
+                logger.info("restore from cache file success, use time " + (t2 - t1) + " ms");
             } catch (Exception e) {
-                _logger.info("restore from cache file fail", e);
-                _logger.warn("restore from cache " + cache.getAbsolutePath(), e);
+                logger.warn("restore from cache " + cache.getAbsolutePath(), e);
             }
         }
 
@@ -55,7 +70,7 @@ public interface MynlpCacheable {
             loadFromRealData();
             long t2 = System.currentTimeMillis();
 
-            _logger.info("restore from real data success, use time " + (t2 - t1) + " ms");
+            logger.info("restore from real data success, use time " + (t2 - t1) + " ms");
 
             if (!loadFromBin && cache != null) {
                 long t3 = System.currentTimeMillis();
@@ -66,7 +81,7 @@ public interface MynlpCacheable {
                 }
                 long t4 = System.currentTimeMillis();
 
-                _logger.info("save to cache file, use time " + (t4 - t3) + " ms");
+                logger.info("save to cache file, use time " + (t4 - t3) + " ms");
             }
         }
 

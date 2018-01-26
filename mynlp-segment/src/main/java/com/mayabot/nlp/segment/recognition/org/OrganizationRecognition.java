@@ -1,27 +1,26 @@
 /*
- *  Copyright 2017 mayabot.com authors. All rights reserved.
+ * Copyright 2018 mayabot.com authors. All rights reserved.
  *
- *  Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *       http://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package com.mayabot.nlp.segment.recognition.org;
 
 import com.google.inject.Inject;
 import com.google.inject.Injector;
-import com.google.inject.Singleton;
 import com.mayabot.nlp.algorithm.SimpleViterbi;
 import com.mayabot.nlp.segment.OptimizeProcessor;
+import com.mayabot.nlp.segment.common.VertexTagCharSequenceTempChar;
 import com.mayabot.nlp.segment.corpus.dictionary.item.EnumFreqPair;
 import com.mayabot.nlp.segment.corpus.tag.NTTag;
 import com.mayabot.nlp.segment.corpus.tag.Nature;
@@ -30,7 +29,8 @@ import com.mayabot.nlp.segment.dictionary.NatureAttribute;
 import com.mayabot.nlp.segment.dictionary.core.CoreDictionary;
 import com.mayabot.nlp.segment.recognition.org.nt.NTDictionary;
 import com.mayabot.nlp.segment.recognition.org.nt.OrganizationDictionary;
-import com.mayabot.nlp.segment.utils.VertexTagCharSequenceTempChar;
+import com.mayabot.nlp.segment.tokenizer.ApplyPipelineSetting;
+import com.mayabot.nlp.segment.tokenizer.PipelineSettings;
 import com.mayabot.nlp.segment.wordnet.Vertex;
 import com.mayabot.nlp.segment.wordnet.Wordnet;
 
@@ -41,8 +41,9 @@ import static com.mayabot.nlp.segment.corpus.tag.NTTag.Z;
  *
  * @author jimichan
  */
-@Singleton
-public class OrganizationRecognition implements OptimizeProcessor {
+public class OrganizationRecognition implements OptimizeProcessor,ApplyPipelineSetting {
+
+    private boolean enable;
 
     public static OrganizationRecognition build(Injector injector) {
         return injector.getInstance(OrganizationRecognition.class);
@@ -65,6 +66,12 @@ public class OrganizationRecognition implements OptimizeProcessor {
     final NatureAttribute natureAttribute;
 
     private SimpleViterbi<NTTag, Vertex> viterbi;
+
+    @Override
+    public void apply(PipelineSettings settings) {
+        enable = settings.getBool("enable.org_recognition", true)
+                && settings.getBool("enable.recognition", true);
+    }
 
     @Inject
     public OrganizationRecognition(OrganizationDictionary placeDictionary, CoreDictionary coreDictionary) {
@@ -95,6 +102,10 @@ public class OrganizationRecognition implements OptimizeProcessor {
 
     @Override
     public boolean process(Vertex[] pathWithBE, Wordnet wordnet) {
+
+        if (!enable) {
+            return false;
+        }
 
         char[] text = wordnet.getCharArray();
 

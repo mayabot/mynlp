@@ -1,27 +1,26 @@
 /*
- *  Copyright 2017 mayabot.com authors. All rights reserved.
+ * Copyright 2018 mayabot.com authors. All rights reserved.
  *
- *  Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *       http://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package com.mayabot.nlp.segment.recognition.place;
 
 import com.google.inject.Inject;
 import com.google.inject.Injector;
-import com.google.inject.Singleton;
 import com.mayabot.nlp.segment.OptimizeProcessor;
 import com.mayabot.nlp.segment.algorithm.Viterbi;
+import com.mayabot.nlp.segment.common.VertexTagCharSequenceTempChar;
 import com.mayabot.nlp.segment.corpus.dictionary.item.EnumFreqPair;
 import com.mayabot.nlp.segment.corpus.tag.NSTag;
 import com.mayabot.nlp.segment.corpus.tag.Nature;
@@ -29,7 +28,8 @@ import com.mayabot.nlp.segment.dictionary.NatureAttribute;
 import com.mayabot.nlp.segment.dictionary.core.CoreDictionary;
 import com.mayabot.nlp.segment.recognition.place.ns.NSDictionary;
 import com.mayabot.nlp.segment.recognition.place.ns.PlaceDictionary;
-import com.mayabot.nlp.segment.utils.VertexTagCharSequenceTempChar;
+import com.mayabot.nlp.segment.tokenizer.ApplyPipelineSetting;
+import com.mayabot.nlp.segment.tokenizer.PipelineSettings;
 import com.mayabot.nlp.segment.wordnet.Vertex;
 import com.mayabot.nlp.segment.wordnet.Wordnet;
 
@@ -42,8 +42,8 @@ import static com.mayabot.nlp.segment.corpus.tag.NSTag.*;
  *
  * @author jimichan
  */
-@Singleton
-public class PlaceRecognition implements OptimizeProcessor {
+
+public class PlaceRecognition implements OptimizeProcessor,ApplyPipelineSetting {
 
     private PlaceDictionary personDictionary;
 
@@ -53,10 +53,17 @@ public class PlaceRecognition implements OptimizeProcessor {
     final int place_word_id;
     final String place_word_tag;
     final NatureAttribute place_natureAttribute;
+    private boolean enable;
 
 
     public static PlaceRecognition build(Injector injector) {
         return injector.getInstance(PlaceRecognition.class);
+    }
+
+    @Override
+    public void apply(PipelineSettings settings) {
+        enable = settings.getBool("enable.place_recognition", true)
+                && settings.getBool("enable.recognition", true);
     }
 
     @Inject
@@ -74,6 +81,10 @@ public class PlaceRecognition implements OptimizeProcessor {
 
     @Override
     public boolean process(Vertex[] pathWithBE, Wordnet wordnet) {
+
+        if (!enable) {
+            return false;
+        }
 
         char[] text = wordnet.getCharArray();
 

@@ -1,18 +1,17 @@
 /*
- *  Copyright 2017 mayabot.com authors. All rights reserved.
+ * Copyright 2018 mayabot.com authors. All rights reserved.
  *
- *  Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *       http://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package com.mayabot.nlp.segment.tokenizer;
@@ -25,8 +24,7 @@ import com.mayabot.nlp.logging.InternalLoggerFactory;
 import com.mayabot.nlp.segment.MynlpTerm;
 import com.mayabot.nlp.segment.MynlpTokenizer;
 import com.mayabot.nlp.segment.WordnetInitializer;
-import com.mayabot.nlp.segment.WordpathProcessor;
-import com.mayabot.nlp.segment.utils.VertexHelper;
+import com.mayabot.nlp.segment.common.VertexHelper;
 import com.mayabot.nlp.segment.wordnet.BestPathComputer;
 import com.mayabot.nlp.segment.wordnet.Vertex;
 import com.mayabot.nlp.segment.wordnet.Wordnet;
@@ -34,7 +32,6 @@ import com.mayabot.nlp.segment.wordnet.Wordpath;
 
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.List;
 
 /**
  * 一个基于词图的流水线 要求里面所有的组件都是无状态的，线程安全的类
@@ -54,7 +51,7 @@ public class WordnetTokenizer implements MynlpTokenizer {
     /**
      * 处理器网络
      */
-    private List<WordpathProcessor> wordPathProcessors = Lists.newArrayList();
+    private Pipeline pipeline;
 
     private BestPathComputer bestPathComputer;
 
@@ -70,6 +67,10 @@ public class WordnetTokenizer implements MynlpTokenizer {
     public void check() {
         Preconditions.checkNotNull(bestPathComputer);
         Preconditions.checkNotNull(wordnetInitializer);
+    }
+
+    public void initSetting(PipelineSettings settings) {
+
     }
 
     @Override
@@ -88,9 +89,7 @@ public class WordnetTokenizer implements MynlpTokenizer {
         //选择一个路径出来(第一次不严谨的分词结果)
         Wordpath wordPath = bestPathComputer.select(wordnet);
 
-        for (WordpathProcessor xProcessor : wordPathProcessors) {
-            wordPath = xProcessor.process(wordPath);
-        }
+        wordPath = pipeline.process(wordPath);
 
         return path2TermList(wordPath);
     }
@@ -144,17 +143,14 @@ public class WordnetTokenizer implements MynlpTokenizer {
         return wordnetInitializer;
     }
 
-    public List<WordpathProcessor> getWordPathProcessors() {
-        return wordPathProcessors;
+     void setPipeline(Pipeline pipeline) {
+        this.pipeline = pipeline;
     }
 
     void setWordnetInitializer(WordnetInitializer wordnetInitializer) {
         this.wordnetInitializer = wordnetInitializer;
     }
 
-    void setWordPathProcessors(List<WordpathProcessor> wordPathProcessors) {
-        this.wordPathProcessors = wordPathProcessors;
-    }
 
     public BestPathComputer getBestPathComputer() {
         return bestPathComputer;
@@ -169,4 +165,8 @@ public class WordnetTokenizer implements MynlpTokenizer {
         this.bestPathComputer = bestPathComputer;
     }
 
+
+    public Pipeline getPipeline() {
+        return pipeline;
+    }
 }
