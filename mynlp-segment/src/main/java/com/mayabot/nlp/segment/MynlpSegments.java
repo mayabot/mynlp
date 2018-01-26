@@ -1,15 +1,24 @@
+/*
+ * Copyright 2018 mayabot.com authors. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.mayabot.nlp.segment;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.google.common.base.Charsets;
-import com.google.common.io.Resources;
+import com.mayabot.nlp.segment.segment.DefaultMynlpSegment;
+import com.mayabot.nlp.segment.tokenizer.PipelineSettings;
 import com.mayabot.nlp.segment.tokenizer.WordnetTokenizerFactory;
-
-import java.io.IOException;
-import java.net.URL;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * MynlpSegments 是mynlp-segment模块对外门面。此后只可以增加方法
@@ -17,54 +26,30 @@ import java.util.concurrent.ConcurrentHashMap;
 public final class MynlpSegments {
 
 
-    static ConcurrentHashMap<String, MynlpTokenizer> map = new ConcurrentHashMap<>();
+    public static MynlpTokenizer nlpTokenizer() {
+        return WordnetTokenizerFactory.get().build("core", "viterbi", "default");
+    }
 
-    static Map<String, Object> configMap = null;
-
-    static {
-
-        URL resourceAsStream = MynlpSegments.class.getClassLoader().getResource("META-INF/tokenizers.json");
-        try {
-            String json = Resources.asCharSource(resourceAsStream, Charsets.UTF_8).read();
-
-            Map<String, Object> map1 = (JSONObject) JSON.parse(json);
-
-            configMap = map1;
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public static MynlpTokenizer nlpTokenizer(PipelineSettings settings) {
+        return WordnetTokenizerFactory.get().build("core", "viterbi", "default",settings);
     }
 
 
-    /**
-     * 切词器工厂
-     *
-     * @return
-     */
-    public static WordnetTokenizerFactory tokenizerFactory() {
-        return WordnetTokenizerFactory.get();
+    public static MynlpTokenizer crfTokenizer() {
+        return WordnetTokenizerFactory.get().build("crf", "viterbi", "default");
     }
 
-    public static MynlpTokenizer getDefault() {
-        return get("default");
-    }
-
-    public static MynlpTokenizer nlp() {
-        return get("default");
+    public static MynlpTokenizer crfTokenizer(PipelineSettings settings) {
+        return WordnetTokenizerFactory.get().build("crf", "viterbi", "default",settings);
     }
 
 
-    public static MynlpTokenizer crf() {
-        return get("crf");
+    public static MynlpTokenizer tokenizer(String initer, String bestpath, String pipeline,PipelineSettings settings) {
+        return WordnetTokenizerFactory.get().build(initer, bestpath, pipeline, settings);
     }
 
 
-    public static MynlpTokenizer get(String name) {
-        return map.computeIfAbsent(name, n -> {
-            Map<String, Object> config = (Map) configMap.get(n);
-            return WordnetTokenizerFactory.get().build(config);
-        });
+    public static MynlpSegment segment(MynlpTokenizer tokenizer) {
+        return new DefaultMynlpSegment("", tokenizer);
     }
-
 }

@@ -14,17 +14,29 @@
  * limitations under the License.
  */
 
-package com.mayabot.nlp;
+package com.mayabot.nlp.segment.segment;
 
-public class BaseTest {
+import com.mayabot.nlp.segment.MynlpSegment;
+import com.mayabot.nlp.segment.MynlpTerm;
 
-//    protected Injector injector;
-//
-//    @Before
-//    public void initialize() {
-//        injector = Guice.createInjector(
-//
-//                new DictionaryModule());
-//    }
+import java.io.Reader;
+import java.util.Iterator;
 
+public abstract class WrapMySegment implements MynlpSegment {
+
+    protected MynlpSegment myAnalyzer;
+
+    public WrapMySegment(MynlpSegment myAnalyzer) {
+        this.myAnalyzer = myAnalyzer;
+    }
+
+    @Override
+    public MynlpSegment reset(Reader reader) {
+        return myAnalyzer.reset(reader);
+    }
+
+    @Override
+    public Iterator<MynlpTerm> iterator() {
+        return myAnalyzer.iterator();
+    }
 }
