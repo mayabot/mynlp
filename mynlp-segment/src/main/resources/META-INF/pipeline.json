@@ -1,0 +1,20 @@
+{
+  "default": [
+    "customDict",
+    "mq",
+    "ml",
+    {
+      "type": "pattern"
+    },
+    {
+      "type": "optimizeNet",
+      "list": [
+        "person",
+        "place",
+        "organization"
+      ]
+    },
+    "correction",
+    "speechTagging"
+  ]
+}
