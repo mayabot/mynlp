@@ -1,5 +1,5 @@
 {
-  "default": {
+  "nlp": {
     "wordnetIniter": "core",
     "bestPath": "viterbi",
     "pipeline": [

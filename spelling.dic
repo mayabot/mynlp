@@ -12,3 +12,4 @@ guice
 segmenter
 wordpath
 humanadjust
+fasttext
