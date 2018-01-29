@@ -53,10 +53,20 @@ public interface DataInOutputUtils {
         int len = input.readInt();
         byte[] result = new byte[len];
         input.readFully(result);
-        return MyInts.fromByteArrayToArray(result);
+
+        int[] ints = MyInts.fromByteArrayToArray(result);
+        if(ints.length == 3 && ints[0] == 1123992342 && ints[1] == 832718121 && ints[2] == 957462342 ){
+            return null;
+        }
+        return ints;
     }
 
+    int[] nullMagic = new int[]{1123992342,832718121,957462342};
+
     static void writeIntArray(int[] array, DataOutput output) throws IOException {
+        if(array == null){
+            array = nullMagic;
+        }
         byte[] bytes = MyInts.toByteArray(array);
         output.writeInt(bytes.length);
         output.write(bytes);
