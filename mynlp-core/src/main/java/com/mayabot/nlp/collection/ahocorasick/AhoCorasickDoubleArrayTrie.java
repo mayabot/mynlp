@@ -73,9 +73,10 @@ public class AhoCorasickDoubleArrayTrie<V> {
 
     }
 
-    public static <T extends DataInOutputUtils> void write(
+    public static <T> void write(
             AhoCorasickDoubleArrayTrie<T> dat, DataOutput out, BiConsumer<T, DataOutput> biConsumer) throws IOException {
         writeIntArray(dat.check, out);
+        writeIntArray(dat.keylength, out);
         writeIntArray(dat.base, out);
         writeIntArray(dat.fail, out);
         writeArrayList(dat.values, biConsumer, out);
@@ -83,10 +84,11 @@ public class AhoCorasickDoubleArrayTrie<V> {
 
     }
 
-    public static <T extends DataInOutputUtils> AhoCorasickDoubleArrayTrie<T> read(DataInput in, Function<DataInput, T> function) throws IOException {
+    public static <T> AhoCorasickDoubleArrayTrie<T> read(DataInput in, Function<DataInput, T> function) throws IOException {
         AhoCorasickDoubleArrayTrie x = new AhoCorasickDoubleArrayTrie();
 
         x.check = readIntArray(in);
+        x.keylength = readIntArray(in);
         x.base = readIntArray(in);
         x.fail = readIntArray(in);
         x.values = readArrayList(in, function);
