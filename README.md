@@ -16,7 +16,6 @@
 * 汉子转拼音
 * 简繁体转换
 * fasttext解码[fasttext](https://fasttext.cc/)
-* 依存句法分析
 * 贝叶斯文本分类
 * 文本SIM Hash
 * 语料库工具
