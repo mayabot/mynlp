@@ -19,11 +19,12 @@ rootProject.name = dirName
 
 List projects = [
         'mynlp-core',
-        'mynlp-dependency',
         'mynlp-segment',
         'mynlp-package',
         'mynlp-pinyin',
-        'mynlp-cli'
+        'mynlp-cli',
+        'mynlp-fasttext'
+
 ]
 
 
