@@ -18,11 +18,11 @@ package fasttext;
 
 
 import fasttext.utils.CLangDataInputStream;
+import fasttext.utils.IOUtil;
 import fasttext.utils.loss_name;
 import fasttext.utils.model_name;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 
 public class Args {

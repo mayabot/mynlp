@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package fasttext.productquantizer;
+package fasttext.pq;
 
 import com.google.common.base.Preconditions;
 import fasttext.matrix.Matrix;

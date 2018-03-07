@@ -18,18 +18,16 @@ package fasttext;
 
 import com.carrotsearch.hppc.IntArrayList;
 
-import java.util.List;
-
-public class entry {
+public class Entry {
     public String word;
     public long count;
-    public entry_type type;
+    public EntryType type;
     public IntArrayList subwords;
 
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        builder.append("entry [word=");
+        builder.append("Entry [word=");
         builder.append(word);
         builder.append(", count=");
         builder.append(count);

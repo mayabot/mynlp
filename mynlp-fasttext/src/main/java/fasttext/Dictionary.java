@@ -21,17 +21,13 @@ import com.carrotsearch.hppc.cursors.IntIntCursor;
 import com.google.common.base.*;
 import com.google.common.io.CharSource;
 import com.google.common.io.Files;
-import com.google.common.io.LineProcessor;
 import fasttext.utils.CLangDataInputStream;
 import fasttext.utils.CLangDataOutputStream;
 import fasttext.utils.model_name;
 
 import java.io.*;
 import java.math.BigInteger;
-import java.nio.file.Path;
-import java.sql.SQLOutput;
 import java.util.*;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkArgument;
@@ -51,7 +47,7 @@ public class Dictionary {
 
     //word的hash，对应的words_下标的索引
     private LongIntMap word2int_; // default=-1
-    private List<entry> words_;
+    private List<Entry> words_;
 
 
     private int size_ = 0;
@@ -86,14 +82,14 @@ public class Dictionary {
     }
 
 
-    private entry_type getType(long h) {
+    private EntryType getType(long h) {
         checkArgument(h >= 0);
         checkArgument(h < size_);
         return words_.get((int) h).type;
     }
 
-    private entry_type getType(String w) {
-        return w.startsWith(args_.label) ? entry_type.label : entry_type.word;
+    private EntryType getType(String w) {
+        return w.startsWith(args_.label) ? EntryType.label : EntryType.word;
     }
 
 
@@ -102,7 +98,7 @@ public class Dictionary {
         ntokens_++;
 
         if (word2int_.getOrDefault(h, WORDID_DEFAULT) == WORDID_DEFAULT) {
-            entry e = new entry();
+            Entry e = new Entry();
             e.word = w;
             e.count = 1;
             e.type = getType(w);
@@ -205,7 +201,7 @@ public class Dictionary {
         while (true) {
             int wordsIndex = word2int_.getOrDefault(id, WORDID_DEFAULT);
             if (wordsIndex != WORDID_DEFAULT) {
-                entry e = words_.get(wordsIndex);
+                Entry e = words_.get(wordsIndex);
                 if (e != null) {
                     if (!e.word.equals(w)) {
                         id = (id + 1) % MAX_VOCAB_SIZE;
@@ -219,7 +215,7 @@ public class Dictionary {
     }
 
 
-    public entry_type getType(int id) {
+    public EntryType getType(int id) {
         checkArgument(id >= 0);
         checkArgument(id < size_);
         return words_.get(id).type;
@@ -327,7 +323,7 @@ public class Dictionary {
 
     public void initNgrams() {
         for (int i = 0; i < size_; i++) {
-            entry e = words_.get(i);
+            Entry e = words_.get(i);
             String word = BOW + e.word + EOW;
 
             if (e.subwords == null) {
@@ -403,18 +399,18 @@ public class Dictionary {
     public void threshold(long t, long tl) {
         //过滤
         words_ = words_.parallelStream().filter(
-                entry -> (entry.type == entry_type.word && entry.count>=t)
-                || (entry.type == entry_type.label && entry.count>=tl)
+                entry -> (entry.type == EntryType.word && entry.count>=t)
+                || (entry.type == EntryType.label && entry.count>=tl)
         ).collect(Collectors.toList());
 
         //TODO 检查排序逻辑是否正确，和运来的版本相比，这里先过滤在排序
         Collections.sort(words_, entry_comparator);
 
-//        Iterator<entry> iterator = words_.iterator();
+//        Iterator<Entry> iterator = words_.iterator();
 //        while (iterator.hasNext()) {
-//            entry _entry = iterator.next();
-//            if ((entry_type.word == _entry.type && _entry.count < t)
-//                    || (entry_type.label == _entry.type && _entry.count < tl)) {
+//            Entry _entry = iterator.next();
+//            if ((EntryType.word == _entry.type && _entry.count < t)
+//                    || (EntryType.label == _entry.type && _entry.count < tl)) {
 //                iterator.remove();
 //            }
 //        }
@@ -423,20 +419,20 @@ public class Dictionary {
         nlabels_ = 0;
         // word2int_.clear();
         word2int_ = new LongIntHashMap(words_.size());
-        for (entry _entry : words_) {
+        for (Entry _entry : words_) {
             long h = find(_entry.word);
             word2int_.put(h, size_++);
-            if (entry_type.word == _entry.type) {
+            if (EntryType.word == _entry.type) {
                 nwords_++;
-            } else if (entry_type.label == _entry.type) {
+            } else if (EntryType.label == _entry.type) {
                 nlabels_++;
             }
         }
     }
 
-    private transient Comparator<entry> entry_comparator = new Comparator<entry>() {
+    private transient Comparator<Entry> entry_comparator = new Comparator<Entry>() {
         @Override
-        public int compare(entry o1, entry o2) {
+        public int compare(Entry o1, Entry o2) {
             int cmp = (o1.type.value < o2.type.value) ? -1 : ((o1.type.value == o2.type.value) ? 0 : 1);
             if (cmp == 0) {
                 cmp = (o2.count < o1.count) ? -1 : ((o2.count == o1.count) ? 0 : 1);
@@ -453,11 +449,11 @@ public class Dictionary {
         }
     }
 
-    public long[] getCounts(entry_type type) {
-        long[] counts = entry_type.label == type ?
+    public long[] getCounts(EntryType type) {
+        long[] counts = EntryType.label == type ?
                 new long[nlabels()] : new long[nwords()];
         int i=0;
-        for (entry w : words_) {
+        for (Entry w : words_) {
             if (w.type == type)
                 counts[i++]=w.count;
         }
@@ -503,7 +499,7 @@ public class Dictionary {
         out.writeLong(pruneidx_size_);
 
         for (int i = 0; i < size_; i++) {
-            entry e = words_.get(i);
+            Entry e = words_.get(i);
             out.writeUTF(e.word);
             out.writeLong(e.count);
             out.writeByte(e.type.value);
@@ -531,10 +527,10 @@ public class Dictionary {
 
         //size 189997 18万的词汇
         for (int i = 0; i < size_; i++) {
-            entry e = new entry();
+            Entry e = new Entry();
             e.word = in.readUTF();
             e.count = in.readLong();
-            e.type = entry_type.fromValue(in.readByte());
+            e.type = EntryType.fromValue(in.readByte());
             words_.add(e);
             word2int_.put(find(e.word), i);
 
@@ -564,7 +560,7 @@ public class Dictionary {
 
             ntokens++;
 
-            if (getType(wid) == entry_type.word && !discard(wid,rng.nextFloat())) {
+            if (getType(wid) == EntryType.word && !discard(wid,rng.nextFloat())) {
                 words.add(wid);
             }
             if (ntokens > MAX_LINE_SIZE || token.equals(EOS)) {
@@ -592,14 +588,14 @@ public class Dictionary {
         for (String token : tokens) {
             long h = hash(token);
             int wid = getId(token, h);
-            entry_type type = wid < 0 ? getType(token) : getType(wid);
+            EntryType type = wid < 0 ? getType(token) : getType(wid);
 
             ntokens++;
 
-            if (type == entry_type.word) {
+            if (type == EntryType.word) {
                 addSubwords(words, token, wid);
                 word_hashes.add(h);
-            }else if (type == entry_type.label && wid >= 0) {
+            }else if (type == EntryType.label && wid >= 0) {
                 labels.add(wid - nwords_);
             }
         }
@@ -657,7 +653,7 @@ public class Dictionary {
         return builder.toString();
     }
 
-    public List<entry> getWords() {
+    public List<Entry> getWords() {
         return words_;
     }
 
