@@ -14,25 +14,26 @@
  * limitations under the License.
  */
 
+package fasttext;
+
 import com.google.common.collect.Lists;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.mayabot.nlp.segment.wordnet.Vertex;
-import fasttext.FastText;
 import fasttext.matrix.Vector;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.Map;
 
-public class Main {
-    public static void main(String[] args) throws IOException {
+public class FastTextTest {
 
-        FastText fastText = FastText.loadModel(new File("/Users/jimichan/bin/fasttext/model_min.bin"));
+    static FastText fastText;
 
+    @BeforeClass
+    public static void prepare() throws Exception{
+        fastText = FastText.loadModel(new File("/Users/jimichan/bin/fasttext/wiki.zh.bin"));
+    }
 
+    @Test
+    public void testWordVec() {
         Vector v1 = fastText.getWordVector("苹果");
         Vector v2 = fastText.getWordVector("香蕉");
         Vector v3 = fastText.getWordVector("国王");
@@ -42,11 +43,37 @@ public class Main {
         System.out.println(Vector.cosine(v1,v2));
         System.out.println(Vector.cosine(v3,v2));
         System.out.println(Vector.dot(v3,v2));
+    }
 
+    @Test
+    public void testSenVec() {
         Vector sv1 = fastText.getSentenceVector(Lists.newArrayList("香蕉 和 苹果 都 是 水果".split(" ")));
         Vector sv2 = fastText.getSentenceVector(Lists.newArrayList("香蕉 苹果 是 常见 的 水果 品种".split(" ")));
-
-       // System.out.println(fastText);
         System.out.println(Vector.cosine(sv1,sv2));
+
+    }
+
+    @Test
+    public void testNN() throws Exception{
+
+        FastText.NearestNeighbor nearestNeighbor = fastText.nearestNeighbor();
+
+        nearestNeighbor.nn("香蕉", 11).forEach(System.out::println);
+
+        System.out.println("---------------------");
+
+        nearestNeighbor.nn("发动机", 11).forEach(System.out::println);
+    }
+
+    @Test
+    public void testAnalogies() throws Exception{
+
+        FastText.Analogies analogies = fastText.analogies();
+
+        analogies.analogies("国王","皇后","男",10).stream().filter(x->x.key>0.7f).forEach(System.out::println);
+        System.out.println("---------------------");
+        analogies.analogies("国王","皇后","公",10).stream().filter(x->x.key>0.7f).forEach(System.out::println);
+        System.out.println("---------------------");
+        analogies.analogies("国王","皇后","皇帝",10).stream().filter(x->x.key>0.7f).forEach(System.out::println);
     }
 }
