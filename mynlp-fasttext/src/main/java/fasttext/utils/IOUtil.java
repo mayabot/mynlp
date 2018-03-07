@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package fasttext;
+package fasttext.utils;
 
 import java.io.IOException;
 import java.io.InputStream;

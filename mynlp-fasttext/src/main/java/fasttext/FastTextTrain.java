@@ -99,9 +99,9 @@ public class FastTextTrain {
         Model model = new Model(input, output, args, 0);
 
         if (args.model == model_name.sup) {
-            model.setTargetCounts(dict.getCounts(entry_type.label));
+            model.setTargetCounts(dict.getCounts(EntryType.label));
         } else {
-            model.setTargetCounts(dict.getCounts(entry_type.word));
+            model.setTargetCounts(dict.getCounts(EntryType.word));
         }
 
         return new FastText(dict, input, output, model,args);
@@ -189,9 +189,9 @@ public class FastTextTrain {
                 // setTargetCounts 相当耗时
 
                 if (args.model == model_name.sup) {
-                    model.setTargetCounts(dict.getCounts(entry_type.label));
+                    model.setTargetCounts(dict.getCounts(EntryType.label));
                 } else {
-                    model.setTargetCounts(dict.getCounts(entry_type.word));
+                    model.setTargetCounts(dict.getCounts(EntryType.word));
                 }
 
                 final long ntokens = dict.ntokens(); //文件中词语的总数量(非排重)

@@ -18,18 +18,18 @@ package fasttext;
 
 import com.carrotsearch.hppc.IntArrayList;
 import com.google.common.primitives.Floats;
-import com.google.common.primitives.Ints;
 import fasttext.matrix.Matrix;
-import fasttext.productquantizer.QMatrix;
+import fasttext.pq.QMatrix;
+import fasttext.utils.FloatIntPair;
+import fasttext.utils.Utils;
 import fasttext.utils.loss_name;
 import fasttext.utils.model_name;
 
 import java.util.*;
 import fasttext.matrix.Vector;
-import javafx.util.Pair;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static fasttext.Utils.shuffle;
+import static fasttext.utils.Utils.shuffle;
 
 public class Model {
 

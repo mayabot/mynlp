@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package fasttext.productquantizer;
+package fasttext.pq;
 
 import com.google.common.base.Preconditions;
 
 import java.util.Random;
 
-import static fasttext.Utils.iota;
-import static fasttext.Utils.shuffle;
+import static fasttext.utils.Utils.iota;
+import static fasttext.utils.Utils.shuffle;
 
 public class CentroidTable {
     public static final int niter_ = 25;
