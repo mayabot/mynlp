@@ -14,34 +14,26 @@
  * limitations under the License.
  */
 
-package fasttext;
+package fasttext.utils;
 
-public enum entry_type {
-
-    word(0), label(1);
-
+public class FloatIntPair {
+    public float key;
     public int value;
 
-    entry_type(int value) {
+    public FloatIntPair() {
+    }
+
+    public FloatIntPair(float key, int value) {
+        this.key = key;
         this.value = value;
-    }
-
-    public int getValue() {
-        return this.value;
-    }
-
-    static entry_type[] types = entry_type.values();
-
-    public static entry_type fromValue(int value) throws IllegalArgumentException {
-        try {
-            return types[value];
-        } catch (ArrayIndexOutOfBoundsException e) {
-            throw new IllegalArgumentException("Unknown entry_type enum value :" + value);
-        }
     }
 
     @Override
     public String toString() {
-        return value == 0 ? "word" : value == 1 ? "label" : "unknown";
+        final StringBuilder sb = new StringBuilder("FloatIntPair{");
+        sb.append("key=").append(key);
+        sb.append(", value=").append(value);
+        sb.append('}');
+        return sb.toString();
     }
 }

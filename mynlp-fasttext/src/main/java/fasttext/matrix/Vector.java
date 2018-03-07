@@ -18,7 +18,7 @@ package fasttext.matrix;
 
 
 import com.google.common.base.Preconditions;
-import fasttext.productquantizer.QMatrix;
+import fasttext.pq.QMatrix;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
@@ -201,7 +201,7 @@ public class Vector {
      *
      * @return
      */
-    public float norm_2() {
+    public float norm() {
         double sum = 0;
         for (int i = start; i < end; i++) {
             float x = data[i];

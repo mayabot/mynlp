@@ -16,24 +16,32 @@
 
 package fasttext;
 
-public class FloatIntPair {
-    public float key;
+public enum EntryType {
+
+    word(0), label(1);
+
     public int value;
 
-    public FloatIntPair() {
+    EntryType(int value) {
+        this.value = value;
     }
 
-    public FloatIntPair(float key, int value) {
-        this.key = key;
-        this.value = value;
+    public int getValue() {
+        return this.value;
+    }
+
+    static EntryType[] types = EntryType.values();
+
+    public static EntryType fromValue(int value) throws IllegalArgumentException {
+        try {
+            return types[value];
+        } catch (ArrayIndexOutOfBoundsException e) {
+            throw new IllegalArgumentException("Unknown EntryType enum value :" + value);
+        }
     }
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("FloatIntPair{");
-        sb.append("key=").append(key);
-        sb.append(", value=").append(value);
-        sb.append('}');
-        return sb.toString();
+        return value == 0 ? "word" : value == 1 ? "label" : "unknown";
     }
 }

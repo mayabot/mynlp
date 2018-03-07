@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package fasttext.productquantizer;
+package fasttext.pq;
 
 import fasttext.matrix.Vector;
 
 import java.util.Random;
 
-import static fasttext.Utils.iota;
-import static fasttext.Utils.shuffle;
+import static fasttext.utils.Utils.iota;
+import static fasttext.utils.Utils.shuffle;
 
 public class ProductQuantizer {
 
