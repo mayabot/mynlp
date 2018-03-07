@@ -46,3 +46,6 @@ mynlp_work/**
 **/model/dependency
 **/model/segment
 /temp/
+/mynlp-fasttext/xbackjava/
+/mynlp-fasttext/xcsource/
+/mynlp-fasttext/data/

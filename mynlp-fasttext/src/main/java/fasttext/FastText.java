@@ -24,9 +24,8 @@ import com.google.common.collect.Sets;
 import com.google.common.io.Files;
 import fasttext.matrix.Matrix;
 import fasttext.matrix.Vector;
-import fasttext.productquantizer.QMatrix;
-import fasttext.utils.CLangDataInputStream;
-import fasttext.utils.model_name;
+import fasttext.pq.QMatrix;
+import fasttext.utils.*;
 
 import java.io.*;
 import java.text.DecimalFormat;
@@ -82,10 +81,10 @@ public class FastText {
     }
 
 
-    public List<FloatStringPair> findNN(Matrix wordVectors,Vector queryVec, int k,Set<String> sets){
+    public List<FloatStringPair> findNN(Matrix wordVectors, Vector queryVec, int k, Set<String> sets){
 
 
-        float queryNorm = queryVec.norm_2();
+        float queryNorm = queryVec.norm();
         if (Math.abs(queryNorm) < 1e-8) {
             queryNorm = 1;
         }
@@ -193,7 +192,7 @@ public class FastText {
         for (int i = 0; i < dict.nwords(); i++) {
             String word = dict.getWord(i);
             getWordVector(vec, word);
-            float norm = vec.norm_2();
+            float norm = vec.norm();
             if (norm > 0) {
                 wordVectors.addRow(vec, i, 1.0f / norm);
             }
@@ -279,7 +278,7 @@ public class FastText {
             int count = 0;
             for (String word : tokens) {
                 getWordVector(vec, word);
-                float norm = vec.norm_2();
+                float norm = vec.norm();
                 if (norm > 0) {
                     vec.mul(1.0f / norm);
                     svec.add(vec);
@@ -379,9 +378,9 @@ public class FastText {
             model.setQuantizePointer(qinput, qoutput, args_.qout);
 
             if (args_.model == sup) {
-                model.setTargetCounts(dictionary.getCounts(entry_type.label));
+                model.setTargetCounts(dictionary.getCounts(EntryType.label));
             } else {
-                model.setTargetCounts(dictionary.getCounts(entry_type.word));
+                model.setTargetCounts(dictionary.getCounts(EntryType.word));
             }
 
 

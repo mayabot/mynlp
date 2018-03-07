@@ -19,15 +19,11 @@ package fasttext.matrix;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
-import fasttext.IOUtil;
 import fasttext.utils.CLangDataInputStream;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.nio.FloatBuffer;
-import java.util.Arrays;
 import java.util.Random;
 
 public class Matrix {

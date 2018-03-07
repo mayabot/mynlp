@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package fasttext;
+package fasttext.utils;
 
 import com.carrotsearch.hppc.IntArrayList;
 

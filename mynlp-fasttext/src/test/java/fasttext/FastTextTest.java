@@ -37,7 +37,7 @@ public class FastTextTest {
         Vector v1 = fastText.getWordVector("苹果");
         Vector v2 = fastText.getWordVector("香蕉");
         Vector v3 = fastText.getWordVector("国王");
-        System.out.println(v1.norm_2());
+        System.out.println(v1.norm());
 
         System.out.println(Vector.dot(v1,v2));
         System.out.println(Vector.cosine(v1,v2));
