@@ -16,10 +16,13 @@
 
 package fasttext;
 
+
+import java.util.Comparator;
+
 public class FloatStringPair {
 
     public float key;
-    public String  value;
+    public String value;
 
     public FloatStringPair() {
     }
@@ -27,5 +30,17 @@ public class FloatStringPair {
     public FloatStringPair(float key, String value) {
         this.key = key;
         this.value = value;
+    }
+
+    public final static Comparator<FloatStringPair> High2Low =
+            ((o1, o2) -> Float.compare(o2.key, o1.key));
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("Pair{");
+        sb.append("key=").append(key);
+        sb.append(", value='").append(value).append('\'');
+        sb.append('}');
+        return sb.toString();
     }
 }
