@@ -17,7 +17,10 @@
 package fasttext.pq;
 
 import fasttext.matrix.Vector;
+import fasttext.utils.CLangDataInputStream;
+import fasttext.utils.CLangDataOutputStream;
 
+import java.io.IOException;
 import java.util.Random;
 
 import static fasttext.utils.Utils.iota;
@@ -70,6 +73,10 @@ public class ProductQuantizer {
         } else {
             nsubq_++;
         }
+    }
+
+    public ProductQuantizer() {
+
     }
 
     public void train(int n, float[] data) {
@@ -174,22 +181,25 @@ public class ProductQuantizer {
         }
         return res * alpha;
     }
-//    real ProductQuantizer::mulcode(const Vector& x, const uint8_t* codes,
-//                                   int32_t t, real alpha) const {
-//        real res = 0.0;
-//        auto d = dsub_;
-//  const uint8_t* code = codes + nsubq_ * t;
-//        for (auto m = 0; m < nsubq_; m++) {
-//    const real* c = get_centroids(m, code[m]);
-//            if (m == nsubq_ - 1) {d = lastdsub_;}
-//            for(auto n = 0; n < d; n++) {
-//                res += x[m * dsub_ + n] * c[n];
-//            }
-//        }
-//        return res * alpha;
-//    }
-//
 
-//
+    public void save(CLangDataOutputStream out) throws IOException{
+        out.writeInt(dim_);
+        out.writeInt(nsubq_);
+        out.writeInt(dsub_);
+        out.writeInt(lastdsub_);
+
+        out.writeFloatArray(centroidTable.centroidData);
+
+    }
+
+    public void load(CLangDataInputStream in) throws IOException{
+        dim_ = in.readInt();
+        nsubq_ = in.readInt();
+        dsub_ = in.readInt();
+        lastdsub_ = in.readInt();
+        centroidTable = new CentroidTable(dim_, ksub_, dsub_);
+        in.readFloatArray(centroidTable.centroidData);
+
+    }
 
 }

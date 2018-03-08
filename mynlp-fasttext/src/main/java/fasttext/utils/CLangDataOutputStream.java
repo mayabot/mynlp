@@ -17,6 +17,8 @@
 package fasttext.utils;
 
 import java.io.*;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 
 /**
  * A data output stream lets an application write primitive Java data
@@ -52,6 +54,57 @@ class CLangDataOutputStream extends FilterOutputStream implements DataOutput {
     public CLangDataOutputStream(OutputStream out) {
         super(out);
     }
+
+
+    public void writeFloatArray(float[] data) throws IOException{
+        int size = data.length;
+        final int batch = 512;
+        final int  part = size / batch;
+        final int less = size % batch;
+
+        ByteBuffer buffer = ByteBuffer.allocate(4 * batch);
+        buffer.order(ByteOrder.LITTLE_ENDIAN);
+
+        for (int i = 0; i < part; i++) {
+            buffer.clear();
+            buffer.asFloatBuffer().put(data, i * batch, batch);
+            write(buffer.array());
+        }
+
+        //tail
+        if (less > 0) {
+            buffer = ByteBuffer.allocate(4 * less);
+            buffer.order(ByteOrder.LITTLE_ENDIAN);
+            buffer.asFloatBuffer().put(data, part * batch, less);
+            write(buffer.array());
+        }
+    }
+
+
+    public void writeShortArray(short[] data) throws  IOException{
+        int size = data.length;
+        final int batch = 512;
+        final int  part = size / batch;
+        final int less = size % batch;
+
+        ByteBuffer buffer = ByteBuffer.allocate(2 * batch);
+        buffer.order(ByteOrder.LITTLE_ENDIAN);
+
+        for (int i = 0; i < part; i++) {
+            buffer.clear();
+            buffer.asShortBuffer().put(data, i * batch, batch);
+            write(buffer.array());
+        }
+
+        //tail
+        if (less > 0) {
+            buffer = ByteBuffer.allocate(2 * less);
+            buffer.order(ByteOrder.LITTLE_ENDIAN);
+            buffer.asShortBuffer().put(data, part * batch, less);
+            write(buffer.array());
+        }
+    }
+
 
     /**
      * Increases the written counter by the specified value

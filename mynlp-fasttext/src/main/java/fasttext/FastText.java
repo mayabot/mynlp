@@ -18,6 +18,7 @@ package fasttext;
 
 import com.carrotsearch.hppc.IntArrayList;
 import com.google.common.base.Charsets;
+import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
@@ -317,11 +318,9 @@ public class FastText {
                 BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file), 1024 * 64);
                 CLangDataInputStream dis = new CLangDataInputStream(bis)) {
 
-            IOUtil ioutil = new IOUtil();
-
             //check model
             int magic = dis.readInt();
-            int version = ioutil.readInt(dis);
+            int version = dis.readInt();
 
             if (magic != FASTTEXT_FILEFORMAT_MAGIC_INT32) {
                 throw new RuntimeException("Model file has wrong file format!");
@@ -352,7 +351,8 @@ public class FastText {
             QMatrix qoutput = new QMatrix();
 
 
-            boolean quant_input = ioutil.readBoolean(dis);
+
+            boolean quant_input = dis.readBoolean();
             if (quant_input) {
                 qinput.load(dis);
             } else {
@@ -365,7 +365,7 @@ public class FastText {
                         + "See issue #332 on Github for more information.\n");
             }
 
-            args_.qout = ioutil.readBoolean(dis);
+            args_.qout = dis.readBoolean();
             if (quant_input && args_.qout) {
                 qoutput.load(dis);
             } else {
@@ -392,7 +392,39 @@ public class FastText {
         }
     }
 
-    public void saveModel(File out) {
+    public void saveModel(File out) throws Exception{
+        if (quant) {
+            Preconditions.checkArgument(out.getName().endsWith(".ftz"));
+        }else{
+            Preconditions.checkArgument(out.getName().endsWith(".bin"));
+        }
+
+        try (
+                BufferedOutputStream bout = new BufferedOutputStream(
+                        new FileOutputStream(out), 1024 * 64);
+                CLangDataOutputStream dis = new CLangDataOutputStream(bout)) {
+
+            //singModel
+            dis.writeInt(FASTTEXT_FILEFORMAT_MAGIC_INT32);
+            dis.writeInt(FASTTEXT_VERSION);
+
+            args.save(dis);
+            dict.save(dis);
+
+            dis.writeBoolean(quant);
+            if (quant) {
+                qinput.save(dis);
+            }else{
+                input.save(dis);
+            }
+
+            dis.writeBoolean(args.qout);
+            if (quant && args.qout) {
+                qoutput.save(dis);
+            }else{
+                output.save(dis);
+            }
+        }
 
     }
 
@@ -402,6 +434,7 @@ public class FastText {
      * @param file
      */
     public void saveVectors(File file) throws Exception {
+        Preconditions.checkArgument(file.getName().endsWith(".vec"));
         if (file.exists()) {
             file.delete();
         }
@@ -417,9 +450,10 @@ public class FastText {
                 String word = dict.getWord(i);
                 getWordVector(vec, word);
                 writer.write(word);
+                writer.write(" ");
                 for (int j = 0; j < vec.length(); j++) {
-                    writer.write(" ");
                     writer.write(df.format(vec.get(j)));
+                    writer.write(" ");
                 }
                 writer.write("\n");
             }
