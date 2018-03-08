@@ -17,21 +17,34 @@
 package fasttext;
 
 import com.carrotsearch.hppc.IntArrayList;
-import com.google.common.base.Strings;
+import com.google.common.base.CharMatcher;
+import com.google.common.base.Charsets;
+import com.google.common.base.Preconditions;
+import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
+import com.google.common.io.CharSink;
+import com.google.common.io.CharSource;
+import com.google.common.io.Files;
+import com.google.common.primitives.Ints;
 import com.google.common.util.concurrent.AtomicDouble;
 import fasttext.matrix.Matrix;
 import fasttext.utils.LoopReader;
 import fasttext.utils.model_name;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
+import java.io.Writer;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
+/**
+ * FastText训练方法.
+ */
 public class FastTextTrain {
 
     private final File file;
-    private final String pretrainedVectors;
+    private final File pretrainedVectors;
     private Args args;
 
     private Matrix input;
@@ -45,41 +58,35 @@ public class FastTextTrain {
     private AtomicDouble loss;
 
 
-    public static void main(String[] args) throws Exception {
-
-        Args args_ = new Args();
-
-        args_.verbose = 2;
-        args_.model = model_name.cbow;
-
-        FastTextTrain textTrain = new FastTextTrain(new File("data/train.txt"), args_,null);
-//        FastTextTrain textTrain = new FastTextTrain(new File("/Users/jimichan/bin/fasttext/train.txt"), args_);
-
-
-        FastText result = textTrain.train();
-
-
+    public static final FastText train(File trainFile, Args args) throws Exception {
+        return new FastTextTrain(trainFile, args, null).train();
     }
+
+    public static final FastText train(File trainFile, File preTrainedVectors, Args args) throws Exception {
+        return new FastTextTrain(trainFile, args, preTrainedVectors).train();
+    }
+
 
 //    Read 0M words
 //    Number of words:  14831
 //    Number of labels: 0
 //    Progress: 100.0%  words/sec/thread: 77650  lr: 0.000000  loss: 2.181113  eta: 0h0m
 
-    public FastTextTrain(File file, Args args,String pretrainedVectors) {
+    private FastTextTrain(File file, Args args, File pretrainedVectors) {
         this.file = file;
         this.args = args;
         this.pretrainedVectors = pretrainedVectors;
     }
 
-    public FastText train() throws Exception {
+
+    private FastText train() throws Exception {
 
         this.dict = new Dictionary(args);
 
         dict.readFromFile(file);
 
 
-        if (!Strings.isNullOrEmpty(pretrainedVectors)) {
+        if (pretrainedVectors != null) {
             loadVectors(pretrainedVectors);
         } else {
             input = new Matrix(dict.nwords() + args.bucket, args.dim);
@@ -104,9 +111,8 @@ public class FastTextTrain {
             model.setTargetCounts(dict.getCounts(EntryType.word));
         }
 
-        return new FastText(dict, input, output, model,args);
+        return new FastText(dict, input, output, model, args);
     }
-
 
 
     private void startThreads() throws Exception {
@@ -158,18 +164,17 @@ public class FastTextTrain {
         }
         long etah = eta / 3600;
         long etam = ((eta % 3600) / 60);
-        long etas =  (eta % 3600) % 60;
+        long etas = (eta % 3600) % 60;
         progress = progress * 100;
         StringBuilder sb = new StringBuilder();
         sb.append("Progress: " +
                 String.format("%2.2f", progress) + "% words/sec/thread: " + String.format("%8.0f", wst));
         sb.append(String.format(" lr: %2.5f", lr));
         sb.append(String.format(" loss: %2.5f", loss.floatValue()));
-        sb.append("ETA: "+etah+"h "+etam+"m "+etas+"s");
+        sb.append("ETA: " + etah + "h " + etam + "m " + etas + "s");
 
         System.out.print(sb);
     }
-
 
 
     class TrainThread implements Runnable {
@@ -180,9 +185,10 @@ public class FastTextTrain {
             this.threadId = threadId;
         }
 
+        @Override
         public void run() {
 
-            try (LoopReader loopReader = new LoopReader((int) (threadId * file.length() / args.thread), file)){
+            try (LoopReader loopReader = new LoopReader((int) (threadId * file.length() / args.thread), file)) {
 
                 Model model = new Model(input, output, args, threadId);
 
@@ -201,7 +207,7 @@ public class FastTextTrain {
                 IntArrayList line = new IntArrayList();
                 IntArrayList labels = new IntArrayList();
 
-                if(args.model == model_name.sup){
+                if (args.model == model_name.sup) {
                     while (tokenCount.longValue() < up_) {
                         float progress = tokenCount.floatValue() / up_; //总的进度
                         float lr = (float) args.lr * (1.0f - progress); //学习率自动放缓
@@ -220,7 +226,7 @@ public class FastTextTrain {
                         }
                     }
                 }
-                if(args.model == model_name.cbow){
+                if (args.model == model_name.cbow) {
                     while (tokenCount.longValue() < up_) {
                         float progress = tokenCount.floatValue() / up_; //总的进度
                         float lr = (float) args.lr * (1.0f - progress); //学习率自动放缓
@@ -239,7 +245,7 @@ public class FastTextTrain {
                         }
                     }
                 }
-                if(args.model == model_name.sg){
+                if (args.model == model_name.sg) {
                     while (tokenCount.longValue() < up_) {
                         float progress = tokenCount.floatValue() / up_; //总的进度
                         float lr = (float) args.lr * (1.0f - progress); //学习率自动放缓
@@ -275,7 +281,9 @@ public class FastTextTrain {
             float lr,
             IntArrayList line,
             IntArrayList labels) {
-        if (labels.size() == 0 || line.size() == 0) return;
+        if (labels.size() == 0 || line.size() == 0){
+            return;
+        }
         int i = labels.size() == 1 ? 0 : model.rng.nextInt(labels.size());
         model.update(line, labels.get(i), lr);
     }
@@ -314,8 +322,79 @@ public class FastTextTrain {
     }
 
 
-    private void loadVectors(String filename) {
+    private void loadVectors(File filename) throws Exception {
 
+        int n;
+        int dim;
+
+        CharSource charSource = Files.asCharSource(filename, Charsets.UTF_8);
+
+        String firstLine = charSource.readFirstLine();
+        {
+            List<String> strings = Splitter.on(CharMatcher.whitespace()).splitToList(firstLine);
+            n = Ints.tryParse(strings.get(0));
+            dim = Ints.tryParse(strings.get(1));
+        }
+        if (n == 0 || dim == 0) {
+            throw new Exception("Error format for " + filename.getName() + ",First line must be rows and dim arg");
+        }
+        if (dim != args.dim) {
+            throw new Exception("Dimension of pretrained vectors " + dim + " does not match dimension (" + args.dim + ")");
+        }
+
+        Matrix mat = new Matrix(n, dim);
+        float[] matrixData = mat.getData();
+
+        final Splitter sp = Splitter.on(" ").omitEmptyStrings();
+
+        List<String> words = Lists.newArrayListWithExpectedSize(n);
+        try (BufferedReader reader = charSource.openBufferedStream()) {
+            reader.readLine();//first line
+            for (int i = 0; i < n; i++) {
+                String line = reader.readLine();
+                List<String> parts = sp.splitToList(line);
+                if (parts.size() != dim + 1) {
+                    if (parts.size() == dim) {
+                        parts = Lists.newArrayList(line.substring(0,line.indexOf(parts.get(0))-1));
+                        parts.addAll(sp.splitToList(line));
+                    }else{
+                        throw new RuntimeException("line "+line+" parse error");
+                    }
+
+                }
+
+                String word = parts.get(0);
+                dict.add(word);
+                words.add(word);
+                int offset = i * dim;
+                for (int j = 1; j <= dim; j++) {
+                    matrixData[offset++] = Float.parseFloat(parts.get(j));
+                }
+            }
+        }
+
+        dict.threshold(1, 0);
+        input = new Matrix(dict.nwords() + args.bucket, args.dim);
+        input.uniform(1.0f / args.dim);
+
+        for (int i = 0; i < n; i++) {
+            int idx = dict.getId(words.get(i));
+            if (idx < 0 || idx > dict.nwords()) {
+                continue;
+            }
+
+            System.arraycopy(matrixData,i*dim,input.getData(),idx*dim,dim);
+//            for (int j = 0; j < dim; j++) {
+//                input.set(idx, j, mat.get(i, j));
+//            }
+
+        }
+
+    }
+
+    public static void main(String[] args) {
+        final Splitter sp = Splitter.on(" ").omitEmptyStrings();
+        System.out.println(sp.splitToList("s  0.40642 0.045065 -0.085397 -0.071044 -0.088321 0.17659 -0.22325 -0.063488 0.16278 0.02615 -0.01317 -0.083395 -0.16697 0.13322 -0.14721 0.18336 0.10601 -0.1845 -0.16747 0.21275 0.25291 0.14608 0.1677 0.21997 0.27573 -0.24129 -0.24082 -0.37281 -0.10154 0.30345 -0.18276 0.077967 -0.16464 0.24025 -0.23187 -0.0068812 0.2614 -0.010023 -0.086186 -0.17127 0.11888 0.18309 -0.30917 -0.25309 0.04848 0.032858 -0.048794 -0.073833 -0.1381 0.050822 -0.24658 -0.03808 -0.013428 -0.11534 -0.27828 -0.13479 -0.21254 -0.030397 0.14031 0.24628 0.16948 0.16564 -0.036517 0.090744 0.22744 0.1877 -0.088911 -0.032296 0.015552 0.19412 0.038615 0.24587 0.16371 -0.08859 -0.0088721 -0.25312 -0.0042083 -0.16622 -0.019661 0.32599 -0.010921 0.24771 0.081447 0.30267 0.049818 -0.40013 -0.24594 -0.07652 -0.26987 -0.10347 0.023058 0.095134 0.54489 -0.19086 0.060302 -0.094459 0.043949 -0.0091736 -0.23753 0.060498 "));
     }
 
 }
