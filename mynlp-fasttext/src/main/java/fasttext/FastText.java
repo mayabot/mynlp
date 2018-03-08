@@ -1,18 +1,3 @@
-/*
- * Copyright 2018 mayabot.com authors. All rights reserved.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *       http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 
 package fasttext;
 
@@ -100,16 +85,16 @@ public class FastText {
         for (int i = 0; i < dict.nwords(); i++) {
             float dp = wordVectors.dotRow(queryVec, i)/queryNorm;
             FloatStringPair last = mostSimilar[mastSimilarLast];
-            if (dp > last.key) {
-                last.key = dp;
-                last.value = dict.getWord(i);
+            if (dp > last.first) {
+                last.first = dp;
+                last.second = dict.getWord(i);
                 Arrays.sort(mostSimilar, FloatStringPair.High2Low);
             }
         }
 
         List<FloatStringPair> result = Lists.newArrayList();
         for (FloatStringPair r : mostSimilar) {
-            if (r.key != -1f && !sets.contains(r.value)) {
+            if (r.first != -1f && !sets.contains(r.second)) {
                 result.add(r);
             }
         }
@@ -221,8 +206,9 @@ public class FastText {
 
         model.predict(words, k, modelPredictions, hidden, output);
 
-        return Lists.transform(modelPredictions, x -> new FloatStringPair(x.key, dict.getLabel(x.value)));
+        return Lists.transform(modelPredictions, x -> new FloatStringPair(x.first, dict.getLabel(x.second)));
     }
+
 
     /**
      * 把词向量填充到一个Vector对象里面去

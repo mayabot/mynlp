@@ -29,7 +29,7 @@ public class FastTextTest {
 
     @BeforeClass
     public static void prepare() throws Exception{
-        fastText = FastText.loadModel(new File("/Users/jimichan/bin/fasttext/wiki.zh.bin"));
+        fastText = FastText.loadModel(new File("/Users/jimichan/Downloads/cc.zh.300.bin"));
     }
 
     @Test
@@ -70,10 +70,10 @@ public class FastTextTest {
 
         FastText.Analogies analogies = fastText.analogies();
 
-        analogies.analogies("国王","皇后","男",10).stream().filter(x->x.key>0.7f).forEach(System.out::println);
+        analogies.analogies("国王","皇后","男",10).stream().filter(x->x.first >0.7f).forEach(System.out::println);
         System.out.println("---------------------");
-        analogies.analogies("国王","皇后","公",10).stream().filter(x->x.key>0.7f).forEach(System.out::println);
+        analogies.analogies("国王","皇后","公",10).stream().filter(x->x.first >0.7f).forEach(System.out::println);
         System.out.println("---------------------");
-        analogies.analogies("国王","皇后","皇帝",10).stream().filter(x->x.key>0.7f).forEach(System.out::println);
+        analogies.analogies("国王","皇后","皇帝",10).stream().filter(x->x.first >0.7f).forEach(System.out::println);
     }
 }

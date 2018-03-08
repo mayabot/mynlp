@@ -17,13 +17,15 @@
 apply plugin: 'idea'
 apply plugin: 'eclipse'
 
-group = 'com.mayabot.mynlp'
-version = '0.0.1-snapshot'
-description = """MyNlp"""
-
 ext {
     guava_version = "19.0"
+    mynlp_version = "1.0.0-snapshot"
 }
+
+
+group = 'com.mayabot.mynlp'
+version = "$mynlp_version"
+description = """MyNlp"""
 
 
 idea {
@@ -36,7 +38,7 @@ subprojects {
     description = "Maya Nlp subproject ${project.path}"
 
     group = 'com.mayabot.mynlp'
-    version = '0.0.1-snapshot'
+    version = "$mynlp_version"
 
     if (path == ":data") {
 
