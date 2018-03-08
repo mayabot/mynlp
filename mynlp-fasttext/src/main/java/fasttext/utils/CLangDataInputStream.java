@@ -17,6 +17,8 @@
 package fasttext.utils;
 
 import java.io.*;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.util.Arrays;
 
 /**
@@ -51,6 +53,74 @@ class CLangDataInputStream extends FilterInputStream implements DataInput {
      */
     private byte bytearr[] = new byte[80];
     private char chararr[] = new char[80];
+
+
+    public void readFloatArray(float[] data) throws IOException{
+        int size = data.length;
+        final int batch = 512;
+        final int  part = size / batch;
+        final int less = size % batch;
+
+        {
+            ByteBuffer byteBuffer = ByteBuffer.allocate(4 * batch);
+            byteBuffer.order(ByteOrder.LITTLE_ENDIAN);
+            byte[] buffer = new byte[4 * batch];
+
+            for (int i = 0; i < part; i++) {
+                read(buffer);
+                byteBuffer.clear();
+                byteBuffer.put(buffer);
+                byteBuffer.flip();
+                byteBuffer.asFloatBuffer().get(data, i * batch, batch);
+            }
+        }
+
+        if(less>0){
+            ByteBuffer byteBuffer = ByteBuffer.allocate(4 * less);
+            byteBuffer.order(ByteOrder.LITTLE_ENDIAN);
+            byte[] buffer = new byte[4 * less];
+
+            read(buffer);
+            byteBuffer.clear();
+            byteBuffer.put(buffer);
+            byteBuffer.flip();
+            byteBuffer.asFloatBuffer().get(data, part * batch, less);
+        }
+    }
+
+
+    public void readShortArray(short[] data) throws IOException{
+        int size = data.length;
+        final int batch = 512;
+        final int  part = size / batch;
+        final int less = size % batch;
+
+        {
+            ByteBuffer byteBuffer = ByteBuffer.allocate(4 * batch);
+            byteBuffer.order(ByteOrder.LITTLE_ENDIAN);
+            byte[] buffer = new byte[4 * batch];
+
+            for (int i = 0; i < part; i++) {
+                read(buffer);
+                byteBuffer.clear();
+                byteBuffer.put(buffer);
+                byteBuffer.flip();
+                byteBuffer.asShortBuffer().get(data, i * batch, batch);
+            }
+        }
+
+        if(less>0){
+            ByteBuffer byteBuffer = ByteBuffer.allocate(4 * less);
+            byteBuffer.order(ByteOrder.LITTLE_ENDIAN);
+            byte[] buffer = new byte[4 * less];
+
+            read(buffer);
+            byteBuffer.clear();
+            byteBuffer.put(buffer);
+            byteBuffer.flip();
+            byteBuffer.asShortBuffer().get(data, part * batch, less);
+        }
+    }
 
     /**
      * Reads some number of bytes from the contained input stream and

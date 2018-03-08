@@ -20,10 +20,12 @@ package fasttext.matrix;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import fasttext.utils.CLangDataInputStream;
+import fasttext.utils.CLangDataOutputStream;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.util.Arrays;
 import java.util.Random;
 
 public class Matrix {
@@ -148,11 +150,13 @@ public class Matrix {
     }
 
 
+    @Override
     public String toString() {
 
         int iMax = data.length - 1;
-        if (iMax == -1)
+        if (iMax == -1) {
             return "[]";
+        }
 
         StringBuilder b = new StringBuilder();
         b.append(Strings.repeat("-", cols * 12));
@@ -162,8 +166,9 @@ public class Matrix {
             count++;
             b.append(data[i]);
 
-            if (i == iMax)
+            if (i == iMax) {
                 return b.append('\n').append(Strings.repeat("-", cols * 12)).append('\n').toString();
+            }
             if (count % cols == 0) {
                 b.append('\n');
             } else {
@@ -189,23 +194,18 @@ public class Matrix {
         rows = (int) in.readLong();
         cols = (int) in.readLong();
         length = rows*cols;
-        long t1 = System.currentTimeMillis();
         data = new float[length];
 
-        byte[] buffer = new byte[4*cols];
-        ByteBuffer byteBuffer = ByteBuffer.allocate(buffer.length);
-        byteBuffer.order(ByteOrder.LITTLE_ENDIAN);
-
-        for (int r = 0; r < rows; r++) {
-            in.read(buffer);
-            byteBuffer.clear();
-            byteBuffer.put(buffer);
-            byteBuffer.flip();
-            byteBuffer.asFloatBuffer()
-                    .get(data,r*cols,cols);
-        }
-
+        in.readFloatArray(data);
     }
+
+    public void save(CLangDataOutputStream out) throws IOException{
+        out.writeLong(rows);
+        out.writeLong(cols);
+
+        out.writeFloatArray(data);
+    }
+
 }
 
 
