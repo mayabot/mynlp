@@ -226,10 +226,12 @@ public class Vector {
         return (float) (dot(a, b) / Math.sqrt(normA * normB));
     }
 
+    @Override
     public String toString() {
 
-        if (length == 0)
+        if (length == 0) {
             return "[]";
+        }
 
         StringBuilder b = new StringBuilder();
         b.append('[');
