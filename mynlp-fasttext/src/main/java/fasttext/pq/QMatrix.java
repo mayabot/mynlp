@@ -19,9 +19,13 @@ package fasttext.pq;
 import com.google.common.base.Preconditions;
 import fasttext.matrix.Matrix;
 import fasttext.matrix.Vector;
+import fasttext.utils.CLangDataInputStream;
+import fasttext.utils.CLangDataOutputStream;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.ByteBuffer;
 
 public class QMatrix {
     ProductQuantizer pq_;
@@ -112,12 +116,42 @@ public class QMatrix {
         npq_.compute_codes(norms, norm_codes_, m_);
     }
 
-    public void save(OutputStream out) {
+    public void save(CLangDataOutputStream out) throws IOException{
+        out.writeBoolean(qnorm_);
+        out.writeLong(m_);
+        out.writeLong(n_);
+        out.writeInt(codesize_);
+
+        out.writeShortArray(codes_);
+
+        pq_.save(out);
+        if (qnorm_) {
+            out.writeShortArray(norm_codes_);
+
+            npq_.save(out);
+        }
 
     }
 
-    public void load(InputStream in) {
+    public void load(CLangDataInputStream in) throws IOException{
+        qnorm_ = in.readBoolean();
+        m_ = (int) in.readLong();
+        n_ = (int) in.readLong();
+        codesize_ = in.readInt();
 
+        codes_ = new short[codesize_];
+        in.readShortArray(codes_);
+
+        pq_ = new ProductQuantizer();
+        pq_.load(in);
+
+        if (qnorm_) {
+            norm_codes_ = new short[m_];
+            in.readShortArray(norm_codes_);
+
+            npq_ = new ProductQuantizer();
+            npq_.load(in);
+        }
     }
 
 }
