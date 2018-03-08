@@ -48,7 +48,7 @@ public enum model_name {
                 value -= 1;
                 return model_name.values()[value];
             } catch (ArrayIndexOutOfBoundsException e) {
-                throw new IllegalArgumentException("Unknown model_name enum value :" + value);
+                throw new IllegalArgumentException("Unknown model_name enum second :" + value);
             }
         }
     }

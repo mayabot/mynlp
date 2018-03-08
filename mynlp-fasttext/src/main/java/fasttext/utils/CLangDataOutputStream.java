@@ -107,7 +107,7 @@ class CLangDataOutputStream extends FilterOutputStream implements DataOutput {
 
 
     /**
-     * Increases the written counter by the specified value
+     * Increases the written counter by the specified second
      * until it reaches Integer.MAX_VALUE.
      */
     private void incCount(int value) {
@@ -171,13 +171,13 @@ class CLangDataOutputStream extends FilterOutputStream implements DataOutput {
 
     /**
      * Writes a <code>boolean</code> to the underlying output stream as
-     * a 1-byte value. The value <code>true</code> is written out as the
-     * value <code>(byte)1</code>; the value <code>false</code> is
-     * written out as the value <code>(byte)0</code>. If no exception is
+     * a 1-byte second. The second <code>true</code> is written out as the
+     * second <code>(byte)1</code>; the second <code>false</code> is
+     * written out as the second <code>(byte)0</code>. If no exception is
      * thrown, the counter <code>written</code> is incremented by
      * <code>1</code>.
      *
-     * @param      v   a <code>boolean</code> value to be written.
+     * @param      v   a <code>boolean</code> second to be written.
      * @exception  IOException  if an I/O error occurs.
      * @see        java.io.FilterOutputStream#out
      */
@@ -188,10 +188,10 @@ class CLangDataOutputStream extends FilterOutputStream implements DataOutput {
 
     /**
      * Writes out a <code>byte</code> to the underlying output stream as
-     * a 1-byte value. If no exception is thrown, the counter
+     * a 1-byte second. If no exception is thrown, the counter
      * <code>written</code> is incremented by <code>1</code>.
      *
-     * @param      v   a <code>byte</code> value to be written.
+     * @param      v   a <code>byte</code> second to be written.
      * @exception  IOException  if an I/O error occurs.
      * @see        java.io.FilterOutputStream#out
      */
@@ -217,10 +217,10 @@ class CLangDataOutputStream extends FilterOutputStream implements DataOutput {
 
     /**
      * Writes a <code>char</code> to the underlying output stream as a
-     * 2-byte value, high byte first. If no exception is thrown, the
+     * 2-byte second, high byte first. If no exception is thrown, the
      * counter <code>written</code> is incremented by <code>2</code>.
      *
-     * @param      v   a <code>char</code> value to be written.
+     * @param      v   a <code>char</code> second to be written.
      * @exception  IOException  if an I/O error occurs.
      * @see        java.io.FilterOutputStream#out
      */
@@ -274,12 +274,12 @@ class CLangDataOutputStream extends FilterOutputStream implements DataOutput {
     /**
      * Converts the float argument to an <code>int</code> using the
      * <code>floatToIntBits</code> method in class <code>Float</code>,
-     * and then writes that <code>int</code> value to the underlying
+     * and then writes that <code>int</code> second to the underlying
      * output stream as a 4-byte quantity, high byte first. If no
      * exception is thrown, the counter <code>written</code> is
      * incremented by <code>4</code>.
      *
-     * @param      v   a <code>float</code> value to be written.
+     * @param      v   a <code>float</code> second to be written.
      * @exception  IOException  if an I/O error occurs.
      * @see        java.io.FilterOutputStream#out
      * @see        java.lang.Float#floatToIntBits(float)
@@ -291,12 +291,12 @@ class CLangDataOutputStream extends FilterOutputStream implements DataOutput {
     /**
      * Converts the double argument to a <code>long</code> using the
      * <code>doubleToLongBits</code> method in class <code>Double</code>,
-     * and then writes that <code>long</code> value to the underlying
+     * and then writes that <code>long</code> second to the underlying
      * output stream as an 8-byte quantity, high byte first. If no
      * exception is thrown, the counter <code>written</code> is
      * incremented by <code>8</code>.
      *
-     * @param      v   a <code>double</code> value to be written.
+     * @param      v   a <code>double</code> second to be written.
      * @exception  IOException  if an I/O error occurs.
      * @see        java.io.FilterOutputStream#out
      * @see        java.lang.Double#doubleToLongBits(double)
@@ -332,7 +332,7 @@ class CLangDataOutputStream extends FilterOutputStream implements DataOutput {
      * thrown, the counter <code>written</code> is incremented by twice
      * the length of <code>s</code>.
      *
-     * @param      s   a <code>String</code> value to be written.
+     * @param      s   a <code>String</code> second to be written.
      * @exception  IOException  if an I/O error occurs.
      * @see        java.io.DataOutputStream#writeChar(int)
      * @see        java.io.FilterOutputStream#out
@@ -355,7 +355,7 @@ class CLangDataOutputStream extends FilterOutputStream implements DataOutput {
      * <p>
      * First, two bytes are written to the output stream as if by the
      * <code>writeShort</code> method giving the number of bytes to
-     * follow. This value is the number of bytes actually written out,
+     * follow. This second is the number of bytes actually written out,
      * not the length of the string. Following the length, each character
      * of the string is output, in sequence, using the modified UTF-8 encoding
      * for the character. If no exception is thrown, the counter
@@ -374,11 +374,11 @@ class CLangDataOutputStream extends FilterOutputStream implements DataOutput {
 
 
     /**
-     * Returns the current value of the counter <code>written</code>,
+     * Returns the current second of the counter <code>written</code>,
      * the number of bytes written to this data output stream so far.
      * If the counter overflows, it will be wrapped to Integer.MAX_VALUE.
      *
-     * @return  the value of the <code>written</code> field.
+     * @return  the second of the <code>written</code> field.
      * @see     java.io.DataOutputStream#written
      */
     public final int size() {

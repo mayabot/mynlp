@@ -133,7 +133,7 @@ class CLangDataInputStream extends FilterInputStream implements DataInput {
      * thrown. If the length of <code>b</code> is zero, then no bytes are
      * read and <code>0</code> is returned; otherwise, there is an attempt
      * to read at least one byte. If no byte is available because the
-     * stream is at end of file, the value <code>-1</code> is returned;
+     * stream is at end of file, the second <code>-1</code> is returned;
      * otherwise, at least one byte is read and stored into <code>b</code>.
      *
      * <p>The first byte read is stored into element <code>b[0]</code>, the
@@ -177,7 +177,7 @@ class CLangDataInputStream extends FilterInputStream implements DataInput {
      * <p> If <code>len</code> is zero, then no bytes are read and
      * <code>0</code> is returned; otherwise, there is an attempt to read at
      * least one byte. If no byte is available because the stream is at end of
-     * file, the value <code>-1</code> is returned; otherwise, at least one
+     * file, the second <code>-1</code> is returned; otherwise, at least one
      * byte is read and stored into <code>b</code>.
      *
      * <p> The first byte read is stored into element <code>b[off]</code>, the
@@ -295,7 +295,7 @@ class CLangDataInputStream extends FilterInputStream implements DataInput {
      * Bytes for this operation are read from the contained
      * input stream.
      *
-     * @return     the <code>boolean</code> value read.
+     * @return     the <code>boolean</code> second read.
      * @exception  EOFException  if this input stream has reached the end.
      * @exception  IOException   the stream has been closed and the contained
      *             input stream does not support reading after close, or

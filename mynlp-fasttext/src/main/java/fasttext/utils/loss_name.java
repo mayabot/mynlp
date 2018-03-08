@@ -33,7 +33,7 @@ public enum loss_name {
                 value -= 1;
                 return loss_name.values()[value];
             } catch (ArrayIndexOutOfBoundsException e) {
-                throw new IllegalArgumentException("Unknown loss_name enum value :" + value);
+                throw new IllegalArgumentException("Unknown loss_name enum second :" + value);
             }
         }
     }

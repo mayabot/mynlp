@@ -1,26 +1,7 @@
-/*
- * Copyright 2018 mayabot.com authors. All rights reserved.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *       http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package fasttext;
 
 
-import fasttext.utils.CLangDataInputStream;
-import fasttext.utils.IOUtil;
-import fasttext.utils.loss_name;
-import fasttext.utils.model_name;
+import fasttext.utils.*;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -54,22 +35,21 @@ public class Args {
 
     public boolean qout;
 
-    public void save(OutputStream ofs) throws IOException {
-        IOUtil ioutil = new IOUtil();
+    public void save(CLangDataOutputStream ofs) throws IOException {
 
-        ofs.write(ioutil.intToByteArray(dim));
-        ofs.write(ioutil.intToByteArray(ws));
-        ofs.write(ioutil.intToByteArray(epoch));
-        ofs.write(ioutil.intToByteArray(minCount));
-        ofs.write(ioutil.intToByteArray(neg));
-        ofs.write(ioutil.intToByteArray(wordNgrams));
-        ofs.write(ioutil.intToByteArray(loss.value));
-        ofs.write(ioutil.intToByteArray(model.value));
-        ofs.write(ioutil.intToByteArray(bucket));
-        ofs.write(ioutil.intToByteArray(minn));
-        ofs.write(ioutil.intToByteArray(maxn));
-        ofs.write(ioutil.intToByteArray(lrUpdateRate));
-        ofs.write(ioutil.doubleToByteArray(t));
+        ofs.writeInt(dim);
+        ofs.writeInt(ws);
+        ofs.writeInt(epoch);
+        ofs.writeInt(minCount);
+        ofs.writeInt(neg);
+        ofs.writeInt(wordNgrams);
+        ofs.writeInt(loss.value);
+        ofs.writeInt(model.value);
+        ofs.writeInt(bucket);
+        ofs.writeInt(minn);
+        ofs.writeInt(maxn);
+        ofs.writeInt(lrUpdateRate);
+        ofs.writeDouble(t);
     }
 
     public void load(CLangDataInputStream input) throws IOException {
