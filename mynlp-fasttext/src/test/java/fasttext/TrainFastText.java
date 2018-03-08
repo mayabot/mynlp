@@ -19,13 +19,13 @@ public class TrainFastText {
         FastText result = FastTextTrain.train(trFile, args);
 
         System.out.println("prepare save...");
-        result.saveModel(new File("data/model.bin"));
-        result.saveVectors(new File("data/model.vec"));
+        result.saveModel(new File("data/out/model.bin"));
+        result.saveVectors(new File("data/out/model.vec"));
     }
 
     @Test
     public void testReadModel() throws Exception {
-        FastText fastText = FastText.loadModel(new File("data/model.bin"));
+        FastText fastText = FastText.loadModel(new File("data/out/model.bin"));
 
         FastText.NearestNeighbor nearestNeighbor = fastText.nearestNeighbor();
 

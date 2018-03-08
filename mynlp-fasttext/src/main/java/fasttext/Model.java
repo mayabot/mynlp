@@ -1,19 +1,3 @@
-/*
- * Copyright 2018 mayabot.com authors. All rights reserved.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *       http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package fasttext;
 
 import com.carrotsearch.hppc.IntArrayList;
@@ -39,7 +23,6 @@ public class Model {
 
 	static final int NEGATIVE_TABLE_SIZE = 10000000;
 
-
 	public class Node {
 		int parent;
 		int left;
@@ -62,10 +45,14 @@ public class Model {
 	private long nexamples_;
 	private float[] t_sigmoid;
 	private float[] t_log;
+
 	// used for negative sampling:
+
 	private IntArrayList negatives;
 	private int negpos;
+
 	// used for hierarchical softmax:
+
 	private List<List<Integer>> paths;
 	private List<List<Boolean>> codes;
 	private List<Node> tree;
@@ -178,7 +165,7 @@ public class Model {
 		hidden.mul(1.0f / input.size());
 	}
 
-	private Comparator<FloatIntPair> comparePairs = (o1, o2) -> Floats.compare(o2.key,o1.key);
+	private Comparator<FloatIntPair> comparePairs = (o1, o2) -> Floats.compare(o2.first,o1.first);
 
 	public void predict(final IntArrayList input, int k, List<FloatIntPair> heap, Vector hidden,
 			Vector output) {
@@ -202,7 +189,7 @@ public class Model {
 	public void findKBest(int k, List<FloatIntPair> heap, Vector hidden, Vector output) {
 		computeOutputSoftmax(hidden, output);
 		for (int i = 0; i < osz_; i++) {
-			if (heap.size() == k && log(output.get(i)) < heap.get(heap.size() - 1).key) {
+			if (heap.size() == k && log(output.get(i)) < heap.get(heap.size() - 1).first) {
 				continue;
 			}
 			heap.add(new FloatIntPair(log(output.get(i)), i));
@@ -215,7 +202,7 @@ public class Model {
 	}
 
 	public void dfs(int k, int node, float score, List<FloatIntPair> heap, Vector hidden) {
-		if (heap.size() == k && score < heap.get(heap.size() - 1).key) {
+		if (heap.size() == k && score < heap.get(heap.size() - 1).first) {
 			return;
 		}
 
@@ -286,13 +273,6 @@ public class Model {
 			}
 		}
 		shuffle(negatives, rng);
-	}
-
-	public static void main(String[] args) {
-		IntArrayList negativ = new IntArrayList(100);
-		negativ.add(1);
-		negativ.add(2);
-		System.out.println(negativ);
 	}
 
 	public int getNegative(int target) {

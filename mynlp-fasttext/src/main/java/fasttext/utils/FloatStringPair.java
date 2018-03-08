@@ -21,26 +21,25 @@ import java.util.Comparator;
 
 public class FloatStringPair {
 
-    public float key;
-    public String value;
+    public float first;
+
+    public String second;
 
     public FloatStringPair() {
     }
 
     public FloatStringPair(float key, String value) {
-        this.key = key;
-        this.value = value;
+        this.first = key;
+        this.second = value;
     }
 
     public final static Comparator<FloatStringPair> High2Low =
-            ((o1, o2) -> Float.compare(o2.key, o1.key));
+            ((o1, o2) -> Float.compare(o2.first, o1.first));
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("Pair{");
-        sb.append("key=").append(key);
-        sb.append(", value='").append(value).append('\'');
-        sb.append('}');
+        final StringBuilder sb = new StringBuilder("( ").append(first)
+                .append(",").append(second).append(" )");
         return sb.toString();
     }
 }

@@ -17,23 +17,23 @@
 package fasttext.utils;
 
 public class FloatIntPair {
-    public float key;
-    public int value;
+
+    public float first;
+
+    public int second;
 
     public FloatIntPair() {
     }
 
     public FloatIntPair(float key, int value) {
-        this.key = key;
-        this.value = value;
+        this.first = key;
+        this.second = value;
     }
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("FloatIntPair{");
-        sb.append("key=").append(key);
-        sb.append(", value=").append(value);
-        sb.append('}');
+        final StringBuilder sb = new StringBuilder("( ").append(first)
+                .append(",").append(second).append(" )");
         return sb.toString();
     }
 }
