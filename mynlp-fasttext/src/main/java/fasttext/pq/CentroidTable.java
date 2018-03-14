@@ -81,24 +81,6 @@ public class CentroidTable {
         mcen.kmeans(xslice, np);
     }
 
-
-//    private void kmeans(int c, int n, int d) {
-//        int[] perm = new int[n];
-//        iota(perm);
-//        shuffle(perm);
-//
-//        for (int i = 0; i < ksub_; i++) {
-//            // memcpy (&c[i * d], x + perm[i] * d, d * sizeof(real));
-//            System.arraycopy(centroids_,i*d,data,perm[i]*d,d);
-//        }
-//        short[] codes = new short[n];
-//        for (int i = 0; i < niter_; i++) {
-//            //Estep(x, c, codes.data(), d, n);
-//
-//        }
-//    }
-
-
     /**
      * 第M个区间的质心视图
      */
@@ -230,7 +212,5 @@ public class CentroidTable {
         }
 
     }
-
-
 
 }
