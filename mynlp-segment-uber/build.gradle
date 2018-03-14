@@ -14,24 +14,15 @@
  * limitations under the License.
  */
 plugins {
-    id 'com.github.johnrengelman.shadow' version '2.0.1'
+    id 'com.github.johnrengelman.shadow' version '2.0.2'
 }
 
 apply plugin: 'maven-publish'
-apply plugin: 'idea'
-apply plugin: 'java'
-apply plugin: 'eclipse'
-
-
-//group = 'com.mayabot.mynlp'
-//version = '1.0.0-snapshot'
-description = """MyNlp"""
+description = """mynlp all-in-one jar"""
 
 
 dependencies {
     compile project(':mynlp-segment')
-
-    //shadow 'com.google.guava:guava:22.0'
 }
 
 
@@ -51,22 +42,16 @@ shadowJar {
 }
 
 
-
 publishing {
     publications {
 
-        nlpJava(MavenPublication) {
-            from components.java
-        }
-
         shadow(MavenPublication) { publication ->
-
 
             project.shadow.component(publication)
 
             pom.withXml {
                 asNode().appendNode('description',
-                        'A demonstration of maven POM customization')
+                        'mynlp segment uber jar')
 
             }
         }

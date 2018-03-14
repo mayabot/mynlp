@@ -40,29 +40,31 @@ subprojects {
     group = 'com.mayabot.mynlp'
     version = "$mynlp_version"
 
-    if (path == ":data") {
+    apply plugin: 'java'
+    apply plugin: 'maven-publish'
 
-    } else {
+    task sourceJar(type: Jar) {
+        from sourceSets.main.allJava
+    }
 
-        apply plugin: 'java'
-        apply plugin: 'maven-publish'
+    project.plugins.withType(JavaBasePlugin) {
+        publishing {
+            publications {
+                myJava(MavenPublication) {
+                    from components.java
 
-
-        project.plugins.withType(JavaBasePlugin) {
-            publishing {
-                publications {
-                    myJava(MavenPublication) {
-                        from components.java
+                    artifact sourceJar {
+                        classifier "sources"
                     }
                 }
             }
         }
+    }
 
-        project.afterEvaluate {
-            if (plugins.hasPlugin('java')) {
-                sourceCompatibility = 1.8
-                targetCompatibility = 1.8
-            }
+    project.afterEvaluate {
+        if (plugins.hasPlugin('java')) {
+            sourceCompatibility = 1.8
+            targetCompatibility = 1.8
         }
     }
 }
