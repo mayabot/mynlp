@@ -14,16 +14,17 @@
  * limitations under the License.
  */
 
-String dirName = rootProject.projectDir.name
-rootProject.name = dirName
+rootProject.name = 'mynlp'
 
 List projects = [
         'mynlp-core',
         'mynlp-segment',
+        'mynlp-segment-uber',
         'mynlp-package',
         'mynlp-pinyin',
         'mynlp-cli',
-        'mynlp-fasttext'
+        'mynlp-fasttext',
+        'mynlp-common'
 
 ]
 
