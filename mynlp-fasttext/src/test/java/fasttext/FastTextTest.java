@@ -29,7 +29,7 @@ public class FastTextTest {
 
     @BeforeClass
     public static void prepare() throws Exception{
-        fastText = FastText.loadModel(new File("/Users/jimichan/Downloads/cc.zh.300.bin"));
+        fastText = FastText.loadModel(new File("data/c_model.bin"));
     }
 
     @Test
@@ -47,9 +47,32 @@ public class FastTextTest {
 
     @Test
     public void testSenVec() {
-        Vector sv1 = fastText.getSentenceVector(Lists.newArrayList("香蕉 和 苹果 都 是 水果".split(" ")));
-        Vector sv2 = fastText.getSentenceVector(Lists.newArrayList("香蕉 苹果 是 常见 的 水果 品种".split(" ")));
-        System.out.println(Vector.cosine(sv1,sv2));
+        String[] x =new String[]{
+        "检查 故障车 左边 后排 4 分 座椅 时",
+        "发现 后排 4 分 座椅 坐垫 右侧 骨架 上 有 明显 的 突出 铁刺",
+        "铁刺 长约 2cm",
+        "在 后排 4 分 座椅 靠背 向前 折叠 放下 再 翻起 时",
+        "座椅 头枕 皮套 直接 被 突出 铁刺 划破",
+                "加速 时 比较 明显",
+                "检查 后桥 油 足够",
+                "干净 和 味道",
+                "苹果 和 香蕉"
+        };
+        for (int i = 0; i < x.length; i++) {
+            for (int j = 0; j < x.length; j++) {
+                if (i != j) {
+                    Vector sv1 = fastText.getSentenceVector(Lists.newArrayList(x[i].split(" ")));
+                    Vector sv2 = fastText.getSentenceVector(Lists.newArrayList(x[j].split(" ")));
+                    System.out.println(x[i]);
+                    System.out.println(sv1);
+                    System.out.println(x[j]);
+                    System.out.println(sv2);
+                    System.out.println(Vector.cosine(sv1,sv2));
+                    System.out.println("==============");
+                }
+            }
+        }
+
 
     }
 
@@ -58,7 +81,7 @@ public class FastTextTest {
 
         FastText.NearestNeighbor nearestNeighbor = fastText.nearestNeighbor();
 
-        nearestNeighbor.nn("香蕉", 11).forEach(System.out::println);
+        nearestNeighbor.nn("异响", 11).forEach(System.out::println);
 
         System.out.println("---------------------");
 
