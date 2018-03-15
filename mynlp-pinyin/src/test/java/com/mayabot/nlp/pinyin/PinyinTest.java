@@ -16,21 +16,22 @@
 
 package com.mayabot.nlp.pinyin;
 
-import com.mayabot.nlp.MyNlps;
-import com.mayabot.nlp.pinyin.model.Pinyin;
+import com.mayabot.nlp.MynlpInjector;
+import org.junit.Assert;
 import org.junit.Test;
 
 public class PinyinTest {
 
+    Text2PinyinService text2PinyinService = MynlpInjector.getInstance(Text2PinyinService.class);
+    PinyinDictionary instance = MynlpInjector.getInstance(PinyinDictionary.class);
+
     @Test
     public void test() {
-        PinyinDictionary instance = MyNlps.getInjector().getInstance(PinyinDictionary.class);
-        Text2PinyinService text2PinyinService = MyNlps.getInjector().getInstance(Text2PinyinService.class);
 
-        PinyinResult xx = text2PinyinService.text2Pinyin("123aed,.你好朝朝暮暮");
-//        xx.ignorePunctuation = false;
-        System.out.println(xx.asString());
-        System.out.println(xx.asHeadString());
+        PinyinResult result = text2PinyinService.text2Pinyin("123aed,.你好朝朝暮暮");
+
+        Assert.assertEquals("",result.asString(),"1 2 3 a e d ni hao zhao zhao mu mu");
+        Assert.assertEquals("",result.asHeadString(),"1 2 3 a e d n h z z m m");
 
     }
 

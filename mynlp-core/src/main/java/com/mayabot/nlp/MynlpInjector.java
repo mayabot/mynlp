@@ -38,12 +38,12 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * MyNlps.getInjector
+ * 使用google guice作为IOC容器管理。对系统子模块安装模块加载。
  */
-public class MyNlps {
+public class MynlpInjector {
 
 
-    static InternalLogger logger = InternalLoggerFactory.getInstance(MyNlps.class);
+    static InternalLogger logger = InternalLoggerFactory.getInstance(MynlpInjector.class);
 
     private static final Injector injector;
 
@@ -105,7 +105,7 @@ public class MyNlps {
         try {
 
             Set<String> set = Sets.newHashSet();
-            Enumeration<URL> resources = MyNlps.class.getClassLoader().getResources("META-INF/mynlp.factories");
+            Enumeration<URL> resources = MynlpInjector.class.getClassLoader().getResources("META-INF/mynlp.factories");
 
             while (resources.hasMoreElements()) {
                 URL url = resources.nextElement();
@@ -175,57 +175,4 @@ public class MyNlps {
         return injector.getInstance(type);
     }
 
-
-    //    @Singleton
-//    public static class A{
-//
-//    }
-//
-//    @Singleton
-//    public static class B{
-//        @Inject
-//        public B(A a){
-//            System.out.println(a);
-//        }
-//    }
-//
-//    @Singleton
-//    public static class C{
-//        @Inject
-//        public C(B b){
-//            System.out.println(b);
-//        }
-//    }
-//
-//    @Singleton
-//    public static class D{
-//        @Inject
-//        public D(B b,C c){
-//            System.out.println(b);
-//        }
-//    }
-//
-//    public static interface F{
-//
-//    }
-//
-//    public static class G implements F{
-//        public G(){
-//
-//        }
-//    } public static class X implements F{
-//        public X(){
-//
-//        }
-//    }
-//
-//    public static void main(String[] args) {
-//        Injector injector = Guice.createInjector(binder -> {
-//            binder.bind(F.class).to(G.class);
-//        });
-//
-//        System.out.println(injector.getInstance(D.class));
-//
-//        injector.getAllBindings().keySet().forEach(System.out::println);
-//    }
 }
