@@ -283,7 +283,7 @@ public class Wordnet implements CharSequence {
     }
 
     /**
-     * put一个 ，但是返回的是一个最新的Vertext对象，然后你可以继续设置属性
+     * put一个 ，但是返回的是一个最新的Vertext对象，然后可以继续设置属性
      *
      * @param offset
      * @param length

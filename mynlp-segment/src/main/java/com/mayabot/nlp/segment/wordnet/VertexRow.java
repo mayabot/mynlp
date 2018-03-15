@@ -397,7 +397,7 @@ public class VertexRow implements Iterable<Vertex> {
         return rowNum;
     }
 
-    public boolean isNotEmtpy() {
+    public boolean isNotEmpty() {
         return first != null;
     }
 

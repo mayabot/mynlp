@@ -39,7 +39,7 @@ public class OptimizeWordPathProcessor implements WordpathProcessor,ApplyPipelin
     private final NamedComponentRegistry registry;
 
     private List<OptimizeProcessor> optimizeProcessorList = Lists.newArrayList();
-
+    WordpathProcessor repairWordnet;
     @Inject
     public OptimizeWordPathProcessor(NamedComponentRegistry registry) {
         this.registry = registry;
@@ -49,6 +49,8 @@ public class OptimizeWordPathProcessor implements WordpathProcessor,ApplyPipelin
         List<String> list = (List) map.get("list");
 
         Preconditions.checkArgument(!list.isEmpty(), "");
+
+        repairWordnet = registry.getInstance("repairWordnet", WordpathProcessor.class);
 
         for (String name : list) {
             OptimizeProcessor pr = registry.getInstance(name, OptimizeProcessor.class);
@@ -63,6 +65,9 @@ public class OptimizeWordPathProcessor implements WordpathProcessor,ApplyPipelin
 
         Wordnet wordnet = wordPath.getWordnet();
 
+        //之前流水线上的处理器，有可能把wordpath截断，造成wordnet不匹配。这里要修复尝试
+        repairWordnet.process(wordPath);
+
         //标记处优化网络
         wordnet.setOptimizeNet(true);
         wordnet.tagOptimizeNetVertex(wordPath);
@@ -74,6 +79,8 @@ public class OptimizeWordPathProcessor implements WordpathProcessor,ApplyPipelin
         }
 
         boolean change = false;
+
+
         for (OptimizeProcessor processor : optimizeProcessorList) {
             boolean ch = processor.process(pathWithBE, wordnet);
             if (ch) {
@@ -83,6 +90,7 @@ public class OptimizeWordPathProcessor implements WordpathProcessor,ApplyPipelin
 
         if (change) {
             wordPath = wordPath.getBestPathComputer().select(wordnet);
+            repairWordnet.process(wordPath);
         }
 
         wordnet.setOptimizeNet(false);

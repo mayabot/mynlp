@@ -21,6 +21,7 @@ import com.google.inject.Injector;
 import com.google.inject.Key;
 import com.google.inject.Singleton;
 import com.google.inject.name.Names;
+import org.junit.Test;
 
 public class GuiceTest {
     @Singleton
@@ -48,5 +49,63 @@ public class GuiceTest {
         Injector c2 = inject.createChildInjector();
         System.out.println(c1.getInstance(Key.get(A.class, Names.named("a"))));
         System.out.println(c2.getInstance(A.class));
+    }
+
+    @Test
+    public void test() {
+
+
+        //    @Singleton
+//    public static class A{
+//
+//    }
+//
+//    @Singleton
+//    public static class B{
+//        @Inject
+//        public B(A a){
+//            System.out.println(a);
+//        }
+//    }
+//
+//    @Singleton
+//    public static class C{
+//        @Inject
+//        public C(B b){
+//            System.out.println(b);
+//        }
+//    }
+//
+//    @Singleton
+//    public static class D{
+//        @Inject
+//        public D(B b,C c){
+//            System.out.println(b);
+//        }
+//    }
+//
+//    public static interface F{
+//
+//    }
+//
+//    public static class G implements F{
+//        public G(){
+//
+//        }
+//    } public static class X implements F{
+//        public X(){
+//
+//        }
+//    }
+//
+//    public static void main(String[] args) {
+//        Injector injector = Guice.createInjector(binder -> {
+//            binder.bind(F.class).to(G.class);
+//        });
+//
+//        System.out.println(injector.getInstance(D.class));
+//
+//        injector.getAllBindings().keySet().forEach(System.out::println);
+//    }
     }
 }

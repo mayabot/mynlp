@@ -19,8 +19,6 @@ archivesBaseName = 'nlp-core'
 
 dependencies {
 
-    compile group: 'org.fusesource.jansi', name: 'jansi', version: '1.16'
-
     compile group: 'com.google.guava', name: 'guava', version: "$guava_version"
     compile group: 'com.google.inject', name: 'guice', version: '4.1.0'
 
