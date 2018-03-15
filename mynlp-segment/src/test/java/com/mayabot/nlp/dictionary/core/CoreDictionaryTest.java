@@ -16,7 +16,7 @@
 
 package com.mayabot.nlp.dictionary.core;
 
-import com.mayabot.nlp.MyNlps;
+import com.mayabot.nlp.MynlpInjector;
 import com.mayabot.nlp.Settings;
 import com.mayabot.nlp.segment.dictionary.core.CoreDictionary;
 import org.junit.Test;
@@ -29,7 +29,7 @@ public class CoreDictionaryTest {
 
         System.setProperty(Settings.KEY_WORK_DIR, "temp");
 
-        CoreDictionary dictionary = MyNlps.getInstance(CoreDictionary.class);
+        CoreDictionary dictionary = MynlpInjector.getInstance(CoreDictionary.class);
         System.out.println(dictionary.get("普查"));
 
 //        long t1 = System.currentTimeMillis();

@@ -19,7 +19,7 @@ package com.mayabot.nlp.segment.tokenizer;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Singleton;
-import com.mayabot.nlp.MyNlps;
+import com.mayabot.nlp.MynlpInjector;
 import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
 import com.mayabot.nlp.segment.NamedComponentRegistry;
@@ -53,7 +53,7 @@ public class WordnetTokenizerFactory {
      * @return
      */
     public static WordnetTokenizerFactory get() {
-        return MyNlps.getInjector().getInstance(WordnetTokenizerFactory.class);
+        return MynlpInjector.getInjector().getInstance(WordnetTokenizerFactory.class);
     }
 
     public WordnetTokenizer build(String initer, String bestpath, String pipeline,PipelineSettings settings) {

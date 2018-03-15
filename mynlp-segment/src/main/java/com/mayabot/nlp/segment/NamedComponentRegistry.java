@@ -107,6 +107,7 @@ public final class NamedComponentRegistry {
         register("correction", WordpathProcessor.class, injector -> injector.getInstance(CorrectionXProcessor.class));
         register("customDict", WordpathProcessor.class, injector -> injector.getInstance(CustomDictionaryXProcess.class));
         register("pattern", WordpathProcessor.class, injector -> new CommonPatternWordPathProcessor());
+        register("repairWordnet", WordpathProcessor.class, injector -> injector.getInstance(RepairWordnetProcessor.class) );
 
         register("optimizeNet", WordpathProcessor.class, injector -> injector.getInstance(OptimizeWordPathProcessor.class));
     }

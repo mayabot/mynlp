@@ -34,7 +34,7 @@ import com.mayabot.nlp.utils.Characters;
 /**
  * 寻找wordnet中的连续空白行, 识别出字符串、数字（浮点数）、等固定模式。
  * 通过FST实现，可以自由扩展模式。
- * 主要作用把粗粉之间的空格搞定
+ * 主要作用把粗分之间的空格搞定
  * 做原子分词用
  * 填充他们
  *
@@ -105,12 +105,12 @@ public class AtomSegmenter implements WordnetInitializer {
             final CharSet zhonwenCharSet = CharSet.getInstance("零○〇一二两三四五六七八九十廿百千万亿壹贰叁肆伍陆柒捌玖拾佰仟");
             final FstCondition<VertexRow> condition = (index, row) -> {
                 if (index < Integer.MAX_VALUE) {
-                    return row.isEmpty() && zhonwenCharSet.contains(row.theChar());
+                    return zhonwenCharSet.contains(row.theChar());
                 }
                 return false;
             };
 
-            FstNode<VertexRow> node = startNode.to("NullAndChinaNum", condition);
+            FstNode<VertexRow> node = startNode.to("ChinaNum", condition);
             node.linkIfReadEndFlag("$chinaNum");
             node.to("$chinaNum", condition.not());
             node.loop(condition);
@@ -157,7 +157,10 @@ public class AtomSegmenter implements WordnetInitializer {
             node.to("$other", FstCondition.TRUE());//无论读取到什么都结束
         }
 
+        numWordId = coreDictionary.getWordID(CoreDictionary.TAG_NUMBER);
     }
+
+    final int numWordId ;
 
     @Override
     public void initialize(Wordnet wordnet) {
@@ -173,9 +176,25 @@ public class AtomSegmenter implements WordnetInitializer {
             switch (nodeId) {
                 case "$number":
                 case "$chinaNum": {
-                    int wordID = coreDictionary.getWordID(CoreDictionary.TAG_NUMBER);
+                    //六万一千公里   [万一] 被词典选中了
+                    //如果都是null，那么就连接起来。如果中间有断点，那么林外单子填充
+                    boolean foundNotEmpty = false;
+                    for (int i = from; i <from+len ; i++) {
+                        if(wordnet.getRow(i).isNotEmpty()){
+                            foundNotEmpty = true;
+                            break;
+                        }
+                    }
                     wordnet.put(from, len).
-                            setWordInfo(wordID, CoreDictionary.TAG_NUMBER, NatureAttribute.create(Nature.m, 100000));
+                            setWordInfo(numWordId, CoreDictionary.TAG_NUMBER, NatureAttribute.create(Nature.m, 100000));
+                    if (foundNotEmpty) {
+                        for (int i = from; i <from+len ; i++) {
+                            if(wordnet.getRow(i).isEmpty()){
+                                wordnet.put(i, 1).
+                                        setWordInfo(numWordId, CoreDictionary.TAG_NUMBER, NatureAttribute.create(Nature.m, 100000));
+                            }
+                        }
+                    }
                 }
                 break;
                 case "$alpha": {

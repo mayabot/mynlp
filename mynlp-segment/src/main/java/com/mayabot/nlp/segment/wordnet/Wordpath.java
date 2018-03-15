@@ -99,8 +99,11 @@ public class Wordpath {
                 Vertex theVertex = wordnet.getVertex(from, (short) len);
 
                 if (theVertex == null) {
+                    // 正则表达式，combin词后，的确或出现这种情况.
+                    //theVertex = wordnet.put(from,len);
                     // 一个行，但是没有去做选择
-                    //
+                    // @ RepairWordnetProcessor 这里去修复了这个错误，到时要在之前去调用
+
                     logger.error("row: " + from + " len " + len + " select is null");
                     throw new IllegalStateException("row: " + from + " len " + len + " select is null");
 
@@ -290,6 +293,10 @@ public class Wordpath {
             }
         }
         return sb.toString();
+    }
+
+    public BitSet getBitSet() {
+        return bitSet;
     }
 
     public void reset() {
