@@ -84,14 +84,14 @@ public class CommonPatternWordPathProcessor implements WordpathProcessor, ApplyP
             int len = end - start;
 
             int wordId = -1;
-            String tag = null;
+            //String tag = null;
             //NatureAttribute natureAttribute = NatureAttribute.build();
 
             //is 日期
             if (datePattern.matcher(wordnet).region(start, end).matches()) {
                 Vertex v = wordPath.combine(start, len);
                 v.setWordInfo(wordId, null, NatureAttribute.create(Nature.t, 10000));
-                change = true;
+                //change = true;
                 continue;
             }
 
@@ -100,7 +100,7 @@ public class CommonPatternWordPathProcessor implements WordpathProcessor, ApplyP
                 if (emailPattern.matcher(wordnet).region(start, end).matches()) {
                     Vertex v = wordPath.combine(start, len);
                     v.setWordInfo(wordId, null, NatureAttribute.create(Nature.x, 10000));
-                    change = true;
+                    //change = true;
                     continue;
                 }
             }
