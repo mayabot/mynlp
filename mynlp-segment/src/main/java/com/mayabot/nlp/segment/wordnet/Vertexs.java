@@ -16,7 +16,7 @@
 
 package com.mayabot.nlp.segment.wordnet;
 
-import com.mayabot.nlp.segment.corpus.tag.Nature;
+import com.mayabot.nlp.segment.dictionary.Nature;
 
 public class Vertexs {
 

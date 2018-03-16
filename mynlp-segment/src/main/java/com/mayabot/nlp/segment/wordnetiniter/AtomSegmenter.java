@@ -23,7 +23,7 @@ import com.mayabot.nlp.fst.FstCondition;
 import com.mayabot.nlp.fst.FstMatcher;
 import com.mayabot.nlp.fst.FstNode;
 import com.mayabot.nlp.segment.WordnetInitializer;
-import com.mayabot.nlp.segment.corpus.tag.Nature;
+import com.mayabot.nlp.segment.dictionary.Nature;
 import com.mayabot.nlp.segment.dictionary.NatureAttribute;
 import com.mayabot.nlp.segment.dictionary.core.CoreDictionary;
 import com.mayabot.nlp.segment.wordnet.VertexRow;
@@ -160,7 +160,7 @@ public class AtomSegmenter implements WordnetInitializer {
         numWordId = coreDictionary.getWordID(CoreDictionary.TAG_NUMBER);
     }
 
-    final int numWordId ;
+    final int numWordId;
 
     @Override
     public void initialize(Wordnet wordnet) {
@@ -179,8 +179,8 @@ public class AtomSegmenter implements WordnetInitializer {
                     //六万一千公里   [万一] 被词典选中了
                     //如果都是null，那么就连接起来。如果中间有断点，那么林外单子填充
                     boolean foundNotEmpty = false;
-                    for (int i = from; i <from+len ; i++) {
-                        if(wordnet.getRow(i).isNotEmpty()){
+                    for (int i = from; i < from + len; i++) {
+                        if (wordnet.getRow(i).isNotEmpty()) {
                             foundNotEmpty = true;
                             break;
                         }
@@ -188,8 +188,8 @@ public class AtomSegmenter implements WordnetInitializer {
                     wordnet.put(from, len).
                             setWordInfo(numWordId, CoreDictionary.TAG_NUMBER, NatureAttribute.create(Nature.m, 100000));
                     if (foundNotEmpty) {
-                        for (int i = from; i <from+len ; i++) {
-                            if(wordnet.getRow(i).isEmpty()){
+                        for (int i = from; i < from + len; i++) {
+                            if (wordnet.getRow(i).isEmpty()) {
                                 wordnet.put(i, 1).
                                         setWordInfo(numWordId, CoreDictionary.TAG_NUMBER, NatureAttribute.create(Nature.m, 100000));
                             }

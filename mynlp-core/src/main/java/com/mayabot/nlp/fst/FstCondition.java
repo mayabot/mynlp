@@ -76,7 +76,7 @@ public interface FstCondition<T> {
     }
 
 
-    public static <R> FstCondition<R> predicate(Predicate<R> predicate) {
+    static <R> FstCondition<R> predicate(Predicate<R> predicate) {
         return new FstCondition<R>() {
             @Override
             public boolean test(int index, R obj) {
@@ -85,7 +85,7 @@ public interface FstCondition<T> {
         };
     }
 
-    public static <T> FstCondition<T> pattern(Pattern pattern) {
+    static <T> FstCondition<T> pattern(Pattern pattern) {
         return new FstCondition<T>() {
             @Override
             public boolean test(int index, T obj) {
@@ -98,7 +98,7 @@ public interface FstCondition<T> {
     }
 
 
-    public static <T> FstCondition<T> pattern(String _pattern) {
+    static <T> FstCondition<T> pattern(String _pattern) {
         Pattern pattern = Pattern.compile(_pattern);
         return new FstCondition<T>() {
             @Override
@@ -112,11 +112,11 @@ public interface FstCondition<T> {
     }
 
 
-    public static <T> FstCondition<T> eq(T testObj) {
+    static <T> FstCondition<T> eq(T testObj) {
         return predicate(testObj, (t, y) -> t.equals(y));
     }
 
-    public static <T> FstCondition<T> in(Set<T> set) {
+    static <T> FstCondition<T> in(Set<T> set) {
         return new FstCondition<T>() {
             @Override
             public boolean test(int index, T obj) {
@@ -128,7 +128,7 @@ public interface FstCondition<T> {
         };
     }
 
-    public static <T> FstCondition<T> NULL() {
+    static <T> FstCondition<T> NULL() {
         return new FstCondition<T>() {
             @Override
             public boolean test(int index, T obj) {
@@ -137,7 +137,7 @@ public interface FstCondition<T> {
         };
     }
 
-    public static <T> FstCondition<T> NotNull() {
+    static <T> FstCondition<T> NotNull() {
         return new FstCondition<T>() {
             @Override
             public boolean test(int index, T obj) {
@@ -147,7 +147,7 @@ public interface FstCondition<T> {
     }
 
 
-    public static <T> FstCondition<T> FALSE() {
+    static <T> FstCondition<T> FALSE() {
         return new FstCondition<T>() {
             @Override
             public boolean test(int index, T obj) {
@@ -156,7 +156,7 @@ public interface FstCondition<T> {
         };
     }
 
-    public static <T> FstCondition<T> TRUE() {
+    static <T> FstCondition<T> TRUE() {
         return new FstCondition<T>() {
             @Override
             public boolean test(int index, T obj) {

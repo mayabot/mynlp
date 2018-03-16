@@ -214,11 +214,11 @@ public class Vector {
         return length;
     }
 
-    public final static float dot(Vector a, Vector b) {
+    public static float dot(Vector a, Vector b) {
         return a.prod(b);
     }
 
-    public final static float cosine(Vector a, Vector b) {
+    public static float cosine(Vector a, Vector b) {
         float normA = dot(a, a), normB = dot(b, b);
         if (normA == 0.0 || normB == 0.0) {
             return 0.0f;

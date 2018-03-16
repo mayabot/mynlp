@@ -40,7 +40,7 @@ public class Characters {
      */
     private static final int cha = 'Ａ' - 'A';
 
-    public static final String fullWidth2halfWidth(String input) {
+    public static String fullWidth2halfWidth(String input) {
         if (input == null || input.isEmpty()) {
             return input;
         }
@@ -85,7 +85,7 @@ public class Characters {
      * @return
      */
 //	private static final int re_cha = 'Ａ'-'A';
-    public static final String halfWidth2fullWidth(String input) {
+    public static String halfWidth2fullWidth(String input) {
         if (input == null || input.isEmpty()) {
             return input;
         }
@@ -123,7 +123,7 @@ public class Characters {
      * @param c
      * @return
      */
-    public final static boolean isPunctuation(char c) {
+    public static boolean isPunctuation(char c) {
         if (c <= 127) {
             if (c <= 47) {
                 return true;
@@ -198,13 +198,13 @@ public class Characters {
         }
     };
 
-    public static final boolean isASCII(char c) {
+    public static boolean isASCII(char c) {
         return c <= 127;
     }
 
     static final String hex = "0123456789ABCDEF";
 
-    public final static String showCharacter(char c) {
+    public static String showCharacter(char c) {
         char[] tmp = {'\\', 'u', '\0', '\0', '\0', '\0'};
         for (int i = 0; i < 4; i++) {
             tmp[5 - i] = hex.charAt(c & 0xF);
@@ -213,7 +213,7 @@ public class Characters {
         return String.copyValueOf(tmp);
     }
 
-    public static final int digit(char ch) {
+    public static int digit(char ch) {
         return Character.digit(ch, 10);
     }
 

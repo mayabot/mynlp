@@ -42,7 +42,7 @@ public class ConvertAbstractWord implements WordnetInitializer {
         wordnet.accessAllVertext(this::process);
     }
 
-    private final void process(Vertex v) {
+    private void process(Vertex v) {
         if (v.natureAttribute == null) {
             return;
         }

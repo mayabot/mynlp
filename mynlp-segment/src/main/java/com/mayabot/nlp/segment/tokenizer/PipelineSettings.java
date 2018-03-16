@@ -23,7 +23,7 @@ import java.util.Map;
 
 public class PipelineSettings {
 
-    private Map<String,String> map = Maps.newHashMap();
+    private Map<String, String> map = Maps.newHashMap();
 
     public PipelineSettings() {
 
@@ -33,7 +33,7 @@ public class PipelineSettings {
         return map.put(key, value);
     }
 
-    public void putAll(Map<String,String> map) {
+    public void putAll(Map<String, String> map) {
         this.map.putAll(map);
     }
 
@@ -61,7 +61,7 @@ public class PipelineSettings {
         return Ints.tryParse(s);
     }
 
-    public static final PipelineSettings parseProperties(String string) {
+    public static PipelineSettings parseProperties(String string) {
         return null;
     }
 

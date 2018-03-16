@@ -21,7 +21,6 @@ import com.google.common.base.Charsets;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import fasttext.Dictionary;
-import fasttext.FastText;
 
 import java.io.*;
 import java.util.List;

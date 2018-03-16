@@ -18,10 +18,10 @@ package com.mayabot.nlp.pinyin;
 
 import com.google.inject.Inject;
 import com.mayabot.nlp.collection.ahocorasick.AhoCorasickDoubleArrayTrie;
-import com.mayabot.nlp.collection.ahocorasick.IHit;
 import com.mayabot.nlp.pinyin.model.Pinyin;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -68,9 +68,8 @@ public class Text2PinyinService {
                 ++offset;
                 continue;
             }
-            for (Pinyin pinyin : wordNet[offset]) {
-                pinyinList.add(pinyin);
-            }
+            Collections.addAll(pinyinList, wordNet[offset]);
+
             offset += wordNet[offset].length;
         }
         return pinyinList;

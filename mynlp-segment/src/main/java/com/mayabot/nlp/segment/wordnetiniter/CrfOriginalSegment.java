@@ -20,7 +20,7 @@ import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Singleton;
 import com.mayabot.nlp.segment.WordnetInitializer;
-import com.mayabot.nlp.segment.corpus.tag.Nature;
+import com.mayabot.nlp.segment.dictionary.Nature;
 import com.mayabot.nlp.segment.dictionary.NatureAttribute;
 import com.mayabot.nlp.segment.model.crf.CRFModelComponent;
 import com.mayabot.nlp.segment.model.crf.CRFSegmentModel;

@@ -212,12 +212,11 @@ public class CorrectionDictionary implements MynlpCacheable {
 
         @Override
         public String toString() {
-            final StringBuilder sb = new StringBuilder("AdjustWord{");
-            sb.append("path='").append(path).append('\'');
-            sb.append(", raw='").append(raw).append('\'');
-            sb.append(", words=").append(words);
-            sb.append('}');
-            return sb.toString();
+            String sb = "AdjustWord{" + "path='" + path + '\'' +
+                    ", raw='" + raw + '\'' +
+                    ", words=" + words +
+                    '}';
+            return sb;
         }
 
     }

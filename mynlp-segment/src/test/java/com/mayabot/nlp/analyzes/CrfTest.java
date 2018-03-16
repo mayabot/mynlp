@@ -33,7 +33,7 @@ public class CrfTest {
         String line = "这个 第二十三届尾牙宴，不要 把文件系统123.456中路径和环境变量的路径混淆。" +
                 "办理镇保门急诊统筹登记缴费手续";
 
-        tokenizer.token(line.toCharArray()).forEach(
+        tokenizer.tokenToList(line).forEach(
                 System.out::println
         );
     }

@@ -20,11 +20,10 @@ import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.mayabot.nlp.algorithm.SimpleViterbi;
 import com.mayabot.nlp.segment.OptimizeProcessor;
+import com.mayabot.nlp.segment.common.EnumFreqPair;
 import com.mayabot.nlp.segment.common.VertexTagCharSequenceTempChar;
-import com.mayabot.nlp.segment.corpus.dictionary.item.EnumFreqPair;
-import com.mayabot.nlp.segment.corpus.tag.NTTag;
-import com.mayabot.nlp.segment.corpus.tag.Nature;
 import com.mayabot.nlp.segment.dictionary.EnumTransformMatrix;
+import com.mayabot.nlp.segment.dictionary.Nature;
 import com.mayabot.nlp.segment.dictionary.NatureAttribute;
 import com.mayabot.nlp.segment.dictionary.core.CoreDictionary;
 import com.mayabot.nlp.segment.recognition.org.nt.NTDictionary;
@@ -34,14 +33,14 @@ import com.mayabot.nlp.segment.tokenizer.PipelineSettings;
 import com.mayabot.nlp.segment.wordnet.Vertex;
 import com.mayabot.nlp.segment.wordnet.Wordnet;
 
-import static com.mayabot.nlp.segment.corpus.tag.NTTag.Z;
+import static com.mayabot.nlp.segment.recognition.org.NTTag.Z;
 
 /**
  * HMM-Viterbi 组织机构名识别处理器
  *
  * @author jimichan
  */
-public class OrganizationRecognition implements OptimizeProcessor,ApplyPipelineSetting {
+public class OrganizationRecognition implements OptimizeProcessor, ApplyPipelineSetting {
 
     private boolean enable;
 

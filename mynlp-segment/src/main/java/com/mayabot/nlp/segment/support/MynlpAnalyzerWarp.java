@@ -14,24 +14,24 @@
  * limitations under the License.
  */
 
-package com.mayabot.nlp.segment.segment;
+package com.mayabot.nlp.segment.support;
 
-import com.mayabot.nlp.segment.MynlpSegment;
+import com.mayabot.nlp.segment.MynlpAnalyzer;
 import com.mayabot.nlp.segment.MynlpTerm;
 
 import java.io.Reader;
 import java.util.Iterator;
 
-public abstract class WrapMySegment implements MynlpSegment {
+public abstract class MynlpAnalyzerWarp implements MynlpAnalyzer {
 
-    protected MynlpSegment myAnalyzer;
+    protected MynlpAnalyzer myAnalyzer;
 
-    public WrapMySegment(MynlpSegment myAnalyzer) {
+    public MynlpAnalyzerWarp(MynlpAnalyzer myAnalyzer) {
         this.myAnalyzer = myAnalyzer;
     }
 
     @Override
-    public MynlpSegment reset(Reader reader) {
+    public MynlpAnalyzer reset(Reader reader) {
         return myAnalyzer.reset(reader);
     }
 

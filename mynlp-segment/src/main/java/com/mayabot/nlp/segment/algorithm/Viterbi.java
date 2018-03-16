@@ -16,7 +16,7 @@
 
 package com.mayabot.nlp.segment.algorithm;
 
-import com.mayabot.nlp.segment.corpus.dictionary.item.EnumFreqPair;
+import com.mayabot.nlp.segment.common.EnumFreqPair;
 import com.mayabot.nlp.segment.dictionary.EnumTransformMatrix;
 
 import java.util.Iterator;

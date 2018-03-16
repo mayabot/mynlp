@@ -28,26 +28,26 @@ public class Utils {
            sqrt[i] = (float) Math.pow(i,0.5);
        }
    }
-    public static final float sqrt(long d) {
+    public static float sqrt(long d) {
         if (d < 200000) {
             return sqrt[(int)d];
         }
         return (float) Math.pow(d,0.5);
     }
 
-    public static final void iota(int[] data) {
+    public static void iota(int[] data) {
         for (int i = 0; i < data.length; i++) {
             data[i] = i;
         }
     }
 
 
-    public static final void swap(int[] array, int i, int j) {
+    public static void swap(int[] array, int i, int j) {
         int x = array[i];
         array[i] = array[j];
         array[j] = x;
     }
-    public static final void swap(IntArrayList array, int i, int j) {
+    public static void swap(IntArrayList array, int i, int j) {
         int x = array.get(i);
         array.set(i,array.get(j));
         array.set(j, x);
@@ -55,13 +55,13 @@ public class Utils {
 
 
 
-    public final static void shuffle(int[] array,Random random) {
+    public static void shuffle(int[] array, Random random) {
         int size = array.length;
         for (int i = size - 1; i > 1; i--) {
             swap(array, i - 1, random.nextInt(i));
         }
     }
-    public final static void shuffle(IntArrayList array, Random random) {
+    public static void shuffle(IntArrayList array, Random random) {
         int size = array.size();
         for (int i = size - 1; i > 1; i--) {
             swap(array, i - 1, random.nextInt(i));

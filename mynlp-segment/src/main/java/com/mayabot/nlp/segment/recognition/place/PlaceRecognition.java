@@ -20,10 +20,9 @@ import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.mayabot.nlp.segment.OptimizeProcessor;
 import com.mayabot.nlp.segment.algorithm.Viterbi;
+import com.mayabot.nlp.segment.common.EnumFreqPair;
 import com.mayabot.nlp.segment.common.VertexTagCharSequenceTempChar;
-import com.mayabot.nlp.segment.corpus.dictionary.item.EnumFreqPair;
-import com.mayabot.nlp.segment.corpus.tag.NSTag;
-import com.mayabot.nlp.segment.corpus.tag.Nature;
+import com.mayabot.nlp.segment.dictionary.Nature;
 import com.mayabot.nlp.segment.dictionary.NatureAttribute;
 import com.mayabot.nlp.segment.dictionary.core.CoreDictionary;
 import com.mayabot.nlp.segment.recognition.place.ns.NSDictionary;
@@ -35,7 +34,7 @@ import com.mayabot.nlp.segment.wordnet.Wordnet;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static com.mayabot.nlp.segment.corpus.tag.NSTag.*;
+import static com.mayabot.nlp.segment.recognition.place.NSTag.*;
 
 /**
  * HMM-Viterbi 地名名识别处理器
@@ -43,7 +42,7 @@ import static com.mayabot.nlp.segment.corpus.tag.NSTag.*;
  * @author jimichan
  */
 
-public class PlaceRecognition implements OptimizeProcessor,ApplyPipelineSetting {
+public class PlaceRecognition implements OptimizeProcessor, ApplyPipelineSetting {
 
     private PlaceDictionary personDictionary;
 
