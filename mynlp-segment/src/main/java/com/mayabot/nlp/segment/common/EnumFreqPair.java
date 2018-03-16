@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.mayabot.nlp.segment.corpus.dictionary.item;
+package com.mayabot.nlp.segment.common;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
@@ -31,8 +31,11 @@ import java.util.function.Function;
 
 /**
  * 对标签-频次的封装
+ * 参考HanLP https://github.com/hankcs/HanLP 中的实现
+ * 做了一些改动，labelMap使用ImmutableMap。序列化采用FastJson对信息打包
  *
  * @author hankcs
+ * @author jimichan
  */
 public class EnumFreqPair<E extends Enum> {
 
@@ -45,15 +48,19 @@ public class EnumFreqPair<E extends Enum> {
         try {
             int size = labelMap.size();
 
-            if (size == 0) {
-                out.writeUTF("{}");
-            } else if (size == 1) {
-                Map.Entry<E, Integer> next = labelMap.entrySet().iterator().next();
-                String name = next.getKey().name();
-                Integer f = next.getValue();
-                out.writeUTF(String.format("{\"" + name + "\":" + f + "}"));
-            } else {
-                out.writeUTF(JSON.toJSONString(labelMap));
+            switch (size) {
+                case 0:
+                    out.writeUTF("{}");
+                    break;
+                case 1:
+                    Map.Entry<E, Integer> next = labelMap.entrySet().iterator().next();
+                    String name = next.getKey().name();
+                    Integer f = next.getValue();
+                    out.writeUTF("{\"" + name + "\":" + f + "}");
+                    break;
+                default:
+                    out.writeUTF(JSON.toJSONString(labelMap));
+                    break;
             }
 
         } catch (IOException e) {
@@ -111,8 +118,7 @@ public class EnumFreqPair<E extends Enum> {
      */
     @SafeVarargs
     public static <E extends Enum<E>> EnumFreqPair<E> create(E... x) {
-        EnumFreqPair<E> ei = new EnumFreqPair<>(x);
-        return ei;
+        return new EnumFreqPair<>(x);
     }
 
     public static <E extends Enum> EnumFreqPair<E> create(List<String> params, Function<String, E> f) {

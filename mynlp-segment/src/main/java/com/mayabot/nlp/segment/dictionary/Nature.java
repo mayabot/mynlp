@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.mayabot.nlp.segment.corpus.tag;
+package com.mayabot.nlp.segment.dictionary;
 
 import com.google.common.base.Charsets;
 import com.google.common.hash.Hashing;
@@ -51,11 +51,11 @@ public class Nature {
         return new Nature(name, ord);
     }
 
-    public static final Nature[] values() {
+    public static Nature[] values() {
         return map.values().toArray(new Nature[0]);
     }
 
-    public static final Nature valueOf(int ord) {
+    public static Nature valueOf(int ord) {
         switch (ord) {
             case 128:
                 return xx;
@@ -359,7 +359,7 @@ public class Nature {
 
     }
 
-    public static final Nature valueOf(String name) {
+    public static Nature valueOf(String name) {
         switch (name) {
             case "bg":
                 return bg;

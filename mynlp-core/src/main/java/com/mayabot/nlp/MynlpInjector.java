@@ -96,9 +96,7 @@ public class MynlpInjector {
         //加载模块，在配置文件中声明的
         modules.addAll(loadModules(environment));
 
-        Injector injector = Guice.createInjector(modules);
-
-        return injector;
+        return Guice.createInjector(modules);
     }
 
     private static List<Module> loadModules(Environment environment) {
@@ -137,14 +135,13 @@ public class MynlpInjector {
                             return c1.newInstance(environment);
                         }
                     } catch (NoSuchMethodException e) {
-
+                        throw new RuntimeException(e);
                     }
 
                     //call default con
-                    Module module = clazz.newInstance();
 
 
-                    return module;
+                    return clazz.newInstance();
                 } catch (ClassNotFoundException e) {
                     System.err.println("Not Found Class " + clazzName);
                     throw new RuntimeException(e);

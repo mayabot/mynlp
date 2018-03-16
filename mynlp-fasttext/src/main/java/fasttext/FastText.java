@@ -295,13 +295,12 @@ public class FastText {
      */
     public static FastText loadModel(File modelPath) throws IOException {
 
-        File file = modelPath;
-        if (!(file.exists() && file.isFile() && file.canRead())) {
+        if (!(modelPath.exists() && modelPath.isFile() && modelPath.canRead())) {
             throw new IOException("Model file cannot be opened for loading!");
         }
 
         try (
-                BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file), 1024 * 64);
+                BufferedInputStream bis = new BufferedInputStream(new FileInputStream(modelPath), 1024 * 64);
                 CLangDataInputStream dis = new CLangDataInputStream(bis)) {
 
             //check model

@@ -23,9 +23,6 @@ import fasttext.utils.CLangDataInputStream;
 import fasttext.utils.CLangDataOutputStream;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.nio.ByteBuffer;
 
 public class QMatrix {
     ProductQuantizer pq_;
@@ -67,16 +64,15 @@ public class QMatrix {
         Preconditions.checkArgument(m_ == matrix.rows());
         Preconditions.checkArgument(n_ == matrix.cols());
 
-        Matrix temp = matrix;
         if (qnorm_) {
             float[] norms = new float[m_];
-            temp.l2NormRow(norms);
-            temp.divideRow(norms);
+            matrix.l2NormRow(norms);
+            matrix.divideRow(norms);
             quantizeNorm(norms);
         }
 
-        pq_.train(m_, temp.getData());
-        pq_.compute_codes(temp.getData(), codes_, m_);
+        pq_.train(m_, matrix.getData());
+        pq_.compute_codes(matrix.getData(), codes_, m_);
     }
 
     public void addToVector(Vector x, int t) {

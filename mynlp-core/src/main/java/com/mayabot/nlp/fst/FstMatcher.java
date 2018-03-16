@@ -83,7 +83,7 @@ public class FstMatcher<T, R> {
         do {
             boolean isNotMovie = false;
 
-            if (movieToNext == false) {
+            if (!movieToNext) {
                 //恢复场景
                 isNotMovie = true;
                 movieToNext = true;

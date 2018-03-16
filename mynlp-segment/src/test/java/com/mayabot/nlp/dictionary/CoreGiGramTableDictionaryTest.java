@@ -16,12 +16,11 @@
 
 package com.mayabot.nlp.dictionary;
 
-import com.mayabot.nlp.BaseTest;
 import com.mayabot.nlp.MynlpInjector;
 import com.mayabot.nlp.segment.dictionary.core.CoreBiGramTableDictionary;
 import org.junit.Test;
 
-public class CoreGiGramTableDictionaryTest extends BaseTest {
+public class CoreGiGramTableDictionaryTest{
 
     @Test
     public void test() {

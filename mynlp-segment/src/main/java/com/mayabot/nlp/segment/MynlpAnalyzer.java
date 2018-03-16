@@ -19,6 +19,7 @@ package com.mayabot.nlp.segment;
 import com.google.common.collect.AbstractIterator;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
+import com.mayabot.nlp.segment.support.DefaultMynlpAnalyzer;
 
 import java.io.Reader;
 import java.io.StringReader;
@@ -26,19 +27,18 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * 一个分词器。
- * 不能被多线程访问，它是有状态的.
+ * 一个面向Reader词分析器实现。它是有状态的，不能被多线程访问.
  * 通过调用reset方法，可以重复使用对象
  *
  * @author jimichan
  */
-public interface MynlpSegment extends Iterable<MynlpTerm> {
+public interface MynlpAnalyzer extends Iterable<MynlpTerm> {
 
     MynlpTerm next();
 
-    MynlpSegment reset(Reader reader);
+    MynlpAnalyzer reset(Reader reader);
 
-    default MynlpSegment reset(String text) {
+    default MynlpAnalyzer reset(String text) {
         return this.reset(new StringReader(text));
     }
 
@@ -47,7 +47,7 @@ public interface MynlpSegment extends Iterable<MynlpTerm> {
         return new AbstractIterator<MynlpTerm>() {
             @Override
             protected MynlpTerm computeNext() {
-                MynlpTerm n = next();
+                MynlpTerm n = MynlpAnalyzer.this.next();
                 if (n != null) {
                     return n;
                 } else {
@@ -57,7 +57,6 @@ public interface MynlpSegment extends Iterable<MynlpTerm> {
         };
     }
 
-
     /**
      * 一个便捷的方法，获得分词结果
      *
@@ -65,6 +64,17 @@ public interface MynlpSegment extends Iterable<MynlpTerm> {
      */
     default List<String> toList() {
         return Lists.newArrayList(Iterators.transform(iterator(), MynlpTerm::getWord));
+    }
+
+    /**
+     * 创建DefaultMynlpSegment的工厂方法
+     *
+     * @param reader
+     * @param tokenizer
+     * @return
+     */
+    static DefaultMynlpAnalyzer create(Reader reader, MynlpTokenizer tokenizer) {
+        return new DefaultMynlpAnalyzer(reader, tokenizer);
     }
 
 }

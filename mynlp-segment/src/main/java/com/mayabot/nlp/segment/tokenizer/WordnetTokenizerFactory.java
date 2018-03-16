@@ -28,6 +28,7 @@ import com.mayabot.nlp.segment.wordnet.BestPathComputer;
 
 /**
  * 根据JSON配置文件产生一个WordnetTokenizer对象
+ *
  * @author jimichan
  */
 @Singleton
@@ -41,7 +42,7 @@ public class WordnetTokenizerFactory {
 
 
     @Inject
-    WordnetTokenizerFactory(NamedComponentRegistry registry, Injector injector,PipelineFactory pipelineFactory) {
+    WordnetTokenizerFactory(NamedComponentRegistry registry, Injector injector, PipelineFactory pipelineFactory) {
         this.registry = registry;
         this.injector = injector;
         this.pipelineFactory = pipelineFactory;
@@ -56,7 +57,7 @@ public class WordnetTokenizerFactory {
         return MynlpInjector.getInjector().getInstance(WordnetTokenizerFactory.class);
     }
 
-    public WordnetTokenizer build(String initer, String bestpath, String pipeline,PipelineSettings settings) {
+    public WordnetTokenizer build(String initer, String bestpath, String pipeline, PipelineSettings settings) {
 
         WordnetTokenizer instance = injector.getInstance(WordnetTokenizer.class);
 
@@ -75,7 +76,7 @@ public class WordnetTokenizerFactory {
     }
 
     public WordnetTokenizer buildDefault() {
-        return build("core","viterbi","default");
+        return build("core", "viterbi", "default");
     }
 
 }

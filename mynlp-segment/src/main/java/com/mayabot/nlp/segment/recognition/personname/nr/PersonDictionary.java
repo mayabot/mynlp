@@ -23,8 +23,8 @@ import com.mayabot.nlp.collection.ahocorasick.AhoCorasickDoubleArrayTrie;
 import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
 import com.mayabot.nlp.resources.MynlpResource;
-import com.mayabot.nlp.segment.corpus.tag.NRTag;
 import com.mayabot.nlp.segment.dictionary.EnumTransformMatrix;
+import com.mayabot.nlp.segment.recognition.personname.NRTag;
 
 import java.io.File;
 import java.io.IOException;

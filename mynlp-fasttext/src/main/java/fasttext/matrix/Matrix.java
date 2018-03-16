@@ -22,9 +22,6 @@ import fasttext.utils.CLangDataInputStream;
 import fasttext.utils.CLangDataOutputStream;
 
 import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.util.Arrays;
 import java.util.Random;
 
 public class Matrix {
@@ -60,10 +57,9 @@ public class Matrix {
     }
 
     public void uniform(float a) {
-        float upper = a;
         float lower = -a;
         for (int i = 0; i < length; i++) {
-            data[i] = (rnd.nextFloat() * (upper - lower)) + lower;
+            data[i] = (rnd.nextFloat() * (a - lower)) + lower;
         }
     }
 
@@ -75,7 +71,7 @@ public class Matrix {
         data[index(i, j)] = v;
     }
 
-    private final int index(int i, int j) {
+    private int index(int i, int j) {
         return i * cols + j;
     }
 

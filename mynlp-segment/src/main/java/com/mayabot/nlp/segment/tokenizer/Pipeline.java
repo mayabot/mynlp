@@ -30,13 +30,12 @@ public class Pipeline {
         this.wordpathProcessors = wordPathProcessors.toArray(new WordpathProcessor[0]);
     }
 
-    public Wordpath process(Wordpath wordPath){
+    public Wordpath process(Wordpath wordPath) {
         for (WordpathProcessor processor : wordpathProcessors) {
             wordPath = processor.process(wordPath);
         }
         return wordPath;
     }
-
 
 
 }

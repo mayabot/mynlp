@@ -20,10 +20,9 @@ import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.mayabot.nlp.segment.OptimizeProcessor;
 import com.mayabot.nlp.segment.algorithm.Viterbi;
+import com.mayabot.nlp.segment.common.EnumFreqPair;
 import com.mayabot.nlp.segment.common.VertexTagCharSequenceTempChar;
-import com.mayabot.nlp.segment.corpus.dictionary.item.EnumFreqPair;
-import com.mayabot.nlp.segment.corpus.tag.NRTag;
-import com.mayabot.nlp.segment.corpus.tag.Nature;
+import com.mayabot.nlp.segment.dictionary.Nature;
 import com.mayabot.nlp.segment.dictionary.NatureAttribute;
 import com.mayabot.nlp.segment.dictionary.core.CoreDictionary;
 import com.mayabot.nlp.segment.recognition.personname.nr.NRDictionary;
@@ -35,7 +34,7 @@ import com.mayabot.nlp.segment.wordnet.Wordnet;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static com.mayabot.nlp.segment.corpus.tag.NRTag.A;
+import static com.mayabot.nlp.segment.recognition.personname.NRTag.A;
 
 /**
  * HMM-Viterbi 中文人名识别处理器
@@ -43,7 +42,7 @@ import static com.mayabot.nlp.segment.corpus.tag.NRTag.A;
  * @author jimichan
  */
 
-public class PersonRecognition implements OptimizeProcessor,ApplyPipelineSetting {
+public class PersonRecognition implements OptimizeProcessor, ApplyPipelineSetting {
 
     private boolean enable;
 
@@ -99,7 +98,7 @@ public class PersonRecognition implements OptimizeProcessor,ApplyPipelineSetting
 
         //选择标签
         Viterbi.computeEnumSimply2(pathWithBE,
-                (v) -> (EnumFreqPair<NRTag>) v.getTempObj(),
+                (v) -> v.getTempObj(),
                 personDictionary.getTransformMatrixDictionary(),
                 (v, tag) -> {
                     v.setTempChar(tag.name().charAt(0));
@@ -138,38 +137,42 @@ public class PersonRecognition implements OptimizeProcessor,ApplyPipelineSetting
                 Vertex v = pathWithBE[i];
 
                 char tag = v.getTempChar();
-                if ('U' == tag) {
-                    //first abstractWord
-                    tagMapOffset[++point] = v.realWordOffset();
-                    tagMapLength[point] = v.length - 1;
-                    tagchar[point] = 'K';
+                switch (tag) {
+                    case 'U':
+                        //first abstractWord
+                        tagMapOffset[++point] = v.realWordOffset();
+                        tagMapLength[point] = v.length - 1;
+                        tagchar[point] = 'K';
 
-                    // second abstractWord
-                    tagMapOffset[++point] = v.realWordOffset() + v.length - 1;
-                    tagMapLength[point] = 1;
-                    tagchar[point] = 'B';
+                        // second abstractWord
+                        tagMapOffset[++point] = v.realWordOffset() + v.length - 1;
+                        tagMapLength[point] = 1;
+                        tagchar[point] = 'B';
 
-                } else if ('V' == tag) {
-                    //人名的末字和下文成词 龚 学 平等 领导, 邓 颖 超生 前
-                    //first abstractWord
-                    tagMapOffset[++point] = v.realWordOffset();
-                    tagMapLength[point] = 1;
+                        break;
+                    case 'V':
+                        //人名的末字和下文成词 龚 学 平等 领导, 邓 颖 超生 前
+                        //first abstractWord
+                        tagMapOffset[++point] = v.realWordOffset();
+                        tagMapLength[point] = 1;
 
-                    if (pathWithBE[i - 1].getTempChar() == 'B') {
-                        tagchar[point] = 'E';
-                    } else {
-                        tagchar[point] = 'D';
-                    }
+                        if (pathWithBE[i - 1].getTempChar() == 'B') {
+                            tagchar[point] = 'E';
+                        } else {
+                            tagchar[point] = 'D';
+                        }
 
-                    // second abstractWord
-                    tagMapOffset[++point] = v.realWordOffset() + 1;
-                    tagMapLength[point] = v.length - 1;
-                    tagchar[point] = 'L';
+                        // second abstractWord
+                        tagMapOffset[++point] = v.realWordOffset() + 1;
+                        tagMapLength[point] = v.length - 1;
+                        tagchar[point] = 'L';
 
-                } else {
-                    tagMapOffset[++point] = v.realWordOffset();
-                    tagMapLength[point] = v.length;
-                    tagchar[point] = v.getTempChar();
+                        break;
+                    default:
+                        tagMapOffset[++point] = v.realWordOffset();
+                        tagMapLength[point] = v.length;
+                        tagchar[point] = v.getTempChar();
+                        break;
                 }
             }
 
@@ -317,6 +320,6 @@ public class PersonRecognition implements OptimizeProcessor,ApplyPipelineSetting
     @Override
     public void apply(PipelineSettings settings) {
         enable = settings.getBool("enable.person_recognition", true)
-         && settings.getBool("enable.recognition", true);
+                && settings.getBool("enable.recognition", true);
     }
 }

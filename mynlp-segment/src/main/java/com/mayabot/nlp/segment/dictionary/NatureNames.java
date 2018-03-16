@@ -14,9 +14,11 @@
  * limitations under the License.
  */
 
-package com.mayabot.nlp.segment.corpus.tag;
+package com.mayabot.nlp.segment.dictionary;
 
 /**
+ * 参考HanLP https://github.com/hankcs/HanLP 中的实现
+ *
  * @author jimichan
  */
 public class NatureNames {

@@ -35,7 +35,7 @@ public enum model_name {
 
         public int value;
 
-        private model_name(int value) {
+        model_name(int value) {
             this.value = value;
         }
 

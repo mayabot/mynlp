@@ -16,7 +16,7 @@
 
 package com.mayabot.nlp.segment;
 
-import com.mayabot.nlp.segment.segment.DefaultMynlpSegment;
+import com.mayabot.nlp.segment.support.DefaultMynlpAnalyzer;
 import com.mayabot.nlp.segment.tokenizer.PipelineSettings;
 import com.mayabot.nlp.segment.tokenizer.WordnetTokenizerFactory;
 
@@ -31,7 +31,7 @@ public final class MynlpSegments {
     }
 
     public static MynlpTokenizer nlpTokenizer(PipelineSettings settings) {
-        return WordnetTokenizerFactory.get().build("core", "viterbi", "default",settings);
+        return WordnetTokenizerFactory.get().build("core", "viterbi", "default", settings);
     }
 
 
@@ -40,16 +40,16 @@ public final class MynlpSegments {
     }
 
     public static MynlpTokenizer crfTokenizer(PipelineSettings settings) {
-        return WordnetTokenizerFactory.get().build("crf", "viterbi", "default",settings);
+        return WordnetTokenizerFactory.get().build("crf", "viterbi", "default", settings);
     }
 
 
-    public static MynlpTokenizer tokenizer(String initer, String bestpath, String pipeline,PipelineSettings settings) {
+    public static MynlpTokenizer tokenizer(String initer, String bestpath, String pipeline, PipelineSettings settings) {
         return WordnetTokenizerFactory.get().build(initer, bestpath, pipeline, settings);
     }
 
 
-    public static MynlpSegment segment(MynlpTokenizer tokenizer) {
-        return new DefaultMynlpSegment("", tokenizer);
+    public static MynlpAnalyzer segment(MynlpTokenizer tokenizer) {
+        return new DefaultMynlpAnalyzer("", tokenizer);
     }
 }

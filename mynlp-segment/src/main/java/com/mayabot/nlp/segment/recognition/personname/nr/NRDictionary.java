@@ -19,9 +19,9 @@ import com.alibaba.fastjson.TypeReference;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.mayabot.nlp.Environment;
-import com.mayabot.nlp.segment.corpus.dictionary.item.EnumFreqPair;
-import com.mayabot.nlp.segment.corpus.tag.NRTag;
+import com.mayabot.nlp.segment.common.EnumFreqPair;
 import com.mayabot.nlp.segment.dictionary.CommonDictionary;
+import com.mayabot.nlp.segment.recognition.personname.NRTag;
 
 import java.io.DataInput;
 import java.io.DataOutput;

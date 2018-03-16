@@ -77,7 +77,7 @@ public class Settings {
 
         logger.info("Mynlp config path {}", configDir.toAbsolutePath().toString());
 
-        List<Supplier<InputStream>> list = Lists.newArrayList(
+        @SuppressWarnings("unchecked") List<Supplier<InputStream>> list = Lists.newArrayList(
 
                 () -> {
                     try {
@@ -182,7 +182,7 @@ public class Settings {
             return null;
         }
 
-        return Splitter.on(',').omitEmptyStrings().trimResults().splitToList((String) obj);
+        return Splitter.on(',').omitEmptyStrings().trimResults().splitToList(obj);
     }
 
 

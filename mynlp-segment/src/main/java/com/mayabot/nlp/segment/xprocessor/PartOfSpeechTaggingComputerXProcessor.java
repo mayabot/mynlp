@@ -22,7 +22,7 @@ import com.google.inject.Singleton;
 import com.mayabot.nlp.algorithm.SimpleViterbi;
 import com.mayabot.nlp.collection.TransformMatrix;
 import com.mayabot.nlp.segment.WordpathProcessor;
-import com.mayabot.nlp.segment.corpus.tag.Nature;
+import com.mayabot.nlp.segment.dictionary.Nature;
 import com.mayabot.nlp.segment.dictionary.core.CoreDictionaryTransformMatrixDictionary;
 import com.mayabot.nlp.segment.wordnet.Vertex;
 import com.mayabot.nlp.segment.wordnet.Wordpath;

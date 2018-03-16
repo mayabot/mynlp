@@ -18,7 +18,7 @@ package com.mayabot.nlp.segment.xprocessor;
 
 import com.google.inject.Inject;
 import com.mayabot.nlp.segment.WordpathProcessor;
-import com.mayabot.nlp.segment.corpus.tag.Nature;
+import com.mayabot.nlp.segment.dictionary.Nature;
 import com.mayabot.nlp.segment.dictionary.NatureAttribute;
 import com.mayabot.nlp.segment.tokenizer.ApplyPipelineSetting;
 import com.mayabot.nlp.segment.tokenizer.PipelineSettings;
