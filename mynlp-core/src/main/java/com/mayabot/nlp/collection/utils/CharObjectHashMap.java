@@ -343,7 +343,7 @@ public class CharObjectHashMap<V> implements CharObjectMap<V> {
     }
 
     private char objectToKey(Object key) {
-        return (char) ((Character) key).charValue();
+        return ((Character) key).charValue();
     }
 
     /**

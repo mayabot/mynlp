@@ -20,6 +20,7 @@ package com.mayabot.nlp.segment.wordnet;
 /**
  * 各种扩展属性. 将来可以设计动态扩展属性
  */
+@SuppressWarnings("unchecked")
 public class VertexExt {
     // ########################################//
     // 在最短路相关计算中用到的几个变量 //
@@ -42,7 +43,6 @@ public class VertexExt {
 
     /**
      * 优化网络的节点标记.
-     *
      */
     private boolean optimize = false;
 
@@ -214,6 +214,7 @@ public class VertexExt {
 
     /**
      * 当网络状态为优化网络。那么之后新增的词，比较为true
+     *
      * @param optimizeNewNode
      */
     public void setOptimizeNewNode(boolean optimizeNewNode) {

@@ -19,7 +19,6 @@ package com.mayabot.nlp.segment.dictionary;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.google.common.collect.ImmutableMap;
-import com.mayabot.nlp.segment.corpus.tag.Nature;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -159,18 +158,11 @@ public final class NatureAttribute {
 
     @Override
     public String toString() {
-//        final StringBuilder sb = new StringBuilder();
-//        for (int i = 0; i < nature.length; ++i) {
-//            sb.append(nature[i]).append(' ').append(frequency[i])
-//                    .append(' ');
-//        }
         return map.toString();
     }
-
 
     public int getTotalFrequency() {
         return totalFrequency;
     }
-
 
 }

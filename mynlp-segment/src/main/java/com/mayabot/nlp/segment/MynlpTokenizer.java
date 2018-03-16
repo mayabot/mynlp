@@ -16,24 +16,31 @@
 
 package com.mayabot.nlp.segment;
 
-import java.util.LinkedList;
+import com.google.common.collect.Lists;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
 /**
  * 一个切词器接口。和Segment的差别是Tokenizer只需要关心把一句话或一小段有限的文本分词完成。
- * 改切词器，是个无状态，而且可以多线程安全。
+ * MynlpTokenizer切词器的实现类是个无状态，所以可以多线程安全，系统只需要一个实例共享使用。
  * 所以一个固定的算法的切分。只需要一个实例
+ *
+ * @author jimichan
  */
 public interface MynlpTokenizer {
 
     /**
-     * 返回LinkedList是方便上层进行一个个戳去
-     *
      * @param text
+     * @param target 结果保存在list里面，这个target如果重复使用的，那么会自动clear
      * @return
      */
-    LinkedList<MynlpTerm> token(char[] text);
+    void token(char[] text, List<MynlpTerm> target);
+
+    default void token(String text, List<MynlpTerm> target) {
+        token(text.toCharArray(), target);
+    }
+
 
     /**
      * 便捷方法。不适用于超大文本
@@ -41,8 +48,13 @@ public interface MynlpTokenizer {
      * @param text
      * @return
      */
-    default List<String> toStringList(String text) {
-        return token(text.toCharArray()).stream().map(x -> x.toString()).collect(Collectors.toList());
+    default List<String> tokenToList(String text) {
+        if (text == null || text.isEmpty()) {
+            return Lists.newArrayListWithCapacity(1);
+        }
+        List<MynlpTerm> target = Lists.newArrayListWithExpectedSize(text.length() / 2);
+        token(text, target);
+        return target.stream().map(x -> x.word).collect(Collectors.toList());
     }
 
 }

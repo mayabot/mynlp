@@ -236,13 +236,12 @@ public class Wordnet implements CharSequence {
             return end;
         }
 
-        VertexRow l = slotList[sindex];
-//        if (l == null && build) {
+        //        if (l == null && build) {
 //            l = new VertexRow(sindex, this);
 //            slotList[sindex] = l;
 //        }
 
-        return l;
+        return slotList[sindex];
     }
 
     /**
@@ -325,9 +324,9 @@ public class Wordnet implements CharSequence {
      * @param length
      * @return
      */
-    public boolean contains(int sindex, int length) {
+    public boolean isNotContains(int sindex, int length) {
         VertexRow row = row(sindex);
-        return row.contains(length);
+        return !row.contains(length);
     }
 
     /**

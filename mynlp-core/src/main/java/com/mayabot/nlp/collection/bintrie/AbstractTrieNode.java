@@ -116,7 +116,7 @@ public abstract class AbstractTrieNode<V> implements BinTrieNode<V> {
      * @param _char
      * @return 返回下标索引
      */
-    static final int binarySearch(BinTrieNode<?>[] branches, char _char) {
+    static int binarySearch(BinTrieNode<?>[] branches, char _char) {
         int high = branches.length - 1;
         if (branches.length < 1) {
             return high;

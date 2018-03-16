@@ -165,6 +165,7 @@ public class CoreDictionary implements MynlpCacheable {
 
 
     @Override
+    @SuppressWarnings(value = "rawtypes")
     public void loadFromRealData() throws Exception {
         MynlpResource dictResource = environment.loadResource(coreDictSetting);
 
@@ -189,7 +190,8 @@ public class CoreDictionary implements MynlpCacheable {
         if (map.isEmpty()) {
             throw new RuntimeException("not found core dict file ");
         }
-        this.trie = new DoubleArrayTrieBuilder().build(map);
+
+        this.trie = (DoubleArrayTrie<NatureAttribute>) new DoubleArrayTrieBuilder().build(map);
     }
 
     @Override

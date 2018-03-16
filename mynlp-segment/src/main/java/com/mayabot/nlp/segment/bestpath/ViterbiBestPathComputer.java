@@ -106,8 +106,8 @@ public class ViterbiBestPathComputer implements BestPathComputer {
                     boolean hasOptimizeNode = false;
                     boolean hasOptimizeNewNode = false;
 
-                    for(Vertex n = toRow.first();n!=null;n = n.getNext()) {
-                        if(n.isOptimize()){
+                    for (Vertex n = toRow.first(); n != null; n = n.getNext()) {
+                        if (n.isOptimize()) {
                             hasOptimizeNode = true;
                         }
                         if (n.isOptimizeNewNode()) {
@@ -158,7 +158,7 @@ public class ViterbiBestPathComputer implements BestPathComputer {
 
             for (Vertex node = row.first(); node != null; node = node.next()) {
 
-                if(node.from == null || (optimizeNet && !node.isOptimize())){
+                if (node.from == null || (optimizeNet && !node.isOptimize())) {
                     continue;
                 }
 

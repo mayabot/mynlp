@@ -13,23 +13,62 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 plugins {
-    id 'org.springframework.boot' version '1.5.8.RELEASE'
+    id 'com.github.johnrengelman.shadow' version '2.0.2'
 }
 
 apply plugin: 'idea'
 
 
-bootRepackage {
-    mainClass = 'com.mayabot.nlp.cli.Application'
-    executable = true
+apply plugin: 'maven-publish'
+description = """mynlp all-in-one jar"""
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'com.mayabot.nlp.cli.Application'
+    }
+
 }
 
 dependencies {
-    compile("org.springframework.boot:spring-boot-starter:1.5.8.RELEASE")
-    compile group: 'com.google.guava', name: 'guava', version: '23.0'
+
+    compile project(":mynlp-segment")
+    compile project(":mynlp-pinyin")
+    compile group: 'commons-cli', name: 'commons-cli', version: '1.4'
 
     testCompile group: 'junit', name: 'junit', version: '4.12'
 
+}
+
+shadowJar {
+    classifier ''
+    //configurations = [project.configurations.compile]
+    relocate 'com.google', 'com.mayabot.t.google'
+    relocate 'org.apache.commons.lang3', 'com.mayabot.t.lang3'
+    relocate 'org.apache.commons.cli', 'com.mayabot.t.cli'
+    relocate 'com.alibaba', 'com.mayabot.t.alibaba'
+    relocate 'org.fusesource', 'com.mayabot.t.fusesource'
+
+    relocate 'org.xerial.snappy', 'com.mayabot.t.snappy'
+    relocate 'com.esotericsoftware', 'com.mayabot.t.esotericsoftware'
+    relocate 'org.objenesis', 'com.mayabot.t.objenesis'
+    relocate 'org.codehaus.mojo', 'com.mayabot.t.mojo'
+
+}
+
+
+publishing {
+    publications {
+
+        shadow(MavenPublication) { publication ->
+
+            project.shadow.component(publication)
+
+            pom.withXml {
+                asNode().appendNode('description',
+                        'mynlp cli jar')
+
+            }
+        }
+    }
 }

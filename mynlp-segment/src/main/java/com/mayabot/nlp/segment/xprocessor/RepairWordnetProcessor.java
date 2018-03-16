@@ -9,11 +9,10 @@ import com.mayabot.nlp.segment.wordnet.Wordnet;
 import com.mayabot.nlp.segment.wordnet.Wordpath;
 import com.mayabot.nlp.utils.CharSet;
 
-import java.util.BitSet;
-
 /**
  * 由于对WordPath的处理，有可能造成wordnet里面不匹配。
  * 比如 宝马5102017年度销售 . 在正则表达式处理后，进行截断，造成510在word内部缺失
+ *
  * @author jimichan jimichan@gmail.com
  */
 public class RepairWordnetProcessor implements WordpathProcessor {
@@ -44,12 +43,12 @@ public class RepairWordnetProcessor implements WordpathProcessor {
             int len = wordPointer.getLen();
             Vertex vertex = wordnet.getVertex(from, len);
             if (vertex == null) {
-                 vertex = wordnet.put(from, len);
+                vertex = wordnet.put(from, len);
 
                 if (isNum(charArray, from, len)) {
-                    vertex.setWordInfo(numWordId,Num_attribute);
-                }else{
-                    vertex.setWordInfo(coreDictionary.X_WORD_ID,X_attribute);
+                    vertex.setWordInfo(numWordId, Num_attribute);
+                } else {
+                    vertex.setWordInfo(coreDictionary.X_WORD_ID, X_attribute);
                 }
 
             }
@@ -58,9 +57,10 @@ public class RepairWordnetProcessor implements WordpathProcessor {
     }
 
     static CharSet nums = CharSet.ASCII_NUMERIC;
-    private boolean isNum(char[] string,int from,int len) {
-        for (int i = from; i < from+len ; i++) {
-            if(!nums.contains(string[i])){
+
+    private boolean isNum(char[] string, int from, int len) {
+        for (int i = from; i < from + len; i++) {
+            if (!nums.contains(string[i])) {
                 return false;
             }
         }

@@ -15,7 +15,7 @@
  */
 package com.mayabot.nlp.segment;
 
-import com.mayabot.nlp.segment.corpus.tag.Nature;
+import com.mayabot.nlp.segment.dictionary.Nature;
 
 import java.util.List;
 
@@ -121,7 +121,6 @@ public final class MynlpTerm {
             sb.append(subword);
             sb.append(" ]");
         }
-
         return sb.toString();
     }
 

@@ -29,8 +29,7 @@ import java.util.zip.GZIPOutputStream;
 public class GzipUtils {
 
     public static byte[] gZip(int[] data) {
-        byte[] result = gZip(MyInts.toByteArray(data));
-        return result;
+        return gZip(MyInts.toByteArray(data));
     }
 
     public static int[] unGZipIntArray(byte[] data) {

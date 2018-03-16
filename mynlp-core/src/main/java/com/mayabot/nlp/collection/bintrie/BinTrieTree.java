@@ -260,8 +260,8 @@ public class BinTrieTree<T> implements Trie<T>, BinTrieNode<T> {
         }
     }
 
-    public static interface TireNodeAccess<T> {
-        public void access(AbstractTrieNode<T> node);
+    public interface TireNodeAccess<T> {
+        void access(AbstractTrieNode<T> node);
     }
 
     public void accessFullTireNode(TireNodeAccess<T> nodeAccess) {

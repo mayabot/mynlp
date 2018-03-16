@@ -30,5 +30,5 @@ public interface ParagraphReader {
      * @return
      * @throws IOException
      */
-    public String next() throws IOException;
+    String next() throws IOException;
 }

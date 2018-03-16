@@ -31,7 +31,7 @@ import com.mayabot.nlp.segment.wordnet.Wordnet;
 import com.mayabot.nlp.segment.wordnet.Wordpath;
 
 import java.util.Iterator;
-import java.util.LinkedList;
+import java.util.List;
 
 /**
  * 一个基于词图的流水线 要求里面所有的组件都是无状态的，线程安全的类
@@ -74,11 +74,15 @@ public class WordnetTokenizer implements MynlpTokenizer {
     }
 
     @Override
-    public LinkedList<MynlpTerm> token(char[] text) {
+    public void token(char[] text, List<MynlpTerm> target) {
+
+        if (!target.isEmpty()) {
+            target.clear();
+        }
 
         // 处理为空的特殊情况
         if (text.length == 0) {
-            return Lists.newLinkedList();
+            return;
         }
 
         //构建一个空的Wordnet对象
@@ -91,7 +95,7 @@ public class WordnetTokenizer implements MynlpTokenizer {
 
         wordPath = pipeline.process(wordPath);
 
-        return path2TermList(wordPath);
+        path2TermList(wordPath, target);
     }
 
 
@@ -115,9 +119,8 @@ public class WordnetTokenizer implements MynlpTokenizer {
      * @param wordPath
      * @return
      */
-    protected LinkedList<MynlpTerm> path2TermList(Wordpath wordPath) {
+    protected void path2TermList(Wordpath wordPath, List<MynlpTerm> target) {
         Iterator<Vertex> vertexIterator = wordPath.iteratorBestPath();
-        LinkedList<MynlpTerm> resultList = Lists.newLinkedList();
         while (vertexIterator.hasNext()) {
             Vertex vertex = vertexIterator.next();
 
@@ -134,16 +137,15 @@ public class WordnetTokenizer implements MynlpTokenizer {
             }
 
 
-            resultList.add(term);
+            target.add(term);
         }
-        return resultList;
     }
 
     public WordnetInitializer getWordnetInitializer() {
         return wordnetInitializer;
     }
 
-     void setPipeline(Pipeline pipeline) {
+    void setPipeline(Pipeline pipeline) {
         this.pipeline = pipeline;
     }
 

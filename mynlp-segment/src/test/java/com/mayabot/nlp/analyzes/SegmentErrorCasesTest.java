@@ -31,7 +31,7 @@ public class SegmentErrorCasesTest {
 //        });
         for (String s : lines) {
             System.out.println(s);
-            System.out.println(tokenizer.token(s.toCharArray()));
+            System.out.println(tokenizer.tokenToList(s));
         }
 
     }

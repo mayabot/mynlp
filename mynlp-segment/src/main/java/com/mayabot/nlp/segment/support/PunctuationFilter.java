@@ -14,23 +14,23 @@
  * limitations under the License.
  */
 
-package com.mayabot.nlp.segment.segment;
+package com.mayabot.nlp.segment.support;
 
-import com.mayabot.nlp.segment.MynlpSegment;
+import com.mayabot.nlp.segment.MynlpAnalyzer;
 import com.mayabot.nlp.segment.MynlpTerm;
 import com.mayabot.nlp.utils.Characters;
 
 /**
  * 过滤标点符号
  */
-public class PunctuationFilter extends WrapMySegmentFilter {
+public class PunctuationFilter extends MynlpAnalyzerFilter {
 
     @Override
     boolean accept(MynlpTerm term) {
         return !Characters.isPunctuation(term.word.charAt(0));
     }
 
-    public PunctuationFilter(MynlpSegment myAnalyzer) {
+    public PunctuationFilter(MynlpAnalyzer myAnalyzer) {
         super(myAnalyzer);
     }
 }

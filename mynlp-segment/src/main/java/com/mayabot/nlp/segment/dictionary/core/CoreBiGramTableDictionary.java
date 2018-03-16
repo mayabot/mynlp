@@ -119,9 +119,7 @@ public class CoreBiGramTableDictionary implements MynlpCacheable {
             }
         }
 
-        CSRSparseMatrix matrix = new CSRSparseMatrix(table, coreDictionary.size());
-
-        this.matrix = matrix;
+        this.matrix = new CSRSparseMatrix(table, coreDictionary.size());
     }
 
     /**

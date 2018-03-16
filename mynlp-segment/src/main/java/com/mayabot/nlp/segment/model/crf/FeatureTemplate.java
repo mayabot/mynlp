@@ -74,10 +74,9 @@ public class FeatureTemplate {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("FeatureTemplate{");
-        sb.append("template='").append(template).append('\'');
-        sb.append(", delimiterList=").append(delimiterList);
-        sb.append('}');
-        return sb.toString();
+        String sb = "FeatureTemplate{" + "template='" + template + '\'' +
+                ", delimiterList=" + delimiterList +
+                '}';
+        return sb;
     }
 }

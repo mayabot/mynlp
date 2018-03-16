@@ -60,8 +60,7 @@ public final class NamedComponentRegistry {
     }
 
     public <T> Function<Injector, T> getFactory(String name, Class<T> clazz) {
-        Function function = table.get(name, clazz);
-        return function;
+        return table.get(name, clazz);
     }
 
     public <T> T getInstance(String name, Class<T> clazz) {
@@ -73,8 +72,7 @@ public final class NamedComponentRegistry {
     }
 
     public Map<String, Function> getFactoryByClass(Class clazz) {
-        Map<String, Function> column = ImmutableMap.copyOf(table.column(clazz));
-        return column;
+        return ImmutableMap.copyOf(table.column(clazz));
     }
 
 
@@ -107,7 +105,7 @@ public final class NamedComponentRegistry {
         register("correction", WordpathProcessor.class, injector -> injector.getInstance(CorrectionXProcessor.class));
         register("customDict", WordpathProcessor.class, injector -> injector.getInstance(CustomDictionaryXProcess.class));
         register("pattern", WordpathProcessor.class, injector -> new CommonPatternWordPathProcessor());
-        register("repairWordnet", WordpathProcessor.class, injector -> injector.getInstance(RepairWordnetProcessor.class) );
+        register("repairWordnet", WordpathProcessor.class, injector -> injector.getInstance(RepairWordnetProcessor.class));
 
         register("optimizeNet", WordpathProcessor.class, injector -> injector.getInstance(OptimizeWordPathProcessor.class));
     }

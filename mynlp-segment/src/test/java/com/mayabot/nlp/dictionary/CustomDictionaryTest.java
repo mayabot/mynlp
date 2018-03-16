@@ -16,10 +16,9 @@
 
 package com.mayabot.nlp.dictionary;
 
-import com.mayabot.nlp.BaseTest;
 import org.junit.Test;
 
-public class CustomDictionaryTest extends BaseTest {
+public class CustomDictionaryTest  {
 
     @Test
     public void test1() {

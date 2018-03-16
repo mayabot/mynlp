@@ -22,8 +22,6 @@
  */
 package com.mayabot.nlp.collection.ahocorasick;
 
-import com.mayabot.nlp.utils.DataInOutputUtils;
-
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
@@ -84,6 +82,7 @@ public class AhoCorasickDoubleArrayTrie<V> {
 
     }
 
+    @SuppressWarnings("unchecked")
     public static <T> AhoCorasickDoubleArrayTrie<T> read(DataInput in, Function<DataInput, T> function) throws IOException {
         AhoCorasickDoubleArrayTrie x = new AhoCorasickDoubleArrayTrie();
 
@@ -333,7 +332,7 @@ public class AhoCorasickDoubleArrayTrie<V> {
         int p;
 
         for (int i = pos; i < len; i++) {
-            p = b + (int) (key.codePointAt(i)) + 1;
+            p = b + key.codePointAt(i) + 1;
             if (b == check[p]) {
                 b = base[p];
             } else {

@@ -48,26 +48,24 @@ public final class CRFSegmentModel extends CRFModel {
     public static CRFSegmentModel loadFromCrfPlusText(Iterator<String> txtReader) {
         CRFSegmentModel model = new CRFSegmentModel();
 
-        Iterator<String> lineIterator = txtReader;
 
-
-        if (!lineIterator.hasNext()) {
+        if (!txtReader.hasNext()) {
             return null;
         }
 
-        logger.info(lineIterator.next());   // verson
+        logger.info(txtReader.next());   // verson
 
-        logger.info(lineIterator.next());   // cost-factor
-        int maxid = Integer.parseInt(lineIterator.next().substring("maxid:".length()).trim());
-        logger.info(lineIterator.next());   // xsize
+        logger.info(txtReader.next());   // cost-factor
+        int maxid = Integer.parseInt(txtReader.next().substring("maxid:".length()).trim());
+        logger.info(txtReader.next());   // xsize
 
-        lineIterator.next();    // blank
+        txtReader.next();    // blank
 
 
         String line;
         int id = 0;
         model.tag2id = new HashMap<String, Integer>();
-        while ((line = lineIterator.next()).length() != 0) {
+        while ((line = txtReader.next()).length() != 0) {
             model.tag2id.put(line, id);
             ++id;
         }
@@ -79,7 +77,7 @@ public final class CRFSegmentModel extends CRFModel {
         TreeMap<String, FeatureFunction> featureFunctionMap = new TreeMap<String, FeatureFunction>();  // 构建trie树的时候用
         List<FeatureFunction> featureFunctionList = new LinkedList<FeatureFunction>(); // 读取权值的时候用
         model.featureTemplateList = new LinkedList<FeatureTemplate>();
-        while ((line = lineIterator.next()).length() != 0) {
+        while ((line = txtReader.next()).length() != 0) {
             if (!"B".equals(line)) {
                 FeatureTemplate featureTemplate = FeatureTemplate.create(line);
                 model.featureTemplateList.add(featureTemplate);
@@ -89,11 +87,11 @@ public final class CRFSegmentModel extends CRFModel {
         }
 
         if (model.matrix != null) {
-            lineIterator.next();    // 0 B
+            txtReader.next();    // 0 B
         }
 
-        while (lineIterator.hasNext()) {
-            line = lineIterator.next();
+        while (txtReader.hasNext()) {
+            line = txtReader.next();
             if (line.isEmpty()) {
                 break;
             }
@@ -107,18 +105,18 @@ public final class CRFSegmentModel extends CRFModel {
         if (model.matrix != null) {
             for (int i = 0; i < size; i++) {
                 for (int j = 0; j < size; j++) {
-                    model.matrix[i][j] = Double.parseDouble(lineIterator.next());
+                    model.matrix[i][j] = Double.parseDouble(txtReader.next());
                 }
             }
         }
 
         for (FeatureFunction featureFunction : featureFunctionList) {
             for (int i = 0; i < size; i++) {
-                featureFunction.w[i] = Double.parseDouble(lineIterator.next());
+                featureFunction.w[i] = Double.parseDouble(txtReader.next());
             }
         }
 
-        if (lineIterator.hasNext()) {
+        if (txtReader.hasNext()) {
             logger.warn("CRF 文本读取有残留，可能会出问题！");
         }
 

@@ -19,19 +19,19 @@ package com.mayabot.nlp.segment.tokenizer;
 import java.util.List;
 import java.util.Map;
 
- class PipelineItem {
+class PipelineItem {
 
-        private String type;
-        private List<String > list;
+    private String type;
+    private List<String> list;
 
-        public PipelineItem() {
-        }
-
-        public PipelineItem(String type) {
-            this.type = type;
-        }
-
-        public PipelineItem(String type, Map<String, Object> config) {
-            this.type = type;
-        }
+    public PipelineItem() {
     }
+
+    public PipelineItem(String type) {
+        this.type = type;
+    }
+
+    public PipelineItem(String type, Map<String, Object> config) {
+        this.type = type;
+    }
+}
