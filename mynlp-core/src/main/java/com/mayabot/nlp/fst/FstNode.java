@@ -26,6 +26,7 @@ import java.util.Optional;
  *
  * @param <R>
  */
+@SuppressWarnings("unchecked")
 public class FstNode<R> {
 
     public enum Type {

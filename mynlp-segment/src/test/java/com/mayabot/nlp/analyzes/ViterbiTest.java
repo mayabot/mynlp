@@ -40,7 +40,7 @@ public class ViterbiTest {
 //        tokenizer.token(line.toCharArray()).forEach(it->{
 //            System.out.println(String.format("%d : %s",it.offset,it.word));
 //        });
-        tokenizer.token(line.toCharArray()).forEach(
+        tokenizer.tokenToList(line).forEach(
                 System.out::println);
     }
 
@@ -52,7 +52,7 @@ public class ViterbiTest {
 
                 "计划建立一个5万公顷面积的航天站";
 
-        tokenizer.token(line.toCharArray()).forEach(
+        tokenizer.tokenToList(line).forEach(
                 System.out::println
         );
     }
@@ -66,7 +66,7 @@ public class ViterbiTest {
 
                 "第六十八回  苦尤娘赚入大观园　";
 
-        tokenizer.token(line.toCharArray()).forEach(
+        tokenizer.tokenToList(line).forEach(
                 System.out::println
         );
 
@@ -85,7 +85,7 @@ public class ViterbiTest {
 
         System.out.println(lines.size());
         for (String s : lines) {
-            tokenizer.token(s.toCharArray());
+            tokenizer.tokenToList(s);
         }
         long t2 = System.currentTimeMillis();
         System.out.println(t2 - t1);
@@ -98,7 +98,7 @@ public class ViterbiTest {
 
         String line = "不要把一星半点儿的酒全部都喝掉嘛";
 
-        tokenizer.token(line.toCharArray()).forEach(
+        tokenizer.tokenToList(line).forEach(
                 System.out::println
         );
     }
@@ -109,7 +109,7 @@ public class ViterbiTest {
 
         String line = "这个是你第几套房了"; // 目标 是 第几套 房
 
-        System.out.println(tokenizer.toStringList(line));
+        System.out.println(tokenizer.tokenToList(line));
 
     }
 
@@ -122,7 +122,7 @@ public class ViterbiTest {
 
         String line = "这个是你的ipad3么"; // 目标 是 第几套 房
 
-        System.out.println(tokenizer.toStringList(line));
+        System.out.println(tokenizer.tokenToList(line));
 
     }
 
@@ -135,7 +135,7 @@ public class ViterbiTest {
 
         String line = "这个是你jimi@mayabot.com邮箱地址么2017-10-12"; // 目标 是 第几套 房
 
-        System.out.println(tokenizer.toStringList(line));
+        System.out.println(tokenizer.tokenToList(line));
 
     }
 
@@ -145,7 +145,7 @@ public class ViterbiTest {
 
         String line = "2017年的第一个夏天是2017-10-12"; // 目标 是 第几套 房
 
-        System.out.println(tokenizer.toStringList(line));
+        System.out.println(tokenizer.tokenToList(line));
 
     }
 
@@ -156,7 +156,7 @@ public class ViterbiTest {
 
         String line = "这里有关天培的烈士.龚学平等领导, 邓颖超生前"; // 目标 是 第几套 房
 
-        System.out.println(tokenizer.toStringList(line));
+        System.out.println(tokenizer.tokenToList(line));
 
     }
 
@@ -166,7 +166,7 @@ public class ViterbiTest {
 
         String line = "蓝翔给宁夏固原市彭阳县红河镇黑牛沟村捐赠了挖掘机"; // 目标 是 第几套 房
 
-        System.out.println(tokenizer.toStringList(line));
+        System.out.println(tokenizer.tokenToList(line));
 
     }
 
@@ -178,7 +178,7 @@ public class ViterbiTest {
                 "上海万行信息科技有限公司的招聘信息," +
                 "阿里巴巴股份有限公司"; // 目标 是 第几套 房
 
-        System.out.println(tokenizer.toStringList(line));
+        System.out.println(tokenizer.tokenToList(line));
 
     }
 
@@ -188,7 +188,7 @@ public class ViterbiTest {
 
         String line = "钱管家中怎么绑定网银"; // 目标 是 第几套 房
 
-        System.out.println(tokenizer.toStringList(line));
+        System.out.println(tokenizer.tokenToList(line));
 
     }
 
@@ -198,7 +198,7 @@ public class ViterbiTest {
 
         String line = "查找一下2016年的电影,计划建立一个5万公顷面积的航天站"; // 目标 是 第几套 房
 
-        System.out.println(tokenizer.toStringList(line));
+        System.out.println(tokenizer.tokenToList(line));
 
     }
 
@@ -208,7 +208,7 @@ public class ViterbiTest {
 
         String line = "非洲八冠王曾夺世界季军"; // 目标 是 第几套 房
 
-        System.out.println(tokenizer.toStringList(line));
+        System.out.println(tokenizer.tokenToList(line));
 
     }
 

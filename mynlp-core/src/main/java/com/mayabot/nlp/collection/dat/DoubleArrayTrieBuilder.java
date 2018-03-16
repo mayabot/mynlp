@@ -82,8 +82,7 @@ public class DoubleArrayTrieBuilder<V> {
         used = null;
         keyList = null;
 
-        DoubleArrayTrie<V> trie = new DoubleArrayTrie<>(valueObj, check, base);
-        return trie;
+        return new DoubleArrayTrie<>(valueObj, check, base);
     }
 
     /**

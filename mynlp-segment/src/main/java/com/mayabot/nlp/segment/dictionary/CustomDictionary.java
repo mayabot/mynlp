@@ -31,7 +31,6 @@ import com.mayabot.nlp.collection.dat.DoubleArrayTrieBuilder;
 import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
 import com.mayabot.nlp.resources.MynlpResource;
-import com.mayabot.nlp.segment.corpus.tag.Nature;
 import com.mayabot.nlp.utils.CharSourceLineReader;
 
 import java.io.*;

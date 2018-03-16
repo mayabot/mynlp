@@ -348,7 +348,7 @@ public class Model {
 	private void initLog() {
 		t_log = new float[LOG_TABLE_SIZE + 1];
 		for (int i = 0; i < LOG_TABLE_SIZE + 1; i++) {
-			float x = (float) (((float) (i) + 1e-5f) / LOG_TABLE_SIZE);
+			float x = ((float) (i) + 1e-5f) / LOG_TABLE_SIZE;
 			t_log[i] = (float) Math.log(x);
 		}
 	}

@@ -16,18 +16,21 @@
 
 rootProject.name = 'mynlp'
 
+
+
 List projects = [
+        'mynlp-common',
         'mynlp-core',
         'mynlp-segment',
         'mynlp-segment-uber',
-        'mynlp-package',
         'mynlp-pinyin',
-        'mynlp-cli',
         'mynlp-fasttext',
-        'mynlp-common'
-
+        'mynlp-jian-fan',
+        'mynlp-cli',
+        'mynlp-lang-detection',
+        'mynlp-news-classification'
 ]
 
 
-include projects.toArray(new String[0])
 
+include projects.toArray(new String[0])

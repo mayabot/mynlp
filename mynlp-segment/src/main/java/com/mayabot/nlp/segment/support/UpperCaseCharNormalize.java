@@ -14,29 +14,16 @@
  * limitations under the License.
  */
 
-package com.mayabot.nlp.segment.segment;
+package com.mayabot.nlp.segment.support;
 
-import com.mayabot.nlp.segment.MynlpSegment;
-import com.mayabot.nlp.segment.MynlpTerm;
+import com.mayabot.nlp.segment.CharNormalize;
+import com.mayabot.nlp.utils.CharacterUtils;
 
-public abstract class WrapMySegmentFilter extends WrapMySegment {
-
-    public WrapMySegmentFilter(MynlpSegment myAnalyzer) {
-        super(myAnalyzer);
-    }
+public class UpperCaseCharNormalize implements CharNormalize {
 
     @Override
-    public MynlpTerm next() {
-        MynlpTerm next = myAnalyzer.next();
-        while (next != null) {
-            if (accept(next)) {
-                return next;
-            } else {
-                next = myAnalyzer.next();
-            }
-        }
-        return null;
+    public void normal(char[] text) {
+        CharacterUtils.toUpperCase(text, 0, text.length);
     }
 
-    abstract boolean accept(MynlpTerm term);
 }

@@ -20,7 +20,7 @@ public enum loss_name {
         hs(1), ns(2), softmax(3);
         public int value;
 
-        private loss_name(int value) {
+        loss_name(int value) {
             this.value = value;
         }
 

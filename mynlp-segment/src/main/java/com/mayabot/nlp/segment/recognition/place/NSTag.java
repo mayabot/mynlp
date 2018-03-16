@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.mayabot.nlp.segment.corpus.tag;
+package com.mayabot.nlp.segment.recognition.place;
 
 /**
  * 地名角色标签
+ * 参考HanLP https://github.com/hankcs/HanLP 中的实现
  *
  * @author hankcs
  */

@@ -16,24 +16,49 @@
 
 package com.mayabot.nlp.cli;
 
-import com.google.common.collect.Maps;
-import org.springframework.boot.Banner;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.apache.commons.cli.*;
 
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 
-@SpringBootApplication
 public class Application {
-    public static void main(String[] args) {
-        SpringApplication app = new SpringApplication(Application.class);
-        app.setBannerMode(Banner.Mode.OFF);
-        app.setLogStartupInfo(false);
-        app.setRegisterShutdownHook(false);
-        Map<String, Object> pro = Maps.newHashMap();
-        pro.put("logging.level.root", "ERROR");
 
-        app.setDefaultProperties(pro);
-        app.run(args);
+    private static void printHelp() {
+        System.out.println("有哪些子命令");
     }
+
+    static Map<String, CmdRunner> map = new HashMap<String, CmdRunner>(){
+        {
+            put("segment", new SegmentCmdRunner());
+        }
+    };
+
+
+    public static void main(String[] args) throws AlreadySelectedException {
+
+        if (args.length == 0) {
+            printHelp();
+            return;
+        }
+        // cmd -h -p ssss
+        String cmd = args[0];
+
+        if (cmd == null) {
+            printHelp();
+            return;
+        }
+
+        CmdRunner cmdRunner = map.get(cmd);
+        if (cmdRunner == null) {
+            System.err.println("Cmd " + cmd + " not found");
+            printHelp();
+            return;
+        }
+
+        cmdRunner.run(Arrays.copyOfRange(args,1,args.length));
+
+
+    }
+
 }

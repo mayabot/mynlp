@@ -14,13 +14,11 @@
  * limitations under the License.
  */
 
-package com.mayabot.nlp.segment.segment;
+package com.mayabot.nlp.segment.support;
 
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 import com.mayabot.nlp.segment.CharNormalize;
-import com.mayabot.nlp.segment.MynlpSegment;
+import com.mayabot.nlp.segment.MynlpAnalyzer;
 import com.mayabot.nlp.segment.MynlpTerm;
 import com.mayabot.nlp.segment.MynlpTokenizer;
 import com.mayabot.nlp.utils.ParagraphReader;
@@ -29,10 +27,10 @@ import com.mayabot.nlp.utils.ParagraphReaderSmart;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 import java.util.function.Consumer;
-import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
 /**
  * 分词器通用实现。有状态。无创建成本。非线程安全.
@@ -42,7 +40,7 @@ import java.util.stream.StreamSupport;
  *
  * @author jimichan
  */
-public class DefaultMynlpSegment implements MynlpSegment {
+public class DefaultMynlpAnalyzer implements MynlpAnalyzer {
 
     private MynlpTokenizer tokenizer;
 
@@ -58,7 +56,7 @@ public class DefaultMynlpSegment implements MynlpSegment {
      */
     private int lastTextLength = -1;
 
-    private LinkedList<MynlpTerm> buffer = null;
+    private MynlpTermBuffer buffer = new MynlpTermBuffer();
 
     private List<CharNormalize> charNormalize;
     private Reader reader;
@@ -69,7 +67,7 @@ public class DefaultMynlpSegment implements MynlpSegment {
      * @param reader    需要分词的数据源
      * @param tokenizer 具体的分词器
      */
-    public DefaultMynlpSegment(Reader reader, MynlpTokenizer tokenizer) {
+    public DefaultMynlpAnalyzer(Reader reader, MynlpTokenizer tokenizer) {
         this.reset(reader);
         this.tokenizer = tokenizer;
     }
@@ -81,7 +79,7 @@ public class DefaultMynlpSegment implements MynlpSegment {
      * @param text      需要分词的String文本
      * @param tokenizer 具体的分词器
      */
-    public DefaultMynlpSegment(String text, MynlpTokenizer tokenizer) {
+    public DefaultMynlpAnalyzer(String text, MynlpTokenizer tokenizer) {
         this.reset(new StringReader(text));
         this.tokenizer = tokenizer;
     }
@@ -106,7 +104,7 @@ public class DefaultMynlpSegment implements MynlpSegment {
      *
      * @param tokenizer 具体的分词器
      */
-    public DefaultMynlpSegment(MynlpTokenizer tokenizer) {
+    public DefaultMynlpAnalyzer(MynlpTokenizer tokenizer) {
         this.reset(new StringReader(""));
         this.tokenizer = tokenizer;
     }
@@ -119,7 +117,7 @@ public class DefaultMynlpSegment implements MynlpSegment {
     @Override
     public MynlpTerm next() {
 
-        if (buffer == null || buffer.isEmpty()) {
+        if (!buffer.hasRemain()) {
 
             String paragraph;
             try {
@@ -148,16 +146,47 @@ public class DefaultMynlpSegment implements MynlpSegment {
                     }
                 }
 
-                this.buffer = tokenizer.token(text);
+                if (buffer.list.size() > 5000) { //如果buffer太大了就
+                    buffer.list = Lists.newArrayListWithExpectedSize(256);
+                }
+                tokenizer.token(text, this.buffer.list);
+
+                buffer.reset();
             }
         }
 
         MynlpTerm term = buffer.pop();
 
+        if (term == null) {
+            return null;
+        }
+
         if (baseOffset != 0) { //补充偏移量
             term.setOffset(term.getOffset() + baseOffset);
         }
         return term;
+    }
+
+    static class MynlpTermBuffer {
+        ArrayList<MynlpTerm> list = Lists.newArrayListWithExpectedSize(256);
+        int po = 0;
+        int cap = 0;
+
+        public boolean hasRemain() {
+            return po < cap;
+        }
+
+        public MynlpTerm pop() {
+            if (po >= cap) {
+                return null;
+            }
+            return list.get(po++);
+        }
+
+        public void reset() {
+            cap = list.size();
+            po = 0;
+        }
     }
 
     /**
@@ -167,7 +196,7 @@ public class DefaultMynlpSegment implements MynlpSegment {
      * @return
      */
     @Override
-    public DefaultMynlpSegment reset(Reader reader) {
+    public DefaultMynlpAnalyzer reset(Reader reader) {
         close();
         this.reader = reader;
 
@@ -195,31 +224,4 @@ public class DefaultMynlpSegment implements MynlpSegment {
         this.charNormalize = charNormalize;
     }
 
-
-    public static void main(String[] args) {
-
-        List<Integer> xlist = Lists.newArrayList();
-        for (int i = 0; i < 100000; i++) {
-            xlist.add(i);
-        }
-
-        Spliterator<Integer> spliterator = Iterables.concat(xlist).spliterator();
-
-
-        Set<String> xset = Sets.newHashSet();
-
-        Stream<Double> stream = StreamSupport.stream(spliterator, true).map(
-                num -> {
-                    double r = num / 2.0;
-                    xset.add(Thread.currentThread().getName());
-                    return r;
-                });
-
-        Iterator<Double> iterator = stream.iterator();
-        while (iterator.hasNext()) {
-            System.out.println(iterator.next());
-        }
-
-        System.out.println(xset);
-    }
 }

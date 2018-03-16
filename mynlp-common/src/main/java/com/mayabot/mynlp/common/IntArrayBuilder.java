@@ -15,7 +15,6 @@ public class IntArrayBuilder {
 
             EMPTY_ARRAY =
             new int [0];
-    ;
 
     /**
      * Internal array for storing the list. The array may be larger than the current size

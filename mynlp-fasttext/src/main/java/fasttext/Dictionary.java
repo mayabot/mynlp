@@ -217,7 +217,7 @@ public class Dictionary {
      * @param str
      * @return
      */
-    private final long hash(final String str) {
+    private long hash(final String str) {
         int h = (int) 2166136261L;// 0xffffffc5;
         for (byte strByte : str.getBytes()) {
             h = (h ^ strByte) * 16777619; // FNV-1a
@@ -456,7 +456,6 @@ public class Dictionary {
 
             for (int j = i + 1; j < line_size && j < i + n; j++) {
                 h = h.multiply(r).add(BigInteger.valueOf(line.get(j)));
-                ;
                 line.add(nwords_ + h.remainder(b).intValue());
             }
         }

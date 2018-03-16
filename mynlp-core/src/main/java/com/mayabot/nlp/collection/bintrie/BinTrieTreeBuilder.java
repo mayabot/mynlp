@@ -19,6 +19,7 @@ package com.mayabot.nlp.collection.bintrie;
 import java.util.Map;
 import java.util.function.Function;
 
+@SuppressWarnings("unchecked")
 public enum BinTrieTreeBuilder {
 
     _default(false, HashTrieNode::new),

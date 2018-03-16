@@ -179,6 +179,7 @@ public class SimpleViterbi<TagType, ObjType> {
             int j = 0;
             //clear(cost[0]);
             for (Map.Entry<TagType, Integer> cur : mapFunction.apply(array[1]).entrySet()) {
+                //noinspection unchecked
                 row0[j] = scorer.applyAsDouble(firstSelect, cur);
                 j++;
             }
@@ -224,7 +225,7 @@ public class SimpleViterbi<TagType, ObjType> {
 
     }
 
-    private final void clear(double[] doubles) {
+    private void clear(double[] doubles) {
         for (int i = doubles.length - 1; i >= 0; i--) {
             doubles[i] = 0;
         }

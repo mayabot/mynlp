@@ -126,7 +126,7 @@ public class Wordpath {
      */
     public Vertex combine(int from, int length) {
         this.connect(from, length);
-        if (!wordnet.contains(from, length)) {
+        if (wordnet.isNotContains(from, length)) {
             return wordnet.put(from, length);
         } else {
             return wordnet.getVertex(from, length);
@@ -157,7 +157,7 @@ public class Wordpath {
 
             if (i == lastIndex) {
                 // consumer.accept(i, 1);
-                if (!wordnet.contains(i, 1)) {
+                if (wordnet.isNotContains(i, 1)) {
                     // 一个点
                     consumer.accept(wordnet.put(i, 1));
                 }
@@ -165,7 +165,7 @@ public class Wordpath {
             } else {
                 int len = nextSplitIndex - i + 1;
                 // consumer.accept(i, len);
-                if (!wordnet.contains(i, len)) {
+                if (wordnet.isNotContains(i, len)) {
                     // 一个点
                     consumer.accept(wordnet.put(i, len));
 

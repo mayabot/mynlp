@@ -34,12 +34,13 @@ import java.util.Map;
 /**
  * 优化网络处理器
  */
-public class OptimizeWordPathProcessor implements WordpathProcessor,ApplyPipelineSetting {
+public class OptimizeWordPathProcessor implements WordpathProcessor, ApplyPipelineSetting {
 
     private final NamedComponentRegistry registry;
 
     private List<OptimizeProcessor> optimizeProcessorList = Lists.newArrayList();
     WordpathProcessor repairWordnet;
+
     @Inject
     public OptimizeWordPathProcessor(NamedComponentRegistry registry) {
         this.registry = registry;

@@ -18,9 +18,8 @@ package com.mayabot.nlp.segment.common;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.mayabot.nlp.segment.corpus.tag.Nature;
+import com.mayabot.nlp.segment.dictionary.Nature;
 import com.mayabot.nlp.segment.dictionary.NatureAttribute;
-import com.mayabot.nlp.segment.dictionary.core.CoreBiGramTableDictionary;
 import com.mayabot.nlp.segment.dictionary.core.CoreDictionary;
 import com.mayabot.nlp.segment.wordnet.Vertex;
 import com.mayabot.nlp.utils.Predefine;
@@ -35,16 +34,15 @@ public class VertexHelper {
 
     private CoreDictionary coreDictionary;
 
-    private CoreBiGramTableDictionary coreBiGramTableDictionary;
+    //private CoreBiGramTableDictionary coreBiGramTableDictionary;
 
     private final NatureAttribute bigin_attr = NatureAttribute.create(Nature.begin, Predefine.MAX_FREQUENCY / 10);
     private final NatureAttribute endbigin_attr = NatureAttribute.create(Nature.end, Predefine.MAX_FREQUENCY / 10);
 
     @Inject
-    public VertexHelper(CoreDictionary coreDictionary,
-                        CoreBiGramTableDictionary coreBiGramTableDictionary) {
+    public VertexHelper(CoreDictionary coreDictionary) {
         this.coreDictionary = coreDictionary;
-        this.coreBiGramTableDictionary = coreBiGramTableDictionary;
+        //this.coreBiGramTableDictionary = coreBiGramTableDictionary;
     }
 
     /**
@@ -55,14 +53,12 @@ public class VertexHelper {
      */
     public Vertex newBegin() {
         Vertex v = new Vertex(1);
-        //FIXME 这个的属性是不是可以直接使用核心词典里面的属性
         v.setWordInfo(coreDictionary.Begin_WORD_ID, CoreDictionary.TAG_BIGIN, bigin_attr);
         return v;
     }
 
     public Vertex newEnd() {
         Vertex v = new Vertex(0);
-        //FIXME 这个的属性是不是可以直接使用核心词典里面的属性
         v.setWordInfo(coreDictionary.End_WORD_ID, CoreDictionary.TAG_END, endbigin_attr);
         return v;
     }

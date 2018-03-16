@@ -135,7 +135,7 @@ public class State {
      * @return
      */
     public Collection<Integer> emit() {
-        return this.emits == null ? Collections.<Integer>emptyList() : this.emits;
+        return this.emits == null ? Collections.emptyList() : this.emits;
     }
 
     /**
@@ -220,15 +220,14 @@ public class State {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("State{");
-        sb.append("depth=").append(depth);
-        sb.append(", ID=").append(index);
-        sb.append(", emits=").append(emits);
-        sb.append(", success=").append(success.keySet());
-        sb.append(", failureID=").append(failure == null ? "-1" : failure.index);
-        sb.append(", failure=").append(failure);
-        sb.append('}');
-        return sb.toString();
+        String sb = "State{" + "depth=" + depth +
+                ", ID=" + index +
+                ", emits=" + emits +
+                ", success=" + success.keySet() +
+                ", failureID=" + (failure == null ? "-1" : failure.index) +
+                ", failure=" + failure +
+                '}';
+        return sb;
     }
 
     /**

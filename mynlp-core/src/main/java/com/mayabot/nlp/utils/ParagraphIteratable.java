@@ -36,7 +36,7 @@ public class ParagraphIteratable implements Iterable<String> {
     @Override
     public Iterator<String> iterator() {
 
-        Iterator<String> iterator = new AbstractIterator<String>() {
+        return new AbstractIterator<String>() {
 
             @Override
             protected String computeNext() {
@@ -51,7 +51,5 @@ public class ParagraphIteratable implements Iterable<String> {
                 }
             }
         };
-
-        return iterator;
     }
 }

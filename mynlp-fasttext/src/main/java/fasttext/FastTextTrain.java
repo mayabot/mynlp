@@ -3,10 +3,8 @@ package fasttext;
 import com.carrotsearch.hppc.IntArrayList;
 import com.google.common.base.CharMatcher;
 import com.google.common.base.Charsets;
-import com.google.common.base.Preconditions;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
-import com.google.common.io.CharSink;
 import com.google.common.io.CharSource;
 import com.google.common.io.Files;
 import com.google.common.primitives.Ints;
@@ -17,8 +15,6 @@ import fasttext.utils.model_name;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.IOException;
-import java.io.Writer;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -42,11 +38,11 @@ public class FastTextTrain {
     private AtomicDouble loss;
 
 
-    public static final FastText train(File trainFile, Args args) throws Exception {
+    public static FastText train(File trainFile, Args args) throws Exception {
         return new FastTextTrain(trainFile, args, null).train();
     }
 
-    public static final FastText train(File trainFile, File preTrainedVectors, Args args) throws Exception {
+    public static FastText train(File trainFile, File preTrainedVectors, Args args) throws Exception {
         return new FastTextTrain(trainFile, args, preTrainedVectors).train();
     }
 

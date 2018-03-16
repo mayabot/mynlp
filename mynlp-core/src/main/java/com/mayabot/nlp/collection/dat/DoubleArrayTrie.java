@@ -67,6 +67,7 @@ public class DoubleArrayTrie<T> implements Trie<T> {
         int[] check = readIntArray(in);
         int[] base = readIntArray(in);
         ArrayList<T> values = readArrayList(in, supplier);
+        //noinspection unchecked
         return new DoubleArrayTrie(values, check, base);
     }
 
