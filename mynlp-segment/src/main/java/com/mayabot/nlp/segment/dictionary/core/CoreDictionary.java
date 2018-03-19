@@ -169,6 +169,7 @@ public class CoreDictionary implements MynlpCacheable {
     public void loadFromRealData() throws Exception {
         MynlpResource dictResource = environment.loadResource(coreDictSetting);
 
+
         TreeMap<String, NatureAttribute> map = new TreeMap<>();
 
         int maxFreq = 0;

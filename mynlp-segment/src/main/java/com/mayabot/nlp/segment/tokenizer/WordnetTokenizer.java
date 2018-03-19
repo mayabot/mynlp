@@ -63,14 +63,17 @@ public class WordnetTokenizer implements MynlpTokenizer {
         this.vertexHelper = vertexHelper;
     }
 
+    public void prepare(Pipeline pipeline, BestPathComputer bestPathComputer, WordnetInitializer wordnetInitializer) {
+        this.pipeline = pipeline;
+        this.bestPathComputer = bestPathComputer;
+        this.wordnetInitializer = wordnetInitializer;
+    }
+
 
     public void check() {
         Preconditions.checkNotNull(bestPathComputer);
         Preconditions.checkNotNull(wordnetInitializer);
-    }
-
-    public void initSetting(PipelineSettings settings) {
-
+        Preconditions.checkNotNull(pipeline);
     }
 
     @Override
@@ -88,7 +91,7 @@ public class WordnetTokenizer implements MynlpTokenizer {
         //构建一个空的Wordnet对象
         final Wordnet wordnet = initEmptyWordNet(text);
 
-        wordnetInitializer.initialize(wordnet);
+        wordnetInitializer.init(wordnet);
 
         //选择一个路径出来(第一次不严谨的分词结果)
         Wordpath wordPath = bestPathComputer.select(wordnet);

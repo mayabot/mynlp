@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.mayabot.nlp.segment.xprocessor;
+package com.mayabot.nlp.segment.wordprocessor;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.inject.Inject;
@@ -24,6 +24,7 @@ import com.mayabot.nlp.collection.TransformMatrix;
 import com.mayabot.nlp.segment.WordpathProcessor;
 import com.mayabot.nlp.segment.dictionary.Nature;
 import com.mayabot.nlp.segment.dictionary.core.CoreDictionaryTransformMatrixDictionary;
+import com.mayabot.nlp.segment.support.DefaultNameComponent;
 import com.mayabot.nlp.segment.wordnet.Vertex;
 import com.mayabot.nlp.segment.wordnet.Wordpath;
 
@@ -33,7 +34,7 @@ import com.mayabot.nlp.segment.wordnet.Wordpath;
  * @author jimichan
  */
 @Singleton
-public class PartOfSpeechTaggingComputerXProcessor implements WordpathProcessor {
+public class PartOfSpeechTaggingComputerXProcessor extends DefaultNameComponent implements WordpathProcessor {
 
     private TransformMatrix transformMatrix;
 

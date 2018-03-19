@@ -48,13 +48,11 @@ public class CrfOriginalSegment implements WordnetInitializer {
     }
 
     @Override
-    public void initialize(Wordnet wordnet) {
+    public void init(Wordnet wordnet) {
 
         Table table = new Table();
         table.v = atomSegmentToTable(wordnet.getCharArray());
         crfModel.tag(table);
-
-        System.out.println(table);
 
         int offset = 0;
         OUTER:
@@ -93,8 +91,6 @@ public class CrfOriginalSegment implements WordnetInitializer {
             }
         }
 
-        System.out.println(wordnet);
-
     }
 
 
@@ -112,7 +108,7 @@ public class CrfOriginalSegment implements WordnetInitializer {
                     table[size][1] = sbAtom.toString();
                     ++size;
                     sbAtom.setLength(0);
-                    break;
+                     break;
                 }
                 char c = sentence[++i];
                 while (c == '.' || c == '%' || (c >= '0' && c <= '9')) {

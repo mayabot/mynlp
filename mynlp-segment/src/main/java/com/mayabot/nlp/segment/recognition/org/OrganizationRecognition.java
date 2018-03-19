@@ -28,8 +28,7 @@ import com.mayabot.nlp.segment.dictionary.NatureAttribute;
 import com.mayabot.nlp.segment.dictionary.core.CoreDictionary;
 import com.mayabot.nlp.segment.recognition.org.nt.NTDictionary;
 import com.mayabot.nlp.segment.recognition.org.nt.OrganizationDictionary;
-import com.mayabot.nlp.segment.tokenizer.ApplyPipelineSetting;
-import com.mayabot.nlp.segment.tokenizer.PipelineSettings;
+import com.mayabot.nlp.segment.support.DefaultNameComponent;
 import com.mayabot.nlp.segment.wordnet.Vertex;
 import com.mayabot.nlp.segment.wordnet.Wordnet;
 
@@ -40,9 +39,8 @@ import static com.mayabot.nlp.segment.recognition.org.NTTag.Z;
  *
  * @author jimichan
  */
-public class OrganizationRecognition implements OptimizeProcessor, ApplyPipelineSetting {
+public class OrganizationRecognition  extends DefaultNameComponent implements OptimizeProcessor {
 
-    private boolean enable;
 
     public static OrganizationRecognition build(Injector injector) {
         return injector.getInstance(OrganizationRecognition.class);
@@ -66,11 +64,7 @@ public class OrganizationRecognition implements OptimizeProcessor, ApplyPipeline
 
     private SimpleViterbi<NTTag, Vertex> viterbi;
 
-    @Override
-    public void apply(PipelineSettings settings) {
-        enable = settings.getBool("enable.org_recognition", true)
-                && settings.getBool("enable.recognition", true);
-    }
+
 
     @Inject
     public OrganizationRecognition(OrganizationDictionary placeDictionary, CoreDictionary coreDictionary) {
@@ -101,10 +95,6 @@ public class OrganizationRecognition implements OptimizeProcessor, ApplyPipeline
 
     @Override
     public boolean process(Vertex[] pathWithBE, Wordnet wordnet) {
-
-        if (!enable) {
-            return false;
-        }
 
         char[] text = wordnet.getCharArray();
 

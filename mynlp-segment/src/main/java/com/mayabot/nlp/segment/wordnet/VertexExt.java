@@ -94,7 +94,7 @@ public class VertexExt {
 //        if (objectMap == null) {
 //            return null;
 //        }
-//        return (T) objectMap.get(e);
+//        return (T) objectMap.instance(e);
 //    }
 //
 //    public void setObj(Enum e, Object x) {
@@ -108,7 +108,7 @@ public class VertexExt {
 //        if (doublemap == null) {
 //            return 0;
 //        }
-//        return doublemap.get(e);
+//        return doublemap.instance(e);
 //    }
 //
 //    public void setDouble(Enum e, double x) {
@@ -122,7 +122,7 @@ public class VertexExt {
 //        if (stringmap == null) {
 //            return null;
 //        }
-//        return stringmap.get(e);
+//        return stringmap.instance(e);
 //    }
 //
 //    public void setString(Enum e, String x) {
@@ -136,7 +136,7 @@ public class VertexExt {
 //        if (cmap == null) {
 //            return (char) 0;
 //        }
-//        return cmap.get(e);
+//        return cmap.instance(e);
 //    }
 //
 //    public char setChar(Enum e, char x) {
@@ -150,7 +150,7 @@ public class VertexExt {
 //        if (intmap == null) {
 //            return 0;
 //        }
-//        return intmap.get(e);
+//        return intmap.instance(e);
 //    }
 //
 //    public void setInt(Enum e, int x) {

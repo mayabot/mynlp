@@ -38,7 +38,7 @@ public class ConvertAbstractWord implements WordnetInitializer {
     }
 
     @Override
-    public void initialize(Wordnet wordnet) {
+    public void init(Wordnet wordnet) {
         wordnet.accessAllVertext(this::process);
     }
 
@@ -61,7 +61,7 @@ public class ConvertAbstractWord implements WordnetInitializer {
                 case "ns":
                 case "nsf": {
                     // 在地名识别的时候,希望类似"河镇"的词语保持自己的词性,而不是未##地的词性
-                    //                    this.attribute = CoreDictionary.get(CoreDictionary.NS_WORD_ID);
+                    //                    this.attribute = CoreDictionary.instance(CoreDictionary.NS_WORD_ID);
                     v.setAbstractWordIfEmpty(CoreDictionary.TAG_PLACE)
                             .setWordID(coreDictionary.NS_WORD_ID);
                     return;

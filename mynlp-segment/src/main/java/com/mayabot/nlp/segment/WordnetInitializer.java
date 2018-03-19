@@ -22,5 +22,5 @@ import com.mayabot.nlp.segment.wordnet.Wordnet;
  * 对Wordnet数据结构开始初始化.
  */
 public interface WordnetInitializer {
-    void initialize(Wordnet wordnet);
+    void init(Wordnet wordnet);
 }

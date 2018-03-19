@@ -26,7 +26,7 @@ import com.mayabot.nlp.segment.wordnet.Wordnet;
  *
  * @author jimichan
  */
-public interface OptimizeProcessor {
+public interface OptimizeProcessor extends NamedComponent {
 
     /**
      * @param wordnet

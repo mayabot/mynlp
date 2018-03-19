@@ -14,14 +14,16 @@
  * limitations under the License.
  */
 
-package com.mayabot.nlp.segment.xprocessor;
+package com.mayabot.nlp.segment.wordprocessor;
 
 import com.google.inject.Inject;
+import com.mayabot.nlp.Setting;
+import com.mayabot.nlp.Settings;
 import com.mayabot.nlp.segment.WordpathProcessor;
 import com.mayabot.nlp.segment.dictionary.Nature;
 import com.mayabot.nlp.segment.dictionary.NatureAttribute;
-import com.mayabot.nlp.segment.tokenizer.ApplyPipelineSetting;
-import com.mayabot.nlp.segment.tokenizer.PipelineSettings;
+import com.mayabot.nlp.segment.support.DefaultNameComponent;
+import com.mayabot.nlp.segment.tokenizer.TokenizerSettingListener;
 import com.mayabot.nlp.segment.wordnet.Vertex;
 import com.mayabot.nlp.segment.wordnet.Wordnet;
 import com.mayabot.nlp.segment.wordnet.Wordpath;
@@ -36,7 +38,7 @@ import java.util.regex.Pattern;
  * url
  * email
  */
-public class CommonPatternWordPathProcessor implements WordpathProcessor, ApplyPipelineSetting {
+public class CommonPatternWordPathProcessor extends DefaultNameComponent implements WordpathProcessor, TokenizerSettingListener {
 
     private Pattern allPattern;
 
@@ -44,17 +46,18 @@ public class CommonPatternWordPathProcessor implements WordpathProcessor, ApplyP
     private Pattern datePattern;
 
 
-    private boolean enableEmail = false;
     private boolean enableTime = false;
+    private boolean enableEmail = true;
 
+    public static final Setting<Boolean> EnableEmail_KEY = Setting.boolSetting("enable.email", true);
+    public static final Setting<Boolean> EnableTime_KEY = Setting.boolSetting("enable.time", true);
 
     @Override
-    public void apply(PipelineSettings settings) {
-        enableEmail = settings.getBool("enable.pattern.email", enableEmail);
-        enableTime = settings.getBool("enable.pattern.time", enableTime);
-        // pattern.custom.1.p= a.*?b
-        // pattern.custom.1.nature=x
-        // pattern.custom.
+    public void apply(Settings settings) {
+
+        enableEmail = settings.get(EnableEmail_KEY);
+        enableTime = settings.get(EnableTime_KEY);
+
     }
 
     @Inject
@@ -88,11 +91,13 @@ public class CommonPatternWordPathProcessor implements WordpathProcessor, ApplyP
             //NatureAttribute natureAttribute = NatureAttribute.build();
 
             //is 日期
-            if (datePattern.matcher(wordnet).region(start, end).matches()) {
-                Vertex v = wordPath.combine(start, len);
-                v.setWordInfo(wordId, null, NatureAttribute.create(Nature.t, 10000));
-                //change = true;
-                continue;
+            if (enableTime) {
+                if (datePattern.matcher(wordnet).region(start, end).matches()) {
+                    Vertex v = wordPath.combine(start, len);
+                    v.setWordInfo(wordId, null, NatureAttribute.create(Nature.t, 10000));
+                    //change = true;
+                    continue;
+                }
             }
 
             // is email (避免创建String对象)

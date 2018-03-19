@@ -26,7 +26,7 @@ public class Pipeline {
     private WordpathProcessor[] wordpathProcessors;
 
 
-    public Pipeline(List<WordpathProcessor> wordPathProcessors) {
+    Pipeline(List<WordpathProcessor> wordPathProcessors) {
         this.wordpathProcessors = wordPathProcessors.toArray(new WordpathProcessor[0]);
     }
 
