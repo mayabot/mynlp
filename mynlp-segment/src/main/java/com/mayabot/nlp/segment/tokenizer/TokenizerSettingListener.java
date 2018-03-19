@@ -16,22 +16,12 @@
 
 package com.mayabot.nlp.segment.tokenizer;
 
-import java.util.List;
-import java.util.Map;
+import com.mayabot.nlp.Settings;
 
-class PipelineItem {
-
-    private String type;
-    private List<String> list;
-
-    public PipelineItem() {
-    }
-
-    public PipelineItem(String type) {
-        this.type = type;
-    }
-
-    public PipelineItem(String type, Map<String, Object> config) {
-        this.type = type;
-    }
+/**
+ *
+ * @author jimichan
+ */
+public interface TokenizerSettingListener {
+    void apply(Settings settings);
 }

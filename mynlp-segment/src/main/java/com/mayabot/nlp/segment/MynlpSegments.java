@@ -16,40 +16,31 @@
 
 package com.mayabot.nlp.segment;
 
-import com.mayabot.nlp.segment.support.DefaultMynlpAnalyzer;
-import com.mayabot.nlp.segment.tokenizer.PipelineSettings;
-import com.mayabot.nlp.segment.tokenizer.WordnetTokenizerFactory;
-
 /**
  * MynlpSegments 是mynlp-segment模块对外门面。此后只可以增加方法
+ *
+ * @author jimichan
  */
 public final class MynlpSegments {
 
-
     public static MynlpTokenizer nlpTokenizer() {
-        return WordnetTokenizerFactory.get().build("core", "viterbi", "default");
+        return MynlpTokenizerBuilder.builder().build();
     }
 
-    public static MynlpTokenizer nlpTokenizer(PipelineSettings settings) {
-        return WordnetTokenizerFactory.get().build("core", "viterbi", "default", settings);
+    public static MynlpTokenizerBuilder nlpTokenizerBuilder() {
+        return MynlpTokenizerBuilder.builder();
     }
-
 
     public static MynlpTokenizer crfTokenizer() {
-        return WordnetTokenizerFactory.get().build("crf", "viterbi", "default");
+        return MynlpTokenizerBuilder.builder().crfWordnetIniter().build();
     }
 
-    public static MynlpTokenizer crfTokenizer(PipelineSettings settings) {
-        return WordnetTokenizerFactory.get().build("crf", "viterbi", "default", settings);
+    public static MynlpTokenizerBuilder crfTokenizerBuilder() {
+        return MynlpTokenizerBuilder.builder().crfWordnetIniter();
     }
 
-
-    public static MynlpTokenizer tokenizer(String initer, String bestpath, String pipeline, PipelineSettings settings) {
-        return WordnetTokenizerFactory.get().build(initer, bestpath, pipeline, settings);
+    public static MynlpTokenizerBuilder tokenizerBuilder() {
+        return MynlpTokenizerBuilder.builder();
     }
 
-
-    public static MynlpAnalyzer segment(MynlpTokenizer tokenizer) {
-        return new DefaultMynlpAnalyzer("", tokenizer);
-    }
 }

@@ -20,6 +20,10 @@ import com.google.common.primitives.Ints;
 
 import java.util.function.Function;
 
+/**
+ * @author jimichan
+ * @param <T>
+ */
 public class Setting<T> {
 
     private String key;
@@ -60,7 +64,7 @@ public class Setting<T> {
         return setting;
     }
 
-    public static Setting<Boolean> newBoolSetting(String key, String value) {
+    public static Setting<Boolean> boolSetting(String key, boolean value) {
         Setting<Boolean> setting = new Setting<>();
         setting.key = key;
         setting.defaultValue = value + "";

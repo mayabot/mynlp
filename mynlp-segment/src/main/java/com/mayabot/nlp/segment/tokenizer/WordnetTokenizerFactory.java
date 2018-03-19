@@ -20,11 +20,13 @@ import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Singleton;
 import com.mayabot.nlp.MynlpInjector;
+import com.mayabot.nlp.Settings;
 import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
-import com.mayabot.nlp.segment.NamedComponentRegistry;
+import com.mayabot.nlp.segment.ComponentRegistry;
 import com.mayabot.nlp.segment.WordnetInitializer;
 import com.mayabot.nlp.segment.wordnet.BestPathComputer;
+import com.mayabot.nlp.segment.wordnet.ViterbiBestPathComputer;
 
 /**
  * 根据JSON配置文件产生一个WordnetTokenizer对象
@@ -34,18 +36,21 @@ import com.mayabot.nlp.segment.wordnet.BestPathComputer;
 @Singleton
 public class WordnetTokenizerFactory {
 
+    public static final String TOKENIZER_INITER = "tokenizer.initer";
+    public static final String TOKENIZER_BESTPATH = "tokenizer.bestpath";
     static InternalLogger logger = InternalLoggerFactory.getInstance(WordnetTokenizerFactory.class);
 
-    private final NamedComponentRegistry registry;
+    private final ComponentRegistry registry;
     private final Injector injector;
     private final PipelineFactory pipelineFactory;
-
+    private final Settings settings;
 
     @Inject
-    WordnetTokenizerFactory(NamedComponentRegistry registry, Injector injector, PipelineFactory pipelineFactory) {
+    WordnetTokenizerFactory(ComponentRegistry registry, Injector injector, PipelineFactory pipelineFactory, Settings settings) {
         this.registry = registry;
         this.injector = injector;
         this.pipelineFactory = pipelineFactory;
+        this.settings = settings;
     }
 
     /**
@@ -53,30 +58,31 @@ public class WordnetTokenizerFactory {
      *
      * @return
      */
-    public static WordnetTokenizerFactory get() {
+    public static WordnetTokenizerFactory instance() {
         return MynlpInjector.getInjector().getInstance(WordnetTokenizerFactory.class);
     }
 
-    public WordnetTokenizer build(String initer, String bestpath, String pipeline, PipelineSettings settings) {
+    public WordnetTokenizer build(PipelineDefine pipelineDefine,Settings settings) {
+
+        settings = Settings.merge(this.settings, settings);
+
+        String initer = settings.get(TOKENIZER_INITER,"core");
+        String bestpath = settings.get(TOKENIZER_BESTPATH, ViterbiBestPathComputer.name);
 
         WordnetTokenizer instance = injector.getInstance(WordnetTokenizer.class);
 
         WordnetInitializer w = registry.getInstance(initer, WordnetInitializer.class);
         BestPathComputer b = registry.getInstance(bestpath, BestPathComputer.class);
-        Pipeline pipeline1 = pipelineFactory.createByName(pipeline, settings);
-        instance.setBestPathComputer(b);
-        instance.setWordnetInitializer(w);
-        instance.setPipeline(pipeline1);
+        Pipeline pipeline = pipelineFactory.create(pipelineDefine,settings);
+
+        instance.prepare(pipeline, b, w);
+        instance.check();
 
         return instance;
     }
 
-    public WordnetTokenizer build(String initer, String bestpath, String pipeline) {
-        return build(initer, bestpath, pipeline, PipelineSettings.EMTPY);
-    }
-
     public WordnetTokenizer buildDefault() {
-        return build("core", "viterbi", "default");
+        return build(PipelineDefine.defaultPipeline,Settings.createEmpty());
     }
 
 }

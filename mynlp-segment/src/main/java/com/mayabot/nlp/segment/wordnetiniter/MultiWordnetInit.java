@@ -31,9 +31,9 @@ public class MultiWordnetInit implements WordnetInitializer {
     }
 
     @Override
-    public void initialize(Wordnet wordnet) {
+    public void init(Wordnet wordnet) {
         for (WordnetInitializer wordnetInitializer : list) {
-            wordnetInitializer.initialize(wordnet);
+            wordnetInitializer.init(wordnet);
         }
     }
 }
