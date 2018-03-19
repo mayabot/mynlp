@@ -135,7 +135,7 @@ public class MynlpInjector {
                             return c1.newInstance(environment);
                         }
                     } catch (NoSuchMethodException e) {
-                        throw new RuntimeException(e);
+                        //throw new RuntimeException(e);
                     }
 
                     //call default con

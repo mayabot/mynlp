@@ -17,7 +17,6 @@
 package com.mayabot.nlp.segment.tokenizer;
 
 import com.google.common.base.Preconditions;
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.inject.Inject;
@@ -31,9 +30,9 @@ import com.mayabot.nlp.segment.wordprocessor.OptimizeWordPathProcessor;
 
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
- *
  * @author jimichan
  */
 @Singleton
@@ -44,7 +43,7 @@ public class PipelineFactory {
     private Settings globalSettings;
 
     @Inject
-    public PipelineFactory(ComponentRegistry registry,Settings globalSettings) {
+    public PipelineFactory(ComponentRegistry registry, Settings globalSettings) {
         this.registry = registry;
         this.globalSettings = globalSettings;
     }
@@ -54,11 +53,10 @@ public class PipelineFactory {
     public Pipeline create(PipelineDefine pipelineDefine, Settings settings) {
 
         //合并全局的默认设置
-        settings = Settings.merge(globalSettings,settings);
+        settings = Settings.merge(globalSettings, settings);
 
         //所有的配置使用pipeline前缀
         settings = settings.getByPrefix("pipeline");
-
 
 
         //默认启用所有的Node
@@ -75,16 +73,21 @@ public class PipelineFactory {
 
         for (Object obj : pipelineDefine.getProcessorNames()) {
             if (obj instanceof String) {
+                if (!enableSets.contains(disableNames)) {
+                    continue;
+                }
                 String name = ((String) obj);
                 WordpathProcessor instance = registry.getInstance(name, WordpathProcessor.class);
                 wordPathProcessors.add(instance);
                 instance.setName(name);
 
-            } else if (obj instanceof String[]) {
-                String[] names = ((String[]) obj);
+            } else if (obj instanceof List) {
+                List<String> names = ((List<String>) obj);
+
+                names = names.stream().filter(x -> enableSets.contains(x)).collect(Collectors.toList());
 
                 OptimizeWordPathProcessor p = (OptimizeWordPathProcessor) registry.getInstance("optimizeNet", WordpathProcessor.class);
-                p.initOptimizeProcessor(Lists.newArrayList(names));
+                p.initOptimizeProcessor(names);
 
                 wordPathProcessors.add(p);
 

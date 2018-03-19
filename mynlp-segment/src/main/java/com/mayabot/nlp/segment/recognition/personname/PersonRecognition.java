@@ -41,7 +41,7 @@ import static com.mayabot.nlp.segment.recognition.personname.NRTag.A;
  * @author jimichan
  */
 
-public class PersonRecognition  extends DefaultNameComponent implements OptimizeProcessor{
+public class PersonRecognition extends DefaultNameComponent implements OptimizeProcessor {
 
     public static PersonRecognition build(Injector injector) {
         return injector.getInstance(PersonRecognition.class);

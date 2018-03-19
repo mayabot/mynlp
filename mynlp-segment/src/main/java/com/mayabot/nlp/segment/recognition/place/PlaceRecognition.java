@@ -41,7 +41,7 @@ import static com.mayabot.nlp.segment.recognition.place.NSTag.*;
  * @author jimichan
  */
 
-public class PlaceRecognition  extends DefaultNameComponent implements OptimizeProcessor {
+public class PlaceRecognition extends DefaultNameComponent implements OptimizeProcessor {
 
     private PlaceDictionary personDictionary;
 

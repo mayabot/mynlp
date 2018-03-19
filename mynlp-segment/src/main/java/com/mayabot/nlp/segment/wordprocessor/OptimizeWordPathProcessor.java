@@ -26,7 +26,6 @@ import com.mayabot.nlp.segment.OptimizeProcessor;
 import com.mayabot.nlp.segment.WordpathProcessor;
 import com.mayabot.nlp.segment.support.DefaultNameComponent;
 import com.mayabot.nlp.segment.tokenizer.TokenizerSettingListener;
-import com.mayabot.nlp.segment.tokenizer.PipelineSettings;
 import com.mayabot.nlp.segment.wordnet.Vertex;
 import com.mayabot.nlp.segment.wordnet.Wordnet;
 import com.mayabot.nlp.segment.wordnet.Wordpath;
@@ -36,7 +35,7 @@ import java.util.List;
 /**
  * 优化网络处理器
  */
-public class OptimizeWordPathProcessor  extends DefaultNameComponent implements WordpathProcessor, TokenizerSettingListener {
+public class OptimizeWordPathProcessor extends DefaultNameComponent implements WordpathProcessor, TokenizerSettingListener {
 
     private final ComponentRegistry registry;
 
