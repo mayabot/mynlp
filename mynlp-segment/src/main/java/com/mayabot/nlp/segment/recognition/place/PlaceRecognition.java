@@ -27,8 +27,7 @@ import com.mayabot.nlp.segment.dictionary.NatureAttribute;
 import com.mayabot.nlp.segment.dictionary.core.CoreDictionary;
 import com.mayabot.nlp.segment.recognition.place.ns.NSDictionary;
 import com.mayabot.nlp.segment.recognition.place.ns.PlaceDictionary;
-import com.mayabot.nlp.segment.tokenizer.ApplyPipelineSetting;
-import com.mayabot.nlp.segment.tokenizer.PipelineSettings;
+import com.mayabot.nlp.segment.support.DefaultNameComponent;
 import com.mayabot.nlp.segment.wordnet.Vertex;
 import com.mayabot.nlp.segment.wordnet.Wordnet;
 
@@ -42,7 +41,7 @@ import static com.mayabot.nlp.segment.recognition.place.NSTag.*;
  * @author jimichan
  */
 
-public class PlaceRecognition implements OptimizeProcessor, ApplyPipelineSetting {
+public class PlaceRecognition  extends DefaultNameComponent implements OptimizeProcessor {
 
     private PlaceDictionary personDictionary;
 
@@ -52,18 +51,12 @@ public class PlaceRecognition implements OptimizeProcessor, ApplyPipelineSetting
     final int place_word_id;
     final String place_word_tag;
     final NatureAttribute place_natureAttribute;
-    private boolean enable;
 
 
     public static PlaceRecognition build(Injector injector) {
         return injector.getInstance(PlaceRecognition.class);
     }
 
-    @Override
-    public void apply(PipelineSettings settings) {
-        enable = settings.getBool("enable.place_recognition", true)
-                && settings.getBool("enable.recognition", true);
-    }
 
     @Inject
     public PlaceRecognition(PlaceDictionary placeDictionary, CoreDictionary coreDictionary) {
@@ -80,10 +73,6 @@ public class PlaceRecognition implements OptimizeProcessor, ApplyPipelineSetting
 
     @Override
     public boolean process(Vertex[] pathWithBE, Wordnet wordnet) {
-
-        if (!enable) {
-            return false;
-        }
 
         char[] text = wordnet.getCharArray();
 

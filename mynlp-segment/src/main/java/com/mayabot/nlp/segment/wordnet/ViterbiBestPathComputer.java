@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.mayabot.nlp.segment.bestpath;
+package com.mayabot.nlp.segment.wordnet;
 
 import com.google.common.base.Preconditions;
 import com.google.inject.Inject;

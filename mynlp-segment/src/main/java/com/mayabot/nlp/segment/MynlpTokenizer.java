@@ -17,7 +17,9 @@
 package com.mayabot.nlp.segment;
 
 import com.google.common.collect.Lists;
+import com.mayabot.nlp.segment.support.DefaultMynlpAnalyzer;
 
+import java.io.Reader;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -57,4 +59,26 @@ public interface MynlpTokenizer {
         return target.stream().map(x -> x.word).collect(Collectors.toList());
     }
 
+    /**
+     * 便捷方法。不适用于超大文本
+     *
+     * @param text
+     * @return
+     */
+    default List<MynlpTerm> tokenToItemList(String text) {
+        if (text == null || text.isEmpty()) {
+            return Lists.newArrayListWithCapacity(1);
+        }
+        List<MynlpTerm> target = Lists.newArrayListWithExpectedSize(text.length() / 2);
+        token(text, target);
+        return target;
+    }
+
+    default MynlpAnalyzer createAnalyzer() {
+        return new DefaultMynlpAnalyzer("", this);
+    }
+
+    default MynlpAnalyzer createAnalyzer(Reader reader) {
+        return new DefaultMynlpAnalyzer(reader, this);
+    }
 }

@@ -1,26 +1,22 @@
-MYNLP
+MYNLP是个自然语言处理工具包
 
+#### MYNLP的功能模块
 
-<!-- [START usecases] -->
-###### MYNLP可以做什么?
+* 中文分词
+* 拼音转换
+* 简繁体转换
+* Fasttext的Java高性能实现（支持GPU,兼容原版C语言的模型文件）[fasttext](https://fasttext.cc/)
+* mynlp-news-classification 新闻分类器
+* mynlp-lang-detection 语言探测器
+* mynlp-cli 命令行工具
+    * CRF语料工具
+    * 分词工具
 
-一般NLP工具包包括以下基本功能:
-
-
-* n-Gram+HMM的中文分词
+MYNLP设计之初的一个重要目标就是基于类似Elasticsearch项目的模块化和插件化体系，来构建整个NLP工具组。
+n-Gram+HMM的中文分词
 * CRF中文分词
 * 命名实体识别（人名、地名、组织机构）
 * 词性识别
-* 汉子转拼音
-* 简繁体转换
-* fasttext解码[fasttext](https://fasttext.cc/)
-* 贝叶斯文本分类
-* 文本SIM Hash
-* 语料库工具
-    * crf语料
-    * xxxx
-
-MYNLP设计之初的一个重要目标就是基于类似Elasticsearch项目的模块化和插件化体系，来构建整个NLP工具组。
 * 基于WordNet和WordPath的分词体系
 * 基于Pipleline的设计，你可以自由组合各种分词插件和逻辑，满足不同场景的需求
 * 自由的插件体系，可以根据业务控制分词逻辑

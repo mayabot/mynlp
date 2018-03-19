@@ -36,7 +36,7 @@ public class CoreDictionaryTest {
 //        System.out.println(dictionary.indexOf("人口"));
 //        for (int i = 0; i < 10000000; i++) {
 //
-//            dictionary.get("普查");
+//            dictionary.instance("普查");
 //            dictionary.indexOf("人口");
 //
 //

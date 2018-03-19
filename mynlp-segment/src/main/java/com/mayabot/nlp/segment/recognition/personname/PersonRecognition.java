@@ -27,8 +27,7 @@ import com.mayabot.nlp.segment.dictionary.NatureAttribute;
 import com.mayabot.nlp.segment.dictionary.core.CoreDictionary;
 import com.mayabot.nlp.segment.recognition.personname.nr.NRDictionary;
 import com.mayabot.nlp.segment.recognition.personname.nr.PersonDictionary;
-import com.mayabot.nlp.segment.tokenizer.ApplyPipelineSetting;
-import com.mayabot.nlp.segment.tokenizer.PipelineSettings;
+import com.mayabot.nlp.segment.support.DefaultNameComponent;
 import com.mayabot.nlp.segment.wordnet.Vertex;
 import com.mayabot.nlp.segment.wordnet.Wordnet;
 
@@ -42,9 +41,7 @@ import static com.mayabot.nlp.segment.recognition.personname.NRTag.A;
  * @author jimichan
  */
 
-public class PersonRecognition implements OptimizeProcessor, ApplyPipelineSetting {
-
-    private boolean enable;
+public class PersonRecognition  extends DefaultNameComponent implements OptimizeProcessor{
 
     public static PersonRecognition build(Injector injector) {
         return injector.getInstance(PersonRecognition.class);
@@ -79,10 +76,6 @@ public class PersonRecognition implements OptimizeProcessor, ApplyPipelineSettin
 
     @Override
     public boolean process(Vertex[] pathWithBE, Wordnet wordnet) {
-
-        if (!enable) {
-            return false;
-        }
 
         char[] text = wordnet.getCharArray();
 
@@ -317,9 +310,4 @@ public class PersonRecognition implements OptimizeProcessor, ApplyPipelineSettin
     }
 
 
-    @Override
-    public void apply(PipelineSettings settings) {
-        enable = settings.getBool("enable.person_recognition", true)
-                && settings.getBool("enable.recognition", true);
-    }
 }

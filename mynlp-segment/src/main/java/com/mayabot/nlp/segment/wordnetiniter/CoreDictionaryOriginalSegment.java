@@ -41,7 +41,7 @@ public class CoreDictionaryOriginalSegment implements WordnetInitializer {
     }
 
     @Override
-    public void initialize(Wordnet wordnet) {
+    public void init(Wordnet wordnet) {
         char[] text = wordnet.getCharArray();
 
         // 核心词典查询

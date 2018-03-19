@@ -27,7 +27,7 @@ public class SegmentModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        bind(NamedComponentRegistry.class).asEagerSingleton();
+        bind(ComponentRegistry.class).asEagerSingleton();
     }
 
 
