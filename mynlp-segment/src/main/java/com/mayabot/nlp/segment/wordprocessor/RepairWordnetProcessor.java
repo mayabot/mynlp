@@ -16,7 +16,7 @@ import com.mayabot.nlp.utils.CharSet;
  *
  * @author jimichan jimichan@gmail.com
  */
-public class RepairWordnetProcessor  extends DefaultNameComponent implements WordpathProcessor {
+public class RepairWordnetProcessor extends DefaultNameComponent implements WordpathProcessor {
 
     private CoreDictionary coreDictionary;
 

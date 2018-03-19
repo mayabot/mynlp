@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.mayabot.nlp.analyzes;
+package com.mayabot.nlp.segment;
 
 import com.google.common.base.Charsets;
 import com.google.common.collect.Lists;

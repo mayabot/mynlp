@@ -108,7 +108,7 @@ public class CrfOriginalSegment implements WordnetInitializer {
                     table[size][1] = sbAtom.toString();
                     ++size;
                     sbAtom.setLength(0);
-                     break;
+                    break;
                 }
                 char c = sentence[++i];
                 while (c == '.' || c == '%' || (c >= '0' && c <= '9')) {

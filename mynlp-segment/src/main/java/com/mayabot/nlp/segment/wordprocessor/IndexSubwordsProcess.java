@@ -34,7 +34,7 @@ import java.util.Iterator;
  * <p>
  * 是不是每种情况都要切分出来。
  */
-public class IndexSubwordsProcess  extends DefaultNameComponent implements WordpathProcessor {
+public class IndexSubwordsProcess extends DefaultNameComponent implements WordpathProcessor {
 
     @Override
     public Wordpath process(Wordpath wordPath) {
