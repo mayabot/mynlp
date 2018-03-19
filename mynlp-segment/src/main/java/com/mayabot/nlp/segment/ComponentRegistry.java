@@ -25,11 +25,11 @@ import com.google.inject.Injector;
 import com.google.inject.Singleton;
 import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
-import com.mayabot.nlp.segment.wordnet.ViterbiBestPathComputer;
 import com.mayabot.nlp.segment.recognition.org.OrganizationRecognition;
 import com.mayabot.nlp.segment.recognition.personname.PersonRecognition;
 import com.mayabot.nlp.segment.recognition.place.PlaceRecognition;
 import com.mayabot.nlp.segment.wordnet.BestPathComputer;
+import com.mayabot.nlp.segment.wordnet.ViterbiBestPathComputer;
 import com.mayabot.nlp.segment.wordnetiniter.*;
 import com.mayabot.nlp.segment.wordprocessor.*;
 
@@ -40,6 +40,7 @@ import static com.mayabot.nlp.segment.ComponentNames.*;
 
 /**
  * 注册wordnet 分词器的组件
+ *
  * @author jimichan
  */
 @Singleton
@@ -125,7 +126,7 @@ public final class ComponentRegistry {
         return injector -> injector.getInstance(clazz);
     }
 
-    private <T> Function<Injector, T> instanceOf(T  obj) {
+    private <T> Function<Injector, T> instanceOf(T obj) {
         return injector -> obj;
     }
 

@@ -62,18 +62,18 @@ public class WordnetTokenizerFactory {
         return MynlpInjector.getInjector().getInstance(WordnetTokenizerFactory.class);
     }
 
-    public WordnetTokenizer build(PipelineDefine pipelineDefine,Settings settings) {
+    public WordnetTokenizer build(PipelineDefine pipelineDefine, Settings settings) {
 
         settings = Settings.merge(this.settings, settings);
 
-        String initer = settings.get(TOKENIZER_INITER,"core");
+        String initer = settings.get(TOKENIZER_INITER, ComponentRegistry.WORDNET_INITER_CORE);
         String bestpath = settings.get(TOKENIZER_BESTPATH, ViterbiBestPathComputer.name);
 
         WordnetTokenizer instance = injector.getInstance(WordnetTokenizer.class);
 
         WordnetInitializer w = registry.getInstance(initer, WordnetInitializer.class);
         BestPathComputer b = registry.getInstance(bestpath, BestPathComputer.class);
-        Pipeline pipeline = pipelineFactory.create(pipelineDefine,settings);
+        Pipeline pipeline = pipelineFactory.create(pipelineDefine, settings);
 
         instance.prepare(pipeline, b, w);
         instance.check();
@@ -82,7 +82,7 @@ public class WordnetTokenizerFactory {
     }
 
     public WordnetTokenizer buildDefault() {
-        return build(PipelineDefine.defaultPipeline,Settings.createEmpty());
+        return build(PipelineDefine.defaultPipeline, Settings.createEmpty());
     }
 
 }

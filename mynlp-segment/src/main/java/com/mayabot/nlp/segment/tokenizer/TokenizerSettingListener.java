@@ -19,7 +19,6 @@ package com.mayabot.nlp.segment.tokenizer;
 import com.mayabot.nlp.Settings;
 
 /**
- *
  * @author jimichan
  */
 public interface TokenizerSettingListener {

@@ -8,7 +8,7 @@ public class SegmentTest {
     public void test() {
         MynlpTokenizer mynlpTokenizer = MynlpSegments.nlpTokenizer();
 
-        MynlpAnalyzer segment = MynlpSegments.segment(mynlpTokenizer);
+        MynlpAnalyzer segment = mynlpTokenizer.createAnalyzer();
 
         segment.reset("词汇缓存即词汇表缓存，是Deeplearning4j用于处理TF-IDF、词向量和某些信息提取方法等自然语言分析任务的一种通用机制。词汇缓存的作用是充当文本向量化的一站式存储组件，保存词袋和词向量等模型通常需要使用的一些信息。\n" +
                 "\n" +

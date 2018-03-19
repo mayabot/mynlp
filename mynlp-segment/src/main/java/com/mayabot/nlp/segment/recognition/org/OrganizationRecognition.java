@@ -39,7 +39,7 @@ import static com.mayabot.nlp.segment.recognition.org.NTTag.Z;
  *
  * @author jimichan
  */
-public class OrganizationRecognition  extends DefaultNameComponent implements OptimizeProcessor {
+public class OrganizationRecognition extends DefaultNameComponent implements OptimizeProcessor {
 
 
     public static OrganizationRecognition build(Injector injector) {
@@ -63,7 +63,6 @@ public class OrganizationRecognition  extends DefaultNameComponent implements Op
     final NatureAttribute natureAttribute;
 
     private SimpleViterbi<NTTag, Vertex> viterbi;
-
 
 
     @Inject
