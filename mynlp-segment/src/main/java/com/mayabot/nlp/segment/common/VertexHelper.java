@@ -127,7 +127,7 @@ public class VertexHelper {
 //	 * @param realWord
 //	 */
 //	public Vertex build(String realWord) {
-//		return build(null, realWord, coreDictionary.get(realWord));
+//		return build(null, realWord, coreDictionary.instance(realWord));
 //	}
 //
 //	public Vertex build(char realWord, CoreDictionary.Attribute natureAttribute) {

@@ -20,26 +20,27 @@ import com.google.common.collect.AbstractIterator;
 import com.google.common.io.CharSource;
 import com.google.common.io.LineReader;
 
+import java.io.BufferedReader;
 import java.io.Reader;
 
 public class CharSourceLineReader extends AbstractIterator<String> implements AutoCloseable {
 
-    private final Reader reader;
-    private final LineReader lineReader;
+    private final BufferedReader reader;
+//    private final LineReader lineReader;
 
     public CharSourceLineReader(CharSource charSource) {
         try {
-            reader = charSource.openStream();
+            reader = charSource.openBufferedStream();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        lineReader = new LineReader(reader);
+//        lineReader = new LineReader(reader);
     }
 
     @Override
     protected String computeNext() {
         try {
-            String line = lineReader.readLine();
+            String line = reader.readLine();
             if (line == null) {
                 return endOfData();
             } else {

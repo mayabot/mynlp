@@ -29,10 +29,7 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 import java.util.function.Supplier;
 
 /**
@@ -52,6 +49,10 @@ public class Settings {
         this.settings = Maps.newHashMap(settings);
     }
 
+    Settings(Settings settings) {
+        this.settings = Maps.newHashMap(settings.settings);
+    }
+
     public static final String KEY_CONF_DIR = "mynlp.conf.dir";
     public static final String KEY_DATA_DIR = "mynlp.data.dir";
     public static final String KEY_WORK_DIR = "mynlp.work.dir";
@@ -63,10 +64,55 @@ public class Settings {
         return setting.getParse().apply(value);
     }
 
+    public void put(Setting setting, String value) {
+        settings.put(setting.getKey(), value);
+    }
+
+    public void put(String key, String value) {
+        settings.put(key, value);
+    }
+
+    public void put(String prefix,Setting setting, String value) {
+        settings.put(prefix+"."+setting.getKey(), value);
+    }
+
+    /**
+     * 后面的覆盖前面的设置
+     * @param settings
+     * @return
+     */
+    public static Settings merge(Settings ... settings) {
+        Map<String,String> all = Maps.newHashMap();
+        for (Settings setting : settings) {
+            if (setting == null) {
+                continue;
+            }
+            all.putAll(setting.settings);
+        }
+        return new Settings(ImmutableMap.copyOf(all));
+    }
+
+    public static Settings createEmpty() {
+        return new Settings(ImmutableMap.of());
+    }
+
+    public static Settings createFrom(Settings settings) {
+        return new Settings(settings);
+    }
+
+    public static Settings create(Properties properties) {
+        Map<String, String> map = new HashMap<>();
+        for (String key : properties.stringPropertyNames()) {
+            String value = properties.getProperty(key);
+            map.put(key, value);
+        }
+        return new Settings(map);
+    }
+
     /**
      * 从遇到的第一个文件开始。
-     * 2. classpath://maya_nlp.yml
-     * 2. classpath://maya_nlp_default.yml
+     * 2. classpath://maya_nlp.properties
+     * 2. classpath://maya_nlp_default.properties
      *
      * @return
      */

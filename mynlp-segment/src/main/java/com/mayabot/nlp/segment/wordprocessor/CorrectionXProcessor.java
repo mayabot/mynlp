@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.mayabot.nlp.segment.xprocessor;
+package com.mayabot.nlp.segment.wordprocessor;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -22,6 +22,7 @@ import com.mayabot.nlp.collection.dat.DATMatcher;
 import com.mayabot.nlp.collection.dat.DoubleArrayTrie;
 import com.mayabot.nlp.segment.WordpathProcessor;
 import com.mayabot.nlp.segment.dictionary.CorrectionDictionary;
+import com.mayabot.nlp.segment.support.DefaultNameComponent;
 import com.mayabot.nlp.segment.wordnet.Vertex;
 import com.mayabot.nlp.segment.wordnet.Wordpath;
 
@@ -33,7 +34,7 @@ import com.mayabot.nlp.segment.wordnet.Wordpath;
  * Created by jimichan on 2017/7/3.
  */
 @Singleton
-public class CorrectionXProcessor implements WordpathProcessor {
+public class CorrectionXProcessor extends DefaultNameComponent implements WordpathProcessor {
 
     private final CorrectionDictionary dictionary;
 

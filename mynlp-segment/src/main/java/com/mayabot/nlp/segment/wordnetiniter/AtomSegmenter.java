@@ -163,7 +163,7 @@ public class AtomSegmenter implements WordnetInitializer {
     final int numWordId;
 
     @Override
-    public void initialize(Wordnet wordnet) {
+    public void init(Wordnet wordnet) {
 
         FstMatcher<VertexRow, VertexRow> matcher = fst.newMatcher(wordnet.getSlotList());
 

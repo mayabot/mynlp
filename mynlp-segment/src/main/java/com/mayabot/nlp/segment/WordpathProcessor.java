@@ -18,7 +18,11 @@ package com.mayabot.nlp.segment;
 
 import com.mayabot.nlp.segment.wordnet.Wordpath;
 
-public interface WordpathProcessor {
+/**
+ * Wordpath处理器
+ * @author jimichan
+ */
+public interface WordpathProcessor extends NamedComponent{
     /**
      * @param wordPath
      * @return 一般对传入的wordPath修改，返回对象本身

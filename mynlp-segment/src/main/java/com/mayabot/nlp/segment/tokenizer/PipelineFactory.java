@@ -16,119 +16,96 @@
 
 package com.mayabot.nlp.segment.tokenizer;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.google.common.base.Charsets;
 import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.common.io.Resources;
+import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.mayabot.nlp.Settings;
 import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
-import com.mayabot.nlp.segment.NamedComponentRegistry;
+import com.mayabot.nlp.segment.ComponentRegistry;
 import com.mayabot.nlp.segment.WordpathProcessor;
-import com.mayabot.nlp.segment.xprocessor.OptimizeWordPathProcessor;
+import com.mayabot.nlp.segment.wordprocessor.OptimizeWordPathProcessor;
 
-import java.io.IOException;
-import java.net.URL;
-import java.util.Enumeration;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
+/**
+ *
+ * @author jimichan
+ */
 @Singleton
 public class PipelineFactory {
 
+    private ComponentRegistry registry;
+
+    private Settings globalSettings;
+
     @Inject
-    private NamedComponentRegistry registry;
+    public PipelineFactory(ComponentRegistry registry,Settings globalSettings) {
+        this.registry = registry;
+        this.globalSettings = globalSettings;
+    }
 
     static InternalLogger logger = InternalLoggerFactory.getInstance(PipelineFactory.class);
 
-    public Pipeline createByName(String name) {
-        return createByName(name, PipelineSettings.EMTPY);
-    }
+    public Pipeline create(PipelineDefine pipelineDefine, Settings settings) {
 
-    public Pipeline createByName(String name, PipelineSettings settings) {
+        //合并全局的默认设置
+        settings = Settings.merge(globalSettings,settings);
 
-        List pipeItemList = (List) pipelineConfig.get(name);
+        //所有的配置使用pipeline前缀
+        settings = settings.getByPrefix("pipeline");
 
-        Preconditions.checkNotNull(pipeItemList, "Not found " + name + "pipeline");
+
+
+        //默认启用所有的Node
+        Set<String> enableSets = pipelineDefine.allNodeNames();
+
+        //pipeline.disable 配置项配置禁用的节点
+        Set<String> disableNames = Sets.newHashSet(settings.getAsList("disable"));
+
+        logger.debug("PipelineFactory disableNames " + disableNames);
+
+        disableNames.forEach(name -> enableSets.remove(name));
 
         List<WordpathProcessor> wordPathProcessors = Lists.newArrayList();
 
-        for (Object obj : pipeItemList) {
+        for (Object obj : pipelineDefine.getProcessorNames()) {
             if (obj instanceof String) {
-                wordPathProcessors.add(dd(((String) obj), null));
-            } else if (obj instanceof Map) {
-                Map<String, Object> mini = ((Map) obj);
-                Preconditions.checkArgument(mini.containsKey("type"));
+                String name = ((String) obj);
+                WordpathProcessor instance = registry.getInstance(name, WordpathProcessor.class);
+                wordPathProcessors.add(instance);
+                instance.setName(name);
 
-                String type = mini.remove("type").toString();
+            } else if (obj instanceof String[]) {
+                String[] names = ((String[]) obj);
 
-                wordPathProcessors.add(dd(type, mini));
+                OptimizeWordPathProcessor p = (OptimizeWordPathProcessor) registry.getInstance("optimizeNet", WordpathProcessor.class);
+                p.initOptimizeProcessor(Lists.newArrayList(names));
+
+                wordPathProcessors.add(p);
 
             } else {
-                logger.error("obj {} format is error", obj);
                 Preconditions.checkState(false, "obj %s format is error", obj.toString());
             }
         }
 
         for (WordpathProcessor wordPathProcessor : wordPathProcessors) {
-            if (wordPathProcessor instanceof ApplyPipelineSetting) {
-                ((ApplyPipelineSetting) wordPathProcessor).apply(settings);
+            String name = wordPathProcessor.getName();
+            Settings partSettings = settings;
+            if (name != null) {
+                partSettings = settings.getByPrefix(name + ".");
+            }
+            if (wordPathProcessor instanceof TokenizerSettingListener) {
+                ((TokenizerSettingListener) wordPathProcessor).apply(partSettings);
             }
         }
 
 
         return new Pipeline(wordPathProcessors);
-    }
-
-    private WordpathProcessor dd(String type, Map<String, Object> x) {
-        if (type.equals("optimizeNet")) {
-            OptimizeWordPathProcessor p = (OptimizeWordPathProcessor) registry.getInstance(type, WordpathProcessor.class);
-
-            p.initConfig(x);
-
-            return p;
-        }
-
-        return registry.getInstance(type, WordpathProcessor.class);
-
-    }
-
-
-    static Map<String, Object> pipelineConfig = Maps.newHashMap();
-
-
-    static {
-
-        try {
-            Enumeration<URL> resources = PipelineFactory.class.getClassLoader().getResources("META-INF/pipeline.json");
-
-            while (resources.hasMoreElements()) {
-                URL url = resources.nextElement();
-
-                try {
-                    String json = Resources.asCharSource(url, Charsets.UTF_8).read();
-
-                    Map<String, Object> map1 = (JSONObject) JSON.parse(json);
-
-                    pipelineConfig.putAll(map1);
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            if (logger.isInfoEnabled()) {
-                logger.info("find pipeline " + pipelineConfig.keySet());
-            }
-
-        } catch (Exception e) {
-            logger.error("", e);
-        }
-
     }
 
 }

@@ -399,6 +399,12 @@ public class Wordnet implements CharSequence {
         }
     }
 
+    public void tagOptimizeNetVertex(Vertex[] wordPath) {
+        for (Vertex node : wordPath) {
+            node.setOptimize(true);
+        }
+    }
+
     /**
      * 根据当前的最优路径，设定已经选择的最优路径中的Vertex的最优网络标记为true
      */
@@ -466,7 +472,6 @@ public class Wordnet implements CharSequence {
 
     public void setOptimizeNet(boolean optimizeNet) {
         this.optimizeNet = optimizeNet;
-        //FIXME 需要把里面的优化网络的节点全部去除掉.
         //重置所有节点的optimize标记为false
         accessAllVertext(it -> {
             if (it.isOptimize()) {
