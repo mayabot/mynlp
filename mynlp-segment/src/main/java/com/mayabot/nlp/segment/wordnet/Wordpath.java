@@ -28,7 +28,7 @@ import java.util.function.Consumer;
 
 /**
  * WordPath表示对文本划分词的描述。
- *
+ * <p>
  * bitset 下标[i]
  * true 表示在1 后面插入分割,0表示不分割
  * <p>

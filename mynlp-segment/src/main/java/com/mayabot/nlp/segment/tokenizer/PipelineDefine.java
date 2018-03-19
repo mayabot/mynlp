@@ -1,7 +1,5 @@
 package com.mayabot.nlp.segment.tokenizer;
 
-import com.google.common.base.CharMatcher;
-import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
@@ -10,6 +8,7 @@ import java.util.Set;
 
 /**
  * Pipeline的数据处理流程的定义
+ *
  * @author jimichan
  */
 public class PipelineDefine {
@@ -20,7 +19,7 @@ public class PipelineDefine {
         for (Object object : strings) {
             if (object instanceof String) {
                 processorNames.add(object.toString());
-            }else{
+            } else {
                 String[] list = ((String[]) object);
                 processorNames.add(Lists.newArrayList(list));
             }
@@ -34,11 +33,11 @@ public class PipelineDefine {
     public Set<String> allNodeNames() {
         Set<String> sets = Sets.newHashSet();
 
-        processorNames.forEach(x->{
+        processorNames.forEach(x -> {
             if (x instanceof String) {
                 sets.add(x.toString());
-            }else{
-                String[] list = ((String[]) x);
+            } else {
+                List<String> list = (List<String>) x;
                 sets.addAll(Lists.newArrayList(list));
             }
         });
@@ -54,10 +53,10 @@ public class PipelineDefine {
             "mq",
             "ml",
             "pattern",
-            list("person","place","organization"),
+            list("person", "place", "organization"),
             "correction",
             "speechTagging"
-            );
+    );
 
 
     public static String[] list(String... ss) {

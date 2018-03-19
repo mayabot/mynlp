@@ -14,7 +14,7 @@ public abstract class DefaultNameComponent implements NamedComponent {
 
     @Override
     public void setName(String name) {
-        Preconditions.checkState(name==null,"Name 只能被设置一次");
+        Preconditions.checkState(name != null, "Name 只能被设置一次");
         this.name = name;
     }
 }

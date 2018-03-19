@@ -30,5 +30,4 @@ public class SegmentModule extends AbstractModule {
         bind(ComponentRegistry.class).asEagerSingleton();
     }
 
-
 }

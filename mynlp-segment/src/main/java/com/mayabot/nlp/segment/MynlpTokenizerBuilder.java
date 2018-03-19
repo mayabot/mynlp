@@ -22,13 +22,13 @@ import static com.mayabot.nlp.segment.ComponentRegistry.WORDNET_INITER_CRF;
  */
 public class MynlpTokenizerBuilder {
 
-    Settings settings = Settings.createEmpty();
+    private Settings settings = Settings.createEmpty();
 
-    Set<String> disableNames = Sets.newHashSet();
+    private Set<String> disableNames = Sets.newHashSet();
 
-    PipelineDefine pipelineDefine = PipelineDefine.defaultPipeline;
+    private PipelineDefine pipelineDefine = PipelineDefine.defaultPipeline;
 
-    public static final MynlpTokenizerBuilder builder(){
+    public static final MynlpTokenizerBuilder builder() {
         return new MynlpTokenizerBuilder();
     }
 
@@ -60,7 +60,7 @@ public class MynlpTokenizerBuilder {
     }
 
     public MynlpTokenizerBuilder disable(ComponentNames... name) {
-        disableNames.addAll(Lists.newArrayList(name).stream().map(x->x.name()).collect(Collectors.toList()));
+        disableNames.addAll(Lists.newArrayList(name).stream().map(x -> x.name()).collect(Collectors.toList()));
         return this;
     }
 

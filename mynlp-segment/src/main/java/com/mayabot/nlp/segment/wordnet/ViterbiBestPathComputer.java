@@ -20,7 +20,6 @@ import com.google.common.base.Preconditions;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.mayabot.nlp.segment.dictionary.core.CoreBiGramTableDictionary;
-import com.mayabot.nlp.segment.wordnet.*;
 import com.mayabot.nlp.utils.Predefine;
 
 /**
