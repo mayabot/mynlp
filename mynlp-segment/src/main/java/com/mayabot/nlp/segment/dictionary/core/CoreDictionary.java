@@ -15,6 +15,9 @@
  */
 package com.mayabot.nlp.segment.dictionary.core;
 
+import com.carrotsearch.hppc.IntIntHashMap;
+import com.carrotsearch.hppc.IntIntMap;
+import com.carrotsearch.hppc.IntIntScatterMap;
 import com.google.common.io.Files;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -29,6 +32,8 @@ import com.mayabot.nlp.segment.dictionary.NatureAttribute;
 import com.mayabot.nlp.utils.CharSourceLineReader;
 
 import java.io.*;
+import java.nio.MappedByteBuffer;
+import java.nio.channels.FileChannel;
 import java.util.TreeMap;
 
 /**
@@ -213,11 +218,49 @@ public class CoreDictionary implements MynlpCacheable {
     }
 
     @Override
-    public void readFromCache(InputStream inputStream) throws Exception {
-        DataInput dataInput = new DataInputStream(inputStream);
+    public void readFromCache(File file) throws Exception {
 
-        this.MAX_FREQUENCY = dataInput.readInt();
-        this.trie = DoubleArrayTrie.read(dataInput, NatureAttribute::read);
+        try (FileInputStream fileInputStream = new FileInputStream(file);
+             FileChannel channel = fileInputStream.getChannel();) {
+
+            MappedByteBuffer map = channel.map(FileChannel.MapMode.READ_ONLY, 0, channel.size());
+
+            this.MAX_FREQUENCY = map.getInt();
+
+            this.trie = DoubleArrayTrie.read(map.slice(), NatureAttribute::read);
+
+//            int[] base = this.trie.base;
+//            int[] check = this.trie.check;
+//            IntIntScatterMap x = new IntIntScatterMap(356277);
+//            IntIntScatterMap b = new IntIntScatterMap(356277);
+//
+//            long t1 = System.currentTimeMillis();
+//            int c=0;
+//            for (int i = 0; i < base.length; i++) {
+//                if (base[i] != 0) {
+//                    c++;
+//                    x.put(i, base[i]);
+//                }
+//                if (check[i] != 0) {
+//                    b.put(i, check[i]);
+//                }
+//            }
+//            long t2 = System.currentTimeMillis();
+//            System.out.println((t2-t1)+"ms");
+//            System.out.println("count "+c);
+//            System.out.println(base.length);
+//            System.out.println(x.keys.length);
+//            System.out.println(x.values.length);
+//            System.out.println(b.values.length);
+//            System.out.println(b.values.length);
+        }
+
+//        try (InputStream inputStream = new BufferedInputStream(Files.asByteSource(file).openStream(), 64 * 1024)) {
+//            DataInput dataInput = new DataInputStream(inputStream);
+//            this.MAX_FREQUENCY = dataInput.readInt();
+//            this.trie = DoubleArrayTrie.read(dataInput, NatureAttribute::read);
+//
+//        }
     }
 
     public static void main(String[] args) throws IOException {

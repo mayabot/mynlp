@@ -24,6 +24,7 @@ import com.mayabot.nlp.segment.MynlpSegments;
 import com.mayabot.nlp.segment.MynlpTokenizer;
 import org.junit.Test;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
@@ -60,18 +61,17 @@ public class ViterbiTest {
 
     @Test
     public void speed() throws IOException {
-        MynlpTokenizer tokenizer = MynlpSegments.crfTokenizer();
+        MynlpTokenizer tokenizer = MynlpSegments.nlpTokenizer();
 
-        String line =
-
-                "第六十八回  苦尤娘赚入大观园　";
+        String line = "第六十八回  苦尤娘赚入大观园　";
 
         tokenizer.tokenToList(line).forEach(
                 System.out::println
         );
 
 
-        URL urlinclass = Resources.getResource("xiyouji.txt");
+        URL urlinclass = new File("../data/xiyouji.txt").toURL();
+
         ByteSource source = Resources.asByteSource(urlinclass);
         String text = source.asCharSource(Charsets.UTF_8).read();
         List<String> lines = Lists.newArrayList(text.split("\n"));

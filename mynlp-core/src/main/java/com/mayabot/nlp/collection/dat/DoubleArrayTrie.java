@@ -35,11 +35,11 @@
  */
 package com.mayabot.nlp.collection.dat;
 
+import com.google.common.collect.Lists;
 import com.mayabot.nlp.collection.Trie;
 
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
+import java.io.*;
+import java.nio.ByteBuffer;
 import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
@@ -71,9 +71,24 @@ public class DoubleArrayTrie<T> implements Trie<T> {
         return new DoubleArrayTrie(values, check, base);
     }
 
+    public static <T> DoubleArrayTrie<T> read(
+            ByteBuffer buffer, Function<DataInput, T> supplier) throws IOException {
+        int[] check = readIntArray(buffer);
+        int[] base = readIntArray(buffer);
+
+        byte [] data = new byte[buffer.remaining()];
+        buffer.get(data);
+
+        ArrayList<T> values = readArrayList(new DataInputStream(new ByteArrayInputStream(data)), supplier);
+
+        //noinspection unchecked
+        return new DoubleArrayTrie(values, check, base);
+    }
+
+
     ArrayList<T> values;
-    int[] check;
-    int[] base;
+    public int[] check;
+    public int[] base;
 
     protected DoubleArrayTrie(ArrayList<T> values, int[] check, int[] base) {
         super();

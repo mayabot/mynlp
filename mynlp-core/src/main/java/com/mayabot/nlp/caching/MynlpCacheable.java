@@ -33,7 +33,7 @@ public interface MynlpCacheable {
 
     void saveToCache(OutputStream out) throws Exception;
 
-    void readFromCache(InputStream inputStream) throws Exception;
+    void readFromCache(File inputStream) throws Exception;
 
     void loadFromRealData() throws Exception;
 
@@ -50,16 +50,16 @@ public interface MynlpCacheable {
 
                 long t1 = System.currentTimeMillis();
 
-                try (
-                        InputStream in = new BufferedInputStream(Files.asByteSource(cache).openStream(), 64 * 1024)) {
-                    readFromCache(in);
-                }
+//                try (
+                        //InputStream in = new BufferedInputStream(Files.asByteSource(cache).openStream(), 64 * 1024)) {
+                        readFromCache(cache);
+//                }
 
                 long t2 = System.currentTimeMillis();
 
                 success = true;
                 loadFromBin = true;
-                logger.info("restore from cache file success, use time " + (t2 - t1) + " ms");
+                logger.info(cache.getName() +" restore from cache file success, use time " + (t2 - t1) + " ms");
             } catch (Exception e) {
                 logger.warn("restore from cache " + cache.getAbsolutePath(), e);
             }

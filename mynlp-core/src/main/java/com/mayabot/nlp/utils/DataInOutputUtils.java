@@ -21,6 +21,7 @@ import com.mayabot.nlp.collection.utils.MyInts;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
@@ -55,6 +56,18 @@ public interface DataInOutputUtils {
         input.readFully(result);
 
         int[] ints = MyInts.fromByteArrayToArray(result);
+        if(ints.length == 3 && ints[0] == 1123992342 && ints[1] == 832718121 && ints[2] == 957462342 ){
+            return null;
+        }
+        return ints;
+    }
+
+
+    static int[] readIntArray(ByteBuffer buffer) {
+        int size = buffer.getInt()/4;
+        int[] ints = new int[size];
+        buffer.asIntBuffer().get(ints);
+        buffer.position(buffer.position()+size*4);
         if(ints.length == 3 && ints[0] == 1123992342 && ints[1] == 832718121 && ints[2] == 957462342 ){
             return null;
         }
@@ -113,28 +126,5 @@ public interface DataInOutputUtils {
             consumer.accept(val, output);
         }
     }
-
-    //
-//    public static void main(String[] args) throws IOException {
-//
-//        ByteArrayOutputStream out = new ByteArrayOutputStream();
-//        DataOutputStream dataOutputStream = new DataOutputStream(out);
-//
-//        int[] abc =new int[]{1,2,3,4,5};
-//
-//        writeIntArray(abc,dataOutputStream);
-//
-//        dataOutputStream.flush();
-//        out.flush();
-//
-//        DataInputStream dataInputStream = new DataInputStream(new ByteArrayInputStream(out.toByteArray()));
-//
-//        int[] re = readIntArray(dataInputStream);
-//
-//        for (int i : re) {
-//            System.out.println(i);
-//        }
-//
-//    }
 
 }
