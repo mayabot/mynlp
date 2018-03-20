@@ -3,6 +3,7 @@ package com.mayabot.nlp.segment;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import com.mayabot.nlp.Setting;
 import com.mayabot.nlp.Settings;
 import com.mayabot.nlp.segment.tokenizer.PipelineDefine;
 import com.mayabot.nlp.segment.tokenizer.WordnetTokenizerFactory;
@@ -70,6 +71,11 @@ public class MynlpTokenizerBuilder {
     }
 
     public MynlpTokenizerBuilder set(String key, String value) {
+        settings.put(key, value);
+        return this;
+    }
+
+    public MynlpTokenizerBuilder set(Setting key, String value) {
         settings.put(key, value);
         return this;
     }

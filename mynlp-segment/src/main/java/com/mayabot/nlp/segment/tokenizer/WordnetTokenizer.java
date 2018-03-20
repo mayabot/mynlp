@@ -22,6 +22,7 @@ import com.google.inject.Inject;
 import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
 import com.mayabot.nlp.segment.MynlpTerm;
+import com.mayabot.nlp.segment.MynlpTermCollector;
 import com.mayabot.nlp.segment.MynlpTokenizer;
 import com.mayabot.nlp.segment.WordnetInitializer;
 import com.mayabot.nlp.segment.common.VertexHelper;
@@ -54,6 +55,8 @@ public class WordnetTokenizer implements MynlpTokenizer {
     private Pipeline pipeline;
 
     private BestPathComputer bestPathComputer;
+
+    private MynlpTermCollector termCollector = MynlpTermCollector.bestPath;
 
     private VertexHelper vertexHelper;
 
@@ -93,12 +96,15 @@ public class WordnetTokenizer implements MynlpTokenizer {
 
         wordnetInitializer.init(wordnet);
 
+
         //选择一个路径出来(第一次不严谨的分词结果)
         Wordpath wordPath = bestPathComputer.select(wordnet);
 
         wordPath = pipeline.process(wordPath);
 
-        path2TermList(wordPath, target);
+        termCollector.collect(wordnet,wordPath, target);
+
+
     }
 
 
@@ -115,63 +121,15 @@ public class WordnetTokenizer implements MynlpTokenizer {
         return wordnet;
     }
 
-
-    /**
-     * 把PATH转换为List<MyTerm>结果。 PATH中 #Start #End 需要去除
-     *
-     * @param wordPath
-     * @return
-     */
-    protected void path2TermList(Wordpath wordPath, List<MynlpTerm> target) {
-        Iterator<Vertex> vertexIterator = wordPath.iteratorBestPath();
-        while (vertexIterator.hasNext()) {
-            Vertex vertex = vertexIterator.next();
-
-            MynlpTerm term = new MynlpTerm(vertex.realWord(), vertex.guessNature());
-            term.setOffset(vertex.getRowNum());
-
-            if (vertex.subWords != null) {
-                term.setSubword(Lists.newArrayListWithCapacity(vertex.subWords.size()));
-                for (Vertex subWord : vertex.subWords) {
-                    MynlpTerm sub = new MynlpTerm(subWord.realWord(), null);
-                    sub.setOffset(subWord.getRowNum());
-                    term.getSubword().add(sub);
-                }
-            }
-
-
-            target.add(term);
-        }
-    }
-
-    public WordnetInitializer getWordnetInitializer() {
-        return wordnetInitializer;
-    }
-
-    void setPipeline(Pipeline pipeline) {
-        this.pipeline = pipeline;
-    }
-
-    void setWordnetInitializer(WordnetInitializer wordnetInitializer) {
-        this.wordnetInitializer = wordnetInitializer;
-    }
-
-
-    public BestPathComputer getBestPathComputer() {
-        return bestPathComputer;
-    }
-
-    /**
-     * 设置最优路径选择器
-     *
-     * @param bestPathComputer
-     */
-    void setBestPathComputer(BestPathComputer bestPathComputer) {
-        this.bestPathComputer = bestPathComputer;
-    }
-
-
     public Pipeline getPipeline() {
         return pipeline;
+    }
+
+    public MynlpTermCollector getTermCollector() {
+        return termCollector;
+    }
+
+    public void setTermCollector(MynlpTermCollector termCollector) {
+        this.termCollector = termCollector;
     }
 }

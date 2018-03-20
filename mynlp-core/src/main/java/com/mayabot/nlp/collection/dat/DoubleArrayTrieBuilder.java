@@ -31,7 +31,7 @@ import java.util.function.Function;
  */
 public class DoubleArrayTrieBuilder<V> {
 
-    final int default_capacity = 1024 * 1024; // 1M
+    final int default_capacity = 256 * 1024; // 1M
 
     private int array_capacity = default_capacity;
     protected int[] check = new int[default_capacity];
@@ -303,8 +303,8 @@ public class DoubleArrayTrieBuilder<V> {
         if (new_capacity <= array_capacity) {
             return;
         }
-        if (new_capacity - array_capacity < 1024 * 64) { //64K
-            new_capacity = array_capacity + 1024 * 64;
+        if (new_capacity - array_capacity < 1024 * 1024) { //64K
+            new_capacity = array_capacity + 1024 * 1024;
         }
         int[] base2 = new int[new_capacity];
         int[] check2 = new int[new_capacity];

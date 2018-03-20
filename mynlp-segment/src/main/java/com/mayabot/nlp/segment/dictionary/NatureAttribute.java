@@ -48,39 +48,74 @@ public final class NatureAttribute {
         try {
             out.writeInt(a.totalFrequency);
 
-            JSONArray array = new JSONArray();
-            for (Map.Entry<Nature, Integer> x : a.map.entrySet()) {
-                array.add(x.getKey().ord);
-                array.add(x.getValue());
+            int size = a.map.size();
+
+            if (size == 0) {
+                out.writeUTF("[]");
+            } else if (size == 1) {
+                Map.Entry<Nature, Integer> x = a.map.entrySet().iterator().next();
+                out.writeUTF(x.getKey().ord+","+x.getValue());
+            }else{
+                StringBuilder line =new StringBuilder();
+                for (Map.Entry<Nature, Integer> x : a.map.entrySet()) {
+                    if (line.length() > 0) {
+                        line.append(",");
+                    }
+                    line.append(x.getKey().ord+","+x.getValue());
+                }
+                out.writeUTF(line.toString());
             }
 
-            out.writeUTF(array.toJSONString());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
+
+    //19,17,1,2
+    static int[] empty = new int[0];
+
+    private static int[] quickJson(String json){
+        if (json.equals("[]")) {
+            return empty;
+        }
+        String[] split = json.split(",");
+        int[] result = new int[split.length];
+        for (int i = 0; i < result.length; i++) {
+            result[i] = Integer.parseInt(split[i]);
+        }
+        return result;
+    }
+
     public static NatureAttribute read(DataInput in) {
         try {
             NatureAttribute attribute = new NatureAttribute();
+
             attribute.totalFrequency = in.readInt();
+
             String json = in.readUTF();
-            JSONArray array = JSON.parseArray(json);
 
-            ImmutableMap.Builder<Nature, Integer> builder = ImmutableMap.builder();
-            for (int i = 0; i < array.size(); i += 2) {
-                int ord = array.getIntValue(i);
-                Integer freq = array.getInteger(i + 1);
+            int[] array = quickJson(json);
 
-                builder.put(Nature.valueOf(ord), freq);
+            if (array.length == 0) {
+                attribute.map = ImmutableMap.of();
+            } else if (array.length == 2) {
+                attribute.map = ImmutableMap.of(Nature.valueOf(array[0]), Integer.valueOf(array[1]));
+            }else{
+                ImmutableMap.Builder<Nature, Integer> builder = ImmutableMap.builder();
+                for (int i = 0; i < array.length; i += 2) {
+                    int ord = array[i];
+                    int freq = array[i + 1];
+                    builder.put(Nature.valueOf(ord), Integer.valueOf(freq));
+                }
+
+                attribute.map = builder.build();
             }
-
-            attribute.map = builder.build();
-
             return attribute;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
 
     }
 

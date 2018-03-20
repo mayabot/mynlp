@@ -1,1 +1,6 @@
 description = 'common codes 没有任何依赖'
+
+
+dependencies {
+    compile group: 'com.google.guava', name: 'guava', version: "$guava_version"
+}
