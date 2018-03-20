@@ -63,12 +63,12 @@ public final class ComponentRegistry {
 
     public <T> void register(String name, Class<T> clazz, Function<Injector, ? extends T> factory) {
         table.put(name, clazz, factory);
-        logger.info("register {} for class {}", name, clazz);
+        logger.debug("register {} for class {}", name, clazz);
     }
 
     public <T> void register(ComponentNames name, Class<T> clazz, Function<Injector, ? extends T> factory) {
         table.put(name.name(), clazz, factory);
-        logger.info("register {} for class {}", name, clazz);
+        logger.debug("register {} for class {}", name, clazz);
     }
 
     public <T> Function<Injector, T> getFactory(String name, Class<T> clazz) {

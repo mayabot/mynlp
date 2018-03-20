@@ -18,6 +18,7 @@ package com.mayabot.nlp.segment.dictionary;
 import com.google.common.base.Splitter;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
+import com.google.common.io.Files;
 import com.mayabot.nlp.Environment;
 import com.mayabot.nlp.caching.MynlpCacheable;
 import com.mayabot.nlp.collection.dat.DoubleArrayTrie;
@@ -82,9 +83,11 @@ public abstract class CommonDictionary<V> implements MynlpCacheable {
     }
 
     @Override
-    public void readFromCache(InputStream inputStream) throws Exception {
-        DataInput dataInput = new DataInputStream(inputStream);
-        this.trie = DoubleArrayTrie.read(dataInput, this::readItem);
+    public void readFromCache(File file) throws Exception {
+        try(InputStream inputStream = new BufferedInputStream(Files.asByteSource(file).openStream(), 64 * 1024)){
+            DataInput dataInput = new DataInputStream(inputStream);
+            this.trie = DoubleArrayTrie.read(dataInput, this::readItem);
+        }
     }
 
     @Override

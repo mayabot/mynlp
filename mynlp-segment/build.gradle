@@ -20,5 +20,7 @@ dependencies {
     compile project(':mynlp-core')
     compile group: 'org.fusesource.jansi', name: 'jansi', version: '1.16'
     compile group: 'com.alibaba', name: 'fastjson', version: '1.2.42'
+    compile group: 'com.carrotsearch', name: 'hppc', version: '0.7.3'
     testCompile 'junit:junit:4.12'
+
 }

@@ -37,5 +37,7 @@ public class Pipeline {
         return wordPath;
     }
 
-
+    public boolean isEmpty() {
+        return wordpathProcessors.length == 0;
+    }
 }

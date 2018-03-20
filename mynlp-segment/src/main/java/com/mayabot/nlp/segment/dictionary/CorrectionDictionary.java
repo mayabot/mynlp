@@ -24,6 +24,7 @@ import com.google.common.collect.Lists;
 import com.google.common.hash.Hashing;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
+import com.google.common.io.Files;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.mayabot.nlp.Environment;
@@ -110,9 +111,12 @@ public class CorrectionDictionary implements MynlpCacheable {
     }
 
     @Override
-    public void readFromCache(InputStream inputStream) throws Exception {
-        DataInput dataInput = new DataInputStream(inputStream);
-        this.doubleArrayTrie = DoubleArrayTrie.read(dataInput, AdjustWord::read);
+    public void readFromCache(File file) throws Exception {
+        try(InputStream inputStream = new BufferedInputStream(Files.asByteSource(file).openStream(), 64 * 1024)) {
+            DataInput dataInput = new DataInputStream(inputStream);
+            this.doubleArrayTrie = DoubleArrayTrie.read(dataInput, AdjustWord::read);
+        }
+
     }
 
     @Override
