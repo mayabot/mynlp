@@ -21,6 +21,7 @@ import com.google.common.base.Charsets;
 import com.google.common.hash.Hashing;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
+import com.google.common.io.Files;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.mayabot.nlp.Environment;
@@ -105,9 +106,11 @@ public class CustomDictionary implements MynlpCacheable {
     }
 
     @Override
-    public void readFromCache(InputStream inputStream) throws Exception {
-        DataInput dataInput = new DataInputStream(inputStream);
-        this.dat = DoubleArrayTrie.read(dataInput, NatureAttribute::read);
+    public void readFromCache(File file) throws Exception {
+        try(InputStream inputStream = new BufferedInputStream(Files.asByteSource(file).openStream(), 64 * 1024)) {
+            DataInput dataInput = new DataInputStream(inputStream);
+            this.dat = DoubleArrayTrie.read(dataInput, NatureAttribute::read);
+        }
     }
 
     @Override

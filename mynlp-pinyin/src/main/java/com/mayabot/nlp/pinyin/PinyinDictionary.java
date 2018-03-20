@@ -16,6 +16,7 @@
 
 package com.mayabot.nlp.pinyin;
 
+import com.google.common.io.Files;
 import com.google.common.primitives.Ints;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -115,9 +116,11 @@ public class PinyinDictionary implements MynlpCacheable {
     }
 
     @Override
-    public void readFromCache(InputStream inputStream) throws Exception {
-        DataInput dataInput = new DataInputStream(inputStream);
-        this.trie = AhoCorasickDoubleArrayTrie.read(dataInput, PinyinDictionary::read);
+    public void readFromCache(File file) throws Exception {
+        try(InputStream inputStream = new BufferedInputStream(Files.asByteSource(file).openStream(), 64 * 1024)) {
+            DataInput dataInput = new DataInputStream(inputStream);
+            this.trie = AhoCorasickDoubleArrayTrie.read(dataInput, PinyinDictionary::read);
+        }
     }
 
     @Override

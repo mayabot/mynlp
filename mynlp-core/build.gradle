@@ -21,6 +21,7 @@ dependencies {
 
     compile group: 'com.google.guava', name: 'guava', version: "$guava_version"
     compile group: 'com.google.inject', name: 'guice', version: '4.1.0'
+    compile project(":mynlp-common")
 
     // logs
     compileOnly(group: "org.slf4j", name: "slf4j-api", version: "1.7.21")
@@ -29,5 +30,5 @@ dependencies {
     compileOnly(group: "log4j", name: "log4j", version: "1.2.17")
 
     testCompile group: 'junit', name: 'junit', version: '4.12'
-
+    testCompile group: 'com.carrotsearch', name: 'hppc', version: '0.7.3'
 }
