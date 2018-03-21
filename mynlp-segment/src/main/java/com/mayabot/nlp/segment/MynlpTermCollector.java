@@ -10,18 +10,19 @@ import java.util.List;
 
 /**
  * Mynlp收集器
+ *
  * @author jimichan
  */
 public interface MynlpTermCollector {
 
-    void collect(Wordnet wordnet,Wordpath wordPath, List<MynlpTerm> target);
+    void collect(Wordnet wordnet, Wordpath wordPath, List<MynlpTerm> target);
 
     /**
      * 最优路径选择器。
      * 如果有subword，双层结构表示。类似于语料库中处理复合词的做法
      * 北京人民大学  =》 北京 [人民 大学]
      */
-    MynlpTermCollector bestPath = ( wordnet,wordPath, target) -> {
+    MynlpTermCollector bestPath = (wordnet, wordPath, target) -> {
         Iterator<Vertex> vertexIterator = wordPath.iteratorBestPath();
         while (vertexIterator.hasNext()) {
             Vertex vertex = vertexIterator.next();
@@ -48,7 +49,7 @@ public interface MynlpTermCollector {
      * 如果有子词，那么平铺，抛弃原有的组合词
      * 北京人民大学  =》 北京 人民 大学
      */
-    MynlpTermCollector bestpath_subword_flat = (wordnet,wordPath, target) -> {
+    MynlpTermCollector bestpath_subword_flat = (wordnet, wordPath, target) -> {
         Iterator<Vertex> vertexIterator = wordPath.iteratorBestPath();
         while (vertexIterator.hasNext()) {
             Vertex vertex = vertexIterator.next();
@@ -59,7 +60,7 @@ public interface MynlpTermCollector {
                     sub.setOffset(subWord.getRowNum());
                     target.add(sub);
                 }
-            }else{
+            } else {
                 MynlpTerm term = new MynlpTerm(vertex.realWord(), vertex.guessNature());
                 term.setOffset(vertex.getRowNum());
 
@@ -73,7 +74,7 @@ public interface MynlpTermCollector {
     /**
      * 索引分词。只有求得所有组合的可能性
      */
-    MynlpTermCollector indexs_ = (wordnet,wordPath, target) -> {
+    MynlpTermCollector indexs_ = (wordnet, wordPath, target) -> {
         Iterator<Vertex> vertexIterator = wordPath.iteratorBestPath();
         while (vertexIterator.hasNext()) {
             Vertex vertex = vertexIterator.next();
@@ -84,7 +85,7 @@ public interface MynlpTermCollector {
                     sub.setOffset(subWord.getRowNum());
                     target.add(sub);
                 }
-            }else{
+            } else {
                 MynlpTerm term = new MynlpTerm(vertex.realWord(), vertex.guessNature());
                 term.setOffset(vertex.getRowNum());
 
