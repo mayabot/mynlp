@@ -21,10 +21,10 @@ import com.google.common.io.Files;
 import com.google.common.primitives.Ints;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.mayabot.mynlp.common.matrix.CSRSparseMatrix;
 import com.mayabot.nlp.Environment;
 import com.mayabot.nlp.Setting;
 import com.mayabot.nlp.caching.MynlpCacheable;
-import com.mayabot.nlp.collection.matrix.CSRSparseMatrix;
 import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
 import com.mayabot.nlp.resources.MynlpResource;
@@ -85,7 +85,7 @@ public class CoreBiGramTableDictionary implements MynlpCacheable {
 
     @Override
     public void readFromCache(File file) throws Exception {
-        try(InputStream inputStream = new BufferedInputStream(Files.asByteSource(file).openStream(), 64 * 1024)) {
+        try (InputStream inputStream = new BufferedInputStream(Files.asByteSource(file).openStream(), 64 * 1024)) {
             DataInput dataInput = new DataInputStream(inputStream);
 
             int[] columnIndices = DataInOutputUtils.readIntArray(dataInput);

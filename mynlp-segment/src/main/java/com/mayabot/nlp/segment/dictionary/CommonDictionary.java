@@ -84,7 +84,7 @@ public abstract class CommonDictionary<V> implements MynlpCacheable {
 
     @Override
     public void readFromCache(File file) throws Exception {
-        try(InputStream inputStream = new BufferedInputStream(Files.asByteSource(file).openStream(), 64 * 1024)){
+        try (InputStream inputStream = new BufferedInputStream(Files.asByteSource(file).openStream(), 64 * 1024)) {
             DataInput dataInput = new DataInputStream(inputStream);
             this.trie = DoubleArrayTrie.read(dataInput, this::readItem);
         }

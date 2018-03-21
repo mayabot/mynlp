@@ -15,7 +15,7 @@
  */
 package com.mayabot.nlp.segment.model.crf;
 
-import com.mayabot.nlp.collection.Trie;
+import org.trie4j.MapTrie;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -36,7 +36,7 @@ public class CRFModel {
     /**
      * 特征函数
      */
-    protected Trie<FeatureFunction> featureFunctionTrie;
+    protected MapTrie<FeatureFunction> featureFunctionTrie;
 
     /**
      * 特征模板
@@ -57,7 +57,7 @@ public class CRFModel {
         // do nothing
     }
 
-    public void setFeatureFunctionTrie(Trie<FeatureFunction> featureFunctionTrie) {
+    public void setFeatureFunctionTrie(MapTrie<FeatureFunction> featureFunctionTrie) {
         this.featureFunctionTrie = featureFunctionTrie;
     }
 

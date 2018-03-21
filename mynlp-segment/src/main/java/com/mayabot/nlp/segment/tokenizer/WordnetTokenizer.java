@@ -17,7 +17,6 @@
 package com.mayabot.nlp.segment.tokenizer;
 
 import com.google.common.base.Preconditions;
-import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
@@ -27,11 +26,9 @@ import com.mayabot.nlp.segment.MynlpTokenizer;
 import com.mayabot.nlp.segment.WordnetInitializer;
 import com.mayabot.nlp.segment.common.VertexHelper;
 import com.mayabot.nlp.segment.wordnet.BestPathComputer;
-import com.mayabot.nlp.segment.wordnet.Vertex;
 import com.mayabot.nlp.segment.wordnet.Wordnet;
 import com.mayabot.nlp.segment.wordnet.Wordpath;
 
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -102,7 +99,7 @@ public class WordnetTokenizer implements MynlpTokenizer {
 
         wordPath = pipeline.process(wordPath);
 
-        termCollector.collect(wordnet,wordPath, target);
+        termCollector.collect(wordnet, wordPath, target);
 
 
     }
