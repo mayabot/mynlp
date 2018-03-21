@@ -20,6 +20,9 @@ import com.mayabot.nlp.collection.dat.DoubleArrayTrie;
 import com.mayabot.nlp.collection.dat.DoubleArrayTrieBuilder;
 import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
+import org.trie4j.louds.MapTailLOUDSTrie;
+import org.trie4j.louds.TailLOUDSTrie;
+import org.trie4j.patricia.MapPatriciaTrie;
 
 import java.util.*;
 
@@ -74,9 +77,10 @@ public final class CRFSegmentModel extends CRFModel {
         for (Map.Entry<String, Integer> entry : model.tag2id.entrySet()) {
             model.id2tag[entry.getValue()] = entry.getKey();
         }
-        TreeMap<String, FeatureFunction> featureFunctionMap = new TreeMap<String, FeatureFunction>();  // 构建trie树的时候用
+        MapPatriciaTrie<FeatureFunction> featureFunctionMap = new MapPatriciaTrie<>();
+
         List<FeatureFunction> featureFunctionList = new LinkedList<FeatureFunction>(); // 读取权值的时候用
-        model.featureTemplateList = new LinkedList<FeatureTemplate>();
+        model.featureTemplateList = new LinkedList<>();
         while ((line = txtReader.next()).length() != 0) {
             if (!"B".equals(line)) {
                 FeatureTemplate featureTemplate = FeatureTemplate.create(line);
@@ -98,7 +102,7 @@ public final class CRFSegmentModel extends CRFModel {
             String[] args = line.split(" ", 2);
             char[] charArray = args[1].toCharArray();
             FeatureFunction featureFunction = new FeatureFunction(charArray, size);
-            featureFunctionMap.put(args[1], featureFunction);
+            featureFunctionMap.insert(args[1], featureFunction);
             featureFunctionList.add(featureFunction);
         }
 
@@ -120,9 +124,14 @@ public final class CRFSegmentModel extends CRFModel {
             logger.warn("CRF 文本读取有残留，可能会出问题！");
         }
 
-        logger.info("开始构建trie树");
+        logger.info("开始构建trie树 featureFunctionMap.size = " +featureFunctionMap.size());
 
-        DoubleArrayTrie<FeatureFunction> trie = new DoubleArrayTrieBuilder().build(featureFunctionMap);
+        //这里采用MapTailLOUDSTrie 构建速度快。查询速度稍微慢。
+        //TODO 以后提供两张二进制格式。一种是DoubleArray的，内存大，速度快。一种是LOUDSTrie，高压缩比，性能稍微慢。
+        //一种是LOUDSTrie适合测试或者对性能不要求不苛刻的大部分场景下使用。
+        //或者另外一个办法MapTailLOUDSTrie提供前置缓存，说不定会大大提供效率
+
+        MapTailLOUDSTrie<FeatureFunction> trie = new MapTailLOUDSTrie(featureFunctionMap);
         model.setFeatureFunctionTrie(trie);
 
         model.onLoadTxtFinished();

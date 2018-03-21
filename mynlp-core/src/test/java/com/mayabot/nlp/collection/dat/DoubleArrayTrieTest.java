@@ -23,9 +23,9 @@ public class DoubleArrayTrieTest {
                         "一举一动\n" +
                         "一举成名\n" +
                         "一举成名天下知\n" +
-                        "万能\n" +
-                        "万一\n" +
-                        "万能胶").split("\n");
+                        "五谷\n" +
+                        "五谷丰登\n" +
+                        "万万").split("\n");
 
         Set<Character> sets = new HashSet<>();
         for (int i = 0; i < list.length; i++) {
@@ -53,23 +53,34 @@ public class DoubleArrayTrieTest {
 
         String x = trie.get("一举成名");
 
+        int[] base = trie.base;
+        int c =0;
+        for (int i = base.length-1; i >=0 ; i--) {
+            if (0== base[i]) {
+                c++;
+            }else{
+                System.out.println("+"+i);
+                break;
+            }
+        }
+
+        System.out.println(base.length);
+        System.out.println(c);
+
+        System.out.println(x);
         Assert.assertEquals(x,"一举成名");
 
         System.out.println(trie.base.length);
 
         System.out.println("Index" + "\t" + "Base" + "\t" + "Check");
 
-        IntIntHashMap intIntMap = new IntIntHashMap();
+        //IntIntHashMap intIntMap = new IntIntHashMap();
 
         for (int i = 0; i < trie.base.length; i++) {
             if (trie.base[i] != 0 || trie.check[i] != 0) {
-                intIntMap.put(i, trie.base[i]);
                 System.out.println(i + "\t\t" + trie.base[i] + "\t\t" + trie.check[i]);
             }
         }
 
-        System.out.println(intIntMap.size());
-        System.out.println(intIntMap.keys.length);
-        System.out.println(intIntMap.values.length);
     }
 }

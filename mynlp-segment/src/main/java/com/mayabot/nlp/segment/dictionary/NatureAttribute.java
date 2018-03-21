@@ -16,8 +16,6 @@
 
 package com.mayabot.nlp.segment.dictionary;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 import com.google.common.collect.ImmutableMap;
 
 import java.io.DataInput;
@@ -54,14 +52,14 @@ public final class NatureAttribute {
                 out.writeUTF("[]");
             } else if (size == 1) {
                 Map.Entry<Nature, Integer> x = a.map.entrySet().iterator().next();
-                out.writeUTF(x.getKey().ord+","+x.getValue());
-            }else{
-                StringBuilder line =new StringBuilder();
+                out.writeUTF(x.getKey().ord + "," + x.getValue());
+            } else {
+                StringBuilder line = new StringBuilder();
                 for (Map.Entry<Nature, Integer> x : a.map.entrySet()) {
                     if (line.length() > 0) {
                         line.append(",");
                     }
-                    line.append(x.getKey().ord+","+x.getValue());
+                    line.append(x.getKey().ord + "," + x.getValue());
                 }
                 out.writeUTF(line.toString());
             }
@@ -75,7 +73,7 @@ public final class NatureAttribute {
     //19,17,1,2
     static int[] empty = new int[0];
 
-    private static int[] quickJson(String json){
+    private static int[] quickJson(String json) {
         if (json.equals("[]")) {
             return empty;
         }
@@ -101,7 +99,7 @@ public final class NatureAttribute {
                 attribute.map = ImmutableMap.of();
             } else if (array.length == 2) {
                 attribute.map = ImmutableMap.of(Nature.valueOf(array[0]), Integer.valueOf(array[1]));
-            }else{
+            } else {
                 ImmutableMap.Builder<Nature, Integer> builder = ImmutableMap.builder();
                 for (int i = 0; i < array.length; i += 2) {
                     int ord = array[i];
