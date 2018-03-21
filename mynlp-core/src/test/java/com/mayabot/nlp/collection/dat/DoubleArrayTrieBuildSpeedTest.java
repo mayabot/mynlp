@@ -61,8 +61,23 @@ public class DoubleArrayTrieBuildSpeedTest {
             DoubleArrayTrie trie = builder.build(treeMap);
             long t2 = System.currentTimeMillis();
 
+
+
             System.out.println("base len "+trie.base.length);
 
+
+            int[] base = trie.base;
+            int c =0;
+            for (int i = base.length-1; i >=0 ; i--) {
+                if (0== base[i]) {
+                    c++;
+                }else{
+                    System.out.println("+"+i);
+                    break;
+                }
+            }
+
+        System.out.println("tail empty count"+c);
         IntIntHashMap map = new IntIntHashMap();
         for (int i = 0; i < trie.base.length; i++) {
             if (trie.base[i] != 0) {

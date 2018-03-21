@@ -20,7 +20,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * 不需要复制char数组
+ * 不需要复制char数组的CharSequence实现
  *
  * @author jimichan
  */
