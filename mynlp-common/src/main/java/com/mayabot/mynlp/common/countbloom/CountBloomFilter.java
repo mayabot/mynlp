@@ -54,7 +54,7 @@ import com.google.common.primitives.Ints;
  * 
  * <p>
  * The false positive probability ({@code FPP}) of a bloom filter is defined as
- * the probability that {@linkplain #mightContain(Object)} will erroneously
+ * the probability that  will erroneously
  * return {@code true} for an object that has not actually been put in the
  * {@code BloomFilter}.
  * 
@@ -203,7 +203,7 @@ public final class CountBloomFilter<T> implements Serializable {
 
 	/**
 	 * Puts an element into this {@code BloomFilter}. Ensures that subsequent
-	 * invocations of {@link #mightContain(Object)} with the same element will
+	 * invocations of mightContain with the same element will
 	 * always return {@code true}.
 	 * 
 	 * @return true if the bloom filter's bits changed as a result of this
@@ -241,7 +241,7 @@ public final class CountBloomFilter<T> implements Serializable {
 	}
 
 	/**
-	 * Creates a {@code Builder} of a {@link CountBloomFilter BloomFilter<T>},
+	 * Creates a {@code Builder} of a
 	 * with the expected number of insertions and expected false positive
 	 * probability.
 	 * 
@@ -305,7 +305,7 @@ public final class CountBloomFilter<T> implements Serializable {
 	}
 
 	/**
-	 * Creates a {@code Builder} of a {@link CountBloomFilter BloomFilter<T>},
+	 * Creates a {@code Builder} of a ,
 	 * with the expected number of insertions, and a default expected false
 	 * positive probability of 3%.
 	 * 

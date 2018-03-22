@@ -20,14 +20,15 @@ public class Args {
     public int neg = 5;
     public int wordNgrams = 1;
     public loss_name loss = loss_name.ns;
-    public model_name model = model_name.sg;
+    public ModelName model = ModelName.sg;
     public int bucket = 2000000;
     public int minn = 3;
     public int maxn = 6;
-    public int thread = Math.max(Runtime.getRuntime().availableProcessors()-2,2);
     public int lrUpdateRate = 100;
     public double t = 1e-4;
 
+    //不保存的参数
+    public int thread = Math.max(Runtime.getRuntime().availableProcessors()-2,2);
     public String label = "__label__";
     public int verbose = 2;
     public double lr = 0.05;
@@ -59,7 +60,7 @@ public class Args {
         neg = input.readInt();
         wordNgrams = input.readInt();
         loss = loss_name.fromValue(input.readInt());
-        model = model_name.fromValue(input.readInt());
+        model = ModelName.fromValue(input.readInt());
         bucket = input.readInt();
         minn = input.readInt();
         maxn = input.readInt();

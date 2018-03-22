@@ -5,9 +5,9 @@ import com.google.common.primitives.Floats;
 import fasttext.matrix.Matrix;
 import fasttext.pq.QMatrix;
 import fasttext.utils.FloatIntPair;
+import fasttext.utils.ModelName;
 import fasttext.utils.Utils;
 import fasttext.utils.loss_name;
-import fasttext.utils.model_name;
 
 import java.util.*;
 import fasttext.matrix.Vector;
@@ -238,7 +238,7 @@ public class Model {
 		}
 		nexamples_ += 1;
 
-		if (args_.model == model_name.sup) {
+		if (args_.model == ModelName.sup) {
 			grad_.mul(1.0f / input.size());
 		}
 
