@@ -1,7 +1,7 @@
 package fasttext;
 
 import fasttext.utils.FloatStringPair;
-import fasttext.utils.model_name;
+import fasttext.utils.ModelName;
 import org.junit.Test;
 
 import java.io.File;
@@ -14,9 +14,9 @@ public class TrainFastText {
         File trFile = new File("data/train.txt");
         Args args = new Args();
         args.dim=50;
-        args.model = model_name.cbow;
+        args.model = ModelName.cbow;
 
-        FastText result = FastTextTrain.train(trFile, args);
+        FastText result = FastText.train(trFile,ModelName.sup);
 
         System.out.println("prepare save...");
         result.saveModel(new File("data/out/model.bin"));
@@ -25,11 +25,9 @@ public class TrainFastText {
 
     public static void main(String[] args2) throws Exception{
         File trFile = new File("data/train.txt");
-        Args args = new Args();
-        args.dim=50;
-        args.model = model_name.cbow;
 
-        FastText result = FastTextTrain.train(trFile, args);
+        FastText result = FastText.train(trFile, ModelName.cbow,new TrainArgs()
+                .setDim(100));
 
         System.out.println("prepare save...");
         result.saveModel(new File("data/out/model.bin"));

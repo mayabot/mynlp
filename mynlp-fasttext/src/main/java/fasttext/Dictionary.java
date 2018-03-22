@@ -7,7 +7,7 @@ import com.google.common.io.CharSource;
 import com.google.common.io.Files;
 import fasttext.utils.CLangDataInputStream;
 import fasttext.utils.CLangDataOutputStream;
-import fasttext.utils.model_name;
+import fasttext.utils.ModelName;
 
 import java.io.*;
 import java.math.BigInteger;
@@ -145,7 +145,7 @@ public class Dictionary {
 //    public boolean discard(int id, float rand) {
 //        checkArgument(id >= 0);
 //        checkArgument(id < nwords_);
-//        if (args_.model == model_name.sup)
+//        if (args_.model == ModelName.sup)
 //            return false;
 //        return rand > pdiscard_.get(id);
 //    }
@@ -163,7 +163,7 @@ public class Dictionary {
 
     public int getId(final String w, long hash) {
         long id = find(w, hash);
-        return word2int_.getOrDefault(hash, WORDID_DEFAULT);
+        return word2int_.getOrDefault(id, WORDID_DEFAULT);
     }
 
 
@@ -527,7 +527,7 @@ public class Dictionary {
         }
 
         initTableDiscard();
-        //if (model_name.cbow == args_.model || model_name.sg == args_.model) {
+        //if (ModelName.cbow == args_.model || ModelName.sg == args_.model) {
         initNgrams();
         //}
     }
@@ -556,7 +556,7 @@ public class Dictionary {
     boolean discard(int id, float rand) {
         Preconditions.checkArgument(id >= 0);
         Preconditions.checkArgument(id < nwords_);
-        if (args_.model == model_name.sup) return false;
+        if (args_.model == ModelName.sup) return false;
         return rand > pdiscard_.get(id);
     }
 
@@ -582,8 +582,12 @@ public class Dictionary {
                 labels.add(wid - nwords_);
             }
         }
+
+        addWordNgrams(words, word_hashes, args_.wordNgrams);
+
         return ntokens;
     }
+
 
      void addSubwords(IntArrayList line,
                             String token,
@@ -604,8 +608,8 @@ public class Dictionary {
 
 
     void addWordNgrams(IntArrayList line,
-                       IntArrayList hashes,
-                                   int n)  {
+                       LongArrayList hashes,
+                       int n)  {
         for (int i = 0; i < hashes.size(); i++) {
             long h = hashes.get(i);
             for (int j = i + 1; j < hashes.size() && j < i + n; j++) {
