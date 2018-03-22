@@ -16,7 +16,7 @@
 
 package fasttext.utils;
 
-public enum model_name {
+public enum ModelName {
 
         /**
          * CBOW
@@ -35,7 +35,7 @@ public enum model_name {
 
         public int value;
 
-        model_name(int value) {
+        ModelName(int value) {
             this.value = value;
         }
 
@@ -43,12 +43,12 @@ public enum model_name {
             return this.value;
         }
 
-        public static model_name fromValue(int value) throws IllegalArgumentException {
+        public static ModelName fromValue(int value) throws IllegalArgumentException {
             try {
                 value -= 1;
-                return model_name.values()[value];
+                return ModelName.values()[value];
             } catch (ArrayIndexOutOfBoundsException e) {
-                throw new IllegalArgumentException("Unknown model_name enum second :" + value);
+                throw new IllegalArgumentException("Unknown ModelName enum second :" + value);
             }
         }
     }

@@ -17,7 +17,7 @@ import java.io.*;
 import java.text.DecimalFormat;
 import java.util.*;
 
-import static fasttext.utils.model_name.sup;
+import static fasttext.utils.ModelName.sup;
 
 public class FastText {
 
@@ -195,14 +195,16 @@ public class FastText {
     public List<FloatStringPair> predict(Iterable<String> tokens, int k) {
         IntArrayList words = new IntArrayList();
         IntArrayList labels = new IntArrayList();
+
         dict.getLine(tokens, words, labels);
+
         if (words.isEmpty()) {
             return ImmutableList.of();
         }
         Vector hidden = new Vector(args.dim);
         Vector output = new Vector(dict.nlabels());
 
-        List<FloatIntPair> modelPredictions = Lists.newArrayList();
+        List<FloatIntPair> modelPredictions = Lists.newArrayListWithCapacity(k);
 
         model.predict(words, k, modelPredictions, hidden, output);
 
@@ -248,7 +250,7 @@ public class FastText {
      */
     public void getSentenceVector(Vector svec, Iterable<String> tokens) {
         svec.zero();
-        if (args.model == model_name.sup) {
+        if (args.model == ModelName.sup) {
             IntArrayList line = new IntArrayList();
             IntArrayList labels = new IntArrayList();
             dict.getLine(tokens, line, labels);
@@ -452,5 +454,18 @@ public class FastText {
      */
     public void quantize(File out) {
 
+    }
+
+
+    public static FastText train(File trainFile, ModelName model_name, TrainArgs args) throws Exception {
+        return new FastTextTrain().train(trainFile,model_name,args);
+    }
+
+    public static FastText train(File trainFile,ModelName model_name) throws Exception {
+        return new FastTextTrain().train(trainFile,model_name,new TrainArgs());
+    }
+
+    public static FastText train(File trainFile) throws Exception {
+        return new FastTextTrain().train(trainFile, ModelName.sup,new TrainArgs());
     }
 }
