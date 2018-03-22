@@ -47,14 +47,23 @@ subprojects {
         from sourceSets.main.allJava
     }
 
+    task javadocJar(type: Jar, dependsOn: javadoc) {
+        classifier "javadoc"
+        from javadoc.destinationDir
+    }
+
     project.plugins.withType(JavaBasePlugin) {
         publishing {
             publications {
-                myJava(MavenPublication) {
+                java(MavenPublication) {
                     from components.java
 
                     artifact sourceJar {
                         classifier "sources"
+                    }
+
+                    artifact javadocJar {
+                        classifier "javadoc"
                     }
                 }
             }

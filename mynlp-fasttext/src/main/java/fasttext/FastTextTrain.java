@@ -11,7 +11,8 @@ import com.google.common.primitives.Ints;
 import com.google.common.util.concurrent.AtomicDouble;
 import fasttext.matrix.Matrix;
 import fasttext.utils.LoopReader;
-import fasttext.utils.model_name;
+import fasttext.utils.ModelName;
+import fasttext.utils.loss_name;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -23,8 +24,8 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 public class FastTextTrain {
 
-    private final File file;
-    private final File pretrainedVectors;
+    private File file;
+    private File pretrainedVectors;
     private Args args;
 
     private Matrix input;
@@ -38,30 +39,24 @@ public class FastTextTrain {
     private AtomicDouble loss;
 
 
-    public static FastText train(File trainFile, Args args) throws Exception {
-        return new FastTextTrain(trainFile, args, null).train();
-    }
-
-    public static FastText train(File trainFile, File preTrainedVectors, Args args) throws Exception {
-        return new FastTextTrain(trainFile, args, preTrainedVectors).train();
-    }
-
-
 //    Read 0M words
 //    Number of words:  14831
 //    Number of labels: 0
 //    Progress: 100.0%  words/sec/thread: 77650  lr: 0.000000  loss: 2.181113  eta: 0h0m
 
-    private FastTextTrain(File file, Args args, File pretrainedVectors) {
-        this.file = file;
-        this.args = args;
-        this.pretrainedVectors = pretrainedVectors;
+    FastTextTrain() {
+
     }
 
+    FastText train(File file, ModelName model_name, TrainArgs trainArgs) throws Exception {
 
-    private FastText train() throws Exception {
+        this.file = file;
+
+        this.applyArgs(model_name, trainArgs);
+
 
         this.dict = new Dictionary(args);
+
 
         dict.readFromFile(file);
 
@@ -113,9 +108,11 @@ public class FastTextTrain {
         long ntokens = dict.ntokens();
         // Same condition as trainThread
         while (tokenCount.longValue() < args.epoch * ntokens) {
-            Thread.sleep(300);
+
+            Thread.sleep(100);
             if (loss.floatValue() >= 0 && args.verbose > 1) {
                 float progress = tokenCount.floatValue() / (args.epoch * ntokens);
+
                 System.out.print("\r");
                 printInfo(progress, loss);
             }
@@ -174,7 +171,7 @@ public class FastTextTrain {
 
                 // setTargetCounts 相当耗时
 
-                if (args.model == model_name.sup) {
+                if (args.model == ModelName.sup) {
                     model.setTargetCounts(dict.getCounts(EntryType.label));
                 } else {
                     model.setTargetCounts(dict.getCounts(EntryType.word));
@@ -187,7 +184,7 @@ public class FastTextTrain {
                 IntArrayList line = new IntArrayList();
                 IntArrayList labels = new IntArrayList();
 
-                if (args.model == model_name.sup) {
+                if (args.model == ModelName.sup) {
                     while (tokenCount.longValue() < up_) {
                         float progress = tokenCount.floatValue() / up_; //总的进度
                         float lr = (float) args.lr * (1.0f - progress); //学习率自动放缓
@@ -206,7 +203,7 @@ public class FastTextTrain {
                         }
                     }
                 }
-                if (args.model == model_name.cbow) {
+                if (args.model == ModelName.cbow) {
                     while (tokenCount.longValue() < up_) {
                         float progress = tokenCount.floatValue() / up_; //总的进度
                         float lr = (float) args.lr * (1.0f - progress); //学习率自动放缓
@@ -225,7 +222,7 @@ public class FastTextTrain {
                         }
                     }
                 }
-                if (args.model == model_name.sg) {
+                if (args.model == ModelName.sg) {
                     while (tokenCount.longValue() < up_) {
                         float progress = tokenCount.floatValue() / up_; //总的进度
                         float lr = (float) args.lr * (1.0f - progress); //学习率自动放缓
@@ -261,7 +258,7 @@ public class FastTextTrain {
             float lr,
             IntArrayList line,
             IntArrayList labels) {
-        if (labels.size() == 0 || line.size() == 0){
+        if (labels.size() == 0 || line.size() == 0) {
             return;
         }
         int i = labels.size() == 1 ? 0 : model.rng.nextInt(labels.size());
@@ -335,10 +332,10 @@ public class FastTextTrain {
                 List<String> parts = sp.splitToList(line);
                 if (parts.size() != dim + 1) {
                     if (parts.size() == dim) {
-                        parts = Lists.newArrayList(line.substring(0,line.indexOf(parts.get(0))-1));
+                        parts = Lists.newArrayList(line.substring(0, line.indexOf(parts.get(0)) - 1));
                         parts.addAll(sp.splitToList(line));
-                    }else{
-                        throw new RuntimeException("line "+line+" parse error");
+                    } else {
+                        throw new RuntimeException("line " + line + " parse error");
                     }
 
                 }
@@ -363,7 +360,7 @@ public class FastTextTrain {
                 continue;
             }
 
-            System.arraycopy(matrixData,i*dim,input.getData(),idx*dim,dim);
+            System.arraycopy(matrixData, i * dim, input.getData(), idx * dim, dim);
 //            for (int j = 0; j < dim; j++) {
 //                input.set(idx, j, mat.get(i, j));
 //            }
@@ -371,6 +368,67 @@ public class FastTextTrain {
         }
 
     }
+
+
+
+
+    private void applyArgs(ModelName model_name, TrainArgs trainArgs) {
+        this.args = new Args();
+
+
+        if (trainArgs.pretrainedVectors != null) {
+            File filePre = new File(trainArgs.pretrainedVectors);
+            if (filePre.exists() && file.canRead()) {
+                this.pretrainedVectors = filePre;
+            } else {
+                throw new RuntimeException("Not found File " + trainArgs.pretrainedVectors);
+            }
+        }
+
+        this.args.model = model_name;
+        if (model_name == ModelName.sup) {
+            args.minCount = 1;
+            args.loss = loss_name.softmax;
+            args.minCount = 1;
+            args.minn = 0;
+            args.maxn = 0;
+            args.lr = 0.1;
+        }
+
+        if (trainArgs.thread != null) {
+            this.args.thread = trainArgs.thread;
+        }
+
+        if (trainArgs.dim != null) {
+            this.args.dim = trainArgs.dim;
+        }
+        if (trainArgs.epoch != null) {
+            this.args.epoch = trainArgs.epoch;
+        }
+        if (trainArgs.loss != null) {
+            this.args.loss = trainArgs.loss;
+        }
+        if (trainArgs.lr != null) {
+            this.args.lr = trainArgs.lr;
+        }
+        if (trainArgs.lrUpdateRate != null) {
+            this.args.lrUpdateRate = trainArgs.lrUpdateRate;
+        }
+        if (trainArgs.neg != null) {
+            this.args.neg = trainArgs.neg;
+        }
+        if (trainArgs.ws != null) {
+            this.args.ws = trainArgs.ws;
+        }
+
+       // -wordNgrams         max length of word ngram [1]
+        // -maxn               max length of char ngram [0]
+        if (this.args.wordNgrams <= 1 && this.args.maxn == 0) {
+            this.args.bucket = 0;
+        }
+
+    }
+
 
     public static void main(String[] args) {
         final Splitter sp = Splitter.on(" ").omitEmptyStrings();
