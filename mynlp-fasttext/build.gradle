@@ -19,10 +19,11 @@ description = 'FastText的java版本实现，兼容facebook发布的原生预训
 
 dependencies {
 
-    compile group: 'com.google.guava', name: 'guava', version: "$guava_version"
+    compile project(":mynlp-common")
+
     compile group: 'com.carrotsearch', name: 'hppc', version: '0.7.3'
 
-//    compile 'org.nd4j:nd4j-native-platform:0.9.1'
+    compile 'org.nd4j:nd4j-native-platform:0.9.1'
 
     testCompile 'junit:junit:4.12'
 

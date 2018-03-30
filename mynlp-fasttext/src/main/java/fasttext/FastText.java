@@ -4,6 +4,7 @@ package fasttext;
 import com.carrotsearch.hppc.IntArrayList;
 import com.google.common.base.Charsets;
 import com.google.common.base.Preconditions;
+import com.google.common.base.Stopwatch;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
@@ -16,6 +17,7 @@ import fasttext.utils.*;
 import java.io.*;
 import java.text.DecimalFormat;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 import static fasttext.utils.ModelName.sup;
 
@@ -219,11 +221,13 @@ public class FastText {
      * @param word
      */
     public void getWordVector(Vector vec, final String word) {
-        final IntArrayList ngrams = dict.getSubwords(word);
         vec.zero();
-        for (int i = 0; i < ngrams.size(); i++) {
-            addInputVector(vec, ngrams.get(i));
+        final IntArrayList ngrams = dict.getSubwords(word);
+        int[] buffer = ngrams.buffer;
+        for (int i = 0,len=ngrams.size(); i < len; i++) {
+            addInputVector(vec, buffer[i]);
         }
+
         if (ngrams.size() > 0) {
             vec.mul(1.0f / ngrams.size());
         }
@@ -295,88 +299,12 @@ public class FastText {
      * @param modelPath
      * @throws IOException
      */
-    public static FastText loadModel(File modelPath) throws IOException {
-
-        if (!(modelPath.exists() && modelPath.isFile() && modelPath.canRead())) {
-            throw new IOException("Model file cannot be opened for loading!");
-        }
-
-        try (
-                BufferedInputStream bis = new BufferedInputStream(new FileInputStream(modelPath), 1024 * 64);
-                CLangDataInputStream dis = new CLangDataInputStream(bis)) {
-
-            //check model
-            int magic = dis.readInt();
-            int version = dis.readInt();
-
-            if (magic != FASTTEXT_FILEFORMAT_MAGIC_INT32) {
-                throw new RuntimeException("Model file has wrong file format!");
-            }
-            if (version > FASTTEXT_VERSION) {
-                throw new RuntimeException("Model file has wrong file format! version is " + version);
-            }
-
-            //Args
-            Args args_ = new Args();
-            args_.load(dis);
-
-            System.out.println(args_.toString());
-
-            //
-            if (version == 11 && args_.model == sup) {
-                // backward compatibility: old supervised models do not use char ngrams.
-                args_.maxn = 0;
-            }
-
-            Dictionary dictionary = new Dictionary(args_);
-            dictionary.load(dis);
-
-            Matrix input = new Matrix();
-            Matrix output = new Matrix();
-
-            QMatrix qinput = new QMatrix();
-            QMatrix qoutput = new QMatrix();
-
-
-
-            boolean quant_input = dis.readBoolean();
-            if (quant_input) {
-                qinput.load(dis);
-            } else {
-                input.load(dis);
-            }
-
-            if (!quant_input && dictionary.isPruned()) {
-                throw new RuntimeException("Invalid model file.\n"
-                        + "Please download the updated model from www.fasttext.cc.\n"
-                        + "See issue #332 on Github for more information.\n");
-            }
-
-            args_.qout = dis.readBoolean();
-            if (quant_input && args_.qout) {
-                qoutput.load(dis);
-            } else {
-                output.load(dis);
-            }
-
-
-            Model model = new Model(input, output, args_, 0);
-            model.quant_ = quant_input;
-            model.setQuantizePointer(qinput, qoutput, args_.qout);
-
-            if (args_.model == sup) {
-                model.setTargetCounts(dictionary.getCounts(EntryType.label));
-            } else {
-                model.setTargetCounts(dictionary.getCounts(EntryType.word));
-            }
-
-
-            if (!quant_input) {
-                return new FastText(dictionary, input, output, model, args_);
-            } else {
-                return new FastText(dictionary, qinput, qoutput, model, args_);
-            }
-        }
+    public static FastText loadModel(String modelPath) throws Exception {
+        Stopwatch stopwatch = Stopwatch.createStarted();
+        FastText fastText = FastTextIO.readClangModel(modelPath);
+        stopwatch.stop();
+        System.out.println("load model use time " + stopwatch.elapsed(TimeUnit.MILLISECONDS) + " ms");
+        return fastText;
     }
 
     public void saveModel(File out) throws Exception{
@@ -412,7 +340,6 @@ public class FastText {
                 output.save(dis);
             }
         }
-
     }
 
     /**
@@ -452,8 +379,11 @@ public class FastText {
      *
      * @param out
      */
-    public void quantize(File out) {
-
+    public void quantize(String out) {
+        if (quant) {
+            System.out.println("该模型已经被量化过");
+            return;
+        }
     }
 
 

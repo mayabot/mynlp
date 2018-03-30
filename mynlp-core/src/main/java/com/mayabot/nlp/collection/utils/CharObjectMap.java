@@ -88,7 +88,7 @@ public interface CharObjectMap<V> extends Map<Character, V> {
 
     /**
      * Gets an iterable to traverse over the primitive entries contained in this map. As an optimization,
-     * the {@link PrimitiveEntry}s returned by the {@link Iterator} may change as the {@link Iterator}
+     * the {@link PrimitiveEntry}s returned by the may change as the
      * progresses. The caller should not rely on {@link PrimitiveEntry} key/value stability.
      */
     Iterable<PrimitiveEntry<V>> entries();
