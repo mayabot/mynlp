@@ -26,6 +26,9 @@ import java.util.Random;
 import static fasttext.utils.Utils.iota;
 import static fasttext.utils.Utils.shuffle;
 
+/**
+ * 乘积量化
+ */
 public class ProductQuantizer {
 
     public static final int nbits_ = 8;

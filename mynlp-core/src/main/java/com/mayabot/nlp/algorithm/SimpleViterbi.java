@@ -25,7 +25,7 @@ import java.util.function.ToDoubleBiFunction;
 /**
  * 一次性对象
  * 一个通用版本
- * 一个序列，每个节点都会对应一个Map<Tag,Integer>的结构。
+ * 一个序列，每个节点都会对应一个Map Tag,Integer的结构。
  * 选择出来，然后通知每个节点去处理或保存。
  * 简化的快速的viterbi版本
  *

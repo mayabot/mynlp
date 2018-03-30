@@ -6,6 +6,7 @@ import com.google.common.base.Splitter;
 import com.google.common.io.Files;
 import fasttext.utils.FloatStringPair;
 import fasttext.utils.ModelName;
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.File;
@@ -25,10 +26,14 @@ public class AgNewsClassifyTest {
         train.saveModel(new File("../data/fasttext/out/ag_model.bin"));
     }
 
+    public static void main(String[] args) throws Exception{
+        new AgNewsClassifyTest().train();
+    }
+
     @Test
     public void predict() throws Exception{
 
-        FastText fastText = FastText.loadModel(new File("../data/fasttext/out/ag_model.bin"));
+        FastText fastText = FastText.loadModel("../data/fasttext/out/ag_model.bin");
 
         int total = 0;
         int right = 0;
@@ -54,6 +59,8 @@ public class AgNewsClassifyTest {
         System.out.println("total="+total);
         System.out.println("right="+right);
         System.out.println("rate " +(right*1.0/total));
+
+        Assert.assertTrue(right > 0.9f);
 
     }
 

@@ -68,31 +68,6 @@ public class Args {
         t = input.readDouble();
     }
 
-    public void printHelp() {
-        System.out.println("\n" + "The following arguments are mandatory:\n"
-                + "  -input              training file path\n"
-                + "  -output             output file path\n\n"
-                + "The following arguments are optional:\n"
-                + "  -lr                 learning rate [" + lr + "]\n"
-                + "  -lrUpdateRate       change the rate of updates for the learning rate [" + lrUpdateRate + "]\n"
-                + "  -dim                size of word vectors [" + dim + "]\n"
-                + "  -ws                 size of the context window [" + ws + "]\n"
-                + "  -epoch              number of epochs [" + epoch + "]\n"
-                + "  -minCount           minimal number of word occurences [" + minCount + "]\n"
-                + "  -minCountLabel      minimal number of label occurences [" + minCountLabel + "]\n"
-                + "  -neg                number of negatives sampled [" + neg + "]\n"
-                + "  -wordNgrams         max length of word ngram [" + wordNgrams + "]\n"
-                + "  -loss               loss function {ns, hs, softmax} [ns]\n"
-                + "  -bucket             number of buckets [" + bucket + "]\n"
-                + "  -minn               min length of char ngram [" + minn + "]\n"
-                + "  -maxn               max length of char ngram [" + maxn + "]\n"
-                + "  -thread             number of threads [" + thread + "]\n"
-                + "  -t                  sampling threshold [" + t + "]\n"
-                + "  -label              labels prefix [" + label + "]\n"
-                + "  -verbose            verbosity level [" + verbose + "]\n"
-                + "  -pretrainedVectors  pretrained word vectors for supervised learning []");
-    }
-
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();

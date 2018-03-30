@@ -27,7 +27,6 @@ List projects = [
         'mynlp-fasttext',
         'mynlp-jian-fan',
         'mynlp-cli',
-        'mynlp-lang-detection',
         'mynlp-news-classification'
 ]
 

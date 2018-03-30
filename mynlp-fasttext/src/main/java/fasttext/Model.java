@@ -11,6 +11,7 @@ import fasttext.utils.loss_name;
 
 import java.util.*;
 import fasttext.matrix.Vector;
+import org.jetbrains.annotations.Contract;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static fasttext.utils.Utils.shuffle;
@@ -353,7 +354,8 @@ public class Model {
 		}
 	}
 
-	public float log(float x) {
+	@Contract(pure = true)
+	private float log(float x) {
 		if (x > 1.0f) {
 			return 0.0f;
 		}
@@ -361,7 +363,7 @@ public class Model {
 		return t_log[i];
 	}
 
-	public float sigmoid(float x) {
+	private float sigmoid(float x) {
 		if (x < -MAX_SIGMOID) {
 			return 0.0f;
 		} else if (x > MAX_SIGMOID) {

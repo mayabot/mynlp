@@ -2,36 +2,66 @@ package fasttext;
 
 import com.carrotsearch.hppc.*;
 import com.carrotsearch.hppc.cursors.IntIntCursor;
-import com.google.common.base.*;
+import com.google.common.base.CharMatcher;
+import com.google.common.base.Charsets;
+import com.google.common.base.Preconditions;
+import com.google.common.base.Splitter;
 import com.google.common.io.CharSource;
 import com.google.common.io.Files;
 import fasttext.utils.CLangDataInputStream;
 import fasttext.utils.CLangDataOutputStream;
 import fasttext.utils.ModelName;
+import org.jetbrains.annotations.Contract;
+import org.nd4j.linalg.api.buffer.DataBuffer;
+import org.nd4j.linalg.factory.Nd4j;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.math.BigInteger;
 import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
+/**
+ * 字典
+ * 分层
+ * [
+ * words,
+ * labels,
+ * bucket
+ * ]
+ *
+ * 目前的代码看来，labels和bucket是互斥的，只能存在一个
+ *
+ * @author jimichan
+ */
 public class Dictionary {
 
     private static final int MAX_VOCAB_SIZE = 30000000;
     private static final int MAX_LINE_SIZE = 1024;
-    private static final Integer WORDID_DEFAULT = -1;
 
     public static final String EOS = "</s>";
+
+    /**
+     * begin of word
+     */
     public static final String BOW = "<";
+
+    /**
+     * end of word
+     */
     public static final String EOW = ">";
 
 
     private Args args_;
 
     //word的hash，对应的words_下标的索引
-    private LongIntMap word2int_; // default=-1
-    private List<Entry> words_;
+    private List<Entry> wordList;
+
+    private int[] word_hash_2_id;
 
 
     private int size_ = 0;
@@ -41,9 +71,24 @@ public class Dictionary {
 
 
     private long pruneidx_size_ = -1;//jimi
-    private FloatArrayList pdiscard_;
+    private float[] pdiscard_;
     private IntIntMap pruneidx_ = new IntIntHashMap();//jimi
 
+
+    /**
+     * maxn length of char ngram
+     */
+    private final int maxn;
+
+    /**
+     * min length of char ngram
+     */
+    private final int minn;
+
+    private final int bucket;
+    private final int wordNgrams;
+    private final String label;
+    private final ModelName model;
 
     public Dictionary(Args args) {
         args_ = args;
@@ -51,9 +96,17 @@ public class Dictionary {
         nwords_ = 0;
         nlabels_ = 0;
         ntokens_ = 0;
-        word2int_ = new LongIntHashMap(MAX_VOCAB_SIZE);
-        words_ = new ArrayList<>(MAX_VOCAB_SIZE);
+        word_hash_2_id = new int[MAX_VOCAB_SIZE];
+        Arrays.fill(word_hash_2_id, -1);
+        wordList = new ArrayList<>(1024 * 8);
         pruneidx_size_ = -1;
+
+        maxn = args.maxn;
+        minn = args.minn;
+        bucket = args.bucket;
+        label = args.label;
+        model = args.model;
+        wordNgrams = args.wordNgrams;
     }
 
     public boolean isPruned() {
@@ -61,94 +114,34 @@ public class Dictionary {
     }
 
 
-    public long toIndexId(String w) {
-        return find(w);
+    public final EntryType getType(int id) {
+        checkArgument(id >= 0);
+        checkArgument(id < size_);
+        return wordList.get(id).type;
     }
 
-
-    private EntryType getType(long h) {
-        checkArgument(h >= 0);
-        checkArgument(h < size_);
-        return words_.get((int) h).type;
+    public final EntryType getType(String w) {
+        return w.startsWith(label) ? EntryType.label : EntryType.word;
     }
-
-    private EntryType getType(String w) {
-        return w.startsWith(args_.label) ? EntryType.label : EntryType.word;
-    }
-
 
     public void add(final String w) {
-        long h = find(w);
-        ntokens_++;
+        int h = word2hash(w);
+        int id  = word_hash_2_id[h];
 
-        if (word2int_.getOrDefault(h, WORDID_DEFAULT) == WORDID_DEFAULT) {
+        if (id == -1) {
             Entry e = new Entry();
             e.word = w;
             e.count = 1;
             e.type = getType(w);
-            words_.add(e);
-            word2int_.put(h, size_++);
+            wordList.add(e);
+            word_hash_2_id[h] = size_++;
         } else {
-            words_.get(word2int_.get(h)).count++;
-        }
-    }
-
-    public int nwords() {
-        return nwords_;
-    }
-
-    public int nlabels() {
-        return nlabels_;
-    }
-
-    public long ntokens() {
-        return ntokens_;
-    }
-
-
-    public final IntArrayList getSubwords(int id) {
-        checkArgument(id >= 0);
-        checkArgument(id < nwords_);
-        return words_.get(id).subwords;
-    }
-
-    public final IntArrayList getSubwords(final String word) {
-        int i = getId(word);
-
-        if (i >= 0) {
-            return words_.get(i).subwords;
+            wordList.get(id).count++;
         }
 
-        IntArrayList ngrams = new IntArrayList();
-        computeSubwords(BOW + word + EOW, ngrams);
-
-        return ngrams;
+        ntokens_++;
     }
 
-    public final void getSubwords(final String word, IntArrayList ngrams,
-                                  List<String> substrings) {
-        int i = getId(word);
-        ngrams.clear();
-        substrings.clear();
-        if (i >= 0) {
-            ngrams.add(i);
-            substrings.add(words_.get(i).word);
-        } else {
-            ngrams.add(WORDID_DEFAULT);
-            substrings.add(word);
-        }
-
-        computeSubwords(BOW + word + EOW, ngrams);
-    }
-
-
-//    public boolean discard(int id, float rand) {
-//        checkArgument(id >= 0);
-//        checkArgument(id < nwords_);
-//        if (args_.model == ModelName.sup)
-//            return false;
-//        return rand > pdiscard_.get(id);
-//    }
 
     /**
      * word 在words_里面的下标，也就是词ID。
@@ -157,18 +150,32 @@ public class Dictionary {
      * @return
      */
     public int getId(final String w) {
-        long id = find(w);
-        return word2int_.getOrDefault(id, WORDID_DEFAULT);
+        int id = word2hash(w);
+        if (id == -1) {
+            return -1; //词不存在
+        }
+        return word_hash_2_id[id];
     }
 
+    /**
+     *
+     * @param w
+     * @param hash
+     * @return
+     */
     public int getId(final String w, long hash) {
-        long id = find(w, hash);
-        return word2int_.getOrDefault(id, WORDID_DEFAULT);
+        return word_hash_2_id[word2hash(w, hash)];
     }
 
 
-    public long find(final String w) {
-        return find(w, hash(w));
+    /**
+     * 返回的是word2int的下标。返回的是不冲突的hash值，也是word_hash的下标索引的位置
+     * 原来的find
+     * @param w
+     * @return
+     */
+    private int word2hash(final String w) {
+        return word2hash(w, stringHash(w));
     }
 
     /**
@@ -179,36 +186,26 @@ public class Dictionary {
      * @param hash
      * @return 返回的是word2int的下标
      */
-    public long find(final String w, long hash) {
-        long id = hash % MAX_VOCAB_SIZE;
+    private int word2hash(final String w, long hash) {
+
+        int id = (int) (hash % MAX_VOCAB_SIZE);
 
         while (true) {
-            int wordsIndex = word2int_.getOrDefault(id, WORDID_DEFAULT);
-            if (wordsIndex != WORDID_DEFAULT) {
-                Entry e = words_.get(wordsIndex);
-                if (e != null) {
-                    if (!e.word.equals(w)) {
-                        id = (id + 1) % MAX_VOCAB_SIZE;
-                        continue;
-                    }
-                }
+            int x = word_hash_2_id[id];
+            if (x != -1 && !wordList.get(x).word.equals(w)) {
+                id = (id + 1) % MAX_VOCAB_SIZE;
+            }else {
+                break;
             }
-            break;
         }
+
         return id;
     }
 
-
-    public EntryType getType(int id) {
+    public final String getWord(int id) {
         checkArgument(id >= 0);
         checkArgument(id < size_);
-        return words_.get(id).type;
-    }
-
-    public String getWord(int id) {
-        checkArgument(id >= 0);
-        checkArgument(id < size_);
-        return words_.get(id).word;
+        return wordList.get(id).word;
     }
 
     /**
@@ -217,7 +214,7 @@ public class Dictionary {
      * @param str
      * @return
      */
-    private long hash(final String str) {
+    private static long stringHash(final String str) {
         int h = (int) 2166136261L;// 0xffffffc5;
         for (byte strByte : str.getBytes()) {
             h = (h ^ strByte) * 16777619; // FNV-1a
@@ -226,7 +223,54 @@ public class Dictionary {
         return h & 0xffffffffL;
     }
 
-    public void computeSubwords(final String word, IntArrayList ngrams) {
+    private void pushHash(IntArrayList hashes, int id) {
+        if (pruneidx_size_ == 0 || id < 0) return;
+
+        if (pruneidx_size_ > 0) {
+            if (pruneidx_.containsKey(id)) {
+                id = pruneidx_.get(id);
+            } else {
+                return;
+            }
+        }
+
+        hashes.add(nwords_ + id);
+    }
+
+    @Contract(pure = true)
+    private boolean charMatches(char ch) {
+        if (ch == ' ' || ch == '\t' || ch == '\n' || ch == '\f' || ch == '\r') {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 初始化 char ngrams 也就是 subwords
+     */
+    private void initNgrams() {
+        for (int id = 0; id < size_; id++) {
+            Entry e = wordList.get(id);
+            String word = BOW + e.word + EOW;
+
+            if (maxn == 0) {
+                //优化 maxn 一定没有subwords ，这个是分类模型里面的默认定义
+                e.subwords = IntArrayList.from(id);
+            }else{
+                if (e.subwords == null) {
+                    e.subwords = new IntArrayList(1);
+                }
+                e.subwords.add(id);
+
+                if (!e.word.equals(EOS)) {
+                    computeSubwords(word, e.subwords);
+                }
+            }
+            //e.subwords.trimToSize();
+        }
+    }
+
+    private void computeSubwords(final String word, IntArrayList ngrams) {
         final int word_len = word.length();
         for (int i = 0; i < word_len; i++) {
 
@@ -235,16 +279,14 @@ public class Dictionary {
             }
 
             StringBuilder ngram = new StringBuilder();
-            if (charMatches(word.charAt(i))) {
-                continue;
-            }
-            for (int j = i, n = 1; j < word_len && n <= args_.maxn; n++) {
+
+            for (int j = i, n = 1; j < word_len && n <= maxn; n++) {
                 ngram.append(word.charAt(j++));
                 while (j < word.length() && charMatches(word.charAt(j))) {
                     ngram.append(word.charAt(j++));
                 }
-                if (n >= args_.minn && !(n == 1 && (i == 0 || j == word.length()))) {
-                    int h = (int) ((hash(ngram.toString()) % args_.bucket));
+                if (n >= minn && !(n == 1 && (i == 0 || j == word.length()))) {
+                    int h = (int) ((stringHash(ngram.toString()) % bucket));
                     if (h < 0) {
                         System.err.println("computeSubwords h<0: " + h + " on word: " + word);
                     }
@@ -266,13 +308,13 @@ public class Dictionary {
             if (charMatches(word.charAt(i))) {
                 continue;
             }
-            for (int j = i, n = 1; j < word_len && n <= args_.maxn; n++) {
+            for (int j = i, n = 1; j < word_len && n <= maxn; n++) {
                 ngram.append(word.charAt(j++));
                 while (j < word.length() && charMatches(word.charAt(j))) {
                     ngram.append(word.charAt(j++));
                 }
-                if (n >= args_.minn && !(n == 1 && (i == 0 || j == word.length()))) {
-                    int h = (int) ((hash(ngram.toString()) % args_.bucket));
+                if (n >= minn && !(n == 1 && (i == 0 || j == word.length()))) {
+                    int h = (int) ((stringHash(ngram.toString()) % bucket));
                     if (h < 0) {
                         System.err.println("computeSubwords h<0: " + h + " on word: " + word);
                     }
@@ -283,66 +325,31 @@ public class Dictionary {
         }
     }
 
-    private void pushHash(IntArrayList hashes, int id) {
-        if (pruneidx_size_ == 0 || id < 0) return;
-
-        if (pruneidx_size_ > 0) {
-            if (pruneidx_.containsKey(id)) {
-                id = pruneidx_.get(id);
-            } else {
-                return;
-            }
-        }
-
-        hashes.add(nwords_ + id);
-    }
-
-    private boolean charMatches(char ch) {
-        if (ch == ' ' || ch == '\t' || ch == '\n' || ch == '\f' || ch == '\r') {
-            return true;
-        }
-        return false;
-    }
-
-
-    public void initNgrams() {
-        for (int i = 0; i < size_; i++) {
-            Entry e = words_.get(i);
-            String word = BOW + e.word + EOW;
-
-            if (e.subwords == null) {
-                e.subwords = new IntArrayList(1);
-            }
-            e.subwords.add(i);
-            if (!e.word.equals(EOS)) {
-                computeSubwords(word, e.subwords);
-            }
-        }
-    }
-
     /**
      * 读取分析原始语料，语料单词直接空格
      *
      * @param file 训练文件
      * @throws Exception
      */
-    public void readFromFile(File file) throws Exception {
+    public void buildFromFile(File file) throws Exception {
 
         CharSource charSource = Files.asByteSource(file).asCharSource(Charsets.UTF_8);
 
         final double mmm = 0.75 * MAX_VOCAB_SIZE;
 
 
-         final String lineDelimitingRegex_ = " |\r|\t|\\v|\f|\0";
+        //final String lineDelimitingRegex_ = " |\r|\t|\\v|\f|\0";
 
-         long minThreshold = 1;
-         final Splitter splitter =
+        long minThreshold = 1;
+        final Splitter splitter =
                 Splitter.on(CharMatcher.whitespace())
-                 .omitEmptyStrings();
+                        .omitEmptyStrings().trimResults();
 
         BufferedReader reader = charSource.openBufferedStream();
-        String line;
 
+        System.out.println("Read file build dictionary ...");
+
+        String line;
         while ((line = reader.readLine()) != null) {
 
             if (line.isEmpty() || line.startsWith("#")) {
@@ -352,7 +359,7 @@ public class Dictionary {
             for (String token : splitter.split(line)) {
                 add(token);
                 if (ntokens_ % 1000000 == 0 && args_.verbose > 1) {
-                    System.out.printf("\rRead %dM words", ntokens_ / 1000000);
+                    System.out.print("\rRead "+(ntokens_ / 1000000)+"M words");
                 }
 
                 if (size_ > mmm) {
@@ -380,32 +387,25 @@ public class Dictionary {
         }
     }
 
-    public void threshold(long t, long tl) {
+    void threshold(long t, long tl) {
         //过滤
-        words_ = words_.parallelStream().filter(
-                entry -> (entry.type == EntryType.word && entry.count>=t)
-                || (entry.type == EntryType.label && entry.count>=tl)
+        wordList = wordList.parallelStream().filter(
+                entry -> (entry.type == EntryType.word && entry.count >= t)
+                        || (entry.type == EntryType.label && entry.count >= tl)
         ).collect(Collectors.toList());
 
-        //TODO 检查排序逻辑是否正确，和运来的版本相比，这里先过滤在排序
-        Collections.sort(words_, entry_comparator);
+        //和运来的版本相比，这里先过滤在排序
+        Collections.sort(wordList, entry_comparator);
 
-//        Iterator<Entry> iterator = words_.iterator();
-//        while (iterator.hasNext()) {
-//            Entry _entry = iterator.next();
-//            if ((EntryType.word == _entry.type && _entry.count < t)
-//                    || (EntryType.label == _entry.type && _entry.count < tl)) {
-//                iterator.remove();
-//            }
-//        }
         size_ = 0;
         nwords_ = 0;
         nlabels_ = 0;
-        // word2int_.clear();
-        word2int_ = new LongIntHashMap(words_.size());
-        for (Entry _entry : words_) {
-            long h = find(_entry.word);
-            word2int_.put(h, size_++);
+
+        Arrays.fill(word_hash_2_id, -1);
+
+        for (Entry _entry : wordList) {
+            int h = word2hash(_entry.word);
+            word_hash_2_id[h] = size_++;
             if (EntryType.word == _entry.type) {
                 nwords_++;
             } else if (EntryType.label == _entry.type) {
@@ -414,32 +414,29 @@ public class Dictionary {
         }
     }
 
-    private transient Comparator<Entry> entry_comparator = new Comparator<Entry>() {
-        @Override
-        public int compare(Entry o1, Entry o2) {
-            int cmp = (o1.type.value < o2.type.value) ? -1 : ((o1.type.value == o2.type.value) ? 0 : 1);
-            if (cmp == 0) {
-                cmp = (o2.count < o1.count) ? -1 : ((o2.count == o1.count) ? 0 : 1);
-            }
-            return cmp;
+    private transient Comparator<Entry> entry_comparator = (o1, o2) -> {
+        int cmp = (o1.type.value < o2.type.value) ? -1 : ((o1.type.value == o2.type.value) ? 0 : 1);
+        if (cmp == 0) {
+            cmp = (o2.count < o1.count) ? -1 : ((o2.count == o1.count) ? 0 : 1);
         }
+        return cmp;
     };
 
     public void initTableDiscard() {
-        pdiscard_ = new FloatArrayList(size_);
+        pdiscard_ = new float[size_];
         for (int i = 0; i < size_; i++) {
-            float f = (float) (words_.get(i).count) / (float) ntokens_;
-            pdiscard_.add((float) (Math.sqrt(args_.t / f) + args_.t / f));
+            float f = wordList.get(i).count*1.0f / ntokens_;
+            pdiscard_[i] = (float) (Math.sqrt(args_.t / f) + args_.t / f);
         }
     }
 
     public long[] getCounts(EntryType type) {
         long[] counts = EntryType.label == type ?
                 new long[nlabels()] : new long[nwords()];
-        int i=0;
-        for (Entry w : words_) {
+        int i = 0;
+        for (Entry w : wordList) {
             if (w.type == type)
-                counts[i++]=w.count;
+                counts[i++] = w.count;
         }
         return counts;
     }
@@ -452,7 +449,7 @@ public class Dictionary {
         for (int i = 0; i < line_size; i++) {
             BigInteger h = BigInteger.valueOf(line.get(i));
             BigInteger r = BigInteger.valueOf(116049371l);
-            BigInteger b = BigInteger.valueOf(args_.bucket);
+            BigInteger b = BigInteger.valueOf(bucket);
 
             for (int j = i + 1; j < line_size && j < i + n; j++) {
                 h = h.multiply(r).add(BigInteger.valueOf(line.get(j)));
@@ -464,12 +461,137 @@ public class Dictionary {
     public String getLabel(int lid) {
         checkArgument(lid >= 0);
         checkArgument(lid < nlabels_);
-        return words_.get(lid + nwords_).word;
+        return wordList.get(lid + nwords_).word;
     }
 
     public void prune(List<Integer> ids) {
         //todo 暂不支持量子化
     }
+
+    public int getLine(List<String> tokens, IntArrayList words,
+                       Random rng) {
+        int ntokens = 0;
+        words.clear();
+        for (String token : tokens) {
+            int h = word2hash(token);
+            int wid = word_hash_2_id[h];
+            if (wid < 0) continue;
+
+            ntokens++;
+
+            if (getType(wid) == EntryType.word && !discard(wid, rng.nextFloat())) {
+                words.add(wid);
+            }
+            if (ntokens > MAX_LINE_SIZE || token.equals(EOS)) {
+                break;
+            }
+        }
+
+
+        return ntokens;
+    }
+
+
+    public int getLine(Iterable<String> tokens, IntArrayList words,IntArrayList labels) {
+        LongArrayList word_hashes = new LongArrayList();
+        int ntokens = 0;
+
+        words.clear();
+        labels.clear();
+
+        for (String token : tokens) {
+            long h = stringHash(token);
+            int wid = getId(token, h);
+            EntryType type = wid < 0 ? getType(token) : getType(wid);
+
+            ntokens++;
+
+            if (type == EntryType.word) {
+                addSubwords(words, token, wid);
+                word_hashes.add(h);
+            } else if (type == EntryType.label && wid >= 0) {
+                labels.add(wid - nwords_);
+            }
+        }
+
+        addWordNgrams(words, word_hashes, wordNgrams);
+
+        return ntokens;
+    }
+
+
+    private void addWordNgrams(IntArrayList line,
+                               LongArrayList hashes,
+                               int n) {
+        for (int i = 0; i < hashes.size(); i++) {
+            long h = hashes.get(i);
+            for (int j = i + 1; j < hashes.size() && j < i + n; j++) {
+                h = h * 116049371 + hashes.get(j);
+                pushHash(line, (int) (h % bucket));
+            }
+        }
+    }
+
+    private void addSubwords(IntArrayList line,
+                             String token,
+                             int wid) {
+        if (wid < 0) { // out of vocab
+            if (!EOS.equals(token)) {
+                computeSubwords(BOW + token + EOW, line);
+            }
+        } else {
+            if (maxn <= 0) { // in vocab w/o subwords
+                line.add(wid);
+            } else { // in vocab w/ subwords
+                IntArrayList ngrams = getSubwords(wid);
+                line.addAll(ngrams);
+            }
+        }
+    }
+
+    private boolean discard(int id, float rand) {
+        Preconditions.checkArgument(id >= 0);
+        Preconditions.checkArgument(id < nwords_);
+        if (model == ModelName.sup) return false;
+        return rand > pdiscard_[id];
+    }
+
+
+    public final IntArrayList getSubwords(int id) {
+        checkArgument(id >= 0);
+        checkArgument(id < nwords_);
+        return wordList.get(id).subwords;
+    }
+
+    public final IntArrayList getSubwords(final String word) {
+        int i = getId(word);
+
+        if (i >= 0) {
+            return wordList.get(i).subwords;
+        }
+
+        IntArrayList ngrams = new IntArrayList();
+        computeSubwords(BOW + word + EOW, ngrams);
+
+        return ngrams;
+    }
+
+    public final void getSubwords(final String word, IntArrayList ngrams,
+                                  List<String> substrings) {
+        int i = getId(word);
+        ngrams.clear();
+        substrings.clear();
+        if (i >= 0) {
+            ngrams.add(i);
+            substrings.add(wordList.get(i).word);
+        } else {
+            ngrams.add(-1);
+            substrings.add(word);
+        }
+
+        computeSubwords(BOW + word + EOW, ngrams);
+    }
+
 
     public void save(OutputStream ofs) throws IOException {
 
@@ -482,7 +604,7 @@ public class Dictionary {
         out.writeLong(pruneidx_size_);
 
         for (int i = 0; i < size_; i++) {
-            Entry e = words_.get(i);
+            Entry e = wordList.get(i);
             out.writeUTF(e.word);
             out.writeLong(e.count);
             out.writeByte(e.type.value);
@@ -496,7 +618,7 @@ public class Dictionary {
     }
 
     public void load(CLangDataInputStream in) throws IOException {
-        // words_.clear();
+        // wordList.clear();
         // word2int_.clear();
 
         size_ = in.readInt();
@@ -505,8 +627,8 @@ public class Dictionary {
         ntokens_ = in.readLong();
         pruneidx_size_ = in.readLong();
 
-        word2int_ = new LongIntScatterMap(MAX_VOCAB_SIZE);
-        words_ = new ArrayList<>(size_);
+//        word_hash_2_id = new LongIntScatterMap(size_);
+        wordList = new ArrayList<>(size_);
 
         //size 189997 18万的词汇
         for (int i = 0; i < size_; i++) {
@@ -514,9 +636,8 @@ public class Dictionary {
             e.word = in.readUTF();
             e.count = in.readLong();
             e.type = EntryType.fromValue(in.readByte());
-            words_.add(e);
-            word2int_.put(find(e.word), i);
-
+            wordList.add(e);
+            word_hash_2_id[word2hash(e.word)] = i;
         }
 
         pruneidx_.clear();
@@ -532,103 +653,16 @@ public class Dictionary {
         //}
     }
 
-    public int getLine(List<String> tokens, IntArrayList words,
-                       Random rng) {
-        int ntokens = 0;
-        words.clear();
-        for (String token : tokens) {
-            long h = find(token);
-            int wid = word2int_.get(h);
-            if (wid < 0) continue;
-
-            ntokens++;
-
-            if (getType(wid) == EntryType.word && !discard(wid,rng.nextFloat())) {
-                words.add(wid);
-            }
-            if (ntokens > MAX_LINE_SIZE || token.equals(EOS)) {
-                break;
-            }
-        }
-        return ntokens;
-    }
-
-    boolean discard(int id, float rand) {
-        Preconditions.checkArgument(id >= 0);
-        Preconditions.checkArgument(id < nwords_);
-        if (args_.model == ModelName.sup) return false;
-        return rand > pdiscard_.get(id);
-    }
-
-    public int getLine(Iterable<String> tokens,IntArrayList words,
-                        IntArrayList labels){
-        LongArrayList word_hashes = new LongArrayList();
-        int ntokens = 0;
-
-        words.clear();
-        labels.clear();
-
-        for (String token : tokens) {
-            long h = hash(token);
-            int wid = getId(token, h);
-            EntryType type = wid < 0 ? getType(token) : getType(wid);
-
-            ntokens++;
-
-            if (type == EntryType.word) {
-                addSubwords(words, token, wid);
-                word_hashes.add(h);
-            }else if (type == EntryType.label && wid >= 0) {
-                labels.add(wid - nwords_);
-            }
-        }
-
-        addWordNgrams(words, word_hashes, args_.wordNgrams);
-
-        return ntokens;
-    }
-
-
-     void addSubwords(IntArrayList line,
-                            String token,
-                                 int wid)  {
-        if (wid < 0) { // out of vocab
-            if (!EOS.equals(token)) {
-                computeSubwords(BOW + token + EOW, line);
-            }
-        } else {
-            if (args_.maxn <= 0) { // in vocab w/o subwords
-                line.add(wid);
-            } else { // in vocab w/ subwords
-                IntArrayList ngrams = getSubwords(wid);
-                line.addAll(ngrams);
-            }
-        }
-    }
-
-
-    void addWordNgrams(IntArrayList line,
-                       LongArrayList hashes,
-                       int n)  {
-        for (int i = 0; i < hashes.size(); i++) {
-            long h = hashes.get(i);
-            for (int j = i + 1; j < hashes.size() && j < i + n; j++) {
-                h = h * 116049371 + hashes.get(j);
-                pushHash(line, (int)(h % args_.bucket));
-            }
-        }
-    }
-
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        builder.append("Dictionary [words_=");
-        builder.append(words_);
+        builder.append("Dictionary [wordList=");
+        builder.append(wordList.size());
         builder.append(", pdiscard_=");
         builder.append(pdiscard_);
-        builder.append(", word2int_=");
-        builder.append(word2int_);
-        builder.append(", size_=");
+        builder.append(", word2int_=[");
+        builder.append(word_hash_2_id.length);
+        builder.append("], size_=");
         builder.append(size_);
         builder.append(", nwords_=");
         builder.append(nwords_);
@@ -640,23 +674,19 @@ public class Dictionary {
         return builder.toString();
     }
 
-    public List<Entry> getWords() {
-        return words_;
-    }
-
-    public FloatArrayList getPdiscard() {
-        return pdiscard_;
-    }
-
-    public LongIntMap getWord2int() {
-        return word2int_;
-    }
-
     public int getSize() {
         return size_;
     }
 
-    public Args getArgs() {
-        return args_;
+    public int nwords() {
+        return nwords_;
+    }
+
+    public int nlabels() {
+        return nlabels_;
+    }
+
+    public long ntokens() {
+        return ntokens_;
     }
 }

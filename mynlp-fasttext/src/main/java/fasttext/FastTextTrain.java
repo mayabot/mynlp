@@ -58,7 +58,7 @@ public class FastTextTrain {
         this.dict = new Dictionary(args);
 
 
-        dict.readFromFile(file);
+        dict.buildFromFile(file);
 
 
         if (pretrainedVectors != null) {

@@ -29,7 +29,7 @@ public class FastTextTest {
 
     @BeforeClass
     public static void prepare() throws Exception{
-        fastText = FastText.loadModel(new File("data/c_model.bin"));
+        fastText = FastText.loadModel("data/c_model.bin");
     }
 
     @Test
