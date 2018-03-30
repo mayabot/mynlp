@@ -50,3 +50,4 @@ mynlp_work/**
 /mynlp-fasttext/xcsource/
 /mynlp-fasttext/data/
 /testdata/
+!/gradle/wrapper/gradle-wrapper.jar
