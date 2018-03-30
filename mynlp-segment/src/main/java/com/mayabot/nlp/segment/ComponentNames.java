@@ -1,5 +1,9 @@
 package com.mayabot.nlp.segment;
 
+/**
+ *
+ * @author jimichan
+ */
 public enum ComponentNames {
     place,
     person,
