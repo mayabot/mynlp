@@ -28,10 +28,10 @@ public class PinyinTest {
     @Test
     public void test() {
 
-        PinyinResult result = text2PinyinService.text2Pinyin("123aed,.你好朝朝暮暮");
+        PinyinResult result = text2PinyinService.text2Pinyin("123aed,.你好朝朝暮暮,银行");
 
-        Assert.assertEquals("",result.asString(),"1 2 3 a e d ni hao zhao zhao mu mu");
-        Assert.assertEquals("",result.asHeadString(),"1 2 3 a e d n h z z m m");
+        Assert.assertEquals("",result.asString(),"1 2 3 a e d ni hao zhao zhao mu mu yin hang");
+        Assert.assertEquals("",result.asHeadString(),"1 2 3 a e d n h z z m m y h");
 
     }
 
