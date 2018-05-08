@@ -14,17 +14,45 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.2.40"
+    }
+}
+
+apply plugin: 'kotlin'
 
 description = 'FastText的java版本实现，兼容facebook发布的原生预训练模型。'
+version = "1.0.1"
+
+
+sourceSets {
+    example {
+        compileClasspath += sourceSets.main.runtimeClasspath
+        runtimeClasspath += sourceSets.main.runtimeClasspath
+    }
+
+    main.kotlin.srcDirs = main.java.srcDirs
+    test.kotlin.srcDirs = test.java.srcDirs
+    example.kotlin.srcDirs = example.java.srcDirs
+}
 
 dependencies {
 
-    compile project(":mynlp-common")
-
-    compile group: 'com.carrotsearch', name: 'hppc', version: '0.7.3'
-
-    compile 'org.nd4j:nd4j-native-platform:0.9.1'
-
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
     testCompile 'junit:junit:4.12'
+    compile group: 'com.carrotsearch', name: 'hppc', version: '0.7.3'
+    compile group: 'com.google.guava', name: 'guava', version: "$guava_version"
+//
+//    compile project(":mynlp-common")
+//
+//    compile group: 'com.carrotsearch', name: 'hppc', version: '0.7.3'
+//
+////    compile 'org.nd4j:nd4j-native-platform:0.9.1'
+//
+//    testCompile 'junit:junit:4.12'
 
 }
