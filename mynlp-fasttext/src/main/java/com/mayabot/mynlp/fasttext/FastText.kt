@@ -349,6 +349,7 @@ class FastText(internal val args: Args,
          * @param modelPath
          * @throws IOException
          */
+        @JvmStatic
         @Throws(Exception::class)
         fun loadCModel(modelPath: String): FastText {
             return LoadFastTextFromClangModel.loadCModel(modelPath)
@@ -359,6 +360,7 @@ class FastText(internal val args: Args,
          * path应该是一个目录，下面保存各个细节的文件
          */
         @JvmOverloads
+        @JvmStatic
         fun loadModel(modelPath: String, mmap: Boolean = true): FastText {
             val dir = File(modelPath)
 
@@ -462,6 +464,7 @@ class FastText(internal val args: Args,
 
         @JvmOverloads
         @Throws(Exception::class)
+        @JvmStatic
         fun train(trainFile: File, model_name: ModelName = ModelName.sup, args: TrainArgs = TrainArgs()): FastText {
             return FastTextTrain().train(trainFile, model_name, args)
         }
