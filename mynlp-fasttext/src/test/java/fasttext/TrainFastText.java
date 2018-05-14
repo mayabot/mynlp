@@ -36,7 +36,7 @@
 //
 //    @Test
 //    public void testReadModel() throws Exception {
-//        FastText fastText = FastText.loadCModel("data/out/model.bin");
+//        FastText fastText = FastText.loadC++Model("data/out/model.bin");
 //
 //        FastText.NearestNeighbor nearestNeighbor = fastText.nearestNeighbor();
 //

@@ -351,7 +351,7 @@ class FastText(internal val args: Args,
          */
         @JvmStatic
         @Throws(Exception::class)
-        fun loadCModel(modelPath: String): FastText {
+        fun loadFasttextBinModel(modelPath: String): FastText {
             return LoadFastTextFromClangModel.loadCModel(modelPath)
         }
 
@@ -507,7 +507,7 @@ class Model(private val inputMatrix: FloatMatrix
         //			((ArrayList<FloatIntPair>) heap).ensureCapacity(k + 1);
         //		}
         computeHidden(input, hidden)
-        if (args_.loss == loss_name.hs) {
+        if (args_.loss == LossName.hs) {
             dfs(k, 2 * osz - 2, 0.0f, heap, hidden)
         } else {
             findKBest(k, heap, hidden, output)
@@ -626,9 +626,9 @@ open class BaseModel(@JvmField val args_: Args, seed: Int, @JvmField var osz: In
 
     fun setTargetCounts(counts: LongArray) {
         checkArgument(counts.size == osz)
-        if (args_.loss == loss_name.ns) {
+        if (args_.loss == LossName.ns) {
             initTableNegatives(counts)
-        } else if (args_.loss == loss_name.hs) {
+        } else if (args_.loss == LossName.hs) {
             buildTree(counts)
         }
     }

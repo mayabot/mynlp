@@ -2,7 +2,6 @@ package com.mayabot.mynlp.fasttext
 
 
 import java.io.IOException
-import java.nio.ByteBuffer
 import java.nio.channels.FileChannel
 
 class Args {
@@ -18,7 +17,7 @@ class Args {
     var minCountLabel = 0
     var neg = 5
     var wordNgrams = 1
-    @JvmField var loss = loss_name.ns
+    @JvmField var loss = LossName.ns
     @JvmField var model = ModelName.sg
     var bucket = 2000000
     var minn = 3
@@ -60,7 +59,7 @@ class Args {
         minCount = input.readInt()
         neg = input.readInt()
         wordNgrams = input.readInt()
-        loss = loss_name.fromValue(input.readInt())
+        loss = LossName.fromValue(input.readInt())
         model = ModelName.fromValue(input.readInt())
         bucket = input.readInt()
         minn = input.readInt()
@@ -117,7 +116,9 @@ class Args {
 
 class TrainArgs {
 
-
+    /**
+     * learn rate
+     */
     var lr: Double? = null
 
     /**
@@ -148,7 +149,7 @@ class TrainArgs {
     /**
      * loss function {ns, hs, softmax} [softmax]
      */
-    var loss: loss_name? = null
+    var loss: LossName? = null
 
     /**
      * number of threads [12]
@@ -190,7 +191,7 @@ class TrainArgs {
         return this
     }
 
-    fun setLoss(loss: loss_name): TrainArgs {
+    fun setLoss(loss: LossName): TrainArgs {
         this.loss = loss
         return this
     }
@@ -207,20 +208,20 @@ class TrainArgs {
 }
 
 
-enum class loss_name private constructor(var value: Int) {
+enum class LossName private constructor(var value: Int) {
     hs(1), ns(2), softmax(3);
 
 
     companion object {
 
         @Throws(IllegalArgumentException::class)
-        fun fromValue(value: Int): loss_name {
+        fun fromValue(value: Int): LossName {
             var value = value
             try {
                 value -= 1
                 return values()[value]
             } catch (e: ArrayIndexOutOfBoundsException) {
-                throw IllegalArgumentException("Unknown loss_name enum second :$value")
+                throw IllegalArgumentException("Unknown LossName enum second :$value")
             }
 
         }

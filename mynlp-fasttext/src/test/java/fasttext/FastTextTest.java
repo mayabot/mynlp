@@ -30,7 +30,7 @@
 //
 //    @BeforeClass
 //    public static void prepare() throws Exception{
-//        fastText = FastText.loadCModel("/Users/jimichan/project-new/mynlp/mynlp-fasttext/data/wiki.zh.bin");
+//        fastText = FastText.loadC++Model("/Users/jimichan/project-new/mynlp/mynlp-fasttext/data/wiki.zh.bin");
 //    }
 //
 //    @Test
