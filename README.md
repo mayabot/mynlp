@@ -1,13 +1,11 @@
 MYNLP是个自然语言处理工具包
-
+(开发阶段，还未正式发布)
 #### MYNLP的功能模块
 
 * 中文分词
 * 拼音转换
 * 简繁体转换
-* Fasttext的Java高性能实现（支持GPU,兼容原版C语言的模型文件）[fasttext](https://fasttext.cc/)
-* mynlp-news-classification 新闻分类器
-* mynlp-lang-detection 语言探测器
+* Fasttext的Java高性能实现（兼容原版C语言的模型文件）[fasttext](https://fasttext.cc/)
 * mynlp-cli 命令行工具
     * CRF语料工具
     * 分词工具
