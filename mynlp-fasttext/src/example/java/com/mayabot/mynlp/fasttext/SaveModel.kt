@@ -5,7 +5,7 @@ package com.mayabot.mynlp.fasttext
  */
 fun main(args: Array<String>) {
 
-    val fastText = FastText.loadCModel("data/fasttext/wiki.zh.bin")
+    val fastText = FastText.loadFasttextBinModel("data/fasttext/wiki.zh.bin")
 
     println("loaded")
 

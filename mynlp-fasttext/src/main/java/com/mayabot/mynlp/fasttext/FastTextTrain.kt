@@ -10,7 +10,6 @@ import com.google.common.primitives.Ints
 import com.google.common.util.concurrent.AtomicDouble
 import fasttext.QMatrix
 import java.io.*
-import java.util.*
 import java.util.concurrent.atomic.AtomicLong
 import kotlin.collections.ArrayList
 
@@ -85,7 +84,7 @@ class FastTextTrain {
             model = modelName
             if (modelName == ModelName.sup) {
                 minCount = 1
-                loss = loss_name.softmax
+                loss = LossName.softmax
                 minCount = 1
                 minn = 0
                 maxn = 0
@@ -548,9 +547,9 @@ class TrainModel(
         computeHidden(input, hidden)
 
         loss += when (args_.loss) {
-            loss_name.ns -> negativeSampling(target, lr)
-            loss_name.hs -> hierarchicalSoftmax(target, lr)
-            loss_name.softmax -> softmax(target, lr)
+            LossName.ns -> negativeSampling(target, lr)
+            LossName.hs -> hierarchicalSoftmax(target, lr)
+            LossName.softmax -> softmax(target, lr)
         }
         nexamples += 1
 
