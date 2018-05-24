@@ -57,6 +57,14 @@ subprojects {
         from javadoc.destinationDir
     }
 
+
+    sourceSets {
+        example {
+            compileClasspath += sourceSets.main.runtimeClasspath
+            runtimeClasspath += sourceSets.main.runtimeClasspath
+        }
+    }
+
     project.plugins.withType(JavaBasePlugin) {
         publishing {
             publications {
