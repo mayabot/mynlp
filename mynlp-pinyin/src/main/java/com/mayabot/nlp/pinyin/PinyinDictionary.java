@@ -16,6 +16,9 @@
 
 package com.mayabot.nlp.pinyin;
 
+import com.google.common.base.Charsets;
+import com.google.common.collect.Lists;
+import com.google.common.hash.Hashing;
 import com.google.common.io.Files;
 import com.google.common.primitives.Ints;
 import com.google.inject.Inject;
@@ -32,6 +35,7 @@ import com.mayabot.nlp.resources.MynlpResource;
 import com.mayabot.nlp.utils.CharSourceLineReader;
 
 import java.io.*;
+import java.util.List;
 import java.util.TreeMap;
 
 @Singleton
@@ -41,6 +45,9 @@ public class PinyinDictionary implements MynlpCacheable {
 
     public final Setting<String> pinyinSetting =
             Setting.stringSetting("pinyin.dict", "inner://dictionary/pinyin.txt");
+
+    public final Setting<String> pinyinExtDicSetting =
+            Setting.stringSetting("pinyin.ext.dict",null);
 
     private final Environment environment;
 
@@ -58,7 +65,17 @@ public class PinyinDictionary implements MynlpCacheable {
 
     @Override
     public File cacheFileName() {
+        //environment.getMynlpResourceFactory().load("inner://")
+
         String hash = environment.loadResource(pinyinSetting).hash();
+
+        MynlpResource ext = environment.loadResource(pinyinExtDicSetting);
+        if (ext != null) {
+            hash += ext.hash();
+        }
+
+        hash = Hashing.md5().hashString(hash, Charsets.UTF_8).toString();
+
         return new File(environment.getWorkDir(), "pinyin.dict." + hash);
     }
 
@@ -125,29 +142,42 @@ public class PinyinDictionary implements MynlpCacheable {
 
     @Override
     public void loadFromRealData() throws Exception {
-        MynlpResource dictResource = environment.loadResource(pinyinSetting);
+
+
+
+        List<MynlpResource> list = Lists.newArrayList();
+
+        list.add(environment.loadResource(pinyinSetting));
+
+        MynlpResource ext = environment.loadResource(pinyinExtDicSetting);
+        if (ext != null) {
+            list.add(ext);
+        }
 
         TreeMap<String, Pinyin[]> map = new TreeMap<>();
-        try (CharSourceLineReader reader = dictResource.openLineReader()) {
-            while (reader.hasNext()) {
-                //降龙伏虎=xiang2,long2,fu2,hu3
-                //单=dan1,shan4,chan2
-                String line = reader.next();
-                String[] param = line.split("=");
+        for (MynlpResource dictResource : list) {
 
-                String key = param[0];
-                String[] values = param[1].split(",");
+            try (CharSourceLineReader reader = dictResource.openLineReader()) {
+                while (reader.hasNext()) {
+                    //降龙伏虎=xiang2,long2,fu2,hu3
+                    //单=dan1,shan4,chan2
+                    String line = reader.next();
+                    String[] param = line.split("=");
+
+                    String key = param[0];
+                    String[] values = param[1].split(",");
 
 
-                Pinyin[] pinyins = new Pinyin[values.length];
+                    Pinyin[] pinyins = new Pinyin[values.length];
 
-                for (int i = 0; i < values.length; i++) {
-                    try {
-                        Pinyin pinyin = Pinyin.valueOf(values[i]);
-                        pinyins[i] = pinyin;
-                        map.put(key, pinyins);
-                    } catch (IllegalArgumentException e) {
-                        logger.warn("读取拼音词典，解析" + line + "错误");
+                    for (int i = 0; i < values.length; i++) {
+                        try {
+                            Pinyin pinyin = Pinyin.valueOf(values[i]);
+                            pinyins[i] = pinyin;
+                            map.put(key, pinyins);
+                        } catch (IllegalArgumentException e) {
+                            logger.warn("读取拼音词典，解析" + line + "错误");
+                        }
                     }
                 }
             }

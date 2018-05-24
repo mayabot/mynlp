@@ -16,6 +16,8 @@
 
 package com.mayabot.nlp;
 
+import com.google.common.base.Splitter;
+import com.google.common.collect.Lists;
 import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
 import com.mayabot.nlp.resources.MynlpResource;
@@ -25,6 +27,9 @@ import com.mayabot.nlp.utils.PathUtils;
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import static com.mayabot.nlp.Settings.*;
 
@@ -73,12 +78,29 @@ public class Environment {
 
     public MynlpResource loadResource(String setting, String defaultPath) {
         String url = this.getSettings().get(setting, defaultPath);
+        if (url == null) {
+            return null;
+        }
         return this.mynlpResourceFactory.load(url);
     }
 
     public MynlpResource loadResource(Setting<String> setting) {
         String url = this.getSettings().get(setting);
+        if (url == null) {
+            return null;
+        }
         return this.mynlpResourceFactory.load(url);
+    }
+
+    public List<MynlpResource> loadResources(Setting<String> setting) {
+        String strings = this.getSettings().get(setting);
+        List<String> urls = Lists.newArrayList(Splitter.on(Pattern.compile("[,|]")).
+                omitEmptyStrings().trimResults().splitToList(
+                strings));
+
+        return urls.stream().map(
+                it->mynlpResourceFactory.load(it)
+        ).filter(it->it!=null).collect(Collectors.toList());
     }
 
     public File getWorkDirPath() {
