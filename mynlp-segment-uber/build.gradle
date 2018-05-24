@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 plugins {
-    id 'com.github.johnrengelman.shadow' version '2.0.2'
+    id 'com.github.johnrengelman.shadow' version '2.0.4'
 }
 
 apply plugin: 'maven-publish'
