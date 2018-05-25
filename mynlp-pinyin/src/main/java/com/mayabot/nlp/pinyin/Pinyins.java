@@ -5,7 +5,7 @@ import com.mayabot.nlp.MynlpInjector;
 /**
  * @author jimichan
  */
-public class Pinyin {
+public class Pinyins {
 
     static Text2PinyinService text2PinyinService = MynlpInjector.getInstance(Text2PinyinService.class);
 
