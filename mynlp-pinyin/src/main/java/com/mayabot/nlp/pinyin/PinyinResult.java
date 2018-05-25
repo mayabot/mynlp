@@ -106,4 +106,8 @@ public class PinyinResult {
         return Joiner.on(" ").join(asHeadList());
     }
 
+    @Override
+    public String toString() {
+        return asString();
+    }
 }
