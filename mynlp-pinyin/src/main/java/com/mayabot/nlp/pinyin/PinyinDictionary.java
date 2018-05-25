@@ -169,15 +169,19 @@ public class PinyinDictionary implements MynlpCacheable {
 
 
                     Pinyin[] pinyins = new Pinyin[values.length];
-
+                    boolean error = false;
                     for (int i = 0; i < values.length; i++) {
                         try {
                             Pinyin pinyin = Pinyin.valueOf(values[i]);
                             pinyins[i] = pinyin;
-                            map.put(key, pinyins);
+
                         } catch (IllegalArgumentException e) {
                             logger.warn("读取拼音词典，解析" + line + "错误");
+                            error = true;
                         }
+                    }
+                    if (!error) {
+                        map.put(key, pinyins);
                     }
                 }
             }
