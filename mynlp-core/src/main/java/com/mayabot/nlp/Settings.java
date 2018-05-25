@@ -180,11 +180,11 @@ public class Settings {
                 } catch (Exception e) {
 
                 }
-                return new Settings(ImmutableMap.copyOf(map));
             }
         }
 
-        return new Settings(Maps.newHashMap());
+        return new Settings(ImmutableMap.copyOf(map));
+
     }
 
     /**
