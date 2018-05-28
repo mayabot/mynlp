@@ -17,11 +17,15 @@
 package com.mayabot.nlp.pinyin;
 
 import com.google.common.base.Joiner;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.mayabot.nlp.pinyin.model.Pinyin;
 import com.mayabot.nlp.utils.Characters;
 
 import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class PinyinResult {
 
@@ -32,10 +36,30 @@ public class PinyinResult {
 
     private boolean ignorePunctuation = true;
 
+    /**
+     * 模糊拼音.
+     * as list 后，把
+     * z = zh
+     * c ch
+     * s sh
+     * an ang
+     * en eng
+     * in ing
+     * ian iang
+     * uan uang
+     * 把拼音的都归一化
+     */
+    private boolean fuzzy;
+
     PinyinResult(List<Pinyin> pinyinList, String text) {
         this.pinyinList = pinyinList;
         this.text = text;
 
+    }
+
+    public PinyinResult fuzzy(boolean fuzzy) {
+        this.fuzzy = fuzzy;
+        return this;
     }
 
     public PinyinResult skipNull(boolean skipNull) {
@@ -52,7 +76,20 @@ public class PinyinResult {
         return asString(" ");
     }
 
+    private static Pattern pattern = Pattern.compile("(^zh|^ch|^sh|iang$|ang$|ing$|eng$|uang$)");
+    private static ImmutableMap<String,String> fuzzyMap = ImmutableMap.<String,String>builder()
+            .put("zh","z")
+            .put("ch","c")
+            .put("sh","s")
+            .put("eng","en")
+            .put("ang","an")
+            .put("ing","in")
+            .put("iang","ian")
+            .put("uang","uan").build();
 
+    public static void main(String[] args) {
+
+    }
     public List<String> asList() {
         List<String> list = Lists.newArrayListWithCapacity(pinyinList.size());
         int i = 0;
@@ -66,7 +103,18 @@ public class PinyinResult {
                     list.add(text.charAt(i) + "");
                 }
             } else {
-                list.add(pinyin.getPinyinWithoutTone());
+                String withoutTone = pinyin.getPinyinWithoutTone();
+
+                if (fuzzy) {
+                    Matcher matcher = pattern.matcher(withoutTone);
+                    StringBuffer sb = new StringBuffer();
+                    if (matcher.find()) {
+                        String part = matcher.group();
+                        matcher.appendReplacement(sb, fuzzyMap.get(part));
+                    }
+                }
+
+                list.add(withoutTone);
             }
             ++i;
         }
