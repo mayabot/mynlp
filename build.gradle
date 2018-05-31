@@ -97,6 +97,13 @@ if (JavaVersion.current().isJava8Compatible()) {
     allprojects {
         tasks.withType(Javadoc) {
             options.addStringOption('Xdoclint:none', '-quiet')
+            options.encoding = "UTF-8"
+        }
+        tasks.withType(JavaCompile) {
+            options.encoding = "UTF-8"
+        }
+        tasks.withType(Test){
+            enabled = false
         }
     }
 }
