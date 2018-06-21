@@ -20,7 +20,7 @@ apply plugin: 'eclipse'
 
 ext {
     guava_version = "19.0"
-    mynlp_version = "1.0.0-snapshot"
+    mynlp_version = "1.0.0-SNAPSHOT"
 }
 
 
@@ -69,6 +69,36 @@ subprojects {
                     }
                 }
             }
+
+            repositories {
+                maven {
+                    name 'AliyunSelf'
+                    if (project.version.endsWith('-SNAPSHOT')) {
+                        url "${aliyun_mvn_snapshot}"
+                    } else {
+                        url = "${aliyun_mvn_release}"
+                    }
+                    credentials{
+                        username "${mvn_user}"
+                        password "${mvn_pass}"
+                    }
+                }
+
+                maven {
+                    name 'MayaPublic'
+                    if (project.version.endsWith('-SNAPSHOT')) {
+                        url "${maya_pub_snapshot}"
+                    } else {
+                        url = "${maya_pub_release}"
+                    }
+                    credentials{
+                        username "${maya_pub_user}"
+                        password "${maya_pub_pass}"
+                    }
+                }
+            }
+
+
         }
     }
 
@@ -101,6 +131,7 @@ if (JavaVersion.current().isJava8Compatible()) {
         }
         tasks.withType(JavaCompile) {
             options.encoding = "UTF-8"
+            options.compilerArgs += ["-Xdoclint:none", "-Xlint:none", "-nowarn"]
         }
         tasks.withType(Test){
             enabled = false

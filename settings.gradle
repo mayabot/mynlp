@@ -24,7 +24,6 @@ List projects = [
         'mynlp-segment',
         'mynlp-segment-uber',
         'mynlp-pinyin',
-        'mynlp-fasttext',
         'mynlp-jian-fan',
         'mynlp-cli',
         'plugins:lucene-7',
