@@ -48,19 +48,19 @@ public interface Trie {
      */
     boolean contains(String word);
 
-    /**
-     * search trie for word contained in chars. If the word is found, this method
-     * returns the position in chars and add found word to word parameter.
-     *
-     * @param chars chars
-     * @param start start position
-     * @param end   end position
-     * @param word  buffer to append found word. this can be null
-     * @return found position. -1 if no word found.
-     * @deprecated replaced by findShortestWord {@link #findShortestWord(CharSequence, int, int, StringBuilder)}
-     */
-    @Deprecated
-    int findWord(CharSequence chars, int start, int end, StringBuilder word);
+//    /**
+//     * search trie for word contained in chars. If the word is found, this method
+//     * returns the position in chars and add found word to word parameter.
+//     *
+//     * @param chars chars
+//     * @param start start position
+//     * @param end   end position
+//     * @param word  buffer to append found word. this can be null
+//     * @return found position. -1 if no word found.
+//     * @deprecated replaced by findShortestWord {@link #findShortestWord(CharSequence, int, int, StringBuilder)}
+//     */
+//    @Deprecated
+//    int findWord(CharSequence chars, int start, int end, StringBuilder word);
 
     /**
      * search trie for shortest word contained in chars. If the word is found, this method

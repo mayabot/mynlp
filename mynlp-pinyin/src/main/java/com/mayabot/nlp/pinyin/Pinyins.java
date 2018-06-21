@@ -13,4 +13,6 @@ public class Pinyins {
     public static PinyinResult convert(String text) {
         return text2PinyinService.text2Pinyin(text);
     }
+
+
 }

@@ -35,7 +35,7 @@ import static com.mayabot.nlp.segment.wordnet.Vertexs.hasNature;
 /**
  * 合并 数 量 (72kg)词
  *
- * @author Fred
+ * @author jimichan
  */
 public class MergeNumberQuantifierPreProcessor extends DefaultNameComponent implements WordpathProcessor {
 
