@@ -20,10 +20,10 @@ import java.io.Writer;
 import java.util.Iterator;
 
 public abstract class AbstractTrie implements Trie {
-    @Override
-    public int findWord(CharSequence chars, int start, int end, StringBuilder word) {
-        return findShortestWord(chars, start, end, word);
-    }
+//    @Override
+//    public int findWord(CharSequence chars, int start, int end, StringBuilder word) {
+//        return findShortestWord(chars, start, end, word);
+//    }
 
     @Override
     public int findShortestWord(CharSequence chars, int start, int end, StringBuilder word) {
