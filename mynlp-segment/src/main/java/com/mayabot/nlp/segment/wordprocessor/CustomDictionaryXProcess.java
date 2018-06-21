@@ -37,7 +37,6 @@ import com.mayabot.nlp.segment.wordnet.Wordpath;
  * 以后可以标记如果自定义词非常高的优先级或者只能从分词纠错中来解决
  *
  * @author jimichan
- * @author fred
  */
 public class CustomDictionaryXProcess extends DefaultNameComponent implements WordpathProcessor {
 

@@ -35,7 +35,6 @@ import com.mayabot.nlp.segment.wordnet.Wordpath;
  * FIXME ipad前面必须是空格或者词汇 3 是连续的
  *
  * @author jimichan
- * @author fred
  */
 public class MergeNumberAndLetterPreProcess extends DefaultNameComponent implements WordpathProcessor {
 

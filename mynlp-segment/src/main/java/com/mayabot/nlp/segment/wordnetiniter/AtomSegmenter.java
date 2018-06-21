@@ -39,7 +39,6 @@ import com.mayabot.nlp.utils.Characters;
  * 填充他们
  *
  * @author jimichan
- * @author Fred
  */
 public class AtomSegmenter implements WordnetInitializer {
 
