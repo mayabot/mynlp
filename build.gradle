@@ -18,25 +18,42 @@ apply plugin: 'idea'
 apply plugin: 'eclipse'
 
 
+description = "Mynlp是mayabot开源的中文自然语言处理工具集"
+
 ext {
     guava_version = "19.0"
-    mynlp_version = "1.0.0-SNAPSHOT"
 }
 
 
-group = 'com.mayabot.mynlp'
-version = "$mynlp_version"
-description = "mynlp"
+idea {
+    project {
+        vcs = 'Git'
+    }
+}
 
+allprojects {
+    repositories{
+        mavenCentral()
+    }
+}
 
 subprojects {
+    if(project.path==":plugins" ){
+        return
+    }
     description = "Maya Nlp subproject ${project.path}"
 
     group = 'com.mayabot.mynlp'
-    version = "$mynlp_version"
+    version = "1.0.1"
+    //SNAPSHOT
 
     apply plugin: 'java'
     apply plugin: 'maven-publish'
+    apply plugin: 'signing'
+
+    sourceCompatibility = '1.8'
+    targetCompatibility = '1.8'
+
 
     task sourceJar(type: Jar) {
         from sourceSets.main.allJava
@@ -47,80 +64,93 @@ subprojects {
         from javadoc.destinationDir
     }
 
-    sourceSets {
-        example {
-            compileClasspath += sourceSets.main.runtimeClasspath
-            runtimeClasspath += sourceSets.main.runtimeClasspath
+    if(project.path!=':mynlp-all' && project.path!=':mynlp-segment-resources')
+    {
+        sourceSets {
+            example {
+                compileClasspath += sourceSets.main.runtimeClasspath
+                runtimeClasspath += sourceSets.main.runtimeClasspath
+            }
         }
     }
 
-    project.plugins.withType(JavaBasePlugin) {
-        publishing {
-            publications {
-                java(MavenPublication) {
-                    from components.java
+    publishing {
+        publications {
+            java(MavenPublication) {
 
-                    artifact sourceJar {
-                        classifier "sources"
-                    }
+                from components.java
 
-                    artifact javadocJar {
-                        classifier "javadoc"
+                artifact sourceJar {
+                    classifier "sources"
+                }
+
+                artifact javadocJar {
+                    classifier "javadoc"
+                }
+                pom {
+                    name = 'mynlp'
+                    description = project.description
+                    url = 'https://github.com/mayabot/mynlp'
+                    licenses {
+                        license {
+                            name = 'The Apache License, Version 2.0'
+                            url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                        }
                     }
+                    developers {
+                        developer {
+                            id = 'jimichan'
+                            name = 'Jimi chan'
+                            email = 'jimichan@gmail.com'
+                        }
+                    }
+                    scm {
+                        connection = 'scm:git:git@github.com:mayabot/mynlp.git'
+                        developerConnection = 'scm:git:git@github.com:mayabot/mynlp.git'
+                        url = 'git@github.com:mayabot/mynlp.git'
+                    }
+                }
+
+            }
+
+        }
+
+        repositories {
+
+            maven {
+                name 'MayaPrivate'
+                if (project.version.endsWith('-SNAPSHOT')) {
+                    url "${maya_pri_snapshot}"
+                } else {
+                    url = "${maya_pri_release}"
+                }
+                credentials{
+                    username "${maya_pri_user}"
+                    password "${maya_pri_pass}"
                 }
             }
 
-            repositories {
-                maven {
-                    name 'AliyunSelf'
-                    if (project.version.endsWith('-SNAPSHOT')) {
-                        url "${aliyun_mvn_snapshot}"
-                    } else {
-                        url = "${aliyun_mvn_release}"
-                    }
-                    credentials{
-                        username "${mvn_user}"
-                        password "${mvn_pass}"
-                    }
-                }
-
-                maven {
-                    name 'MayaPublic'
-                    if (project.version.endsWith('-SNAPSHOT')) {
-                        url "${maya_pub_snapshot}"
-                    } else {
-                        url = "${maya_pub_release}"
-                    }
-                    credentials{
-                        username "${maya_pub_user}"
-                        password "${maya_pub_pass}"
-                    }
-                }
-            }
-
-
+//            maven {
+//                name 'OssPublic'
+//                if (project.version.endsWith('-SNAPSHOT')) {
+//                    url "https://oss.sonatype.org/content/repositories/snapshots/"
+//                } else {
+//                    url = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+//                }
+//                credentials{
+//                    username "${oss_user}"
+//                    password "${oss_password}"
+//                }
+//            }
         }
+
     }
 
-    project.afterEvaluate {
-        if (plugins.hasPlugin('java')) {
-            sourceCompatibility = 1.8
-            targetCompatibility = 1.8
-        }
+    signing {
+        sign publishing.publications.java
     }
 }
 
-
-idea {
-    project {
-        vcs = 'Git'
-    }
-}
-
-
-repositories {
-    mavenCentral()
-}
 
 
 if (JavaVersion.current().isJava8Compatible()) {
