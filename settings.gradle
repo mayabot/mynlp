@@ -19,18 +19,17 @@ rootProject.name = 'mynlp'
 
 
 List projects = [
-        'mynlp-common',
         'mynlp-core',
         'mynlp-segment',
-        'mynlp-segment-uber',
+        'mynlp-segment-resources',
         'mynlp-pinyin',
         'mynlp-jian-fan',
-        'mynlp-cli',
+        'mynlp-all',
         'plugins:lucene-7',
         'plugins:lucene-6'
 
 ]
 
 
-
 include projects.toArray(new String[0])
+

@@ -14,14 +14,13 @@
  * limitations under the License.
  */
 
-description = """Maya Nlp core"""
+description = "MYNLP基础数据结构和IOC容器"
 archivesBaseName = 'nlp-core'
 
 dependencies {
 
     compile group: 'com.google.guava', name: 'guava', version: "$guava_version"
     compile group: 'com.google.inject', name: 'guice', version: '4.1.0'
-    compile project(":mynlp-common")
 
     // logs
     compileOnly(group: "org.slf4j", name: "slf4j-api", version: "1.7.21")

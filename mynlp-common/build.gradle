@@ -1,9 +1,0 @@
-description = 'common codes 没有任何依赖'
-
-
-dependencies {
-    compile group: 'com.google.guava', name: 'guava', version: "$guava_version"
-    // https://mvnrepository.com/artifact/org.jetbrains/annotations
-
-    testCompile group: 'junit', name: 'junit', version: '4.12'
-}
