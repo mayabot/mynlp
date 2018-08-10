@@ -5,7 +5,6 @@ import com.carrotsearch.hppc.IntIntMap;
 import com.google.common.base.Charsets;
 import com.google.common.collect.Maps;
 import com.google.common.hash.Funnels;
-import com.mayabot.mynlp.common.countbloom.CountBloomFilter;
 import org.junit.Test;
 
 import java.io.*;
@@ -115,64 +114,64 @@ public class DoubleArrayTrieBuildSpeedTest {
 
             System.out.println(prefix+" use time"+(t2-t1));
     }
-
-    @Test
-    public void testFindCommonPrefix() throws IOException {
-        File file = new File("../data/crf_funtions.txt");
-
-
-        Stream<String> lines = Files.lines(file.toPath());
-
-        CountBloomFilter<CharSequence> filter = CountBloomFilter.create(Funnels.stringFunnel(Charsets.UTF_8), 50000);
-
-        AtomicInteger c = new AtomicInteger();
-        lines
-                .map(x -> x.split(" ")[1])
-                .forEach(
-                        x -> {
-                            int count = c.incrementAndGet();
-
-                            for (int i = 1; i <= x.length(); i++) {
-                                filter.put(x.substring(0, i));
-                            }
-
-                            if (count % 10000 == 0) {
-                                filter.resetLowCount(5000);
-                            }
-                        }
-                );
-
-        filter.resetLowCount(5000);
-        Map<String, Integer> stringIntegerMap = filter.exportHighRepeatKeys();
-
-        System.out.println(stringIntegerMap.size());
-
-        stringIntegerMap.forEach((x,y)->{
-            System.out.println(x+" -> "+y);
-        });
-
-
-        Map<String,Integer> map = Maps.newTreeMap();
-        Files.lines(file.toPath())
-                .map(x -> x.split(" ")[1])
-                .forEach(
-                        x -> {
-                            for (int i = 1; i <= x.length(); i++) {
-                                String sub = x.substring(0, i);
-
-                                int i1 = filter.mayCount(sub);
-                                if (i1 > 5000) {
-                                    map.putIfAbsent(sub,i1);
-                                }
-                            }
-
-                        }
-                );
-
-        map.forEach((x,y)->{
-            System.out.println(x+" -> "+y);
-        });
-    }
+//
+//    @Test
+//    public void testFindCommonPrefix() throws IOException {
+//        File file = new File("../data/crf_funtions.txt");
+//
+//
+//        Stream<String> lines = Files.lines(file.toPath());
+//
+//        CountBloomFilter<CharSequence> filter = CountBloomFilter.create(Funnels.stringFunnel(Charsets.UTF_8), 50000);
+//
+//        AtomicInteger c = new AtomicInteger();
+//        lines
+//                .map(x -> x.split(" ")[1])
+//                .forEach(
+//                        x -> {
+//                            int count = c.incrementAndGet();
+//
+//                            for (int i = 1; i <= x.length(); i++) {
+//                                filter.put(x.substring(0, i));
+//                            }
+//
+//                            if (count % 10000 == 0) {
+//                                filter.resetLowCount(5000);
+//                            }
+//                        }
+//                );
+//
+//        filter.resetLowCount(5000);
+//        Map<String, Integer> stringIntegerMap = filter.exportHighRepeatKeys();
+//
+//        System.out.println(stringIntegerMap.size());
+//
+//        stringIntegerMap.forEach((x,y)->{
+//            System.out.println(x+" -> "+y);
+//        });
+//
+//
+//        Map<String,Integer> map = Maps.newTreeMap();
+//        Files.lines(file.toPath())
+//                .map(x -> x.split(" ")[1])
+//                .forEach(
+//                        x -> {
+//                            for (int i = 1; i <= x.length(); i++) {
+//                                String sub = x.substring(0, i);
+//
+//                                int i1 = filter.mayCount(sub);
+//                                if (i1 > 5000) {
+//                                    map.putIfAbsent(sub,i1);
+//                                }
+//                            }
+//
+//                        }
+//                );
+//
+//        map.forEach((x,y)->{
+//            System.out.println(x+" -> "+y);
+//        });
+//    }
 
 
 }
