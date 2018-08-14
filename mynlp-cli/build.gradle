@@ -63,21 +63,21 @@ project.afterEvaluate {
         enabled = false
     }
 }
-
-publishing.publications {
-
-        shadow(MavenPublication) { publication ->
-            project.shadow.component(publication)
-            artifact sourceJar {
-                classifier "sources"
-            }
-
-            artifact javadocJar {
-                classifier "javadoc"
-            }
-        }
-}
-
-signing {
-    sign publishing.publications.shadow
-}
+//
+//publishing.publications {
+//
+//        shadow(MavenPublication) { publication ->
+//            project.shadow.component(publication)
+//            artifact sourceJar {
+//                classifier "sources"
+//            }
+//
+//            artifact javadocJar {
+//                classifier "javadoc"
+//            }
+//        }
+//}
+//
+//signing {
+//    sign publishing.publications.shadow
+//}

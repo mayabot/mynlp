@@ -25,7 +25,7 @@ List projects = [
         'mynlp-pinyin',
         'mynlp-jian-fan',
         'mynlp-cli',
-        'plugins:lucene-7'
+        'plugins:mynlp-lucene-7'
 
 ]
 

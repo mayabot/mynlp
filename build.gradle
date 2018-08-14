@@ -18,15 +18,14 @@ apply plugin: 'idea'
 apply plugin: 'eclipse'
 
 
-description = "Mynlp是mayabot开源的中文自然语言处理工具集"
+description = "mynlp是mayabot开源的中文自然语言处理工具集"
 
 ext {
     guava_version = "19.0"
-    publish_resource = true
 }
 
-def buildVersion = "1.0.2"
-def snapShot = false
+def buildVersion = "1.1.0"
+def snapShot = true
 
 subprojects {
     if(project.path==":plugins" ){
@@ -34,7 +33,7 @@ subprojects {
     }
     description = "Maya Nlp subproject ${project.path}"
 
-    group = 'com.mayabot'
+    group = 'com.mayabot.mynlp'
     version = buildVersion
 
     if(snapShot){
@@ -111,29 +110,33 @@ subprojects {
 
         repositories {
 
-            maven {
-                name 'MayaPrivate'
-                if (project.version.endsWith('-SNAPSHOT')) {
-                    url "${maya_pri_snapshot}"
-                } else {
-                    url = "${maya_pri_release}"
-                }
-                credentials{
-                    username "${maya_pri_user}"
-                    password "${maya_pri_pass}"
+            if(project.hasProperty("maya_pri_user")){
+                maven {
+                    name 'MayaPrivate'
+                    if (project.version.endsWith('-SNAPSHOT')) {
+                        url "${maya_pri_snapshot}"
+                    } else {
+                        url = "${maya_pri_release}"
+                    }
+                    credentials{
+                        username "${maya_pri_user}"
+                        password "${maya_pri_pass}"
+                    }
                 }
             }
 
-            maven {
-                name 'OssPublic'
-                if (project.version.endsWith('-SNAPSHOT')) {
-                    url "https://oss.sonatype.org/content/repositories/snapshots/"
-                } else {
-                    url = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
-                }
-                credentials{
-                    username "${oss_user}"
-                    password "${oss_password}"
+            if(!snapShot && project.hasProperty("oss_user")){
+                maven {
+                    name 'OssPublic'
+                    if (project.version.endsWith('-SNAPSHOT')) {
+                        url "https://oss.sonatype.org/content/repositories/snapshots/"
+                    } else {
+                        url = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+                    }
+                    credentials{
+                        username "${oss_user}"
+                        password "${oss_password}"
+                    }
                 }
             }
 
