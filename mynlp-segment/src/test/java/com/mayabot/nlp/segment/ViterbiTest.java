@@ -20,8 +20,6 @@ import com.google.common.base.Charsets;
 import com.google.common.collect.Lists;
 import com.google.common.io.ByteSource;
 import com.google.common.io.Resources;
-import com.mayabot.nlp.segment.MynlpSegments;
-import com.mayabot.nlp.segment.MynlpTokenizer;
 import org.junit.Test;
 
 import java.io.File;

@@ -16,7 +16,7 @@
 
 package com.mayabot.nlp.cli;
 
-import org.apache.commons.cli.*;
+import org.apache.commons.cli.AlreadySelectedException;
 
 import java.util.Arrays;
 import java.util.HashMap;

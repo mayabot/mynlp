@@ -34,7 +34,7 @@ subprojects {
     }
     description = "Maya Nlp subproject ${project.path}"
 
-    group = 'com.mayabot.mynlp'
+    group = 'com.mayabot'
     version = buildVersion
 
     if(snapShot){
