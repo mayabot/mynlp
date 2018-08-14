@@ -22,20 +22,11 @@ description = "Mynlp是mayabot开源的中文自然语言处理工具集"
 
 ext {
     guava_version = "19.0"
+    publish_resource = true
 }
 
-
-idea {
-    project {
-        vcs = 'Git'
-    }
-}
-
-allprojects {
-    repositories{
-        mavenCentral()
-    }
-}
+def buildVersion = "1.0.2"
+def snapShot = false
 
 subprojects {
     if(project.path==":plugins" ){
@@ -44,8 +35,11 @@ subprojects {
     description = "Maya Nlp subproject ${project.path}"
 
     group = 'com.mayabot.mynlp'
-    version = "1.0.1"
-    //SNAPSHOT
+    version = buildVersion
+
+    if(snapShot){
+        version += "-SNAPSHOT"
+    }
 
     apply plugin: 'java'
     apply plugin: 'maven-publish'
@@ -130,18 +124,19 @@ subprojects {
                 }
             }
 
-//            maven {
-//                name 'OssPublic'
-//                if (project.version.endsWith('-SNAPSHOT')) {
-//                    url "https://oss.sonatype.org/content/repositories/snapshots/"
-//                } else {
-//                    url = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
-//                }
-//                credentials{
-//                    username "${oss_user}"
-//                    password "${oss_password}"
-//                }
-//            }
+            maven {
+                name 'OssPublic'
+                if (project.version.endsWith('-SNAPSHOT')) {
+                    url "https://oss.sonatype.org/content/repositories/snapshots/"
+                } else {
+                    url = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+                }
+                credentials{
+                    username "${oss_user}"
+                    password "${oss_password}"
+                }
+            }
+
         }
 
     }
@@ -151,7 +146,17 @@ subprojects {
     }
 }
 
+idea {
+    project {
+        vcs = 'Git'
+    }
+}
 
+allprojects {
+    repositories{
+        mavenCentral()
+    }
+}
 
 if (JavaVersion.current().isJava8Compatible()) {
     allprojects {
@@ -169,3 +174,4 @@ if (JavaVersion.current().isJava8Compatible()) {
     }
 }
 
+// gradle publish -x :mynlp-segment-resources:publish

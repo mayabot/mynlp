@@ -60,20 +60,23 @@ public class PipelineFactory {
 
 
         //默认启用所有的Node
-        Set<String> enableSets = pipelineDefine.allNodeNames();
+        Set<String> enabledPipelineNodeNames = pipelineDefine.allNodeNames();
 
         //pipeline.disable 配置项配置禁用的节点
-        Set<String> disableNames = Sets.newHashSet(settings.getAsList("disable"));
+        {
+            Set<String> disableNames = Sets.newHashSet(settings.getAsList("disable"));
 
-        logger.debug("PipelineFactory disableNames " + disableNames);
+            logger.debug("PipelineFactory disableNames " + disableNames);
 
-        disableNames.forEach(name -> enableSets.remove(name));
+            disableNames.forEach(name -> enabledPipelineNodeNames.remove(name));
+        }
 
         List<WordpathProcessor> wordPathProcessors = Lists.newArrayList();
 
         for (Object obj : pipelineDefine.getProcessorNames()) {
             if (obj instanceof String) {
-                if (!enableSets.contains(disableNames)) {
+                if (!enabledPipelineNodeNames.contains(obj)) {
+                    logger.debug("disable "+obj);
                     continue;
                 }
                 String name = ((String) obj);
@@ -84,7 +87,7 @@ public class PipelineFactory {
             } else if (obj instanceof List) {
                 List<String> names = ((List<String>) obj);
 
-                names = names.stream().filter(x -> enableSets.contains(x)).collect(Collectors.toList());
+                names = names.stream().filter(x -> enabledPipelineNodeNames.contains(x)).collect(Collectors.toList());
 
                 OptimizeWordPathProcessor p = (OptimizeWordPathProcessor) registry.getInstance("optimizeNet", WordpathProcessor.class);
                 p.initOptimizeProcessor(names);

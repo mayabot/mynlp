@@ -21,4 +21,13 @@ public class SegmentTest {
 
 
     }
+
+    @Test
+    public void test2(){
+        MynlpTokenizer mynlpTokenizer = MynlpTokenizerBuilder.builder()
+                .build();
+
+        System.out.println(mynlpTokenizer.tokenToList("年收入达百万"));
+
+    }
 }
