@@ -9,7 +9,6 @@ import org.apache.lucene.analysis.*;
 import org.apache.lucene.analysis.standard.StandardFilter;
 
 import java.io.BufferedReader;
-import java.io.Reader;
 import java.net.URL;
 
 public class MynlpLuceneAnalyzer extends StopwordAnalyzerBase {

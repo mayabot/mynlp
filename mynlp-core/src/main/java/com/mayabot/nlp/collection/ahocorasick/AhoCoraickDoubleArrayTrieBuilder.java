@@ -23,8 +23,6 @@
  */
 package com.mayabot.nlp.collection.ahocorasick;
 
-import com.mayabot.nlp.collection.ahocorasick.AhoCorasickDoubleArrayTrie;
-
 import java.util.*;
 import java.util.concurrent.LinkedBlockingDeque;
 

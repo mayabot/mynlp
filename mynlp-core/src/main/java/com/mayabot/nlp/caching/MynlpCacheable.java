@@ -20,7 +20,9 @@ import com.google.common.io.Files;
 import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
 
-import java.io.*;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.OutputStream;
 
 public interface MynlpCacheable {
 

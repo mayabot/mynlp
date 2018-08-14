@@ -15,11 +15,11 @@
  */
 package org.trie4j.louds;
 
-import org.trie4j.louds.TailLOUDSTrie.NodeListener;
 import org.trie4j.AbstractTermIdMapTrie;
 import org.trie4j.MapNode;
 import org.trie4j.MapTrie;
 import org.trie4j.Node;
+import org.trie4j.louds.TailLOUDSTrie.NodeListener;
 import org.trie4j.louds.bvtree.BvTree;
 import org.trie4j.louds.bvtree.LOUDSBvTree;
 import org.trie4j.tail.ConcatTailArrayBuilder;
