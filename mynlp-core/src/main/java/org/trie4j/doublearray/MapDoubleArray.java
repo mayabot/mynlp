@@ -15,11 +15,11 @@
  */
 package org.trie4j.doublearray;
 
-import org.trie4j.doublearray.DoubleArray.TermNodeListener;
 import org.trie4j.AbstractTermIdMapTrie;
 import org.trie4j.MapNode;
 import org.trie4j.MapTrie;
 import org.trie4j.Node;
+import org.trie4j.doublearray.DoubleArray.TermNodeListener;
 
 import java.io.Externalizable;
 import java.util.Map;

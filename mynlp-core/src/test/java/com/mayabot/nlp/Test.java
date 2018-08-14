@@ -8,7 +8,6 @@ import com.mayabot.nlp.collection.dat.DATMatcher;
 import com.mayabot.nlp.collection.dat.DoubleArrayTrie;
 import com.mayabot.nlp.collection.dat.DoubleArrayTrieBuilder;
 
-import java.util.Map;
 import java.util.TreeMap;
 
 public class Test {

@@ -15,10 +15,7 @@
 package com.mayabot.nlp.common.countbloom;
 
 import com.google.common.hash.Funnel;
-import com.google.common.hash.HashFunction;
 import com.google.common.hash.Hashing;
-
-import java.util.List;
 
 /**
  * Collections of strategies of generating the k * log(M) bits required for an
