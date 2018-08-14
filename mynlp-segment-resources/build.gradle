@@ -1,5 +1,7 @@
 version = "1.0.0"
 
+def publish_resource = false
+
 if(!publish_resource){
     project.afterEvaluate {
         project.tasks.withType(AbstractPublishToMaven.class){
