@@ -1,19 +1,14 @@
 package com.mayabot.nlp.collection.dat;
 
 import com.carrotsearch.hppc.IntIntHashMap;
-import com.carrotsearch.hppc.IntIntMap;
 import com.google.common.base.Charsets;
-import com.google.common.collect.Maps;
-import com.google.common.hash.Funnels;
 import org.junit.Test;
 
 import java.io.*;
 import java.nio.file.Files;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 import java.util.TreeMap;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
 public class DoubleArrayTrieBuildSpeedTest {
