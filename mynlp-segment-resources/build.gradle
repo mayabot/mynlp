@@ -1,0 +1,9 @@
+version = "1.0.0"
+
+if(!publish_resource){
+    project.afterEvaluate {
+        project.tasks.withType(AbstractPublishToMaven.class){
+            enabled = false
+        }
+    }
+}
