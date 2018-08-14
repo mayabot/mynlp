@@ -18,10 +18,8 @@ package com.mayabot.nlp.utils;
 
 import com.google.common.collect.AbstractIterator;
 import com.google.common.io.CharSource;
-import com.google.common.io.LineReader;
 
 import java.io.BufferedReader;
-import java.io.Reader;
 
 public class CharSourceLineReader extends AbstractIterator<String> implements AutoCloseable {
 

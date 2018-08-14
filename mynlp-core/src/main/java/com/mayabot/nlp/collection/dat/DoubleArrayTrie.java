@@ -35,7 +35,6 @@
  */
 package com.mayabot.nlp.collection.dat;
 
-import com.google.common.collect.Lists;
 import com.mayabot.nlp.collection.Trie;
 
 import java.io.*;

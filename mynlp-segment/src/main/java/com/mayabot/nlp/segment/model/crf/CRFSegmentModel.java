@@ -16,12 +16,9 @@
 package com.mayabot.nlp.segment.model.crf;
 
 
-import com.mayabot.nlp.collection.dat.DoubleArrayTrie;
-import com.mayabot.nlp.collection.dat.DoubleArrayTrieBuilder;
 import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
 import org.trie4j.louds.MapTailLOUDSTrie;
-import org.trie4j.louds.TailLOUDSTrie;
 import org.trie4j.patricia.MapPatriciaTrie;
 
 import java.util.*;

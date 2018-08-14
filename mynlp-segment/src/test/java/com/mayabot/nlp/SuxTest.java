@@ -1,19 +1,14 @@
 package com.mayabot.nlp;
 
-import com.mayabot.nlp.collection.dat.DoubleArrayTrie;
-import com.mayabot.nlp.collection.dat.DoubleArrayTrieBuilder;
 import org.junit.Test;
-import org.trie4j.doublearray.DoubleArray;
 import org.trie4j.io.TrieWriter;
 import org.trie4j.louds.TailLOUDSTrie;
 import org.trie4j.patricia.PatriciaTrie;
-import org.trie4j.tail.builder.ConcatTailBuilder;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.TreeMap;
 import java.util.stream.Stream;
 
 public class SuxTest {

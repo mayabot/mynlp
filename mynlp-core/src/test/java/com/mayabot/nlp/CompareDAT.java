@@ -5,15 +5,8 @@ import com.google.common.base.Stopwatch;
 import com.mayabot.nlp.collection.dat.DoubleArrayTrie;
 import com.mayabot.nlp.collection.dat.DoubleArrayTrieBuilder;
 import org.junit.Test;
-import org.trie4j.doublearray.DoubleArray;
-import org.trie4j.doublearray.MapDoubleArray;
-import org.trie4j.doublearray.TailDoubleArray;
 import org.trie4j.louds.TailLOUDSTrie;
-import org.trie4j.patricia.MapPatriciaTrie;
 import org.trie4j.patricia.PatriciaTrie;
-import org.trie4j.tail.ConcatTailArrayBuilder;
-import org.trie4j.tail.builder.ConcatTailBuilder;
-import org.trie4j.tail.builder.SuffixTrieTailBuilder;
 
 import java.io.File;
 import java.nio.file.Files;
