@@ -6,6 +6,8 @@ import com.google.common.collect.Sets;
 import java.util.List;
 import java.util.Set;
 
+import static com.mayabot.nlp.segment.ComponentNames.*;
+
 /**
  * Pipeline的数据处理流程的定义
  *
@@ -19,6 +21,8 @@ public class PipelineDefine {
         for (Object object : strings) {
             if (object instanceof String) {
                 processorNames.add(object.toString());
+            }else if(object instanceof Enum){
+                processorNames.add(((Enum) object).name());
             } else {
                 String[] list = ((String[]) object);
                 processorNames.add(Lists.newArrayList(list));
@@ -49,18 +53,25 @@ public class PipelineDefine {
      * 内置默认的Pipeline定义
      */
     public static final PipelineDefine defaultPipeline = new PipelineDefine(
-            "customDict",
-            "mq",
-            "ml",
-            "pattern",
-            list("person", "place", "organization"),
-            "correction",
-            "speechTagging"
+            customDict,
+            mq,
+            ml,
+            pattern,
+            list(person, place, organization),
+            correction,
+            speechTagging
     );
 
 
     public static String[] list(String... ss) {
         return ss;
+    }
+    public static String[] list(Enum... ss) {
+        String[] s = new String[ss.length];
+        for (int i = 0; i < ss.length; i++) {
+            s[i] = ss[i].name();
+        }
+        return s;
     }
 
 }
