@@ -22,8 +22,8 @@ import com.google.inject.Singleton;
 import com.mayabot.nlp.segment.WordnetInitializer;
 import com.mayabot.nlp.segment.dictionary.Nature;
 import com.mayabot.nlp.segment.dictionary.NatureAttribute;
-import com.mayabot.nlp.segment.model.crf.CRFModelComponent;
 import com.mayabot.nlp.segment.model.crf.CRFSegmentModel;
+import com.mayabot.nlp.segment.model.crf.CrfModelComponent;
 import com.mayabot.nlp.segment.model.crf.Table;
 import com.mayabot.nlp.segment.wordnet.Vertex;
 import com.mayabot.nlp.segment.wordnet.Wordnet;
@@ -43,7 +43,7 @@ public class CrfOriginalSegment implements WordnetInitializer {
     }
 
     @Inject
-    public CrfOriginalSegment(CRFModelComponent crfModelComponent) {
+    public CrfOriginalSegment(CrfModelComponent crfModelComponent) {
         this.crfModel = crfModelComponent.getCrfSegmentModel();
     }
 

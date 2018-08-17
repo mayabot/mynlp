@@ -16,7 +16,7 @@
 
 package com.mayabot.nlp.dictionary;
 
-import com.mayabot.nlp.MynlpInjector;
+import com.mayabot.nlp.Mynlp;
 import com.mayabot.nlp.segment.dictionary.core.CoreBiGramTableDictionary;
 import org.junit.Test;
 
@@ -24,7 +24,8 @@ public class CoreGiGramTableDictionaryTest{
 
     @Test
     public void test() {
-        CoreBiGramTableDictionary dic = MynlpInjector.getInjector().getInstance(CoreBiGramTableDictionary.class);
+        Mynlp mynlp = Mynlp.builder().build();
+        CoreBiGramTableDictionary dic = mynlp.getInstance(CoreBiGramTableDictionary.class);
     }
 
 }

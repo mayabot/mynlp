@@ -27,7 +27,7 @@ import com.google.common.io.ByteStreams;
 import com.google.common.io.Files;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.mayabot.nlp.Environment;
+import com.mayabot.nlp.Mynlp;
 import com.mayabot.nlp.caching.MynlpCacheable;
 import com.mayabot.nlp.collection.dat.DoubleArrayTrie;
 import com.mayabot.nlp.collection.dat.DoubleArrayTrieBuilder;
@@ -55,23 +55,23 @@ import java.util.TreeSet;
 public class CorrectionDictionary implements MynlpCacheable {
 
     static InternalLogger logger = InternalLoggerFactory.getInstance(CorrectionDictionary.class);
-    private final Environment environment;
+    private final Mynlp Mynlp;
 
     private DoubleArrayTrie<AdjustWord> doubleArrayTrie;
 
     private List<String> resourceUrls;
 
 //    public final Setting<String> humanAdjustKey =
-//            Setting.stringSetting("correction.dict", "inner://dictionary/core/CoreNatureDictionary.txt");
+//            Setting.string("correction.dict", "dictionary/core/CoreNatureDictionary.txt");
 
 
     @Inject
-    public CorrectionDictionary(Environment environment) throws Exception {
+    public CorrectionDictionary(Mynlp Mynlp) throws Exception {
 
-        this.environment = environment;
+        this.Mynlp = Mynlp;
 
-        List<String> resourceUrls = environment.getSettings().getAsList(
-                "correction.dict", "inner://dictionary/correction/adjust.txt");
+        List<String> resourceUrls = Mynlp.getSettings().getAsList(
+                "correction.dict", "dictionary/correction/adjust.txt");
 
         if (resourceUrls.isEmpty()) {
             return;
@@ -91,14 +91,14 @@ public class CorrectionDictionary implements MynlpCacheable {
         TreeSet<String> set = new TreeSet<>();
 
         for (String url : resourceUrls) {
-            MynlpResource resource = environment.getMynlpResourceFactory().load(url);
+            MynlpResource resource = Mynlp.loadResource(url);
 
             set.add(resource.hash());
         }
 
         String hash = Hashing.md5().hashString(set.toString(), Charsets.UTF_8).toString();
 
-        return new File(environment.getWorkDir(), hash + ".correction.dict");
+        return new File(Mynlp.getCacheDir(), hash + ".correction.dict");
     }
 
     @Override
@@ -124,7 +124,7 @@ public class CorrectionDictionary implements MynlpCacheable {
         TreeMap<String, AdjustWord> map = new TreeMap<>();
 
         for (String url : resourceUrls) {
-            MynlpResource resource = environment.getMynlpResourceFactory().load(url);
+            MynlpResource resource = Mynlp.loadResource(url);
 
             try (CharSourceLineReader reader = resource.openLineReader()) {
                 while (reader.hasNext()) {
@@ -199,7 +199,6 @@ public class CorrectionDictionary implements MynlpCacheable {
             return raw;
         }
 
-        // line = 第几套/房
         public static AdjustWord parse(String line) {
             AdjustWord adjustWord = new AdjustWord();
             adjustWord.raw = line.trim();

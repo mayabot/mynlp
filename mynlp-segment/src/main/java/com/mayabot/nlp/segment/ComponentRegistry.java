@@ -77,7 +77,7 @@ public final class ComponentRegistry {
 
     public <T> T getInstance(String name, Class<T> clazz) {
         Function<Injector, T> fun = getFactory(name, clazz);
-        Preconditions.checkNotNull(fun, "Not found name " + name + " class " + clazz);
+        Preconditions.checkNotNull(fun, "Not found NAME " + name + " class " + clazz);
         T apply = fun.apply(injector);
         Preconditions.checkNotNull(apply);
         return apply;
@@ -89,7 +89,7 @@ public final class ComponentRegistry {
 
 
     private void initDefaultComponents() {
-        register(ViterbiBestPathComputer.name, BestPathComputer.class, i -> i.getInstance(ViterbiBestPathComputer.class));
+        register(ViterbiBestPathComputer.NAME, BestPathComputer.class, i -> i.getInstance(ViterbiBestPathComputer.class));
 
         //wordnet initer
         register(WORDNET_INITER_CRF, WordnetInitializer.class, inject -> new MultiWordnetInit(

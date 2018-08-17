@@ -56,7 +56,7 @@ public class Setting<T> {
         return setting;
     }
 
-    public static Setting<String> stringSetting(String key, String value) {
+    public static Setting<String> string(String key, String value) {
         Setting<String> setting = new Setting<>();
         setting.key = key;
         setting.defaultValue = value;

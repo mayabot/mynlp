@@ -194,7 +194,7 @@ public class PersonRecognition extends DefaultNameComponent implements OptimizeP
                         }
                         String name = sbName.toString();
 
-                        //System.out.println(name);
+                        //System.out.println(NAME);
 
                         switch (value) {
                             case BCD:
@@ -221,7 +221,7 @@ public class PersonRecognition extends DefaultNameComponent implements OptimizeP
                         }
                         String name = sbName.toString();
 
-                        //System.out.println(name);
+                        //System.out.println(NAME);
 
                         switch (value) {
                             case BCD:

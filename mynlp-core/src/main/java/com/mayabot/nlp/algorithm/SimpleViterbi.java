@@ -62,7 +62,8 @@ public class SimpleViterbi<TagType, ObjType> {
      */
     public void viterbi(Iterable<ObjType> pathWithBE) {
 
-        double[] row0 = new double[8];// 最多一个位置有64个标记
+        // 最多一个位置有64个标记
+        double[] row0 = new double[8];
         double[] row1 = new double[8];
 
         Iterator<ObjType> iterator = pathWithBE.iterator();
@@ -108,7 +109,8 @@ public class SimpleViterbi<TagType, ObjType> {
 
             //交换 cost
             double[] _t = theCost;
-            theCost = preCost; //第一次 theCost == 1
+            //第一次 theCost == 1
+            theCost = preCost;
             preCost = _t;
 
             clear(theCost);
@@ -163,7 +165,8 @@ public class SimpleViterbi<TagType, ObjType> {
      */
     public void viterbi(ObjType[] array) {
 
-        double[] row0 = new double[64];// 最多一个位置有64个标记
+        // 最多一个位置有64个标记
+        double[] row0 = new double[64];
         double[] row1 = new double[64];
         //double[][] cost = new double[2][64];
 
@@ -192,7 +195,8 @@ public class SimpleViterbi<TagType, ObjType> {
 
             //交换 cost
             double[] _t = theCost;
-            theCost = preCost; //第一次 theCost == 1
+            //第一次 theCost == 1
+            theCost = preCost;
             preCost = _t;
 
             Map<TagType, Integer> item = mapFunction.apply(array[i]);
