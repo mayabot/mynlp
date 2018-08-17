@@ -24,7 +24,7 @@ import com.google.common.io.ByteStreams;
 import com.google.common.io.Files;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.mayabot.nlp.Environment;
+import com.mayabot.nlp.Mynlp;
 import com.mayabot.nlp.Settings;
 import com.mayabot.nlp.caching.MynlpCacheable;
 import com.mayabot.nlp.collection.dat.DoubleArrayTrie;
@@ -50,7 +50,7 @@ public class CustomDictionary implements MynlpCacheable {
 
     static InternalLogger logger = InternalLoggerFactory.getInstance(CustomDictionary.class);
 
-    private final Environment environment;
+    private final Mynlp Mynlp;
 
     private DoubleArrayTrie<NatureAttribute> dat;
 
@@ -60,16 +60,16 @@ public class CustomDictionary implements MynlpCacheable {
     //dictionary/custom/*
 
     @Inject
-    public CustomDictionary(Settings setting, Environment environment) throws Exception {
+    public CustomDictionary(Settings setting, Mynlp Mynlp) throws Exception {
 
-        this.environment = environment;
+        this.Mynlp = Mynlp;
 
         List<String> resourceUrls = setting.getAsList("custom.dictionary.path");
 
         if (resourceUrls == null || resourceUrls.isEmpty()) {
             return;
         }
-        // inner://dictionary/custom/abc.txt
+        // dictionary/custom/abc.txt
         // db://dictionary/custom/abc.txt
 
         this.resourceUrls = resourceUrls;
@@ -86,14 +86,14 @@ public class CustomDictionary implements MynlpCacheable {
         TreeSet<String> set = new TreeSet<>();
 
         for (String url : resourceUrls) {
-            MynlpResource resource = environment.getMynlpResourceFactory().load(url);
+            MynlpResource resource = Mynlp.loadResource(url);
 
             set.add(resource.hash());
         }
 
         String hash = Hashing.md5().hashString(set.toString(), Charsets.UTF_8).toString();
 
-        return new File(environment.getWorkDir(), hash + ".custom.dict");
+        return new File(Mynlp.getCacheDir(), hash + ".custom.dict");
     }
 
     @Override
@@ -119,7 +119,7 @@ public class CustomDictionary implements MynlpCacheable {
 
         Nature defaultNature = Nature.n;
         for (String url : resourceUrls) {
-            MynlpResource resource = environment.getMynlpResourceFactory().load(url);
+            MynlpResource resource = Mynlp.loadResource(url);
 
             try (CharSourceLineReader reader = resource.openLineReader()) {
                 while (reader.hasNext()) {

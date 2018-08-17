@@ -13,3 +13,5 @@ segmenter
 wordpath
 humanadjust
 fasttext
+viterbi
+jimichan

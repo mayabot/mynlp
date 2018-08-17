@@ -19,6 +19,7 @@ package com.mayabot.nlp.segment.wordnet;
 import com.google.common.base.Preconditions;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.mayabot.nlp.segment.common.Predefine;
 import com.mayabot.nlp.segment.dictionary.core.CoreBiGramTableDictionary;
 
 /**
@@ -29,7 +30,7 @@ import com.mayabot.nlp.segment.dictionary.core.CoreBiGramTableDictionary;
 @Singleton
 public class ViterbiBestPathComputer implements BestPathComputer {
 
-    public final static String name = "viterbi";
+    public final static String NAME = "viterbi";
 
 
     private CoreBiGramTableDictionary coreBiGramTableDictionary;

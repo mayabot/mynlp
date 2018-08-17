@@ -110,7 +110,7 @@ public class PlaceRecognition extends DefaultNameComponent implements OptimizePr
                     }
                     String name = sbName.toString();
 
-                    //System.out.println(name);
+                    //System.out.println(NAME);
 
                     if (isBadCase(name)) {
                         return;
