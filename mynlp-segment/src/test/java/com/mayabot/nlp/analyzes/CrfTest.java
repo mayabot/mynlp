@@ -16,7 +16,6 @@
 
 package com.mayabot.nlp.analyzes;
 
-import com.mayabot.nlp.Settings;
 import com.mayabot.nlp.segment.MynlpSegments;
 import com.mayabot.nlp.segment.MynlpTokenizer;
 import org.junit.Test;
@@ -25,8 +24,6 @@ public class CrfTest {
 
     @Test
     public void test() {
-
-        System.setProperty(Settings.KEY_WORK_DIR, "temp");
 
         MynlpTokenizer tokenizer = MynlpSegments.crfTokenizer();
 

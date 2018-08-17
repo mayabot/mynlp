@@ -82,13 +82,13 @@ public class OrganizationRecognition extends DefaultNameComponent implements Opt
                 (vertex) -> ((EnumFreqPair) vertex.getTempObj()).getMap(),
                 (v, n) -> {
                     v.setTempChar(n.name().charAt(0));
-//                    v.setChar(NameKey.tag, n.name().charAt(0));
+//                    v.setChar(NameKey.tag, n.NAME().charAt(0));
                 });
 //        viterbi = new SimpleViterbi<>(
 //                (pre, cur) -> trans.getTP(pre.getKey(), cur.getKey()) - Math.log(cur.getValue() + 1e-8) / trans.getTotalFrequency(cur.getKey()),
 //                (vertex) -> ((EnumFreqPair) vertex.getObj(NameKey.freqpair)).getMap(),
 //                (v, n) -> {
-//                    v.setChar(NameKey.tag, n.name().charAt(0));
+//                    v.setChar(NameKey.tag, n.NAME().charAt(0));
 //                });
     }
 
@@ -116,7 +116,7 @@ public class OrganizationRecognition extends DefaultNameComponent implements Opt
                     }
                     String name = sbName.toString();
 
-                    //System.out.println("--- "+name);
+                    //System.out.println("--- "+NAME);
 
                     if (isBadCase2(name)) {
                         return;

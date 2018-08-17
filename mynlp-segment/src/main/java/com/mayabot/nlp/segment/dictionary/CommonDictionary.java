@@ -19,7 +19,7 @@ import com.google.common.base.Splitter;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import com.google.common.io.Files;
-import com.mayabot.nlp.Environment;
+import com.mayabot.nlp.Mynlp;
 import com.mayabot.nlp.caching.MynlpCacheable;
 import com.mayabot.nlp.collection.dat.DoubleArrayTrie;
 import com.mayabot.nlp.collection.dat.DoubleArrayTrieBuilder;
@@ -44,21 +44,21 @@ public abstract class CommonDictionary<V> implements MynlpCacheable {
     protected InternalLogger logger = InternalLoggerFactory.getInstance(this.getClass());
 
 
-    private final Environment environment;
+    private final Mynlp mynlp;
 
     private DoubleArrayTrie<V> trie;
 
-    public CommonDictionary(Environment environment) throws Exception {
-        this.environment = environment;
+    public CommonDictionary(Mynlp Mynlp) throws Exception {
+        this.mynlp = Mynlp;
 
         this.restore();
     }
 
     @Override
     public File cacheFileName() {
-        String hash = environment.getMynlpResourceFactory().load(dicFilePath()).hash();
+        String hash = mynlp.loadResource(dicFilePath()).hash();
 
-        return new File(environment.getWorkDir(), hash + "." + this.getClass().getSimpleName());
+        return new File(mynlp.getCacheDir(), hash + "." + this.getClass().getSimpleName());
     }
 
     protected abstract String dicFilePath();
@@ -90,14 +90,14 @@ public abstract class CommonDictionary<V> implements MynlpCacheable {
         }
     }
 
+    private final Splitter splitter = Splitter.on(Pattern.compile("\\s"));
+
     @Override
     public void loadFromRealData() throws Exception {
         TreeMap<String, V> map = new TreeMap<>();
-        long t1 = System.currentTimeMillis();
 
-        MynlpResource resource = environment.getMynlpResourceFactory().load(dicFilePath());
+        MynlpResource resource = mynlp.loadResource(dicFilePath());
 
-        Splitter splitter = Splitter.on(Pattern.compile("\\s"));
         try (CharSourceLineReader reader = resource.openLineReader()) {
             while (reader.hasNext()) {
                 String line = reader.next();

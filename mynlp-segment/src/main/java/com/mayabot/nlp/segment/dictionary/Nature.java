@@ -1626,14 +1626,14 @@ public class Nature {
     //
     // /**
     // * 安全地将字符串类型的词性转为Enum类型，如果未定义该词性，则返回null
-    // * @param name 字符串词性
+    // * @param NAME 字符串词性
     // * @return Enum词性
     // */
-    // public static Nature fromString(String name)
+    // public static Nature fromString(String NAME)
     // {
     // try
     // {
-    // return Nature.valueOf(name);
+    // return Nature.valueOf(NAME);
     // }
     // catch (Exception e)
     // {

@@ -21,7 +21,7 @@ import com.google.common.io.Files;
 import com.google.common.primitives.Ints;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.mayabot.nlp.Environment;
+import com.mayabot.nlp.Mynlp;
 import com.mayabot.nlp.Setting;
 import com.mayabot.nlp.caching.MynlpCacheable;
 import com.mayabot.nlp.common.matrix.CSRSparseMatrix;
@@ -45,30 +45,30 @@ import java.util.regex.Pattern;
 @Singleton
 public class CoreBiGramTableDictionary implements MynlpCacheable {
 
-    private final Environment environment;
+    private final Mynlp mynlp;
 
     private CSRSparseMatrix matrix;
 
     public final Setting<String> coreDictNgramSetting =
-            Setting.stringSetting("core.dict.ngram", "inner://dictionary/core/CoreNatureDictionary.ngram.txt");
+            Setting.string("core.dict.ngram", "dictionary/core/CoreNatureDictionary.ngram.txt");
 
     protected InternalLogger logger = InternalLoggerFactory.getInstance(this.getClass());
 
     private final CoreDictionary coreDictionary;
 
     @Inject
-    public CoreBiGramTableDictionary(CoreDictionary coreDictionary, Environment environment) throws
+    public CoreBiGramTableDictionary(CoreDictionary coreDictionary, Mynlp mynlp) throws
             Exception {
         this.coreDictionary = coreDictionary;
-        this.environment = environment;
+        this.mynlp = mynlp;
 
         this.restore();
     }
 
     @Override
     public File cacheFileName() {
-        String hash = environment.loadResource(coreDictNgramSetting).hash();
-        return new File(environment.getWorkDir(), hash + ".core.ngram.dict");
+        String hash = mynlp.loadResource(coreDictNgramSetting).hash();
+        return new File(mynlp.getCacheDir(), hash + ".core.ngram.dict");
     }
 
     @Override
@@ -98,7 +98,7 @@ public class CoreBiGramTableDictionary implements MynlpCacheable {
 
     @Override
     public void loadFromRealData() throws Exception {
-        MynlpResource source = environment.loadResource(coreDictNgramSetting);
+        MynlpResource source = mynlp.loadResource(coreDictNgramSetting);
 
         TreeBasedTable<Integer, Integer, Integer> table = TreeBasedTable.create();
 
