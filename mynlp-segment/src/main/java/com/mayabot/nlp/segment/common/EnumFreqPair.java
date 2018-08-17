@@ -44,6 +44,14 @@ public class EnumFreqPair<E extends Enum> {
     public EnumFreqPair() {
     }
 
+    /**
+     * 优化
+     * null -> "NULL"
+     * a:1  -> a:1
+     * {a:1,b:2}  -> a:1,b:2
+     *
+     * @param out
+     */
     public void writeItem(DataOutput out) {
         try {
             int size = labelMap.size();
@@ -71,6 +79,7 @@ public class EnumFreqPair<E extends Enum> {
     public void readItem(DataInput in, TypeReference<Map<E, Integer>> typeReference) {
         try {
             String json = in.readUTF();
+            //TODO 可以优化速度
             Map<E, Integer> map = JSON.parseObject(json, typeReference);
 
             this.labelMap = ImmutableMap.copyOf(map);

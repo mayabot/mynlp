@@ -1,5 +1,8 @@
 package com.mayabot.nlp.common;
 
+/**
+ * @author jimichan
+ */
 public class IntArray {
 
     public final int[] data;

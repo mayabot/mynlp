@@ -16,24 +16,25 @@
 
 package com.mayabot.nlp.pinyin;
 
-import com.google.inject.Inject;
 import com.mayabot.nlp.collection.ahocorasick.AhoCorasickDoubleArrayTrie;
 import com.mayabot.nlp.pinyin.model.Pinyin;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 /**
  *
+ * @author jimichan
  */
 
-public class Text2PinyinService {
+public class PinyinService {
 
     private final AhoCorasickDoubleArrayTrie<Pinyin[]> trie;
 
     @Inject
-    public Text2PinyinService(PinyinDictionary pinyinDictionary) {
+    public PinyinService(PinyinDictionary pinyinDictionary) {
         trie = pinyinDictionary.getTrie();
     }
 
@@ -44,7 +45,6 @@ public class Text2PinyinService {
     public  PinyinResult text2Pinyin(String text) {
         return new PinyinResult(segLongest(text.toCharArray()), text);
     }
-
 
 
     /**

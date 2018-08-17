@@ -1,17 +1,18 @@
 package com.mayabot.nlp.pinyin;
 
-import com.mayabot.nlp.MynlpInjector;
+import com.mayabot.nlp.Mynlp;
 
 /**
  * @author jimichan
  */
 public class Pinyins {
 
-    static Text2PinyinService text2PinyinService = MynlpInjector.getInstance(Text2PinyinService.class);
+    static Mynlp mynlp = Mynlp.builder().build();
 
+    static PinyinService pinyinService = mynlp.getInstance(PinyinService.class);
 
     public static PinyinResult convert(String text) {
-        return text2PinyinService.text2Pinyin(text);
+        return pinyinService.text2Pinyin(text);
     }
 
 

@@ -75,6 +75,7 @@ public final class BoundedProportionalArraySizingStrategy implements ArraySizing
    * @param expectedAdditions The number of expected additions to the buffer.
    * @return New buffer size.
    */
+  @Override
   public int grow(int currentBufferLength, int elementsCount, int expectedAdditions) {
     long growBy = (long) ((long) currentBufferLength * growRatio);
     growBy = Math.max(growBy, minGrowCount);
