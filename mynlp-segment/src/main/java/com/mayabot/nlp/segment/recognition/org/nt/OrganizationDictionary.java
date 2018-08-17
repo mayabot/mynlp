@@ -17,7 +17,8 @@ package com.mayabot.nlp.segment.recognition.org.nt;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.mayabot.nlp.Environment;
+import com.mayabot.nlp.Mynlp;
+import com.mayabot.nlp.Setting;
 import com.mayabot.nlp.collection.ahocorasick.AhoCoraickDoubleArrayTrieBuilder;
 import com.mayabot.nlp.collection.ahocorasick.AhoCorasickDoubleArrayTrie;
 import com.mayabot.nlp.logging.InternalLogger;
@@ -54,13 +55,18 @@ public class OrganizationDictionary {
      */
     private AhoCorasickDoubleArrayTrie<String> trie;
 
+    final Setting<String> orgDictSetting =
+            Setting.string("org.dict.tr", "dictionary/organization/nt.tr.txt");
+
+
     @Inject
-    public OrganizationDictionary(NTDictionary dictionary, Environment environment) throws IOException {
+
+    public OrganizationDictionary(NTDictionary dictionary, Mynlp Mynlp) throws IOException {
         this.dictionary = dictionary;
 
         long start = System.currentTimeMillis();
 
-        MynlpResource resource = environment.loadResource("org.dict.tr", "inner://dictionary/organization/nt.tr.txt");
+        MynlpResource resource = Mynlp.loadResource(orgDictSetting);
 
 
         //转移矩阵

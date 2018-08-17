@@ -19,7 +19,6 @@ package com.mayabot.nlp.segment.tokenizer;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Singleton;
-import com.mayabot.nlp.MynlpInjector;
 import com.mayabot.nlp.Settings;
 import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
@@ -59,7 +58,10 @@ public class WordnetTokenizerFactory {
      * @return
      */
     public static WordnetTokenizerFactory instance() {
-        return MynlpInjector.getInjector().getInstance(WordnetTokenizerFactory.class);
+        //FIXME 为了编译 先返回null
+        return null;
+
+        //return MynlpInjector.getInjector().getInstance(WordnetTokenizerFactory.class);
     }
 
     public WordnetTokenizer build(PipelineDefine pipelineDefine, Settings settings) {
@@ -67,7 +69,7 @@ public class WordnetTokenizerFactory {
         settings = Settings.merge(this.settings, settings);
 
         String initer = settings.get(TOKENIZER_INITER, ComponentRegistry.WORDNET_INITER_CORE);
-        String bestpath = settings.get(TOKENIZER_BESTPATH, ViterbiBestPathComputer.name);
+        String bestpath = settings.get(TOKENIZER_BESTPATH, ViterbiBestPathComputer.NAME);
 
         WordnetTokenizer instance = injector.getInstance(WordnetTokenizer.class);
 

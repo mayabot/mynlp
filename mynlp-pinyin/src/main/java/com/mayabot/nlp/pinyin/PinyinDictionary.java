@@ -38,7 +38,7 @@ import java.io.*;
 import java.util.List;
 import java.util.TreeMap;
 
-import static com.mayabot.nlp.Setting.stringSetting;
+import static com.mayabot.nlp.Setting.string;
 
 /**
  * 拼音的词典
@@ -51,10 +51,10 @@ public class PinyinDictionary implements MynlpCacheable {
     InternalLogger logger = InternalLoggerFactory.getInstance(PinyinDictionary.class);
 
     public final static Setting<String> pinyinSetting =
-            stringSetting("pinyin.dict", "dictionary/pinyin.txt");
+            string("pinyin.dict", "dictionary/pinyin.txt");
 
     public final static Setting<String> pinyinExtDicSetting =
-            stringSetting("pinyin.ext.dict", null);
+            string("pinyin.ext.dict", null);
 
     private Mynlp mynlp;
 

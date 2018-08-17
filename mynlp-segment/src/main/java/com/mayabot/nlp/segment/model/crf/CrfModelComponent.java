@@ -18,7 +18,8 @@ package com.mayabot.nlp.segment.model.crf;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.mayabot.nlp.Environment;
+import com.mayabot.nlp.Mynlp;
+import com.mayabot.nlp.Setting;
 import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
 import com.mayabot.nlp.resources.MynlpResource;
@@ -26,18 +27,24 @@ import com.mayabot.nlp.utils.CharSourceLineReader;
 
 import java.io.IOException;
 
+/**
+ * @author jimichan
+ */
 @Singleton
-public class CRFModelComponent {
+public class CrfModelComponent {
 
-    private final Environment environment;
+    private final Mynlp mynlp;
 
     protected InternalLogger logger = InternalLoggerFactory.getInstance(this.getClass());
 
     final CRFSegmentModel crfSegmentModel;
 
+    public static final Setting<String> crfModelSetting =
+            Setting.string("crf.segment.dict", "model/CRFSegmentModel.txt");
+
     @Inject
-    public CRFModelComponent(Environment environment) throws IOException {
-        this.environment = environment;
+    public CrfModelComponent(Mynlp Mynlp) throws IOException {
+        this.mynlp = Mynlp;
 
         this.crfSegmentModel = loadTxt();
     }
@@ -48,7 +55,8 @@ public class CRFModelComponent {
      * @return 该模型
      */
     private CRFSegmentModel loadTxt() throws IOException {
-        MynlpResource resource = environment.loadResource("crf.segment.dict", "inner://model/segment/CRFSegmentModel.txt");
+        MynlpResource resource = mynlp.loadResource(crfModelSetting);
+
         try (CharSourceLineReader lineIterator = resource.openLineReader()) {
             return CRFSegmentModel.loadFromCrfPlusText(lineIterator);
         }

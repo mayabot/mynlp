@@ -52,7 +52,7 @@ public class MynlpTokenizerBuilder {
     }
 
     public MynlpTokenizerBuilder viterbiBestPath() {
-        return bestPath(ViterbiBestPathComputer.name);
+        return bestPath(ViterbiBestPathComputer.NAME);
     }
 
     public MynlpTokenizerBuilder pipeline(PipelineDefine pipeLine) {

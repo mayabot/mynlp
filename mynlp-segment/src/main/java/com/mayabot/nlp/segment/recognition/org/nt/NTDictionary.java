@@ -19,7 +19,7 @@ package com.mayabot.nlp.segment.recognition.org.nt;
 import com.alibaba.fastjson.TypeReference;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.mayabot.nlp.Environment;
+import com.mayabot.nlp.Mynlp;
 import com.mayabot.nlp.segment.common.EnumFreqPair;
 import com.mayabot.nlp.segment.dictionary.CommonDictionary;
 import com.mayabot.nlp.segment.recognition.org.NTTag;
@@ -36,8 +36,8 @@ import java.util.Map;
 public class NTDictionary extends CommonDictionary<EnumFreqPair<NTTag>> {
 
     @Inject
-    public NTDictionary(Environment environment) throws Exception {
-        super(environment);
+    public NTDictionary(Mynlp Mynlp) throws Exception {
+        super(Mynlp);
     }
 
     @Override
@@ -47,7 +47,7 @@ public class NTDictionary extends CommonDictionary<EnumFreqPair<NTTag>> {
 
     @Override
     public String dicFilePath() {
-        return "inner://dictionary/organization/nt.txt";
+        return "dictionary/organization/nt.txt";
     }
 
     @Override
