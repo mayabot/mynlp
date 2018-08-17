@@ -20,7 +20,6 @@ import com.google.common.base.Preconditions;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.mayabot.nlp.segment.dictionary.core.CoreBiGramTableDictionary;
-import com.mayabot.nlp.utils.Predefine;
 
 /**
  * 基于核心词典的bi词之前的共出现的次数，采用viterbi选择出一个概率最大的path

@@ -20,15 +20,13 @@ import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.common.io.Files;
 import com.google.common.io.Resources;
 import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.InputStream;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,7 +42,7 @@ public class Settings {
 
     private static final InternalLogger logger = InternalLoggerFactory.getInstance(Settings.class);
 
-    private Map<String, String> settings = ImmutableMap.of();
+    private Map<String, String> settings;
 
     public final static Settings EMPTY = new Settings(Maps.newHashMap());
 
@@ -56,36 +54,34 @@ public class Settings {
         this.settings = Maps.newHashMap(settings.settings);
     }
 
-    public static final String KEY_CONF_DIR = "mynlp.conf.dir";
-    public static final String KEY_DATA_DIR = "mynlp.data.dir";
-    public static final String KEY_WORK_DIR = "mynlp.work.dir";
-    public static final String KEY_WORK_DIR_NAME = "mynlp.work.name";
-
-
     public <T> T get(Setting<T> setting) {
         String value = get(setting.getKey(), setting.getDefaultValue());
         return setting.getParse().apply(value);
     }
 
-    public void put(Setting setting, String value) {
+    public Settings put(Setting setting, String value) {
         settings.put(setting.getKey(), value);
+        return this;
     }
 
-    public void put(String key, String value) {
+    public Settings put(String key, String value) {
         settings.put(key, value);
+        return this;
     }
 
-    public void put(String prefix,Setting setting, String value) {
-        settings.put(prefix+"."+setting.getKey(), value);
+    public Settings put(String prefix, Setting setting, String value) {
+        settings.put(prefix + "." + setting.getKey(), value);
+        return this;
     }
 
     /**
      * 后面的覆盖前面的设置
+     *
      * @param settings
      * @return
      */
-    public static Settings merge(Settings ... settings) {
-        Map<String,String> all = Maps.newHashMap();
+    public static Settings merge(Settings... settings) {
+        Map<String, String> all = Maps.newHashMap();
         for (Settings setting : settings) {
             if (setting == null) {
                 continue;
@@ -99,7 +95,7 @@ public class Settings {
         return new Settings(ImmutableMap.of());
     }
 
-    public static Settings createFrom(Settings settings) {
+    public static Settings create(Map<String, String> settings) {
         return new Settings(settings);
     }
 
@@ -113,84 +109,6 @@ public class Settings {
     }
 
     /**
-     * 从遇到的第一个文件开始。
-     * 2. classpath://maya_nlp.properties
-     * 2. classpath://maya_nlp_default.properties
-     *
-     * @return
-     */
-    public static Settings build() {
-
-        String configPath = System.getProperty(KEY_CONF_DIR, "conf");
-        Path configDir = Paths.get(configPath);
-
-        logger.info("Mynlp config path {}", configDir.toAbsolutePath().toString());
-
-        @SuppressWarnings("unchecked") List<Supplier<InputStream>> list = Lists.newArrayList(
-
-                () -> {
-                    try {
-                        return Resources.getResource("mynlp.default.properties").openStream();
-                    } catch (Exception e) {
-                        return null;
-                    }
-                },
-                () -> {
-                    try {
-                        return Resources.getResource("mynlp.properties").openStream();
-                    } catch (Exception e) {
-                        return null;
-                    }
-                },
-
-                () -> {
-                    try {
-
-                        File file = configDir.resolve("mynlp.properties").toFile();
-                        if (file.exists()) {
-                            return new FileInputStream(file);
-                        }
-                        return null;
-                    } catch (Exception e) {
-                        return null;
-                    }
-                },
-                () -> {
-                    try {
-                        File file = configDir.resolve("mynlp.product.properties").toFile();
-                        if (file.exists()) {
-                            return new FileInputStream(file);
-                        }
-                        return null;
-                    } catch (Exception e) {
-                        return null;
-                    }
-                }
-        );
-
-        Map<String, String> map = Maps.newHashMap();
-
-        for (Supplier<InputStream> supplier : list) {
-            InputStream in = supplier.get();
-            if (in != null) {
-                Properties properties = new Properties();
-                try {
-                    properties.load(in);
-                    for (String key : properties.stringPropertyNames()) {
-                        String value = properties.getProperty(key);
-                        map.put(key, value);
-                    }
-                } catch (Exception e) {
-
-                }
-            }
-        }
-
-        return new Settings(ImmutableMap.copyOf(map));
-
-    }
-
-    /**
      * 填充一个POJO配置对象
      *
      * @param objectToConfig
@@ -200,7 +118,7 @@ public class Settings {
     }
 
 
-    private final Splitter splitter = Splitter.on('.').omitEmptyStrings().trimResults();
+    //private final Splitter splitter = Splitter.on('.').omitEmptyStrings().trimResults();
 
     /**
      * Returns the setting value associated with the setting key.
@@ -340,6 +258,78 @@ public class Settings {
         public SettingsException(String message, Throwable cause) {
             super(message, cause);
         }
+    }
+
+
+    /**
+     * 在下面的位置搜索文件 mynlp.properties，并且合并。
+     * 排在前面的优先级高.
+     * <p>
+     * 1. ${work dir}/mynlp.properties
+     * 2. classpath:mynlp.properties
+     * 3. ~/mynlp.properties
+     *
+     * @return
+     */
+    public static Settings defaultSettings() {
+        @SuppressWarnings("unchecked")
+        List<Supplier<InputStream>> list = Lists.newArrayList(
+                () -> {
+                    try {
+                        File file = new File("mynlp.properties");
+                        if (file.exists() && file.canRead()) {
+                            logger.info("read settings from " + file);
+                            return Files.asByteSource(file).openBufferedStream();
+                        }
+                    } catch (Exception e) {
+                        return null;
+                    }
+                    return null;
+                },
+                () -> {
+                    try {
+                        InputStream inputStream = Resources.getResource("mynlp.properties").openStream();
+                        logger.info("read settings from classpath://mynlp.properties");
+                        return inputStream;
+                    } catch (Exception e) {
+                        return null;
+                    }
+                },
+
+                () -> {
+                    try {
+                        String userHome = System.getProperty("user.home");
+                        File file = new File(userHome, "mynlp.properties");
+                        if (file.exists() && file.canRead()) {
+                            logger.info("read settings from " + file);
+                            return Files.asByteSource(file).openBufferedStream();
+                        }
+                    } catch (Exception e) {
+                        return null;
+                    }
+                    return null;
+                }
+        );
+
+        Map<String, String> map = Maps.newHashMap();
+
+        for (Supplier<InputStream> supplier : Lists.reverse(list)) {
+            InputStream in = supplier.get();
+            if (in != null) {
+                Properties properties = new Properties();
+                try {
+                    properties.load(in);
+                    for (String key : properties.stringPropertyNames()) {
+                        String value = properties.getProperty(key);
+                        map.put(key, value);
+                    }
+                } catch (Exception e) {
+
+                }
+            }
+        }
+
+        return new Settings(map);
     }
 
 }

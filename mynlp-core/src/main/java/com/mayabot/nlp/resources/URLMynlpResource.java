@@ -16,7 +16,6 @@
 
 package com.mayabot.nlp.resources;
 
-import com.google.common.base.Charsets;
 import com.google.common.io.ByteSource;
 import com.google.common.io.CharSource;
 import com.google.common.io.Resources;
@@ -36,22 +35,16 @@ public class URLMynlpResource implements MynlpResource {
 
     private final URL url;
     private final Charset charset;
+    private boolean zip;
 
     public URLMynlpResource(URL url, Charset charset) {
         this.url = url;
         this.charset = charset;
-    }
-
-    public URLMynlpResource(URL url) {
-        this.url = url;
-        this.charset = Charsets.UTF_8;
+        zip = url.toString().endsWith(".zip");
     }
 
     @Override
     public InputStream openInputStream() throws IOException {
-
-        boolean zip = url.toString().endsWith(".zip");
-
         ByteSource byteSource = Resources.asByteSource(url);
 
         if (zip) {
@@ -64,9 +57,6 @@ public class URLMynlpResource implements MynlpResource {
 
     @Override
     public CharSourceLineReader openLineReader() {
-
-        boolean zip = url.toString().endsWith(".zip");
-
         ByteSource byteSource = Resources.asByteSource(url);
 
         if (zip) {
