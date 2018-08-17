@@ -22,7 +22,6 @@ import com.mayabot.nlp.segment.dictionary.Nature;
 import com.mayabot.nlp.segment.dictionary.NatureAttribute;
 import com.mayabot.nlp.segment.dictionary.core.CoreDictionary;
 import com.mayabot.nlp.segment.wordnet.Vertex;
-import com.mayabot.nlp.utils.Predefine;
 
 /**
  * 顶点管理器

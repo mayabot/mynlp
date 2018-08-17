@@ -16,22 +16,67 @@
 
 package com.mayabot.nlp.pinyin;
 
-import com.mayabot.nlp.MynlpInjector;
+import com.mayabot.nlp.Mynlp;
+import com.mayabot.nlp.Settings;
 import org.junit.Assert;
 import org.junit.Test;
 
 public class PinyinTest {
 
-    Text2PinyinService text2PinyinService = MynlpInjector.getInstance(Text2PinyinService.class);
-    PinyinDictionary instance = MynlpInjector.getInstance(PinyinDictionary.class);
-
     @Test
     public void test() {
 
-        PinyinResult result = text2PinyinService.text2Pinyin("123aed,.你好朝朝暮暮,银行");
+        PinyinResult result = Pinyins.convert("123aed,.你好朝朝暮暮,银行");
 
         Assert.assertEquals("",result.asString(),"1 2 3 a e d ni hao zhao zhao mu mu yin hang");
         Assert.assertEquals("",result.asHeadString(),"1 2 3 a e d n h z z m m y h");
+
+    }
+
+
+    @Test
+    public void test2() {
+
+        Mynlp mynlp = Mynlp.builder()
+                .setSettings(Settings.createEmpty().put(
+                        PinyinDictionary.pinyinExtDicSetting, "pinyin.txt"))
+                .build();
+
+        PinyinService pinyinService = mynlp.getInstance(PinyinService.class);
+
+
+        PinyinResult result = pinyinService.text2Pinyin("123aed,.你好朝朝暮暮,银行");
+
+        Assert.assertEquals("", result.asString(), "1 2 3 a e d ni hao zhao zhao mu mu yin hang");
+        Assert.assertEquals("", result.asHeadString(), "1 2 3 a e d n h z z m m y h");
+
+        System.out.println(pinyinService.text2Pinyin("朝朝盈"));
+
+    }
+
+    @Test
+    public void test3() {
+
+        CustomPinyin customPinyin = new CustomPinyin();
+
+        customPinyin.put("朝朝盈", "zhao1,zhao1,yin2");
+
+
+        Mynlp mynlp = Mynlp.builder()
+                .bind(CustomPinyin.class, customPinyin)
+                .build();
+
+        PinyinService pinyinService = mynlp.getInstance(PinyinService.class);
+
+
+        PinyinResult result = pinyinService.text2Pinyin("123aed,.你好朝朝暮暮,银行");
+
+        Assert.assertEquals("", result.asString(), "1 2 3 a e d ni hao zhao zhao mu mu yin hang");
+        Assert.assertEquals("", result.asHeadString(), "1 2 3 a e d n h z z m m y h");
+
+
+        Assert.assertEquals("", pinyinService.text2Pinyin("朝朝盈").asString(), "zhao zhao yin");
+
 
     }
 

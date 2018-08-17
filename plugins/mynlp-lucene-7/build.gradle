@@ -1,0 +1,8 @@
+apply plugin: 'java-library'
+
+dependencies {
+    implementation 'org.apache.lucene:lucene-core:7.0.1'
+    implementation 'org.apache.lucene:lucene-analyzers-common:7.0.1'
+
+    api project(":mynlp-segment")
+}

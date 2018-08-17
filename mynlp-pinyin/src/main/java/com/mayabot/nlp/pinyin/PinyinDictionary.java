@@ -23,7 +23,7 @@ import com.google.common.io.Files;
 import com.google.common.primitives.Ints;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.mayabot.nlp.Environment;
+import com.mayabot.nlp.Mynlp;
 import com.mayabot.nlp.Setting;
 import com.mayabot.nlp.caching.MynlpCacheable;
 import com.mayabot.nlp.collection.ahocorasick.AhoCoraickDoubleArrayTrieBuilder;
@@ -38,26 +38,37 @@ import java.io.*;
 import java.util.List;
 import java.util.TreeMap;
 
+import static com.mayabot.nlp.Setting.stringSetting;
+
+/**
+ * 拼音的词典
+ *
+ * @author jimichan
+ */
 @Singleton
 public class PinyinDictionary implements MynlpCacheable {
 
     InternalLogger logger = InternalLoggerFactory.getInstance(PinyinDictionary.class);
 
-    public final Setting<String> pinyinSetting =
-            Setting.stringSetting("pinyin.dict", "inner://dictionary/pinyin.txt");
+    public final static Setting<String> pinyinSetting =
+            stringSetting("pinyin.dict", "dictionary/pinyin.txt");
 
-    public final Setting<String> pinyinExtDicSetting =
-            Setting.stringSetting("pinyin.ext.dict",null);
+    public final static Setting<String> pinyinExtDicSetting =
+            stringSetting("pinyin.ext.dict", null);
 
-    private final Environment environment;
-
+    private Mynlp mynlp;
 
     private AhoCorasickDoubleArrayTrie<Pinyin[]> trie = null;
 
+    private CustomPinyin customPinyin;
+
     @Inject
-    public PinyinDictionary(Environment environment) throws Exception {
-        this.environment = environment;
+    public PinyinDictionary(Mynlp mynlp, CustomPinyin customPinyin) throws Exception {
+        this.mynlp = mynlp;
         long t1 = System.currentTimeMillis();
+
+        this.customPinyin = customPinyin;
+
         this.restore();
         long t2 = System.currentTimeMillis();
         logger.info("Loaded pinyin dictionary success! " + (t2 - t1) + " ms");
@@ -65,18 +76,19 @@ public class PinyinDictionary implements MynlpCacheable {
 
     @Override
     public File cacheFileName() {
-        //environment.getMynlpResourceFactory().load("inner://")
 
-        String hash = environment.loadResource(pinyinSetting).hash();
+        String hash = mynlp.loadResource(pinyinSetting).hash();
 
-        MynlpResource ext = environment.loadResource(pinyinExtDicSetting);
+        MynlpResource ext = mynlp.loadResource(pinyinExtDicSetting);
         if (ext != null) {
             hash += ext.hash();
         }
 
+        hash += customPinyin.hash();
+
         hash = Hashing.md5().hashString(hash, Charsets.UTF_8).toString();
 
-        return new File(environment.getWorkDir(), "pinyin.dict." + hash);
+        return new File(mynlp.getCacheDir(), "pinyin.dict." + hash);
     }
 
     @Override
@@ -102,6 +114,7 @@ public class PinyinDictionary implements MynlpCacheable {
     }
 
     static Pinyin[] pinyinByOrdinal;
+
     static {
         pinyinByOrdinal = new Pinyin[Pinyin.values().length+1];
 
@@ -143,13 +156,11 @@ public class PinyinDictionary implements MynlpCacheable {
     @Override
     public void loadFromRealData() throws Exception {
 
-
-
         List<MynlpResource> list = Lists.newArrayList();
 
-        list.add(environment.loadResource(pinyinSetting));
+        list.add(mynlp.loadResource(pinyinSetting));
 
-        MynlpResource ext = environment.loadResource(pinyinExtDicSetting);
+        MynlpResource ext = mynlp.loadResource(pinyinExtDicSetting);
         if (ext != null) {
             list.add(ext);
         }
@@ -165,31 +176,48 @@ public class PinyinDictionary implements MynlpCacheable {
                     String[] param = line.split("=");
 
                     String key = param[0];
-                    String[] values = param[1].split(",");
 
-
-                    Pinyin[] pinyins = new Pinyin[values.length];
-                    boolean error = false;
-                    for (int i = 0; i < values.length; i++) {
-                        try {
-                            Pinyin pinyin = Pinyin.valueOf(values[i]);
-                            pinyins[i] = pinyin;
-
-                        } catch (IllegalArgumentException e) {
-                            logger.warn("读取拼音词典，解析" + line + "错误");
-                            error = true;
-                        }
-                    }
-                    if (!error) {
+                    Pinyin[] pinyins = parse(param[1]);
+                    if (pinyins != null) {
                         map.put(key, pinyins);
                     }
                 }
             }
         }
 
+        customPinyin.getMap().forEach((key, value) -> {
+            Pinyin[] pinyins = parse(value);
+            if (pinyins != null) {
+                map.put(key, pinyins);
+            }
+        });
+
         AhoCoraickDoubleArrayTrieBuilder<Pinyin[]> builder = new AhoCoraickDoubleArrayTrieBuilder<>();
         this.trie = builder.build(map);
 
+    }
+
+    private Pinyin[] parse(String text) {
+        String[] values = text.split(",");
+
+
+        Pinyin[] pinyins = new Pinyin[values.length];
+        boolean error = false;
+        for (int i = 0; i < values.length; i++) {
+            try {
+                Pinyin pinyin = Pinyin.valueOf(values[i]);
+                pinyins[i] = pinyin;
+
+            } catch (IllegalArgumentException e) {
+                logger.warn("读取拼音词典，解析" + text + "错误");
+                error = true;
+            }
+        }
+        if (!error) {
+            return pinyins;
+        } else {
+            return null;
+        }
     }
 
 
