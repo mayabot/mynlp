@@ -28,9 +28,6 @@ import com.mayabot.nlp.segment.wordnet.Wordpath;
 
 /**
  * 人工纠错。
- * <p>
- * <p>
- * <p>
  * Created by jimichan on 2017/7/3.
  */
 @Singleton
