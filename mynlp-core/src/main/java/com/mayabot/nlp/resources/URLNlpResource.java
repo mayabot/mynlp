@@ -29,15 +29,18 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.zip.ZipInputStream;
 
-public class URLMynlpResource implements MynlpResource {
+/**
+ * @author jimichan
+ */
+public class URLNlpResource implements NlpResource {
 
-    static InternalLogger logger = InternalLoggerFactory.getInstance(URLMynlpResource.class);
+    static InternalLogger logger = InternalLoggerFactory.getInstance(URLNlpResource.class);
 
     private final URL url;
     private final Charset charset;
     private boolean zip;
 
-    public URLMynlpResource(URL url, Charset charset) {
+    public URLNlpResource(URL url, Charset charset) {
         this.url = url;
         this.charset = charset;
         zip = url.toString().endsWith(".zip");

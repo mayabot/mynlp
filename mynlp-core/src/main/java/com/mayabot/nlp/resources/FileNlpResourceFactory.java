@@ -14,16 +14,16 @@ import java.util.zip.ZipInputStream;
 /**
  * @author jimichan
  */
-public class FileResourceFactory implements ResourceFactory {
+public class FileNlpResourceFactory implements NlpResourceFactory {
 
     private File baseDir;
 
-    public FileResourceFactory(File baseDir) {
+    public FileNlpResourceFactory(File baseDir) {
         this.baseDir = baseDir;
     }
 
     @Override
-    public MynlpResource load(String resourceName, Charset charset) {
+    public NlpResource load(String resourceName, Charset charset) {
 
         File file = new File(baseDir, resourceName.replace('/', File.separatorChar));
 
@@ -39,7 +39,7 @@ public class FileResourceFactory implements ResourceFactory {
         return null;
     }
 
-    public static class FileMynlpResource implements MynlpResource {
+    public static class FileMynlpResource implements NlpResource {
 
         private final File file;
         private Charset charset;

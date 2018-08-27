@@ -19,7 +19,7 @@ package com.mayabot.nlp.collection;
 import com.google.common.base.Splitter;
 import com.google.common.collect.*;
 import com.google.common.io.ByteSource;
-import com.mayabot.nlp.resources.MynlpResource;
+import com.mayabot.nlp.resources.NlpResource;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -91,7 +91,7 @@ public class TransformMatrix {
         }
     }
 
-    public boolean load(MynlpResource resource) throws IOException {
+    public boolean load(NlpResource resource) throws IOException {
 
         try (InputStream inputStream = resource.openInputStream()) {
             return load(inputStream);

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.mayabot.nlp.segment.model.crf;
+package com.mayabot.nlp.segment.crf;
 
 /**
  * 给一个实例生成一个元素表

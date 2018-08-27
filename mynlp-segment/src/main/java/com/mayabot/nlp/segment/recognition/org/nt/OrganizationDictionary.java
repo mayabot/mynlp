@@ -23,7 +23,7 @@ import com.mayabot.nlp.collection.ahocorasick.AhoCoraickDoubleArrayTrieBuilder;
 import com.mayabot.nlp.collection.ahocorasick.AhoCorasickDoubleArrayTrie;
 import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
-import com.mayabot.nlp.resources.MynlpResource;
+import com.mayabot.nlp.resources.NlpResource;
 import com.mayabot.nlp.segment.dictionary.EnumTransformMatrix;
 import com.mayabot.nlp.segment.recognition.org.NTTag;
 
@@ -66,7 +66,7 @@ public class OrganizationDictionary {
 
         long start = System.currentTimeMillis();
 
-        MynlpResource resource = Mynlp.loadResource(orgDictSetting);
+        NlpResource resource = Mynlp.loadResource(orgDictSetting);
 
 
         //转移矩阵

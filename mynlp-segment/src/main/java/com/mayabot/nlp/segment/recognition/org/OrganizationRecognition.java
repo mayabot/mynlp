@@ -28,7 +28,7 @@ import com.mayabot.nlp.segment.dictionary.NatureAttribute;
 import com.mayabot.nlp.segment.dictionary.core.CoreDictionary;
 import com.mayabot.nlp.segment.recognition.org.nt.NTDictionary;
 import com.mayabot.nlp.segment.recognition.org.nt.OrganizationDictionary;
-import com.mayabot.nlp.segment.support.DefaultNameComponent;
+import com.mayabot.nlp.segment.support.BaseNlpComponent;
 import com.mayabot.nlp.segment.wordnet.Vertex;
 import com.mayabot.nlp.segment.wordnet.Wordnet;
 
@@ -39,7 +39,7 @@ import static com.mayabot.nlp.segment.recognition.org.NTTag.Z;
  *
  * @author jimichan
  */
-public class OrganizationRecognition extends DefaultNameComponent implements OptimizeProcessor {
+public class OrganizationRecognition extends BaseNlpComponent implements OptimizeProcessor {
 
 
     public static OrganizationRecognition build(Injector injector) {

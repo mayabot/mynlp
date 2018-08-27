@@ -27,6 +27,7 @@ import com.mayabot.nlp.segment.wordnet.Wordnet;
  * 原来Hanlp里面是放在Vertex里面的一个方法
  * <p>
  * 后面有些识别器需要这些设置的属性
+ * @author jimichan
  */
 public class ConvertAbstractWord implements WordnetInitializer {
 

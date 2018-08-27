@@ -1,10 +1,10 @@
-package com.mayabot.nlp.segment.wordprocessor;
+package com.mayabot.nlp.segment.recognition;
 
 import com.google.inject.Inject;
 import com.mayabot.nlp.segment.WordpathProcessor;
 import com.mayabot.nlp.segment.dictionary.NatureAttribute;
 import com.mayabot.nlp.segment.dictionary.core.CoreDictionary;
-import com.mayabot.nlp.segment.support.DefaultNameComponent;
+import com.mayabot.nlp.segment.support.BaseNlpComponent;
 import com.mayabot.nlp.segment.wordnet.Vertex;
 import com.mayabot.nlp.segment.wordnet.Wordnet;
 import com.mayabot.nlp.segment.wordnet.Wordpath;
@@ -16,22 +16,29 @@ import com.mayabot.nlp.utils.CharSet;
  *
  * @author jimichan jimichan@gmail.com
  */
-public class RepairWordnetProcessor extends DefaultNameComponent implements WordpathProcessor {
+public class RepairWordnetProcessor extends BaseNlpComponent implements WordpathProcessor {
 
     private CoreDictionary coreDictionary;
 
-    private NatureAttribute X_attribute;//字符串
-    private NatureAttribute Num_attribute;//字符串
+    /**
+     * 字符串
+     */
+    private NatureAttribute xAttribute;
+
+    /**
+     * 字符串
+     */
+    private NatureAttribute numAttribute;
 
     int numWordId;
 
     @Inject
     public RepairWordnetProcessor(CoreDictionary coreDictionary) {
         this.coreDictionary = coreDictionary;
-        X_attribute = coreDictionary.get(coreDictionary.X_WORD_ID);
+        xAttribute = coreDictionary.get(coreDictionary.X_WORD_ID);
 
         numWordId = coreDictionary.getWordID(CoreDictionary.TAG_NUMBER);
-        Num_attribute = coreDictionary.get(numWordId);
+        numAttribute = coreDictionary.get(numWordId);
     }
 
     @Override
@@ -47,9 +54,9 @@ public class RepairWordnetProcessor extends DefaultNameComponent implements Word
                 vertex = wordnet.put(from, len);
 
                 if (isNum(charArray, from, len)) {
-                    vertex.setWordInfo(numWordId, Num_attribute);
+                    vertex.setWordInfo(numWordId, numAttribute);
                 } else {
-                    vertex.setWordInfo(coreDictionary.X_WORD_ID, X_attribute);
+                    vertex.setWordInfo(coreDictionary.X_WORD_ID, xAttribute);
                 }
 
             }
