@@ -41,37 +41,6 @@ public class ViterbiBestPathComputer implements BestPathComputer {
     }
 
     /**
-     * -1	¤ 	|		BEGIN
-     * 0	这 	|		这 {rzv=54791}(4.070759440936601)		[Y]这里 {rzs=3843}(4.579405126197817)
-     * 1	里 	|		里 {f=16722}(12.46164245387843)
-     * 2	有 	|		有 {vyou=85663}(7.544684832432196)		[Y]有关 {vn=5733, v=2741}(15.203678100804673)
-     * 3	关 	|		关 {n=1388}(15.503126753728335)		[Y]关天[未##人] {nr=607718, nrf=113445}		[Y]关天培[未##人] {nr=607718, nrf=113445}
-     * 4	天 	|		[Y]天 {qt=8660}(25.26417248000554)
-     * 5	培 	|		[Y]培 {v=78}(5.8510305753092355)
-     * 6	的 	|		[Y]的 {ude1=857740}(3.1812404559835485)
-     * 7	烈 	|		烈 {a=43}(52.56616577195564)		[Y]烈士 {nnt=146}(8.849262104347634)
-     * 8	士 	|		士 {ng=132}(64.16173487214445)
-     * 9	. 	|		[Y]. {w=10000}(20.401302810184667)
-     * 10	龚 	|		[Y]龚 {nz=33}(30.329012216428193)		[Y]龚学[未##人] {nr=607718, nrf=113445}(30.329012216428193)		[Y]龚学平[未##人] {nr=607718, nrf=113445}(30.329012216428193)
-     * 11	学 	|		[Y]学 {v=1824}(41.928910055744744)
-     * 12	平 	|		[Y]平 {v=1007}(36.18004279173743)		[Y]平等 {a=542}(36.18004279173743)
-     * 13	等 	|		[Y]等 {udeng=59855}(34.67881357497878)
-     * 14	领 	|		领 {v=721}(108.06111850914337)		[Y]领导 {n=7055}(40.92071359722565)
-     * 15	导 	|		导 {vg=216, v=74}(119.39983526854556)
-     * 16	, 	|		[Y], {w=10000}(51.12282609430713)
-     * 17	  	|		[Y]  {w=10000}(61.05053550055065)
-     * 18	邓 	|		[Y]邓 {nz=285}(70.97824490679417)		[Y]邓颖[未##人] {nr=607718, nrf=113445}(70.97824490679417)		[Y]邓颖超[未##人] {nr=607718, nrf=113445}(70.97824490679417)
-     * 19	颖 	|		[Y]颖 {nz=35}(82.47439493108307)
-     * 20	超 	|		[Y]超 {v=2397}(76.82927548210341)		[Y]超生 {vi=449, vn=34}(76.82927548210341)
-     * 21	生 	|		[Y]生 {v=2977, vn=431}(76.82927548210341)		[Y]生前[未##时] {t=757118}(75.13792938558636)
-     * 22	前 	|		前 {f=16954}(172.6354017910788)
-     * 23	¶ 	|		END
-     *
-     * @param wordnet
-     * @return
-     */
-
-    /**
      * 在原因的path基础上。多个识别器做了修改。
      * 1. 合成词
      * 2. 截断+合成
@@ -79,7 +48,6 @@ public class ViterbiBestPathComputer implements BestPathComputer {
      * @param wordnet
      * @return
      */
-
     @Override
     public Wordpath select(Wordnet wordnet) {
 
@@ -177,23 +145,12 @@ public class ViterbiBestPathComputer implements BestPathComputer {
 
 
     private void updateFrom(Wordnet wordnet, Vertex the, Vertex from) {
-        //FIXME 检查adjust权重在这里add是否正确
-        //提高效率。利用之前的权重。也算为优化网络计算出了力
-//		if(from.getRowNum() >=0 && (!(the.isOptimize() || from.change))){
-//			if (wordnet.isOptimizeNet()) {
-//				System.out.println(the.theChar());
-//			}
-//			return;
-//		}
 
         //是权重越小越好 距离越短
         double weight = from.weight + calculateWeight(from, the);
         if (the.from == null || the.weight > weight) {
             the.from = from;
             the.weight = weight;
-//			if(wordnet.isOptimizeNet()){
-//				the.change = true;
-//			}
         }
     }
 
@@ -208,7 +165,8 @@ public class ViterbiBestPathComputer implements BestPathComputer {
     private double calculateWeight(Vertex from, Vertex to) {
         int frequency = from.natureAttribute.getTotalFrequency();
         if (frequency == 0) {
-            frequency = 1; // 防止发生除零错误
+            // 防止发生除零错误
+            frequency = 1;
         }
 
         // TODO CHECKME

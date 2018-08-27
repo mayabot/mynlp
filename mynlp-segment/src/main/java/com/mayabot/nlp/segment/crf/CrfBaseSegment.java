@@ -14,36 +14,33 @@
  * limitations under the License.
  */
 
-package com.mayabot.nlp.segment.wordnetiniter;
+package com.mayabot.nlp.segment.crf;
 
 import com.google.inject.Inject;
-import com.google.inject.Injector;
 import com.google.inject.Singleton;
 import com.mayabot.nlp.segment.WordnetInitializer;
 import com.mayabot.nlp.segment.dictionary.Nature;
 import com.mayabot.nlp.segment.dictionary.NatureAttribute;
-import com.mayabot.nlp.segment.model.crf.CRFSegmentModel;
-import com.mayabot.nlp.segment.model.crf.CrfModelComponent;
-import com.mayabot.nlp.segment.model.crf.Table;
 import com.mayabot.nlp.segment.wordnet.Vertex;
 import com.mayabot.nlp.segment.wordnet.Wordnet;
 import com.mayabot.nlp.utils.CharacterHelper;
 
 /**
  * CRF基础的分词器
+ * @author jimichan
  */
 @Singleton
-public class CrfOriginalSegment implements WordnetInitializer {
+public class CrfBaseSegment implements WordnetInitializer {
 
 
-    private final CRFSegmentModel crfModel;
+    private final CrfSegmentModel crfModel;
 
-    public static CrfOriginalSegment build(Injector injector) {
-        return injector.getInstance(CrfOriginalSegment.class);
-    }
+//    public static CrfBaseSegment build(Injector injector) {
+//        return injector.getInstance(CrfBaseSegment.class);
+//    }
 
     @Inject
-    public CrfOriginalSegment(CrfModelComponent crfModelComponent) {
+    public CrfBaseSegment(CrfModelFile crfModelComponent) {
         this.crfModel = crfModelComponent.getCrfSegmentModel();
     }
 

@@ -33,7 +33,7 @@ import com.mayabot.nlp.collection.dat.DoubleArrayTrie;
 import com.mayabot.nlp.collection.dat.DoubleArrayTrieBuilder;
 import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
-import com.mayabot.nlp.resources.MynlpResource;
+import com.mayabot.nlp.resources.NlpResource;
 import com.mayabot.nlp.utils.CharSourceLineReader;
 
 import java.io.*;
@@ -91,7 +91,7 @@ public class CorrectionDictionary implements MynlpCacheable {
         TreeSet<String> set = new TreeSet<>();
 
         for (String url : resourceUrls) {
-            MynlpResource resource = Mynlp.loadResource(url);
+            NlpResource resource = Mynlp.loadResource(url);
 
             set.add(resource.hash());
         }
@@ -124,7 +124,7 @@ public class CorrectionDictionary implements MynlpCacheable {
         TreeMap<String, AdjustWord> map = new TreeMap<>();
 
         for (String url : resourceUrls) {
-            MynlpResource resource = Mynlp.loadResource(url);
+            NlpResource resource = Mynlp.loadResource(url);
 
             try (CharSourceLineReader reader = resource.openLineReader()) {
                 while (reader.hasNext()) {

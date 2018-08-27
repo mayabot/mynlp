@@ -17,13 +17,11 @@
 package com.mayabot.nlp.segment.tokenizer;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableList;
 import com.google.inject.Inject;
 import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
-import com.mayabot.nlp.segment.MynlpTerm;
-import com.mayabot.nlp.segment.MynlpTermCollector;
-import com.mayabot.nlp.segment.MynlpTokenizer;
-import com.mayabot.nlp.segment.WordnetInitializer;
+import com.mayabot.nlp.segment.*;
 import com.mayabot.nlp.segment.common.VertexHelper;
 import com.mayabot.nlp.segment.wordnet.BestPathComputer;
 import com.mayabot.nlp.segment.wordnet.Wordnet;
@@ -44,14 +42,14 @@ public class WordnetTokenizer implements MynlpTokenizer {
     /**
      * 当wordnet创建后，调用这些处理器来填充里面的节点
      */
-    private WordnetInitializer wordnetInitializer = null;
+    WordnetInitializer wordnetInitializer = null;
 
     /**
      * 处理器网络
      */
-    private Pipeline pipeline;
+    List<WordpathProcessor> pipeline;
 
-    private BestPathComputer bestPathComputer;
+    BestPathComputer bestPathComputer;
 
     private MynlpTermCollector termCollector = MynlpTermCollector.bestPath;
 
@@ -63,17 +61,11 @@ public class WordnetTokenizer implements MynlpTokenizer {
         this.vertexHelper = vertexHelper;
     }
 
-    public void prepare(Pipeline pipeline, BestPathComputer bestPathComputer, WordnetInitializer wordnetInitializer) {
-        this.pipeline = pipeline;
-        this.bestPathComputer = bestPathComputer;
-        this.wordnetInitializer = wordnetInitializer;
-    }
-
-
     public void check() {
         Preconditions.checkNotNull(bestPathComputer);
         Preconditions.checkNotNull(wordnetInitializer);
         Preconditions.checkNotNull(pipeline);
+        Preconditions.checkArgument(!pipeline.isEmpty());
     }
 
     @Override
@@ -97,11 +89,20 @@ public class WordnetTokenizer implements MynlpTokenizer {
         //选择一个路径出来(第一次不严谨的分词结果)
         Wordpath wordPath = bestPathComputer.select(wordnet);
 
-        wordPath = pipeline.process(wordPath);
+        wordPath = process(wordPath);
 
         termCollector.collect(wordnet, wordPath, target);
 
 
+    }
+
+    private Wordpath process(Wordpath wordPath) {
+        for (WordpathProcessor processor : pipeline) {
+            if (processor.isEnabled()) {
+                wordPath = processor.process(wordPath);
+            }
+        }
+        return wordPath;
     }
 
 
@@ -118,8 +119,8 @@ public class WordnetTokenizer implements MynlpTokenizer {
         return wordnet;
     }
 
-    public Pipeline getPipeline() {
-        return pipeline;
+    public List<WordpathProcessor> getPipeline() {
+        return ImmutableList.copyOf(pipeline);
     }
 
     public MynlpTermCollector getTermCollector() {

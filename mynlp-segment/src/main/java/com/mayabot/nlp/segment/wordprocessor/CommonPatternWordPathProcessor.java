@@ -17,13 +17,10 @@
 package com.mayabot.nlp.segment.wordprocessor;
 
 import com.google.inject.Inject;
-import com.mayabot.nlp.Setting;
-import com.mayabot.nlp.Settings;
 import com.mayabot.nlp.segment.WordpathProcessor;
 import com.mayabot.nlp.segment.dictionary.Nature;
 import com.mayabot.nlp.segment.dictionary.NatureAttribute;
-import com.mayabot.nlp.segment.support.DefaultNameComponent;
-import com.mayabot.nlp.segment.tokenizer.TokenizerSettingListener;
+import com.mayabot.nlp.segment.support.BaseNlpComponent;
 import com.mayabot.nlp.segment.wordnet.Vertex;
 import com.mayabot.nlp.segment.wordnet.Wordnet;
 import com.mayabot.nlp.segment.wordnet.Wordpath;
@@ -37,8 +34,10 @@ import java.util.regex.Pattern;
  * 日期
  * url
  * email
+ *
+ * @author jimichan
  */
-public class CommonPatternWordPathProcessor extends DefaultNameComponent implements WordpathProcessor, TokenizerSettingListener {
+public class CommonPatternWordPathProcessor extends BaseNlpComponent implements WordpathProcessor {
 
     private Pattern allPattern;
 
@@ -49,16 +48,6 @@ public class CommonPatternWordPathProcessor extends DefaultNameComponent impleme
     private boolean enableTime = false;
     private boolean enableEmail = true;
 
-    public static final Setting<Boolean> EnableEmail_KEY = Setting.boolSetting("enable.email", true);
-    public static final Setting<Boolean> EnableTime_KEY = Setting.boolSetting("enable.time", true);
-
-    @Override
-    public void apply(Settings settings) {
-
-        enableEmail = settings.get(EnableEmail_KEY);
-        enableTime = settings.get(EnableTime_KEY);
-
-    }
 
     @Inject
     public CommonPatternWordPathProcessor() {
@@ -115,4 +104,21 @@ public class CommonPatternWordPathProcessor extends DefaultNameComponent impleme
         return wordPath;
     }
 
+    public boolean isEnableTime() {
+        return enableTime;
+    }
+
+    public CommonPatternWordPathProcessor setEnableTime(boolean enableTime) {
+        this.enableTime = enableTime;
+        return this;
+    }
+
+    public boolean isEnableEmail() {
+        return enableEmail;
+    }
+
+    public CommonPatternWordPathProcessor setEnableEmail(boolean enableEmail) {
+        this.enableEmail = enableEmail;
+        return this;
+    }
 }

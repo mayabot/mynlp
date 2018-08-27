@@ -24,7 +24,7 @@ import com.mayabot.nlp.caching.MynlpCacheable;
 import com.mayabot.nlp.collection.dat.DATMatcher;
 import com.mayabot.nlp.collection.dat.DoubleArrayTrie;
 import com.mayabot.nlp.collection.dat.DoubleArrayTrieBuilder;
-import com.mayabot.nlp.resources.MynlpResource;
+import com.mayabot.nlp.resources.NlpResource;
 import com.mayabot.nlp.segment.dictionary.NatureAttribute;
 import com.mayabot.nlp.utils.CharSourceLineReader;
 
@@ -169,7 +169,7 @@ public class CoreDictionary implements MynlpCacheable {
     @Override
     @SuppressWarnings(value = "rawtypes")
     public void loadFromRealData() throws Exception {
-        MynlpResource dictResource = mynlp.loadResource(coreDictSetting);
+        NlpResource dictResource = mynlp.loadResource(coreDictSetting);
 
 
         TreeMap<String, NatureAttribute> map = new TreeMap<>();

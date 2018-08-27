@@ -27,7 +27,7 @@ import com.mayabot.nlp.caching.MynlpCacheable;
 import com.mayabot.nlp.common.matrix.CSRSparseMatrix;
 import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
-import com.mayabot.nlp.resources.MynlpResource;
+import com.mayabot.nlp.resources.NlpResource;
 import com.mayabot.nlp.utils.CharSourceLineReader;
 import com.mayabot.nlp.utils.DataInOutputUtils;
 
@@ -98,7 +98,7 @@ public class CoreBiGramTableDictionary implements MynlpCacheable {
 
     @Override
     public void loadFromRealData() throws Exception {
-        MynlpResource source = mynlp.loadResource(coreDictNgramSetting);
+        NlpResource source = mynlp.loadResource(coreDictNgramSetting);
 
         TreeBasedTable<Integer, Integer, Integer> table = TreeBasedTable.create();
 

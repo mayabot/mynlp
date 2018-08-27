@@ -13,10 +13,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.mayabot.nlp.segment.crf;
 
-package com.mayabot.nlp.segment.wordnet;
 
-public class WordnetUtils {
+/**
+ * 特征函数，其实是tag.size个特征函数的集合
+ *
+ * @author hankcs
+ */
+public class FeatureFunction {
+    /**
+     * 环境参数
+     */
+    char[] o;
+    /**
+     * 标签参数
+     */
+//    String s;
 
+    /**
+     * 权值，按照index对应于tag的id
+     */
+    double[] w;
+
+    public FeatureFunction(char[] o, int tagSize) {
+        this.o = o;
+        w = new double[tagSize];
+    }
+
+    public FeatureFunction() {
+    }
 
 }

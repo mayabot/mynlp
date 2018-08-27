@@ -9,7 +9,7 @@ import java.nio.charset.Charset;
  *
  * @author jimichan
  */
-public interface ResourceFactory {
+public interface NlpResourceFactory {
 
     /**
      * 加载资源
@@ -18,7 +18,7 @@ public interface ResourceFactory {
      * @param charset      字符集
      * @return 如果资源不存在那么返回NULL
      */
-    MynlpResource load(String resourceName, Charset charset);
+    NlpResource load(String resourceName, Charset charset);
 
     /**
      * 加载资源
@@ -26,7 +26,7 @@ public interface ResourceFactory {
      * @param resourceName
      * @return
      */
-    default MynlpResource load(String resourceName) {
+    default NlpResource load(String resourceName) {
         return load(resourceName, Charsets.UTF_8);
     }
 }

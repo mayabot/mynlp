@@ -120,7 +120,7 @@ public class FST<T> {
     /**
      * 状态冻结。不能变更
      */
-    public void fluze() {
+    public void frozen() {
         fluze = true;
     }
 
