@@ -26,8 +26,9 @@ import java.io.InputStream;
 /**
  * 读取的模型是基于文本的。一般一行一个数据。
  * 项目中和外部系统驳接，比如数据库、HDSF
+ * @author jimichan
  */
-public interface MynlpResource {
+public interface NlpResource {
 
     InputStream openInputStream() throws IOException;
 

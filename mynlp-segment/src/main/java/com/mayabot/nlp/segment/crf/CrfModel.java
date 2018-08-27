@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.mayabot.nlp.segment.model.crf;
+package com.mayabot.nlp.segment.crf;
 
 import org.trie4j.MapTrie;
 
@@ -22,9 +22,12 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * CrfModel是把CRF模型文件在内存中的表示。
+ * 其中特征函数的存储实现和HANLP不同，这里采用org.trie4j.MapTrie。兼顾内存占用和加载时间和查询时间.
  * @author hankcs
+ * @author jimichan
  */
-public class CRFModel {
+public class CrfModel {
     /**
      * 标签和id的相互转换
      */
@@ -50,7 +53,7 @@ public class CRFModel {
     /**
      * 以指定的trie树结构储存内部特征函数
      */
-    public CRFModel() {
+    public CrfModel() {
     }
 
     protected void onLoadTxtFinished() {

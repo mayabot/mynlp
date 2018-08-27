@@ -14,53 +14,43 @@
  * limitations under the License.
  */
 
-package com.mayabot.nlp.segment.wordprocessor;
+package com.mayabot.nlp.segment.recognition;
 
-import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
 import com.google.inject.Inject;
-import com.mayabot.nlp.Settings;
-import com.mayabot.nlp.segment.ComponentRegistry;
 import com.mayabot.nlp.segment.OptimizeProcessor;
 import com.mayabot.nlp.segment.WordpathProcessor;
-import com.mayabot.nlp.segment.support.DefaultNameComponent;
-import com.mayabot.nlp.segment.tokenizer.TokenizerSettingListener;
+import com.mayabot.nlp.segment.support.BaseNlpComponent;
 import com.mayabot.nlp.segment.wordnet.Vertex;
 import com.mayabot.nlp.segment.wordnet.Wordnet;
 import com.mayabot.nlp.segment.wordnet.Wordpath;
 
-import java.util.List;
-
 /**
  * 优化网络处理器
+ * @author jimichan
  */
-public class OptimizeWordPathProcessor extends DefaultNameComponent implements WordpathProcessor, TokenizerSettingListener {
-
-    private final ComponentRegistry registry;
+public class OptimizeWordPathProcessor extends BaseNlpComponent implements WordpathProcessor {
 
     private ImmutableList<OptimizeProcessor> optimizeProcessorList = ImmutableList.of();
 
-    private WordpathProcessor repairWordnet;
+    private RepairWordnetProcessor repairWordnet;
 
     @Inject
-    public OptimizeWordPathProcessor(ComponentRegistry registry) {
-        this.registry = registry;
-        repairWordnet = registry.getInstance("repairWordnet", WordpathProcessor.class);
+    public OptimizeWordPathProcessor(RepairWordnetProcessor repairWordnet) {
+        this.repairWordnet = repairWordnet;
     }
 
-    public void initOptimizeProcessor(List<String> list) {
+    public void addOptimizeProcessor(OptimizeProcessor op) {
+        optimizeProcessorList =
+                ImmutableList.<OptimizeProcessor>builder()
+                        .addAll(optimizeProcessorList).add(op).build();
+    }
 
-        List<OptimizeProcessor> temp = Lists.newArrayList();
-
-        for (String name : list) {
-            OptimizeProcessor pr = registry.getInstance(name, OptimizeProcessor.class);
-            pr.setName(name);
-            Preconditions.checkNotNull(pr, "Not found OptimizeProcessor " + name);
-            temp.add(pr);
-        }
-
-        this.optimizeProcessorList = ImmutableList.copyOf(temp);
+    public void addAllOptimizeProcessor(Iterable<? extends OptimizeProcessor> ops) {
+        optimizeProcessorList =
+                ImmutableList.<OptimizeProcessor>builder()
+                        .addAll(optimizeProcessorList)
+                        .addAll(ops).build();
     }
 
     @Override
@@ -91,7 +81,9 @@ public class OptimizeWordPathProcessor extends DefaultNameComponent implements W
         boolean change = false;
 
         for (OptimizeProcessor processor : optimizeProcessorList) {
-            change |= processor.process(pathWithBE, wordnet);
+            if (processor.isEnabled()) {
+                change |= processor.process(pathWithBE, wordnet);
+            }
         }
 
         if (change) {
@@ -104,14 +96,8 @@ public class OptimizeWordPathProcessor extends DefaultNameComponent implements W
         return wordPath;
     }
 
-    @Override
-    public void apply(Settings settings) {
-        for (OptimizeProcessor optimizeProcessor : optimizeProcessorList) {
-            if (optimizeProcessor instanceof TokenizerSettingListener) {
-                Settings subSettings = settings.getByPrefix(optimizeProcessor.getName());
-                ((TokenizerSettingListener) optimizeProcessor).apply(subSettings);
-            }
-        }
+    public ImmutableList<OptimizeProcessor> getOptimizeProcessorList() {
+        return optimizeProcessorList;
     }
 }
 

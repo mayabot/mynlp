@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.mayabot.nlp.segment.model.crf;
+package com.mayabot.nlp.segment.crf;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -22,28 +22,30 @@ import com.mayabot.nlp.Mynlp;
 import com.mayabot.nlp.Setting;
 import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
-import com.mayabot.nlp.resources.MynlpResource;
+import com.mayabot.nlp.resources.NlpResource;
 import com.mayabot.nlp.utils.CharSourceLineReader;
 
 import java.io.IOException;
 
 /**
+ * 加载Crf++的text文本模型。只有在缓存的时候采用自由格式。
+ * 这样用户可以直接使用自己训练的CRF模型文件
  * @author jimichan
  */
 @Singleton
-public class CrfModelComponent {
+public class CrfModelFile {
 
     private final Mynlp mynlp;
 
     protected InternalLogger logger = InternalLoggerFactory.getInstance(this.getClass());
 
-    final CRFSegmentModel crfSegmentModel;
+    final CrfSegmentModel crfSegmentModel;
 
     public static final Setting<String> crfModelSetting =
-            Setting.string("crf.segment.dict", "model/CRFSegmentModel.txt");
+            Setting.string("crf.segment.dict", "model/CrfSegmentModel.txt");
 
     @Inject
-    public CrfModelComponent(Mynlp Mynlp) throws IOException {
+    public CrfModelFile(Mynlp Mynlp) throws IOException {
         this.mynlp = Mynlp;
 
         this.crfSegmentModel = loadTxt();
@@ -54,16 +56,16 @@ public class CrfModelComponent {
      *
      * @return 该模型
      */
-    private CRFSegmentModel loadTxt() throws IOException {
-        MynlpResource resource = mynlp.loadResource(crfModelSetting);
+    private CrfSegmentModel loadTxt() throws IOException {
+        NlpResource resource = mynlp.loadResource(crfModelSetting);
 
         try (CharSourceLineReader lineIterator = resource.openLineReader()) {
-            return CRFSegmentModel.loadFromCrfPlusText(lineIterator);
+            return CrfSegmentModel.loadFromCrfPlusText(lineIterator);
         }
     }
 
 
-    public CRFSegmentModel getCrfSegmentModel() {
+    public CrfSegmentModel getCrfSegmentModel() {
         return crfSegmentModel;
     }
 }

@@ -18,7 +18,7 @@ package com.mayabot.nlp.segment.dictionary;
 import com.mayabot.nlp.collection.TransformMatrix;
 import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
-import com.mayabot.nlp.resources.MynlpResource;
+import com.mayabot.nlp.resources.NlpResource;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -34,7 +34,7 @@ public class EnumTransformMatrix<E extends Enum<E>> {
 
     private TransformMatrix transformMatrix;
 
-    public EnumTransformMatrix(MynlpResource resource) throws IOException {
+    public EnumTransformMatrix(NlpResource resource) throws IOException {
         transformMatrix = new TransformMatrix();
 
         try (InputStream in = resource.openInputStream()) {

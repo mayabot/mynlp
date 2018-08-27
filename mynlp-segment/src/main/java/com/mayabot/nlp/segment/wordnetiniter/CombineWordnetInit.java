@@ -14,30 +14,31 @@
  * limitations under the License.
  */
 
-package com.mayabot.nlp.segment.tokenizer;
+package com.mayabot.nlp.segment.wordnetiniter;
 
-import com.mayabot.nlp.segment.WordpathProcessor;
-import com.mayabot.nlp.segment.wordnet.Wordpath;
+import com.google.common.collect.Lists;
+import com.mayabot.nlp.segment.WordnetInitializer;
+import com.mayabot.nlp.segment.wordnet.Wordnet;
 
 import java.util.List;
 
-public class Pipeline {
+/**
+ * 组合多个基础分词器
+ *
+ * @author jimichan
+ */
+public class CombineWordnetInit implements WordnetInitializer {
 
-    private WordpathProcessor[] wordpathProcessors;
+    private List<WordnetInitializer> list;
 
-
-    Pipeline(List<WordpathProcessor> wordPathProcessors) {
-        this.wordpathProcessors = wordPathProcessors.toArray(new WordpathProcessor[0]);
+    public CombineWordnetInit(WordnetInitializer... list) {
+        this.list = Lists.newArrayList(list);
     }
 
-    public Wordpath process(Wordpath wordPath) {
-        for (WordpathProcessor processor : wordpathProcessors) {
-            wordPath = processor.process(wordPath);
+    @Override
+    public void init(Wordnet wordnet) {
+        for (WordnetInitializer wordnetInitializer : list) {
+            wordnetInitializer.init(wordnet);
         }
-        return wordPath;
-    }
-
-    public boolean isEmpty() {
-        return wordpathProcessors.length == 0;
     }
 }

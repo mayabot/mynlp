@@ -25,6 +25,7 @@ import java.util.Map;
 
 /**
  * 稀疏矩阵CSR.
+ * @author jimichan
  */
 public class CSRSparseMatrix implements Serializable {
 

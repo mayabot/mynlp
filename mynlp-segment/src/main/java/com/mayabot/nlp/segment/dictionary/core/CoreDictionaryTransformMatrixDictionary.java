@@ -22,12 +22,13 @@ import com.mayabot.nlp.Setting;
 import com.mayabot.nlp.collection.TransformMatrix;
 import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
-import com.mayabot.nlp.resources.MynlpResource;
+import com.mayabot.nlp.resources.NlpResource;
 
 import java.io.IOException;
 
 /**
  * 核心词典词性转移矩阵
+ * @author jimichan
  */
 @Singleton
 public class CoreDictionaryTransformMatrixDictionary {
@@ -45,7 +46,7 @@ public class CoreDictionaryTransformMatrixDictionary {
         transformMatrixDictionary = new TransformMatrix();
         long t1 = System.currentTimeMillis();
 
-        MynlpResource resource = Mynlp.loadResource(coreDictTrSetting);
+        NlpResource resource = Mynlp.loadResource(coreDictTrSetting);
         transformMatrixDictionary.load(resource.openInputStream());
         long t2 = System.currentTimeMillis();
         logger.info("加载核心词典词性转移矩阵" + resource + "成功，耗时：" + (t2 - t1)

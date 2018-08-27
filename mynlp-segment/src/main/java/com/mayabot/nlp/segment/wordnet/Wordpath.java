@@ -55,7 +55,8 @@ public class Wordpath {
         this.bitSet = new BitSet(length);
         this.computer = computer;
 
-        bitSet.set(0, length);//每个字后面都有切分符号,默认切成单子
+        //每个字后面都有切分符号,默认切成单子
+        bitSet.set(0, length);
     }
 
     public Wordnet getWordnet() {
@@ -156,7 +157,6 @@ public class Wordpath {
             int nextSplitIndex = bitSet.nextSetBit(i);
 
             if (i == lastIndex) {
-                // consumer.accept(i, 1);
                 if (wordnet.isNotContains(i, 1)) {
                     // 一个点
                     consumer.accept(wordnet.put(i, 1));
@@ -164,7 +164,6 @@ public class Wordpath {
                 i++;
             } else {
                 int len = nextSplitIndex - i + 1;
-                // consumer.accept(i, len);
                 if (wordnet.isNotContains(i, len)) {
                     // 一个点
                     consumer.accept(wordnet.put(i, len));

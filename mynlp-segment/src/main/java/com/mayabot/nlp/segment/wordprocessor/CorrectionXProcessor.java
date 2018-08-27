@@ -22,16 +22,17 @@ import com.mayabot.nlp.collection.dat.DATMatcher;
 import com.mayabot.nlp.collection.dat.DoubleArrayTrie;
 import com.mayabot.nlp.segment.WordpathProcessor;
 import com.mayabot.nlp.segment.dictionary.CorrectionDictionary;
-import com.mayabot.nlp.segment.support.DefaultNameComponent;
+import com.mayabot.nlp.segment.support.BaseNlpComponent;
 import com.mayabot.nlp.segment.wordnet.Vertex;
 import com.mayabot.nlp.segment.wordnet.Wordpath;
 
 /**
  * 人工纠错。
  * Created by jimichan on 2017/7/3.
+ * @author jimichan
  */
 @Singleton
-public class CorrectionXProcessor extends DefaultNameComponent implements WordpathProcessor {
+public class CorrectionXProcessor extends BaseNlpComponent implements WordpathProcessor {
 
     private final CorrectionDictionary dictionary;
 

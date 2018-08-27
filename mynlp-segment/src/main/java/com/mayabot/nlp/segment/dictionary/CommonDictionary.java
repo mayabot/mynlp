@@ -25,7 +25,7 @@ import com.mayabot.nlp.collection.dat.DoubleArrayTrie;
 import com.mayabot.nlp.collection.dat.DoubleArrayTrieBuilder;
 import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
-import com.mayabot.nlp.resources.MynlpResource;
+import com.mayabot.nlp.resources.NlpResource;
 import com.mayabot.nlp.utils.CharSourceLineReader;
 
 import java.io.*;
@@ -96,7 +96,7 @@ public abstract class CommonDictionary<V> implements MynlpCacheable {
     public void loadFromRealData() throws Exception {
         TreeMap<String, V> map = new TreeMap<>();
 
-        MynlpResource resource = mynlp.loadResource(dicFilePath());
+        NlpResource resource = mynlp.loadResource(dicFilePath());
 
         try (CharSourceLineReader reader = resource.openLineReader()) {
             while (reader.hasNext()) {

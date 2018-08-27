@@ -9,10 +9,10 @@ import com.google.inject.Injector;
 import com.google.inject.Module;
 import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
-import com.mayabot.nlp.resources.ClassPathResourceFactory;
-import com.mayabot.nlp.resources.FileResourceFactory;
-import com.mayabot.nlp.resources.MynlpResource;
-import com.mayabot.nlp.resources.ResourceFactory;
+import com.mayabot.nlp.resources.ClasspathNlpResourceFactory;
+import com.mayabot.nlp.resources.FileNlpResourceFactory;
+import com.mayabot.nlp.resources.NlpResource;
+import com.mayabot.nlp.resources.NlpResourceFactory;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -53,7 +53,7 @@ public class Mynlp {
 
     private Injector injector;
 
-    private List<ResourceFactory> resourceFactory;
+    private List<NlpResourceFactory> resourceFactory;
 
     private Settings settings;
 
@@ -169,12 +169,12 @@ public class Mynlp {
      * @param charset      字符集
      * @return
      */
-    public MynlpResource loadResource(String resourceName, Charset charset) {
+    public NlpResource loadResource(String resourceName, Charset charset) {
         if (resourceName == null || resourceName.trim().isEmpty()) {
             return null;
         }
-        for (ResourceFactory factory : resourceFactory) {
-            MynlpResource resource = factory.load(resourceName, charset);
+        for (NlpResourceFactory factory : resourceFactory) {
+            NlpResource resource = factory.load(resourceName, charset);
             if (resource != null) {
                 logger.info("load resource from {}", resource.toString());
                 return resource;
@@ -189,11 +189,11 @@ public class Mynlp {
      * @param resourceName 资源路径名称 dict/abc.dict
      * @return
      */
-    public MynlpResource loadResource(String resourceName) {
+    public NlpResource loadResource(String resourceName) {
         return this.loadResource(resourceName, Charsets.UTF_8);
     }
 
-    public MynlpResource loadResource(Setting<String> resourceNameSettting) {
+    public NlpResource loadResource(Setting<String> resourceNameSettting) {
         return this.loadResource(settings.get(resourceNameSettting), Charsets.UTF_8);
     }
 
@@ -203,6 +203,10 @@ public class Mynlp {
 
     public File getCacheDir() {
         return cacheDir;
+    }
+
+    public Injector getInjector() {
+        return injector;
     }
 
     public static class MynlpBuilder {
@@ -218,7 +222,7 @@ public class Mynlp {
          */
         private String cacheDir;
 
-        private ArrayList<ResourceFactory> resourceFactoryList =
+        private ArrayList<NlpResourceFactory> resourceFactoryList =
                 Lists.newArrayList();
 
         private Settings settings;
@@ -246,8 +250,8 @@ public class Mynlp {
                 logger.info("Mynlp cache dir is {}", cacheDirFile.getAbsolutePath());
 
                 //
-                resourceFactoryList.add(new FileResourceFactory(dataDirFile));
-                resourceFactoryList.add(new ClassPathResourceFactory(Mynlp.class.getClassLoader()));
+                resourceFactoryList.add(new FileNlpResourceFactory(dataDirFile));
+                resourceFactoryList.add(new ClasspathNlpResourceFactory(Mynlp.class.getClassLoader()));
 
                 mynlp.resourceFactory = ImmutableList.copyOf(resourceFactoryList);
 
@@ -272,7 +276,7 @@ public class Mynlp {
          *
          * @param resourceFactory
          */
-        public void addResourceFactory(ResourceFactory resourceFactory) {
+        public void addResourceFactory(NlpResourceFactory resourceFactory) {
             resourceFactoryList.add(resourceFactory);
         }
 

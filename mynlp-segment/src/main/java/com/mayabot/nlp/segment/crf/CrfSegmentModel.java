@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.mayabot.nlp.segment.model.crf;
+package com.mayabot.nlp.segment.crf;
 
 
 import com.mayabot.nlp.logging.InternalLogger;
@@ -31,9 +31,9 @@ import java.util.*;
  * @author hankcs
  * @author jimichan
  */
-public final class CRFSegmentModel extends CRFModel {
+public final class CrfSegmentModel extends CrfModel {
 
-    protected static InternalLogger logger = InternalLoggerFactory.getInstance(CRFSegmentModel.class);
+    protected static InternalLogger logger = InternalLoggerFactory.getInstance(CrfSegmentModel.class);
 
     private int idM;
     private int idE;
@@ -42,11 +42,11 @@ public final class CRFSegmentModel extends CRFModel {
     /**
      * 不允许构造空白实例
      */
-    CRFSegmentModel() {
+    CrfSegmentModel() {
     }
 
-    public static CRFSegmentModel loadFromCrfPlusText(Iterator<String> txtReader) {
-        CRFSegmentModel model = new CRFSegmentModel();
+    public static CrfSegmentModel loadFromCrfPlusText(Iterator<String> txtReader) {
+        CrfSegmentModel model = new CrfSegmentModel();
 
 
         if (!txtReader.hasNext()) {
@@ -76,7 +76,8 @@ public final class CRFSegmentModel extends CRFModel {
         }
         MapPatriciaTrie<FeatureFunction> featureFunctionMap = new MapPatriciaTrie<>();
 
-        List<FeatureFunction> featureFunctionList = new LinkedList<FeatureFunction>(); // 读取权值的时候用
+        // 读取权值的时候用
+        List<FeatureFunction> featureFunctionList = new LinkedList<FeatureFunction>();
         model.featureTemplateList = new LinkedList<>();
         while ((line = txtReader.next()).length() != 0) {
             if (!"B".equals(line)) {
@@ -169,7 +170,8 @@ public final class CRFSegmentModel extends CRFModel {
                 net[i][tag] = computeScore(scoreList, tag);
             }
         }
-        net[0][idM] = -1000.0;  // 第一个字不可能是M或E
+        // 第一个字不可能是M或E
+        net[0][idM] = -1000.0;
         net[0][idE] = -1000.0;
         int[][] from = new int[size][4];
         for (int i = 1; i < size; ++i) {
