@@ -24,7 +24,7 @@ import com.mayabot.nlp.collection.TransformMatrix;
 import com.mayabot.nlp.segment.WordpathProcessor;
 import com.mayabot.nlp.segment.dictionary.Nature;
 import com.mayabot.nlp.segment.dictionary.core.CoreDictionaryTransformMatrixDictionary;
-import com.mayabot.nlp.segment.support.DefaultNameComponent;
+import com.mayabot.nlp.segment.support.BaseNlpComponent;
 import com.mayabot.nlp.segment.wordnet.Vertex;
 import com.mayabot.nlp.segment.wordnet.Wordpath;
 
@@ -34,7 +34,7 @@ import com.mayabot.nlp.segment.wordnet.Wordpath;
  * @author jimichan
  */
 @Singleton
-public class PartOfSpeechTaggingComputerXProcessor extends DefaultNameComponent implements WordpathProcessor {
+public class PartOfSpeechTaggingComputerXProcessor extends BaseNlpComponent implements WordpathProcessor {
 
     private TransformMatrix transformMatrix;
 

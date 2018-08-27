@@ -41,7 +41,7 @@ public class FstMainTest {
                 edge(FstCondition.pattern("\\d+"), "$$");
 
 
-        fst.fluze();
+        fst.frozen();
 
         FstMatcher<String, String> m = fst.newMatcher(list);
 
@@ -141,7 +141,7 @@ public class FstMainTest {
                         , "$");
 
 
-        fst.fluze();
+        fst.frozen();
 
         FstMatcher<String, String> m = fst.newMatcher(list);
 

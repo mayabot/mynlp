@@ -27,7 +27,7 @@ import com.mayabot.nlp.segment.dictionary.NatureAttribute;
 import com.mayabot.nlp.segment.dictionary.core.CoreDictionary;
 import com.mayabot.nlp.segment.recognition.place.ns.NSDictionary;
 import com.mayabot.nlp.segment.recognition.place.ns.PlaceDictionary;
-import com.mayabot.nlp.segment.support.DefaultNameComponent;
+import com.mayabot.nlp.segment.support.BaseNlpComponent;
 import com.mayabot.nlp.segment.wordnet.Vertex;
 import com.mayabot.nlp.segment.wordnet.Wordnet;
 
@@ -41,7 +41,7 @@ import static com.mayabot.nlp.segment.recognition.place.NSTag.*;
  * @author jimichan
  */
 
-public class PlaceRecognition extends DefaultNameComponent implements OptimizeProcessor {
+public class PlaceRecognition extends BaseNlpComponent implements OptimizeProcessor {
 
     private PlaceDictionary personDictionary;
 

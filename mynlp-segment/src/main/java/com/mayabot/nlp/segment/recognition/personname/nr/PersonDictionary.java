@@ -23,7 +23,7 @@ import com.mayabot.nlp.collection.ahocorasick.AhoCoraickDoubleArrayTrieBuilder;
 import com.mayabot.nlp.collection.ahocorasick.AhoCorasickDoubleArrayTrie;
 import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
-import com.mayabot.nlp.resources.MynlpResource;
+import com.mayabot.nlp.resources.NlpResource;
 import com.mayabot.nlp.segment.dictionary.EnumTransformMatrix;
 import com.mayabot.nlp.segment.recognition.personname.NRTag;
 
@@ -64,7 +64,7 @@ public class PersonDictionary {
 
         long start = System.currentTimeMillis();
 
-        MynlpResource resource = Mynlp.loadResource(orgTrDict);
+        NlpResource resource = Mynlp.loadResource(orgTrDict);
 
         //转移矩阵
         transformMatrixDictionary = new EnumTransformMatrix<>(resource);

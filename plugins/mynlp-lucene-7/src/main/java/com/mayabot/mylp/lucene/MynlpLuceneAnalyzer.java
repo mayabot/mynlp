@@ -44,7 +44,7 @@ public class MynlpLuceneAnalyzer extends StopwordAnalyzerBase {
     }
 
     public MynlpLuceneAnalyzer() {
-        this(new DefaultMynlpAnalyzer(MynlpSegments.nlpTokenizer()));
+        this(new DefaultMynlpAnalyzer(MynlpSegments.nlpTokenizer(MynlpLuceneTokenizerFactory.mynlp)));
     }
 
     public MynlpLuceneAnalyzer(MynlpAnalyzer mynlpAnalyzer) {
@@ -57,7 +57,9 @@ public class MynlpLuceneAnalyzer extends StopwordAnalyzerBase {
         final MynlpLuceneTokenizer src = new MynlpLuceneTokenizer(mynlpAnalyzer);
         TokenStream tok = new StandardFilter(src);
         tok = new LowerCaseFilter(tok);
-        if (stopWordsSet != null) tok = new StopFilter(tok, stopWordsSet);
+        if (stopWordsSet != null) {
+            tok = new StopFilter(tok, stopWordsSet);
+        }
 
         return new TokenStreamComponents(src, tok);
     }

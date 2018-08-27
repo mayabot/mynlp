@@ -25,12 +25,18 @@ import com.google.inject.Injector;
 import com.google.inject.Singleton;
 import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
+import com.mayabot.nlp.segment.crf.CrfBaseSegment;
+import com.mayabot.nlp.segment.recognition.OptimizeWordPathProcessor;
+import com.mayabot.nlp.segment.recognition.RepairWordnetProcessor;
 import com.mayabot.nlp.segment.recognition.org.OrganizationRecognition;
 import com.mayabot.nlp.segment.recognition.personname.PersonRecognition;
 import com.mayabot.nlp.segment.recognition.place.PlaceRecognition;
 import com.mayabot.nlp.segment.wordnet.BestPathComputer;
 import com.mayabot.nlp.segment.wordnet.ViterbiBestPathComputer;
-import com.mayabot.nlp.segment.wordnetiniter.*;
+import com.mayabot.nlp.segment.wordnetiniter.AtomSegmenter;
+import com.mayabot.nlp.segment.wordnetiniter.CombineWordnetInit;
+import com.mayabot.nlp.segment.wordnetiniter.ConvertAbstractWord;
+import com.mayabot.nlp.segment.wordnetiniter.CoreDictionaryOriginalSegment;
 import com.mayabot.nlp.segment.wordprocessor.*;
 
 import java.util.Map;
@@ -92,13 +98,13 @@ public final class ComponentRegistry {
         register(ViterbiBestPathComputer.NAME, BestPathComputer.class, i -> i.getInstance(ViterbiBestPathComputer.class));
 
         //wordnet initer
-        register(WORDNET_INITER_CRF, WordnetInitializer.class, inject -> new MultiWordnetInit(
-                inject.getInstance(CrfOriginalSegment.class),
+        register(WORDNET_INITER_CRF, WordnetInitializer.class, inject -> new CombineWordnetInit(
+                inject.getInstance(CrfBaseSegment.class),
                 inject.getInstance(AtomSegmenter.class),
                 inject.getInstance(ConvertAbstractWord.class)
         ));
 
-        register(WORDNET_INITER_CORE, WordnetInitializer.class, inject -> new MultiWordnetInit(
+        register(WORDNET_INITER_CORE, WordnetInitializer.class, inject -> new CombineWordnetInit(
                 inject.getInstance(CoreDictionaryOriginalSegment.class),
                 inject.getInstance(AtomSegmenter.class),
                 inject.getInstance(ConvertAbstractWord.class)

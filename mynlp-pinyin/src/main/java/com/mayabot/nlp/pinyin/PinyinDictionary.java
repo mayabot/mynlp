@@ -31,7 +31,7 @@ import com.mayabot.nlp.collection.ahocorasick.AhoCorasickDoubleArrayTrie;
 import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
 import com.mayabot.nlp.pinyin.model.Pinyin;
-import com.mayabot.nlp.resources.MynlpResource;
+import com.mayabot.nlp.resources.NlpResource;
 import com.mayabot.nlp.utils.CharSourceLineReader;
 
 import java.io.*;
@@ -79,7 +79,7 @@ public class PinyinDictionary implements MynlpCacheable {
 
         String hash = mynlp.loadResource(pinyinSetting).hash();
 
-        MynlpResource ext = mynlp.loadResource(pinyinExtDicSetting);
+        NlpResource ext = mynlp.loadResource(pinyinExtDicSetting);
         if (ext != null) {
             hash += ext.hash();
         }
@@ -156,17 +156,17 @@ public class PinyinDictionary implements MynlpCacheable {
     @Override
     public void loadFromRealData() throws Exception {
 
-        List<MynlpResource> list = Lists.newArrayList();
+        List<NlpResource> list = Lists.newArrayList();
 
         list.add(mynlp.loadResource(pinyinSetting));
 
-        MynlpResource ext = mynlp.loadResource(pinyinExtDicSetting);
+        NlpResource ext = mynlp.loadResource(pinyinExtDicSetting);
         if (ext != null) {
             list.add(ext);
         }
 
         TreeMap<String, Pinyin[]> map = new TreeMap<>();
-        for (MynlpResource dictResource : list) {
+        for (NlpResource dictResource : list) {
 
             try (CharSourceLineReader reader = dictResource.openLineReader()) {
                 while (reader.hasNext()) {

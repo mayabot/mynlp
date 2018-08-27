@@ -19,4 +19,5 @@ description = '拼音'
 dependencies {
     compile project(':mynlp-core')
     testCompile 'junit:junit:4.12'
+    testCompile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
 }
