@@ -17,7 +17,7 @@ package com.mayabot.nlp.segment.recognition.place.ns;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.mayabot.nlp.Mynlp;
+import com.mayabot.nlp.MynlpIOC;
 import com.mayabot.nlp.Setting;
 import com.mayabot.nlp.collection.ahocorasick.AhoCoraickDoubleArrayTrieBuilder;
 import com.mayabot.nlp.collection.ahocorasick.AhoCorasickDoubleArrayTrie;
@@ -61,12 +61,12 @@ public class PlaceDictionary {
     final Setting<String> orgTrDict = Setting.string("org.dict.tr", "dictionary/place/ns.tr.txt");
 
     @Inject
-    public PlaceDictionary(NSDictionary dictionary, Mynlp Mynlp) throws IOException {
+    public PlaceDictionary(NSDictionary dictionary, MynlpIOC mynlp) throws IOException {
         this.dictionary = dictionary;
 
         long start = System.currentTimeMillis();
 
-        NlpResource resource = Mynlp.loadResource(orgTrDict);
+        NlpResource resource = mynlp.loadResource(orgTrDict);
 
         //转移矩阵
         transformMatrixDictionary = new EnumTransformMatrix<>(resource);

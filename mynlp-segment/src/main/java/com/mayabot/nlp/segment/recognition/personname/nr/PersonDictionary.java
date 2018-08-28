@@ -17,7 +17,7 @@ package com.mayabot.nlp.segment.recognition.personname.nr;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.mayabot.nlp.Mynlp;
+import com.mayabot.nlp.MynlpIOC;
 import com.mayabot.nlp.Setting;
 import com.mayabot.nlp.collection.ahocorasick.AhoCoraickDoubleArrayTrieBuilder;
 import com.mayabot.nlp.collection.ahocorasick.AhoCorasickDoubleArrayTrie;
@@ -59,12 +59,12 @@ public class PersonDictionary {
 
     @Inject
 
-    public PersonDictionary(NRDictionary dictionary, Mynlp Mynlp) throws IOException {
+    public PersonDictionary(NRDictionary dictionary, MynlpIOC mynlp) throws IOException {
         this.dictionary = dictionary;
 
         long start = System.currentTimeMillis();
 
-        NlpResource resource = Mynlp.loadResource(orgTrDict);
+        NlpResource resource = mynlp.loadResource(orgTrDict);
 
         //转移矩阵
         transformMatrixDictionary = new EnumTransformMatrix<>(resource);

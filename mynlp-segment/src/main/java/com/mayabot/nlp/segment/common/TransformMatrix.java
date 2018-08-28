@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.mayabot.nlp.collection;
+package com.mayabot.nlp.segment.common;
 
 import com.google.common.base.Splitter;
 import com.google.common.collect.*;

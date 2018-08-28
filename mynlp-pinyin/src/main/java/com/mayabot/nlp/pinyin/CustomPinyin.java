@@ -18,6 +18,10 @@ public class CustomPinyin {
         map.put(text, pinyin);
     }
 
+    public void remove(String text) {
+        map.remove(text);
+    }
+
     public Map<String, String> getMap() {
         return map;
     }

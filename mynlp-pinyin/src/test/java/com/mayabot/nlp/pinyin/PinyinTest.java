@@ -17,11 +17,24 @@
 package com.mayabot.nlp.pinyin;
 
 import com.mayabot.nlp.Mynlp;
-import com.mayabot.nlp.Settings;
 import org.junit.Assert;
 import org.junit.Test;
 
 public class PinyinTest {
+
+    @Test
+    public void testSpeed() {
+        Mynlp.getInstance(PinyinService.class);
+        Mynlp.getInstance(PinyinService.class);
+
+        long t1 = System.currentTimeMillis();
+        for (int i = 0; i < 10000; i++) {
+            Mynlp.getInstance(PinyinService.class);
+        }
+        long t2 = System.currentTimeMillis();
+
+        System.out.println(t2 - t1);
+    }
 
     @Test
     public void test() {
@@ -36,37 +49,37 @@ public class PinyinTest {
 
     @Test
     public void test2() {
+        Mynlp.clear();
 
-        Mynlp mynlp = Mynlp.builder()
-                .setSettings(Settings.createEmpty().put(
-                        PinyinDictionary.pinyinExtDicSetting, "pinyin.txt"))
-                .build();
+        Mynlp.install(builder -> {
+            builder.set(PinyinDictionary.pinyinExtDicSetting, "pinyin.txt");
+        });
 
-        PinyinService pinyinService = mynlp.getInstance(PinyinService.class);
+        Pinyins.reset();
 
 
-        PinyinResult result = pinyinService.text2Pinyin("123aed,.你好朝朝暮暮,银行");
+        PinyinResult result = Pinyins.convert("123aed,.你好朝朝暮暮,银行");
 
         Assert.assertEquals("", result.asString(), "1 2 3 a e d ni hao zhao zhao mu mu yin hang");
         Assert.assertEquals("", result.asHeadString(), "1 2 3 a e d n h z z m m y h");
 
-        System.out.println(pinyinService.text2Pinyin("朝朝盈"));
+        System.out.println(Pinyins.convert("朝朝盈"));
 
     }
 
     @Test
     public void test3() {
+        Mynlp.clear();
 
         CustomPinyin customPinyin = new CustomPinyin();
 
         customPinyin.put("朝朝盈", "zhao1,zhao1,yin2");
 
+        Mynlp.install(builder -> {
+            builder.bind(CustomPinyin.class, customPinyin);
+        });
 
-        Mynlp mynlp = Mynlp.builder()
-                .bind(CustomPinyin.class, customPinyin)
-                .build();
-
-        PinyinService pinyinService = mynlp.getInstance(PinyinService.class);
+        PinyinService pinyinService = Mynlp.getInstance(PinyinService.class);
 
 
         PinyinResult result = pinyinService.text2Pinyin("123aed,.你好朝朝暮暮,银行");
@@ -77,6 +90,16 @@ public class PinyinTest {
 
         Assert.assertEquals("", pinyinService.text2Pinyin("朝朝盈").asString(), "zhao zhao yin");
 
+
+    }
+
+    @Test
+    public void test4() {
+
+        PinyinDictionary instance = Mynlp.getInstance(PinyinDictionary.class);
+
+
+        //instance.getCustomPinyin().put("xxx");
 
     }
 
