@@ -4,7 +4,7 @@ package com.mayabot.nlp.segment;
  * 分词组件需要有个Name和设置是否启用的
  * @author jimichan
  */
-public interface NlpSegmentComponent {
+public interface MynlpComponent {
 
     /**
      * @return

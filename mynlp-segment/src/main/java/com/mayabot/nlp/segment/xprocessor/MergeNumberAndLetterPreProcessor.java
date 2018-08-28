@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.mayabot.nlp.segment.wordprocessor;
+package com.mayabot.nlp.segment.xprocessor;
 
 import com.google.inject.Inject;
 import com.mayabot.nlp.fst.FST;
@@ -36,7 +36,7 @@ import com.mayabot.nlp.segment.wordnet.Wordpath;
  *
  * @author jimichan
  */
-public class MergeNumberAndLetterPreProcess extends BaseNlpComponent implements WordpathProcessor {
+public class MergeNumberAndLetterPreProcessor extends BaseNlpComponent implements WordpathProcessor {
 
     private CoreDictionary coreDictionary;
 
@@ -48,7 +48,7 @@ public class MergeNumberAndLetterPreProcess extends BaseNlpComponent implements 
      * @param coreDictionary
      */
     @Inject
-    public MergeNumberAndLetterPreProcess(CoreDictionary coreDictionary) {
+    public MergeNumberAndLetterPreProcessor(CoreDictionary coreDictionary) {
         this.coreDictionary = coreDictionary;
 
         fst = new FST<>();

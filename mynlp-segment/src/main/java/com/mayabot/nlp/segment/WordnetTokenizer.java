@@ -14,14 +14,13 @@
  * limitations under the License.
  */
 
-package com.mayabot.nlp.segment.tokenizer;
+package com.mayabot.nlp.segment;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.google.inject.Inject;
 import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
-import com.mayabot.nlp.segment.*;
 import com.mayabot.nlp.segment.common.VertexHelper;
 import com.mayabot.nlp.segment.wordnet.BestPathComputer;
 import com.mayabot.nlp.segment.wordnet.Wordnet;
@@ -51,7 +50,7 @@ public class WordnetTokenizer implements MynlpTokenizer {
 
     BestPathComputer bestPathComputer;
 
-    private MynlpTermCollector termCollector = MynlpTermCollector.bestPath;
+    private WordTermCollector termCollector = WordTermCollector.bestPath;
 
     private VertexHelper vertexHelper;
 
@@ -69,7 +68,7 @@ public class WordnetTokenizer implements MynlpTokenizer {
     }
 
     @Override
-    public void token(char[] text, List<MynlpTerm> target) {
+    public void token(char[] text, List<WordTerm> target) {
 
         if (!target.isEmpty()) {
             target.clear();
@@ -123,11 +122,11 @@ public class WordnetTokenizer implements MynlpTokenizer {
         return ImmutableList.copyOf(pipeline);
     }
 
-    public MynlpTermCollector getTermCollector() {
+    public WordTermCollector getTermCollector() {
         return termCollector;
     }
 
-    public void setTermCollector(MynlpTermCollector termCollector) {
+    public void setTermCollector(WordTermCollector termCollector) {
         this.termCollector = termCollector;
     }
 }

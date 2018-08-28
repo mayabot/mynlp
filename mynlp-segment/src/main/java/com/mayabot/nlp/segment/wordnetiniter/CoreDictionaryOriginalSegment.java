@@ -52,7 +52,8 @@ public class CoreDictionaryOriginalSegment implements WordnetInitializer {
             int length = searcher.getLength();
             int wordId = searcher.getIndex();
 
-            Vertex v = new Vertex(length).setWordInfo(wordId, searcher.getValue()); //没有等效词
+            //没有等效词
+            Vertex v = new Vertex(length).setWordInfo(wordId, searcher.getValue());
 
             wordnet.put(offset, v);
         }

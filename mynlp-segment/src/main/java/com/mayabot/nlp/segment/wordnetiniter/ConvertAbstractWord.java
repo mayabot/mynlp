@@ -18,6 +18,7 @@ package com.mayabot.nlp.segment.wordnetiniter;
 
 import com.google.inject.Inject;
 import com.mayabot.nlp.segment.WordnetInitializer;
+import com.mayabot.nlp.segment.dictionary.NatureAttribute;
 import com.mayabot.nlp.segment.dictionary.core.CoreDictionary;
 import com.mayabot.nlp.segment.wordnet.Vertex;
 import com.mayabot.nlp.segment.wordnet.Wordnet;
@@ -44,6 +45,19 @@ public class ConvertAbstractWord implements WordnetInitializer {
     }
 
     private void process(Vertex v) {
+
+        if (v.wordID < 0) {
+            // CRF分词结果后，没有wordID
+            // 或者其他情况
+            int wordid = coreDictionary.getWordID(v.realWord());
+            if (wordid >= 0) {
+                NatureAttribute na = coreDictionary.get(wordid);
+                if (na != null) {
+                    v.setWordInfo(wordid, na);
+                }
+            }
+        }
+
         if (v.natureAttribute == null) {
             return;
         }
