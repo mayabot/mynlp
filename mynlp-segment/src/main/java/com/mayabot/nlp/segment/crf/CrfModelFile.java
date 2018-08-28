@@ -18,7 +18,7 @@ package com.mayabot.nlp.segment.crf;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.mayabot.nlp.Mynlp;
+import com.mayabot.nlp.MynlpIOC;
 import com.mayabot.nlp.Setting;
 import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
@@ -35,7 +35,7 @@ import java.io.IOException;
 @Singleton
 public class CrfModelFile {
 
-    private final Mynlp mynlp;
+    private final MynlpIOC mynlp;
 
     protected InternalLogger logger = InternalLoggerFactory.getInstance(this.getClass());
 
@@ -45,7 +45,7 @@ public class CrfModelFile {
             Setting.string("crf.segment.dict", "model/CrfSegmentModel.txt");
 
     @Inject
-    public CrfModelFile(Mynlp Mynlp) throws IOException {
+    public CrfModelFile(MynlpIOC Mynlp) throws IOException {
         this.mynlp = Mynlp;
 
         this.crfSegmentModel = loadTxt();

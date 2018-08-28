@@ -17,7 +17,7 @@ package com.mayabot.nlp.segment.recognition.org.nt;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.mayabot.nlp.Mynlp;
+import com.mayabot.nlp.MynlpIOC;
 import com.mayabot.nlp.Setting;
 import com.mayabot.nlp.collection.ahocorasick.AhoCoraickDoubleArrayTrieBuilder;
 import com.mayabot.nlp.collection.ahocorasick.AhoCorasickDoubleArrayTrie;
@@ -61,12 +61,12 @@ public class OrganizationDictionary {
 
     @Inject
 
-    public OrganizationDictionary(NTDictionary dictionary, Mynlp Mynlp) throws IOException {
+    public OrganizationDictionary(NTDictionary dictionary, MynlpIOC mynlp) throws IOException {
         this.dictionary = dictionary;
 
         long start = System.currentTimeMillis();
 
-        NlpResource resource = Mynlp.loadResource(orgDictSetting);
+        NlpResource resource = mynlp.loadResource(orgDictSetting);
 
 
         //转移矩阵

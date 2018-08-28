@@ -24,7 +24,7 @@ import com.google.common.io.ByteStreams;
 import com.google.common.io.Files;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.mayabot.nlp.Mynlp;
+import com.mayabot.nlp.MynlpIOC;
 import com.mayabot.nlp.Settings;
 import com.mayabot.nlp.caching.MynlpCacheable;
 import com.mayabot.nlp.collection.dat.DoubleArrayTrie;
@@ -50,7 +50,7 @@ public class CustomDictionary implements MynlpCacheable {
 
     static InternalLogger logger = InternalLoggerFactory.getInstance(CustomDictionary.class);
 
-    private final Mynlp Mynlp;
+    private final MynlpIOC mynlp;
 
     private DoubleArrayTrie<NatureAttribute> dat;
 
@@ -60,9 +60,9 @@ public class CustomDictionary implements MynlpCacheable {
     //dictionary/custom/*
 
     @Inject
-    public CustomDictionary(Settings setting, Mynlp mynlp) throws Exception {
+    public CustomDictionary(Settings setting, MynlpIOC mynlp) throws Exception {
 
-        this.Mynlp = mynlp;
+        this.mynlp = mynlp;
 
         List<String> resourceUrls = setting.getAsList("custom.dictionary.path");
 
@@ -86,14 +86,14 @@ public class CustomDictionary implements MynlpCacheable {
         TreeSet<String> set = new TreeSet<>();
 
         for (String url : resourceUrls) {
-            NlpResource resource = Mynlp.loadResource(url);
+            NlpResource resource = mynlp.loadResource(url);
 
             set.add(resource.hash());
         }
 
         String hash = Hashing.md5().hashString(set.toString(), Charsets.UTF_8).toString();
 
-        return new File(Mynlp.getCacheDir(), hash + ".custom.dict");
+        return new File(mynlp.getCacheDir(), hash + ".custom.dict");
     }
 
     @Override
@@ -119,7 +119,7 @@ public class CustomDictionary implements MynlpCacheable {
 
         Nature defaultNature = Nature.n;
         for (String url : resourceUrls) {
-            NlpResource resource = Mynlp.loadResource(url);
+            NlpResource resource = mynlp.loadResource(url);
 
             try (CharSourceLineReader reader = resource.openLineReader()) {
                 while (reader.hasNext()) {
