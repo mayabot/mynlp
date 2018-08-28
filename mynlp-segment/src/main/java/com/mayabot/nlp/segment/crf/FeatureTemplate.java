@@ -15,6 +15,7 @@
  */
 package com.mayabot.nlp.segment.crf;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -26,16 +27,22 @@ import java.util.regex.Pattern;
  *
  * @author hankcs
  */
-public class FeatureTemplate {
+public class FeatureTemplate implements Serializable {
+
+    public static int serialVersionUID = 1;
+
     /**
      * 用来解析模板的正则表达式
      */
     static final Pattern pattern = Pattern.compile("%x\\[(-?\\d*),(\\d*)]");
+
+
     String template;
     /**
      * 每个部分%x[-2,0]的位移，其中int[0]储存第一个数（-2），int[1]储存第二个数（0）
      */
     ArrayList<int[]> offsetList;
+
     List<String> delimiterList;
 
     public FeatureTemplate() {

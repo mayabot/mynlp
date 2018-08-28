@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.mayabot.nlp.segment.wordprocessor;
+package com.mayabot.nlp.segment.xprocessor;
 
 import com.google.inject.Inject;
 import com.mayabot.nlp.segment.WordpathProcessor;
@@ -37,7 +37,7 @@ import java.util.regex.Pattern;
  *
  * @author jimichan
  */
-public class CommonPatternWordPathProcessor extends BaseNlpComponent implements WordpathProcessor {
+public class CommonPatternProcessor extends BaseNlpComponent implements WordpathProcessor {
 
     private Pattern allPattern;
 
@@ -50,7 +50,7 @@ public class CommonPatternWordPathProcessor extends BaseNlpComponent implements 
 
 
     @Inject
-    public CommonPatternWordPathProcessor() {
+    public CommonPatternProcessor() {
         String email = "\\w+(?:\\.\\w+)*@\\w+(?:(?:\\.\\w+)+)";
 
         String date = "(?:\\d{4}-\\d{2}-\\d{2})|(?:\\d{4}年(\\d{2}月(\\d{2}日)?)?)";
@@ -108,7 +108,7 @@ public class CommonPatternWordPathProcessor extends BaseNlpComponent implements 
         return enableTime;
     }
 
-    public CommonPatternWordPathProcessor setEnableTime(boolean enableTime) {
+    public CommonPatternProcessor setEnableTime(boolean enableTime) {
         this.enableTime = enableTime;
         return this;
     }
@@ -117,7 +117,7 @@ public class CommonPatternWordPathProcessor extends BaseNlpComponent implements 
         return enableEmail;
     }
 
-    public CommonPatternWordPathProcessor setEnableEmail(boolean enableEmail) {
+    public CommonPatternProcessor setEnableEmail(boolean enableEmail) {
         this.enableEmail = enableEmail;
         return this;
     }

@@ -17,7 +17,7 @@
 package com.mayabot.nlp.segment.support;
 
 import com.mayabot.nlp.segment.MynlpAnalyzer;
-import com.mayabot.nlp.segment.MynlpTerm;
+import com.mayabot.nlp.segment.WordTerm;
 import com.mayabot.nlp.utils.Characters;
 
 /**
@@ -26,7 +26,7 @@ import com.mayabot.nlp.utils.Characters;
 public class PunctuationFilter extends MynlpAnalyzerFilter {
 
     @Override
-    boolean accept(MynlpTerm term) {
+    boolean accept(WordTerm term) {
         return !Characters.isPunctuation(term.word.charAt(0));
     }
 

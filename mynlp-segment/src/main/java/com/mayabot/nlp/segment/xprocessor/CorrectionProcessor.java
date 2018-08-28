@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.mayabot.nlp.segment.wordprocessor;
+package com.mayabot.nlp.segment.xprocessor;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -32,12 +32,12 @@ import com.mayabot.nlp.segment.wordnet.Wordpath;
  * @author jimichan
  */
 @Singleton
-public class CorrectionXProcessor extends BaseNlpComponent implements WordpathProcessor {
+public class CorrectionProcessor extends BaseNlpComponent implements WordpathProcessor {
 
     private final CorrectionDictionary dictionary;
 
     @Inject
-    public CorrectionXProcessor(
+    public CorrectionProcessor(
             CorrectionDictionary dictionary) {
         this.dictionary = dictionary;
     }

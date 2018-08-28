@@ -17,7 +17,7 @@
 package com.mayabot.nlp.segment.support;
 
 import com.mayabot.nlp.segment.MynlpAnalyzer;
-import com.mayabot.nlp.segment.MynlpTerm;
+import com.mayabot.nlp.segment.WordTerm;
 
 import java.io.Reader;
 import java.util.Iterator;
@@ -36,7 +36,7 @@ public abstract class MynlpAnalyzerWarp implements MynlpAnalyzer {
     }
 
     @Override
-    public Iterator<MynlpTerm> iterator() {
+    public Iterator<WordTerm> iterator() {
         return myAnalyzer.iterator();
     }
 }

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.mayabot.nlp.segment.wordprocessor;
+package com.mayabot.nlp.segment.xprocessor;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.inject.Inject;
@@ -34,14 +34,17 @@ import com.mayabot.nlp.segment.wordnet.Wordpath;
  * @author jimichan
  */
 @Singleton
-public class PartOfSpeechTaggingComputerXProcessor extends BaseNlpComponent implements WordpathProcessor {
+public class PartOfSpeechTaggingComputerProcessor extends BaseNlpComponent implements WordpathProcessor {
 
     private TransformMatrix transformMatrix;
 
     private SimpleViterbi<Nature, Vertex> simpleViterbi;
 
+
     @Inject
-    PartOfSpeechTaggingComputerXProcessor(CoreDictionaryTransformMatrixDictionary matrixDictionary) {
+    PartOfSpeechTaggingComputerProcessor(
+            CoreDictionaryTransformMatrixDictionary matrixDictionary
+    ) {
         this.transformMatrix = matrixDictionary.getTransformMatrixDictionary();
 
         simpleViterbi = new SimpleViterbi<>(

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.mayabot.nlp.segment.wordprocessor;
+package com.mayabot.nlp.segment.xprocessor;
 
 import com.google.common.collect.ImmutableList;
 import com.google.inject.Inject;
@@ -38,14 +38,14 @@ import com.mayabot.nlp.segment.wordnet.Wordpath;
  *
  * @author jimichan
  */
-public class CustomDictionaryXProcess extends BaseNlpComponent implements WordpathProcessor {
+public class CustomDictionaryProcessor extends BaseNlpComponent implements WordpathProcessor {
 
     private CustomDictionary dictionary;
 
     private CoreDictionary coreDictionary;
 
     @Inject
-    public CustomDictionaryXProcess(CustomDictionary dictionary, CoreDictionary coreDictionary) {
+    public CustomDictionaryProcessor(CustomDictionary dictionary, CoreDictionary coreDictionary) {
         this.dictionary = dictionary;
         this.coreDictionary = coreDictionary;
     }

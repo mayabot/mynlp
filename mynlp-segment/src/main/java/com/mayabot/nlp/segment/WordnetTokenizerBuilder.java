@@ -1,9 +1,8 @@
-package com.mayabot.nlp.segment.tokenizer;
+package com.mayabot.nlp.segment;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.mayabot.nlp.MynlpIOC;
-import com.mayabot.nlp.segment.*;
 import com.mayabot.nlp.segment.crf.CrfBaseSegment;
 import com.mayabot.nlp.segment.recognition.OptimizeWordPathProcessor;
 import com.mayabot.nlp.segment.recognition.org.OrganizationRecognition;
@@ -15,7 +14,7 @@ import com.mayabot.nlp.segment.wordnetiniter.AtomSegmenter;
 import com.mayabot.nlp.segment.wordnetiniter.CombineWordnetInit;
 import com.mayabot.nlp.segment.wordnetiniter.ConvertAbstractWord;
 import com.mayabot.nlp.segment.wordnetiniter.CoreDictionaryOriginalSegment;
-import com.mayabot.nlp.segment.wordprocessor.*;
+import com.mayabot.nlp.segment.xprocessor.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +26,7 @@ import java.util.stream.Collectors;
 /**
  * @author jimichan
  */
-public class WordnetTokenizerBuilder implements TokenizerBuilder {
+public class WordnetTokenizerBuilder implements MynlpTokenizerBuilder {
 
     private final MynlpIOC mynlp;
 
@@ -83,7 +82,7 @@ public class WordnetTokenizerBuilder implements TokenizerBuilder {
     public void test() {
         WordnetTokenizerBuilder builder = null;
 
-        builder.dddd(CommonPatternWordPathProcessor.class, x -> {
+        builder.dddd(CommonPatternProcessor.class, x -> {
             x.setEnableEmail(false);
         });
 
@@ -202,10 +201,10 @@ public class WordnetTokenizerBuilder implements TokenizerBuilder {
 
 
     private void setDefaultPipeline() {
-        addLastProcessor(CustomDictionaryXProcess.class);
+        addLastProcessor(CustomDictionaryProcessor.class);
         addLastProcessor(MergeNumberQuantifierPreProcessor.class);
-        addLastProcessor(MergeNumberAndLetterPreProcess.class);
-        addLastProcessor(CommonPatternWordPathProcessor.class);
+        addLastProcessor(MergeNumberAndLetterPreProcessor.class);
+        addLastProcessor(CommonPatternProcessor.class);
 
         addLastOptimizeProcessorClass(Lists.newArrayList(
                 PersonRecognition.class,
@@ -213,8 +212,8 @@ public class WordnetTokenizerBuilder implements TokenizerBuilder {
                 OrganizationRecognition.class));
 
 
-        addLastProcessor(CorrectionXProcessor.class);
-        addLastProcessor(PartOfSpeechTaggingComputerXProcessor.class);
+        addLastProcessor(CorrectionProcessor.class);
+        addLastProcessor(PartOfSpeechTaggingComputerProcessor.class);
     }
 
 

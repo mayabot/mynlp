@@ -15,7 +15,6 @@
  */
 package com.mayabot.nlp.segment.dictionary.core;
 
-import com.google.common.io.Files;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.mayabot.nlp.MynlpIOC;
@@ -28,7 +27,10 @@ import com.mayabot.nlp.resources.NlpResource;
 import com.mayabot.nlp.segment.dictionary.NatureAttribute;
 import com.mayabot.nlp.utils.CharSourceLineReader;
 
-import java.io.*;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.OutputStream;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.TreeMap;
@@ -258,26 +260,6 @@ public class CoreDictionary implements MynlpCacheable {
 //            this.trie = DoubleArrayTrie.read(dataInput, NatureAttribute::read);
 //
 //        }
-    }
-
-    public static void main(String[] args) throws IOException {
-
-        File temp = new File("temp/mynlp/dec4fa6cdecf95af4d4d3b0195b330dd.core.dict");
-
-//        ByteArrayOutputStream out = new ByteArrayOutputStream();
-
-//        DataOutputStream dataOutput = new DataOutputStream(Files.asByteSink(temp).openBufferedStream());
-//
-//        dataOutput.writeInt(25114638);
-//        dataOutput.flush();
-
-//        ByteArrayInputStream in = new ByteArrayInputStream(out.toByteArray());
-
-        DataInputStream dataInputStream = new DataInputStream(Files.asByteSource(temp).openBufferedStream());
-
-        System.out.println(dataInputStream.readInt());
-
-
     }
 
 

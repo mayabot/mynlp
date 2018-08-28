@@ -25,6 +25,7 @@ import com.mayabot.nlp.logging.InternalLoggerFactory;
 import com.mayabot.nlp.resources.NlpResource;
 import com.mayabot.nlp.utils.CharSourceLineReader;
 
+import java.io.File;
 import java.io.IOException;
 
 /**
@@ -42,13 +43,13 @@ public class CrfModelFile {
     final CrfSegmentModel crfSegmentModel;
 
     public static final Setting<String> crfModelSetting =
-            Setting.string("crf.segment.dict", "model/CrfSegmentModel.txt");
+            Setting.string("crf.segment.dict", "model/CRFSegmentModel.txt");
 
     @Inject
     public CrfModelFile(MynlpIOC Mynlp) throws IOException {
         this.mynlp = Mynlp;
 
-        this.crfSegmentModel = loadTxt();
+        this.crfSegmentModel = loadModel();
     }
 
     /**
@@ -56,12 +57,33 @@ public class CrfModelFile {
      *
      * @return 该模型
      */
-    private CrfSegmentModel loadTxt() throws IOException {
+    private CrfSegmentModel loadModel() throws IOException {
+        //二进制
+        File file = new File(mynlp.getDataDir(), mynlp.getSetting(crfModelSetting) + ".bin");
+        if (file.exists() && file.canRead()) {
+            long t1 = System.currentTimeMillis();
+            CrfSegmentModel model = CrfSegmentModel.load(file);
+            long t2 = System.currentTimeMillis();
+            logger.info("load crf from bin file , use time " + (t2 - t1) + " ms");
+            return model;
+        }
+
+
         NlpResource resource = mynlp.loadResource(crfModelSetting);
 
         try (CharSourceLineReader lineIterator = resource.openLineReader()) {
-            return CrfSegmentModel.loadFromCrfPlusText(lineIterator);
+            CrfSegmentModel model = CrfSegmentModel.loadFromCrfPlusText(lineIterator);
+
+            //保存二进制版本
+
+            long t1 = System.currentTimeMillis();
+            model.write(file);
+            long t2 = System.currentTimeMillis();
+
+
+            return model;
         }
+
     }
 
 

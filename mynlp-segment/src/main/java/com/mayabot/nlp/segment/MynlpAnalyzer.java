@@ -32,9 +32,9 @@ import java.util.List;
  *
  * @author jimichan
  */
-public interface MynlpAnalyzer extends Iterable<MynlpTerm> {
+public interface MynlpAnalyzer extends Iterable<WordTerm> {
 
-    MynlpTerm next();
+    WordTerm next();
 
     MynlpAnalyzer reset(Reader reader);
 
@@ -43,11 +43,11 @@ public interface MynlpAnalyzer extends Iterable<MynlpTerm> {
     }
 
     @Override
-    default Iterator<MynlpTerm> iterator() {
-        return new AbstractIterator<MynlpTerm>() {
+    default Iterator<WordTerm> iterator() {
+        return new AbstractIterator<WordTerm>() {
             @Override
-            protected MynlpTerm computeNext() {
-                MynlpTerm n = MynlpAnalyzer.this.next();
+            protected WordTerm computeNext() {
+                WordTerm n = MynlpAnalyzer.this.next();
                 if (n != null) {
                     return n;
                 } else {
@@ -63,7 +63,7 @@ public interface MynlpAnalyzer extends Iterable<MynlpTerm> {
      * @return
      */
     default List<String> toList() {
-        return Lists.newArrayList(Iterators.transform(iterator(), MynlpTerm::getWord));
+        return Lists.newArrayList(Iterators.transform(iterator(), WordTerm::getWord));
     }
 
     /**

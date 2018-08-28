@@ -15,8 +15,11 @@
  */
 package com.mayabot.nlp.segment.crf;
 
-import org.trie4j.MapTrie;
+import org.trie4j.louds.MapTailLOUDSTrie;
 
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +27,7 @@ import java.util.Map;
 /**
  * CrfModel是把CRF模型文件在内存中的表示。
  * 其中特征函数的存储实现和HANLP不同，这里采用org.trie4j.MapTrie。兼顾内存占用和加载时间和查询时间.
+ *
  * @author hankcs
  * @author jimichan
  */
@@ -39,7 +43,7 @@ public class CrfModel {
     /**
      * 特征函数
      */
-    protected MapTrie<FeatureFunction> featureFunctionTrie;
+    protected MapTailLOUDSTrie<FeatureFunction> featureFunctionTrie;
 
     /**
      * 特征模板
@@ -56,11 +60,30 @@ public class CrfModel {
     public CrfModel() {
     }
 
+    public void write(ObjectOutput out) throws IOException {
+        out.writeObject(tag2id);
+        out.writeObject(id2tag);
+        out.writeObject(matrix);
+        out.writeObject(featureTemplateList);
+        featureFunctionTrie.writeExternal(out);
+    }
+
+    public void load(ObjectInput input) throws IOException, ClassNotFoundException {
+        tag2id = (Map<String, Integer>) input.readObject();
+        id2tag = (String[]) input.readObject();
+        matrix = (double[][]) input.readObject();
+        featureTemplateList = (List<FeatureTemplate>) input.readObject();
+
+        featureFunctionTrie = new MapTailLOUDSTrie<>();
+        featureFunctionTrie.readExternal(input);
+    }
+
+
     protected void onLoadTxtFinished() {
         // do nothing
     }
 
-    public void setFeatureFunctionTrie(MapTrie<FeatureFunction> featureFunctionTrie) {
+    public void setFeatureFunctionTrie(MapTailLOUDSTrie<FeatureFunction> featureFunctionTrie) {
         this.featureFunctionTrie = featureFunctionTrie;
     }
 
