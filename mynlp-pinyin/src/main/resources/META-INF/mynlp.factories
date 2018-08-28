@@ -1,1 +1,1 @@
-com.mayabot.nlp.pinyin.PinyinModule
+GuiceModule=com.mayabot.nlp.pinyin.PinyinModule

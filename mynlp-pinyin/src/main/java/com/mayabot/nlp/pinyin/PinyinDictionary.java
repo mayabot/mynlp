@@ -23,7 +23,7 @@ import com.google.common.io.Files;
 import com.google.common.primitives.Ints;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.mayabot.nlp.Mynlp;
+import com.mayabot.nlp.MynlpIOC;
 import com.mayabot.nlp.Setting;
 import com.mayabot.nlp.caching.MynlpCacheable;
 import com.mayabot.nlp.collection.ahocorasick.AhoCoraickDoubleArrayTrieBuilder;
@@ -56,23 +56,31 @@ public class PinyinDictionary implements MynlpCacheable {
     public final static Setting<String> pinyinExtDicSetting =
             string("pinyin.ext.dict", null);
 
-    private Mynlp mynlp;
+    private MynlpIOC mynlp;
 
     private AhoCorasickDoubleArrayTrie<Pinyin[]> trie = null;
 
     private CustomPinyin customPinyin;
 
     @Inject
-    public PinyinDictionary(Mynlp mynlp, CustomPinyin customPinyin) throws Exception {
+    public PinyinDictionary(MynlpIOC mynlp, CustomPinyin customPinyin) throws Exception {
         this.mynlp = mynlp;
         long t1 = System.currentTimeMillis();
-
         this.customPinyin = customPinyin;
 
         this.restore();
         long t2 = System.currentTimeMillis();
         logger.info("Loaded pinyin dictionary success! " + (t2 - t1) + " ms");
     }
+
+    public void reload() {
+        try {
+            this.restore();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
     @Override
     public File cacheFileName() {
@@ -218,6 +226,10 @@ public class PinyinDictionary implements MynlpCacheable {
         } else {
             return null;
         }
+    }
+
+    public CustomPinyin getCustomPinyin() {
+        return customPinyin;
     }
 
 
