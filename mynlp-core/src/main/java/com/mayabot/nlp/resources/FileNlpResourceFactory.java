@@ -33,7 +33,7 @@ public class FileNlpResourceFactory implements NlpResourceFactory {
 
         File zipFile = new File(baseDir, resourceName.replace('/', File.separatorChar) + ".zip");
         if (zipFile.exists() && zipFile.canRead()) {
-            return new FileMynlpResource(file, charset);
+            return new FileMynlpResource(zipFile, charset);
         }
 
         return null;

@@ -32,12 +32,10 @@ import com.mayabot.nlp.utils.CharacterHelper;
 @Singleton
 public class CrfBaseSegment implements WordnetInitializer {
 
+    public static final int CRF_WORD_ID = -2;
+
 
     private final CrfSegmentModel crfModel;
-
-//    public static CrfBaseSegment build(Injector injector) {
-//        return injector.getInstance(CrfBaseSegment.class);
-//    }
 
     @Inject
     public CrfBaseSegment(CrfModelFile crfModelComponent) {
@@ -46,6 +44,8 @@ public class CrfBaseSegment implements WordnetInitializer {
 
     @Override
     public void init(Wordnet wordnet) {
+
+        final NatureAttribute _na = NatureAttribute.create(Nature.x, 1000);
 
         Table table = new Table();
         table.v = atomSegmentToTable(wordnet.getCharArray());
@@ -67,22 +67,17 @@ public class CrfBaseSegment implements WordnetInitializer {
                     }
                     if (i == table.v.length) {
                         Vertex v = wordnet.put(begin, offset - begin);
-                        v.setWordInfo(-1, null, NatureAttribute.create(Nature.x, 1000));
-                        //termList.add(new Term(new String(sentence, begin, offset - begin), null));
-
+                        v.setWordInfo(CRF_WORD_ID, null, _na);
                         break OUTER;
                     } else {
                         Vertex v = wordnet.put(begin, offset - begin + table.v[i][1].length());
-                        v.setWordInfo(-1, null, NatureAttribute.create(Nature.x, 1000));
-                        //termList.add(new Term(new String(sentence, begin, offset - begin + table.v[i][1].length()), null));
+                        v.setWordInfo(CRF_WORD_ID, null, _na);
                     }
                 }
                 break;
                 default: {
                     Vertex v = wordnet.put(offset, table.v[i][1].length());
-                    v.setWordInfo(-1, null, NatureAttribute.create(Nature.x, 1000));
-                    //termList.add(new Term(new String(sentence, offset, table.v[i][1].length()), null));
-
+                    v.setWordInfo(CRF_WORD_ID, null, _na);
                 }
                 break;
             }

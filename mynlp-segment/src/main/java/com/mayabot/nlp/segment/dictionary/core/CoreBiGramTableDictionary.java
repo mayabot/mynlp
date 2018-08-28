@@ -135,11 +135,11 @@ public class CoreBiGramTableDictionary implements MynlpCacheable {
      */
     public int getBiFrequency(String a, String b) {
         int idA = coreDictionary.getWordID(a);
-        if (idA == -1) {
+        if (idA < 0) {
             return 0;
         }
         int idB = coreDictionary.getWordID(b);
-        if (idB == -1) {
+        if (idB < 0) {
             return 0;
         }
         return matrix.get(idA, idB);

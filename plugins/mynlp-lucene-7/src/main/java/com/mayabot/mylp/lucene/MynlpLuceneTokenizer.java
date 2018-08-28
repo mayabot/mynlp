@@ -1,7 +1,7 @@
 package com.mayabot.mylp.lucene;
 
 import com.mayabot.nlp.segment.MynlpAnalyzer;
-import com.mayabot.nlp.segment.MynlpTerm;
+import com.mayabot.nlp.segment.WordTerm;
 import org.apache.lucene.analysis.Tokenizer;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.analysis.tokenattributes.OffsetAttribute;
@@ -23,7 +23,7 @@ public class MynlpLuceneTokenizer extends Tokenizer {
 
     private MynlpAnalyzer myAnalyzer;
 
-    private LinkedList<MynlpTerm> buffer;
+    private LinkedList<WordTerm> buffer;
 
     public MynlpLuceneTokenizer(MynlpAnalyzer tokenizer) {
         myAnalyzer = tokenizer;
@@ -34,14 +34,14 @@ public class MynlpLuceneTokenizer extends Tokenizer {
         clearAttributes();
 
         if (buffer != null && !buffer.isEmpty()) {
-            MynlpTerm subword = buffer.pop();
+            WordTerm subword = buffer.pop();
             positionAttr.setPositionIncrement(1);
             termAtt.setEmpty().append(subword.word);
             offsetAtt.setOffset(subword.getOffset(), subword.getOffset() + subword.length());
             return true;
         }
 
-        MynlpTerm term = myAnalyzer.next();
+        WordTerm term = myAnalyzer.next();
 
         if (term == null) {
             return false;

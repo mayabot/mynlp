@@ -1,11 +1,11 @@
 package com.mayabot.nlp.segment.support;
 
-import com.mayabot.nlp.segment.NlpSegmentComponent;
+import com.mayabot.nlp.segment.MynlpComponent;
 
 /**
  * @author jimichan
  */
-public abstract class BaseNlpComponent implements NlpSegmentComponent {
+public abstract class BaseNlpComponent implements MynlpComponent {
 
 
     private boolean enabled = true;
