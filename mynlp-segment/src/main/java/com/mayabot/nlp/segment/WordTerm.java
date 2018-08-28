@@ -25,7 +25,7 @@ import java.util.List;
  *
  * @author jimichan
  */
-public final class MynlpTerm {
+public final class WordTerm {
     /**
      * 词语
      */
@@ -44,7 +44,7 @@ public final class MynlpTerm {
     /**
      * 索引分词，切分子词
      */
-    private List<MynlpTerm> subword;
+    private List<WordTerm> subword;
 
     private String customFlag;
 
@@ -54,13 +54,13 @@ public final class MynlpTerm {
      * @param word   词语
      * @param nature 词性
      */
-    public MynlpTerm(String word, Nature nature) {
+    public WordTerm(String word, Nature nature) {
         this.word = word;
         this.nature = nature;
     }
 
 
-    public MynlpTerm(String word) {
+    public WordTerm(String word) {
         this.word = word;
     }
 
@@ -72,7 +72,7 @@ public final class MynlpTerm {
         return offset;
     }
 
-    public List<MynlpTerm> getSubword() {
+    public List<WordTerm> getSubword() {
         return subword;
     }
 
@@ -84,7 +84,7 @@ public final class MynlpTerm {
         this.offset = offset;
     }
 
-    public void setSubword(List<MynlpTerm> subword) {
+    public void setSubword(List<WordTerm> subword) {
         this.subword = subword;
     }
 

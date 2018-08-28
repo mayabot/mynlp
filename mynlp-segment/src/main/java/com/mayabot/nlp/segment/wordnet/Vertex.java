@@ -126,7 +126,7 @@ public class Vertex extends VertexExt {
      * 设置核心词典的属性
      *
      * @param wordID    核心词典的词下标(包括等效词下标)
-     * @param word      等效词
+     * @param word      等效词()
      * @param attribute 属性(包含了词性等信息)
      * @return
      */
@@ -172,6 +172,11 @@ public class Vertex extends VertexExt {
         return follow;
     }
 
+    /**
+     * 返回在原始文本中真实的词
+     *
+     * @return
+     */
     public String realWord() {
         if (vertexRow.rowNum == -1) {
             return "";

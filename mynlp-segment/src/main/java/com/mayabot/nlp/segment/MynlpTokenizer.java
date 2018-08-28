@@ -33,13 +33,13 @@ import java.util.stream.Collectors;
 public interface MynlpTokenizer {
 
     /**
-     * 对text进行分词，结构保存在List<MynlpTerm>,
+     * 对text进行分词，结构保存在List<WordTerm>,
      * token不会对target清空，只会add。
      * @param text
      * @param target 结果保存在list里面，这个target如果重复使用的，那么会自动clear
      * @return
      */
-    void token(char[] text, List<MynlpTerm> target);
+    void token(char[] text, List<WordTerm> target);
 
     /**
      * 对text是String字符串的一个便捷包装.
@@ -47,7 +47,7 @@ public interface MynlpTokenizer {
      * @param text
      * @param target
      */
-    default void token(String text, List<MynlpTerm> target) {
+    default void token(String text, List<WordTerm> target) {
         token(text.toCharArray(), target);
     }
 
@@ -61,7 +61,7 @@ public interface MynlpTokenizer {
         if (text == null || text.isEmpty()) {
             return Lists.newArrayListWithCapacity(1);
         }
-        List<MynlpTerm> target = Lists.newArrayListWithExpectedSize(text.length() / 2);
+        List<WordTerm> target = Lists.newArrayListWithExpectedSize(text.length() / 2);
         token(text, target);
         return target.stream().map(x -> x.word).collect(Collectors.toList());
     }
@@ -72,11 +72,11 @@ public interface MynlpTokenizer {
      * @param text
      * @return
      */
-    default List<MynlpTerm> tokenToTermList(String text) {
+    default List<WordTerm> tokenToTermList(String text) {
         if (text == null || text.isEmpty()) {
             return Lists.newArrayListWithCapacity(1);
         }
-        List<MynlpTerm> target = Lists.newArrayListWithExpectedSize(text.length() / 2);
+        List<WordTerm> target = Lists.newArrayListWithExpectedSize(text.length() / 2);
         token(text, target);
         return target;
     }

@@ -47,14 +47,14 @@ public class MynlpIOCBuilder {
     private Map<Class, Object> preObj = Maps.newHashMap();
 
     MynlpIOC build() throws RuntimeException {
-        MynlpIOC mynlpInstance = new MynlpIOC();
+        MynlpIOC ioc = new MynlpIOC();
         try {
             logger.info("Current Working Dir is " + new File(".").getAbsolutePath());
 
 
             File dataDirFile = ensureDir(new File(dataDir));
             logger.info("Mynlp data dir is " + dataDirFile.getAbsolutePath());
-            mynlpInstance.dataDir = dataDirFile;
+            ioc.dataDir = dataDirFile;
 
             File cacheDirFile = null;
             if (cacheDir == null) {
@@ -62,7 +62,7 @@ public class MynlpIOCBuilder {
             } else {
                 cacheDirFile = ensureDir(new File(cacheDir));
             }
-            mynlpInstance.cacheDir = cacheDirFile;
+            ioc.cacheDir = cacheDirFile;
 
             logger.info("Mynlp cache dir is {}", cacheDirFile.getAbsolutePath());
 
@@ -70,18 +70,18 @@ public class MynlpIOCBuilder {
             resourceFactoryList.add(new FileNlpResourceFactory(dataDirFile));
             resourceFactoryList.add(new ClasspathNlpResourceFactory(Mynlp.class.getClassLoader()));
 
-            mynlpInstance.resourceFactory = ImmutableList.copyOf(resourceFactoryList);
+            ioc.resourceFactory = ImmutableList.copyOf(resourceFactoryList);
 
             if (settings == null) {
-                mynlpInstance.settings = Settings.defaultSettings();
+                ioc.settings = Settings.defaultSettings();
             } else {
-                mynlpInstance.settings = Settings.merge(Settings.defaultSettings(), settings);
+                ioc.settings = Settings.merge(Settings.defaultSettings(), settings);
             }
 
-            mynlpInstance.injector = createInject(mynlpInstance);
+            ioc.injector = createInject(ioc);
 
 
-            return mynlpInstance;
+            return ioc;
         } catch (Exception e) {
             throw new RuntimeException((e));
         }
@@ -96,6 +96,7 @@ public class MynlpIOCBuilder {
             @Override
             protected void configure() {
                 bind(MynlpIOC.class).toInstance(mynlp);
+                bind(Settings.class).toInstance(mynlp.settings);
                 preObj.forEach((k, v) -> bind(k).toInstance(v));
             }
         });

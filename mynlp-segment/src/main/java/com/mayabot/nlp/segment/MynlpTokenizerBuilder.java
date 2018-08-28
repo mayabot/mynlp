@@ -3,7 +3,7 @@ package com.mayabot.nlp.segment;
 /**
  * @author jimichan
  */
-public interface TokenizerBuilder {
+public interface MynlpTokenizerBuilder {
 
     /**
      * 构建一个MynlpTokenizer

@@ -21,6 +21,7 @@ import com.mayabot.nlp.logging.InternalLoggerFactory;
 import org.trie4j.louds.MapTailLOUDSTrie;
 import org.trie4j.patricia.MapPatriciaTrie;
 
+import java.io.*;
 import java.util.*;
 
 /**
@@ -53,18 +54,23 @@ public final class CrfSegmentModel extends CrfModel {
             return null;
         }
 
-        logger.info(txtReader.next());   // verson
+        // verson
+        logger.info(txtReader.next());
 
-        logger.info(txtReader.next());   // cost-factor
+        // cost-factor
+        logger.info(txtReader.next());
         int maxid = Integer.parseInt(txtReader.next().substring("maxid:".length()).trim());
-        logger.info(txtReader.next());   // xsize
 
-        txtReader.next();    // blank
+        // xsize
+        logger.info(txtReader.next());
+
+        // blank
+        txtReader.next();
 
 
         String line;
         int id = 0;
-        model.tag2id = new HashMap<String, Integer>();
+        model.tag2id = new HashMap<>();
         while ((line = txtReader.next()).length() != 0) {
             model.tag2id.put(line, id);
             ++id;
@@ -132,12 +138,51 @@ public final class CrfSegmentModel extends CrfModel {
         MapTailLOUDSTrie<FeatureFunction> trie = new MapTailLOUDSTrie(featureFunctionMap);
         model.setFeatureFunctionTrie(trie);
 
+
         model.onLoadTxtFinished();
 
         logger.info("完成构建trie树 feature size " + featureFunctionMap.size());
 
         return model;
 
+    }
+
+
+    public void write(File file) throws IOException {
+        try (OutputStream fileout = new FileOutputStream(file)) {
+            ObjectOutput out = new ObjectOutputStream(new BufferedOutputStream(fileout, 512 * 1024));
+
+            out.writeInt(idM);
+            out.writeInt(idE);
+            out.writeInt(idS);
+
+            super.write(out);
+
+            out.flush();
+            fileout.flush();
+        }
+    }
+
+    public static CrfSegmentModel load(File file) {
+        CrfSegmentModel model = new CrfSegmentModel();
+
+        try (InputStream filein =
+                     new BufferedInputStream(new FileInputStream(file), 512 * 1024)) {
+
+            ObjectInput in = new ObjectInputStream(filein);
+
+            model.idM = in.readInt();
+            model.idE = in.readInt();
+            model.idS = in.readInt();
+
+            model.load(in);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return model;
     }
 
     /**

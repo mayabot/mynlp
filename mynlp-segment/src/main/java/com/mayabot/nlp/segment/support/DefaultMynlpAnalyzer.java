@@ -19,8 +19,8 @@ package com.mayabot.nlp.segment.support;
 import com.google.common.collect.Lists;
 import com.mayabot.nlp.segment.CharNormalize;
 import com.mayabot.nlp.segment.MynlpAnalyzer;
-import com.mayabot.nlp.segment.MynlpTerm;
 import com.mayabot.nlp.segment.MynlpTokenizer;
+import com.mayabot.nlp.segment.WordTerm;
 import com.mayabot.nlp.utils.ParagraphReader;
 import com.mayabot.nlp.utils.ParagraphReaderSmart;
 
@@ -90,10 +90,10 @@ public class DefaultMynlpAnalyzer implements MynlpAnalyzer {
      * @param action
      */
     @Override
-    public void forEach(Consumer<? super MynlpTerm> action) {
+    public void forEach(Consumer<? super WordTerm> action) {
         // 之后改造成支持使用Stream函数，改造成支持多线程并发的版本
         Objects.requireNonNull(action);
-        for (MynlpTerm t : this) {
+        for (WordTerm t : this) {
             action.accept(t);
         }
     }
@@ -115,7 +115,7 @@ public class DefaultMynlpAnalyzer implements MynlpAnalyzer {
      * @return
      */
     @Override
-    public MynlpTerm next() {
+    public WordTerm next() {
 
         if (!buffer.hasRemain()) {
 
@@ -155,7 +155,7 @@ public class DefaultMynlpAnalyzer implements MynlpAnalyzer {
             }
         }
 
-        MynlpTerm term = buffer.pop();
+        WordTerm term = buffer.pop();
 
         if (term == null) {
             return null;
@@ -168,7 +168,7 @@ public class DefaultMynlpAnalyzer implements MynlpAnalyzer {
     }
 
     static class MynlpTermBuffer {
-        ArrayList<MynlpTerm> list = Lists.newArrayListWithExpectedSize(256);
+        ArrayList<WordTerm> list = Lists.newArrayListWithExpectedSize(256);
         int po = 0;
         int cap = 0;
 
@@ -176,7 +176,7 @@ public class DefaultMynlpAnalyzer implements MynlpAnalyzer {
             return po < cap;
         }
 
-        public MynlpTerm pop() {
+        public WordTerm pop() {
             if (po >= cap) {
                 return null;
             }

@@ -17,7 +17,7 @@
 package com.mayabot.nlp.segment.support;
 
 import com.mayabot.nlp.segment.MynlpAnalyzer;
-import com.mayabot.nlp.segment.MynlpTerm;
+import com.mayabot.nlp.segment.WordTerm;
 
 public abstract class MynlpAnalyzerFilter extends MynlpAnalyzerWarp {
 
@@ -26,8 +26,8 @@ public abstract class MynlpAnalyzerFilter extends MynlpAnalyzerWarp {
     }
 
     @Override
-    public MynlpTerm next() {
-        MynlpTerm next = myAnalyzer.next();
+    public WordTerm next() {
+        WordTerm next = myAnalyzer.next();
         while (next != null) {
             if (accept(next)) {
                 return next;
@@ -38,5 +38,5 @@ public abstract class MynlpAnalyzerFilter extends MynlpAnalyzerWarp {
         return null;
     }
 
-    abstract boolean accept(MynlpTerm term);
+    abstract boolean accept(WordTerm term);
 }

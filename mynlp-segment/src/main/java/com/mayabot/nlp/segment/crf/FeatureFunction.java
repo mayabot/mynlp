@@ -16,20 +16,25 @@
 package com.mayabot.nlp.segment.crf;
 
 
+import java.io.Externalizable;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
+
 /**
  * 特征函数，其实是tag.size个特征函数的集合
  *
  * @author hankcs
  */
-public class FeatureFunction {
+public class FeatureFunction implements Externalizable {
+
+    public static int serialVersionUID = 1;
+
     /**
      * 环境参数
      */
     char[] o;
-    /**
-     * 标签参数
-     */
-//    String s;
+
 
     /**
      * 权值，按照index对应于tag的id
@@ -44,4 +49,25 @@ public class FeatureFunction {
     public FeatureFunction() {
     }
 
+
+    @Override
+    public void writeExternal(ObjectOutput out) throws IOException {
+        out.writeUTF(new String(o));
+
+        out.writeInt(w.length);
+        for (int i = 0; i < w.length; i++) {
+            out.writeDouble(w[i]);
+        }
+    }
+
+    @Override
+    public void readExternal(ObjectInput in) throws IOException {
+        o = in.readUTF().toCharArray();
+
+        w = new double[in.readInt()];
+
+        for (int i = 0; i < w.length; i++) {
+            w[i] = in.readDouble();
+        }
+    }
 }
