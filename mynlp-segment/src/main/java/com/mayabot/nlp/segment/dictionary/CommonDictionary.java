@@ -19,7 +19,7 @@ import com.google.common.base.Splitter;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import com.google.common.io.Files;
-import com.mayabot.nlp.Mynlp;
+import com.mayabot.nlp.MynlpIOC;
 import com.mayabot.nlp.caching.MynlpCacheable;
 import com.mayabot.nlp.collection.dat.DoubleArrayTrie;
 import com.mayabot.nlp.collection.dat.DoubleArrayTrieBuilder;
@@ -44,12 +44,12 @@ public abstract class CommonDictionary<V> implements MynlpCacheable {
     protected InternalLogger logger = InternalLoggerFactory.getInstance(this.getClass());
 
 
-    private final Mynlp mynlp;
+    private final MynlpIOC mynlp;
 
     private DoubleArrayTrie<V> trie;
 
-    public CommonDictionary(Mynlp Mynlp) throws Exception {
-        this.mynlp = Mynlp;
+    public CommonDictionary(MynlpIOC mynlp) throws Exception {
+        this.mynlp = mynlp;
 
         this.restore();
     }

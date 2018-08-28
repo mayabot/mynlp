@@ -16,7 +16,7 @@
 
 package com.mayabot.nlp.segment;
 
-import com.mayabot.nlp.Mynlp;
+import com.mayabot.nlp.MynlpIOC;
 import com.mayabot.nlp.segment.tokenizer.WordnetTokenizerBuilder;
 
 /**
@@ -26,20 +26,20 @@ import com.mayabot.nlp.segment.tokenizer.WordnetTokenizerBuilder;
  */
 public final class MynlpSegments {
 
-    public static WordnetTokenizerBuilder tokenizerBuilder(Mynlp mynlp) {
+    public static WordnetTokenizerBuilder tokenizerBuilder(MynlpIOC mynlp) {
         return WordnetTokenizerBuilder.create(mynlp);
     }
 
-    public static MynlpTokenizer nlpTokenizer(Mynlp mynlp) {
+    public static MynlpTokenizer nlpTokenizer(MynlpIOC mynlp) {
         return WordnetTokenizerBuilder.create(mynlp).build();
     }
 
 
-    public static MynlpTokenizer crfTokenizer(Mynlp mynlp) {
+    public static MynlpTokenizer crfTokenizer(MynlpIOC mynlp) {
         return tokenizerBuilder(mynlp).crf().build();
     }
 
-    public static WordnetTokenizerBuilder crfTokenizerBuilder(Mynlp mynlp) {
+    public static WordnetTokenizerBuilder crfTokenizerBuilder(MynlpIOC mynlp) {
         return WordnetTokenizerBuilder.create(mynlp).crf();
     }
 

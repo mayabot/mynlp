@@ -1,1 +1,1 @@
-com.mayabot.nlp.segment.SegmentModule
+GuiceModule=com.mayabot.nlp.segment.SegmentModule

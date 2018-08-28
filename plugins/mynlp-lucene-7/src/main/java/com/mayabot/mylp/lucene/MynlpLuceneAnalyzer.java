@@ -3,8 +3,6 @@ package com.mayabot.mylp.lucene;
 import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
 import com.mayabot.nlp.segment.MynlpAnalyzer;
-import com.mayabot.nlp.segment.MynlpSegments;
-import com.mayabot.nlp.segment.support.DefaultMynlpAnalyzer;
 import org.apache.lucene.analysis.*;
 import org.apache.lucene.analysis.standard.StandardFilter;
 
@@ -44,7 +42,8 @@ public class MynlpLuceneAnalyzer extends StopwordAnalyzerBase {
     }
 
     public MynlpLuceneAnalyzer() {
-        this(new DefaultMynlpAnalyzer(MynlpSegments.nlpTokenizer(MynlpLuceneTokenizerFactory.mynlp)));
+        //this(new DefaultMynlpAnalyzer(MynlpSegments.nlpTokenizer(MynlpLuceneTokenizerFactory.mynlp)));
+        //FIXME xxxx
     }
 
     public MynlpLuceneAnalyzer(MynlpAnalyzer mynlpAnalyzer) {

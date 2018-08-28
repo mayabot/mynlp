@@ -27,7 +27,7 @@ import com.google.common.io.ByteStreams;
 import com.google.common.io.Files;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.mayabot.nlp.Mynlp;
+import com.mayabot.nlp.MynlpIOC;
 import com.mayabot.nlp.caching.MynlpCacheable;
 import com.mayabot.nlp.collection.dat.DoubleArrayTrie;
 import com.mayabot.nlp.collection.dat.DoubleArrayTrieBuilder;
@@ -55,7 +55,7 @@ import java.util.TreeSet;
 public class CorrectionDictionary implements MynlpCacheable {
 
     static InternalLogger logger = InternalLoggerFactory.getInstance(CorrectionDictionary.class);
-    private final Mynlp Mynlp;
+    private final MynlpIOC mynlp;
 
     private DoubleArrayTrie<AdjustWord> doubleArrayTrie;
 
@@ -66,11 +66,11 @@ public class CorrectionDictionary implements MynlpCacheable {
 
 
     @Inject
-    public CorrectionDictionary(Mynlp Mynlp) throws Exception {
+    public CorrectionDictionary(MynlpIOC mynlp) throws Exception {
 
-        this.Mynlp = Mynlp;
+        this.mynlp = mynlp;
 
-        List<String> resourceUrls = Mynlp.getSettings().getAsList(
+        List<String> resourceUrls = mynlp.getSettings().getAsList(
                 "correction.dict", "dictionary/correction/adjust.txt");
 
         if (resourceUrls.isEmpty()) {
@@ -91,14 +91,14 @@ public class CorrectionDictionary implements MynlpCacheable {
         TreeSet<String> set = new TreeSet<>();
 
         for (String url : resourceUrls) {
-            NlpResource resource = Mynlp.loadResource(url);
+            NlpResource resource = mynlp.loadResource(url);
 
             set.add(resource.hash());
         }
 
         String hash = Hashing.md5().hashString(set.toString(), Charsets.UTF_8).toString();
 
-        return new File(Mynlp.getCacheDir(), hash + ".correction.dict");
+        return new File(mynlp.getCacheDir(), hash + ".correction.dict");
     }
 
     @Override
@@ -124,7 +124,7 @@ public class CorrectionDictionary implements MynlpCacheable {
         TreeMap<String, AdjustWord> map = new TreeMap<>();
 
         for (String url : resourceUrls) {
-            NlpResource resource = Mynlp.loadResource(url);
+            NlpResource resource = mynlp.loadResource(url);
 
             try (CharSourceLineReader reader = resource.openLineReader()) {
                 while (reader.hasNext()) {

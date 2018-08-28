@@ -1,8 +1,5 @@
 package com.mayabot.mylp.lucene;
 
-import com.mayabot.nlp.Mynlp;
-import com.mayabot.nlp.segment.MynlpSegments;
-import com.mayabot.nlp.segment.support.DefaultMynlpAnalyzer;
 import org.apache.lucene.analysis.Tokenizer;
 import org.apache.lucene.analysis.util.TokenizerFactory;
 import org.apache.lucene.util.AttributeFactory;
@@ -11,11 +8,6 @@ import java.util.Map;
 
 public class MynlpLuceneTokenizerFactory extends TokenizerFactory {
 
-    public static Mynlp mynlp;
-
-    static {
-        mynlp = Mynlp.builder().build();
-    }
 
     private Map<String, String> args;
 
@@ -27,7 +19,9 @@ public class MynlpLuceneTokenizerFactory extends TokenizerFactory {
 
     @Override
     public Tokenizer create(AttributeFactory factory) {
-        return new MynlpLuceneTokenizer(new DefaultMynlpAnalyzer(MynlpSegments.nlpTokenizer(mynlp)));
+        //return new MynlpLuceneTokenizer(new DefaultMynlpAnalyzer(MynlpSegments.nlpTokenizer(mynlp)));
+        //FIXME xxx
+        return null;
     }
 
 }

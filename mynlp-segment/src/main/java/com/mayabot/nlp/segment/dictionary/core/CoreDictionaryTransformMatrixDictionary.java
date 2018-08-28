@@ -17,12 +17,12 @@ package com.mayabot.nlp.segment.dictionary.core;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.mayabot.nlp.Mynlp;
+import com.mayabot.nlp.MynlpIOC;
 import com.mayabot.nlp.Setting;
-import com.mayabot.nlp.collection.TransformMatrix;
 import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
 import com.mayabot.nlp.resources.NlpResource;
+import com.mayabot.nlp.segment.common.TransformMatrix;
 
 import java.io.IOException;
 
@@ -42,11 +42,11 @@ public class CoreDictionaryTransformMatrixDictionary {
     protected InternalLogger logger = InternalLoggerFactory.getInstance(this.getClass());
 
     @Inject
-    public CoreDictionaryTransformMatrixDictionary(Mynlp Mynlp) throws IOException {
+    public CoreDictionaryTransformMatrixDictionary(MynlpIOC mynlp) throws IOException {
         transformMatrixDictionary = new TransformMatrix();
         long t1 = System.currentTimeMillis();
 
-        NlpResource resource = Mynlp.loadResource(coreDictTrSetting);
+        NlpResource resource = mynlp.loadResource(coreDictTrSetting);
         transformMatrixDictionary.load(resource.openInputStream());
         long t2 = System.currentTimeMillis();
         logger.info("加载核心词典词性转移矩阵" + resource + "成功，耗时：" + (t2 - t1)
