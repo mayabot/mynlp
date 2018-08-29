@@ -18,9 +18,9 @@ package com.mayabot.nlp.segment.xprocessor;
 
 import com.google.inject.Inject;
 import com.mayabot.nlp.segment.WordpathProcessor;
+import com.mayabot.nlp.segment.common.BaseMynlpComponent;
 import com.mayabot.nlp.segment.dictionary.Nature;
 import com.mayabot.nlp.segment.dictionary.NatureAttribute;
-import com.mayabot.nlp.segment.support.BaseNlpComponent;
 import com.mayabot.nlp.segment.wordnet.Vertex;
 import com.mayabot.nlp.segment.wordnet.Wordnet;
 import com.mayabot.nlp.segment.wordnet.Wordpath;
@@ -37,7 +37,7 @@ import java.util.regex.Pattern;
  *
  * @author jimichan
  */
-public class CommonPatternProcessor extends BaseNlpComponent implements WordpathProcessor {
+public class CommonPatternProcessor extends BaseMynlpComponent implements WordpathProcessor {
 
     private Pattern allPattern;
 

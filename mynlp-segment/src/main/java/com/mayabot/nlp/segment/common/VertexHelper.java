@@ -33,15 +33,12 @@ public class VertexHelper {
 
     private CoreDictionary coreDictionary;
 
-    //private CoreBiGramTableDictionary coreBiGramTableDictionary;
-
     private final NatureAttribute bigin_attr = NatureAttribute.create(Nature.begin, Predefine.MAX_FREQUENCY / 10);
     private final NatureAttribute endbigin_attr = NatureAttribute.create(Nature.end, Predefine.MAX_FREQUENCY / 10);
 
     @Inject
     public VertexHelper(CoreDictionary coreDictionary) {
         this.coreDictionary = coreDictionary;
-        //this.coreBiGramTableDictionary = coreBiGramTableDictionary;
     }
 
     /**

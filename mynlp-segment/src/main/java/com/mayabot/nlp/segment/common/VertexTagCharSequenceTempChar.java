@@ -20,6 +20,8 @@ import com.mayabot.nlp.segment.wordnet.Vertex;
 
 /**
  * 把 Vertex[] 里面的 temp char 伪装成 CharSequence
+ *
+ * @author jimichan
  */
 public class VertexTagCharSequenceTempChar implements CharSequence {
 
