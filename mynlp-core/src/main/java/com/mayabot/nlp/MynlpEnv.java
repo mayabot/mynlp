@@ -1,7 +1,7 @@
 package com.mayabot.nlp;
 
 import com.google.common.base.Charsets;
-import com.google.inject.Injector;
+import com.google.common.collect.ImmutableList;
 import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
 import com.mayabot.nlp.resources.NlpResource;
@@ -11,45 +11,43 @@ import java.io.File;
 import java.nio.charset.Charset;
 import java.util.List;
 
-public class MynlpIOC {
+/**
+ * Mynlp执行环境。
+ * 负责数据目录，缓存、资源加载、Settings等
+ *
+ * @author jimichan
+ */
+public class MynlpEnv {
 
-    public static InternalLogger logger = InternalLoggerFactory.getInstance("com.mayabot.nlp.Mynlp");
+    public static InternalLogger logger = InternalLoggerFactory.getInstance(MynlpEnv.class);
 
     /**
      * 数据目录
      */
-    File dataDir;
+    private File dataDir;
 
     /**
      * 缓存文件目录
      */
-    File cacheDir;
+    private File cacheDir;
 
-    Injector injector;
+    private List<NlpResourceFactory> resourceFactory = ImmutableList.of();
 
-    List<NlpResourceFactory> resourceFactory;
+    private Settings settings;
 
-    Settings settings;
-
-    MynlpIOC() {
-
+    public MynlpEnv(File dataDir, File cacheDir, List<NlpResourceFactory> resourceFactory, Settings settings) {
+        this.dataDir = dataDir;
+        this.cacheDir = cacheDir;
+        this.resourceFactory = ImmutableList.copyOf(resourceFactory);
+        this.settings = settings;
     }
-
-    public <T> T getInstance(Class<T> clazz) {
-        return injector.getInstance(clazz);
-    }
-
-    public void injectMembers(Object object) {
-        injector.injectMembers(object);
-    }
-
 
     public Settings getSettings() {
         return settings;
     }
 
-    public <T> T getSetting(Setting<T> key) {
-        return settings.get(key);
+    public void set(String key, String value) {
+        settings.put(key, value);
     }
 
     /**
@@ -95,7 +93,4 @@ public class MynlpIOC {
         return cacheDir;
     }
 
-    public Injector getInjector() {
-        return injector;
-    }
 }

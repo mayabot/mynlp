@@ -18,7 +18,7 @@ package com.mayabot.nlp.segment.recognition.personname.nr;
 import com.alibaba.fastjson.TypeReference;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.mayabot.nlp.MynlpIOC;
+import com.mayabot.nlp.MynlpEnv;
 import com.mayabot.nlp.segment.common.EnumFreqPair;
 import com.mayabot.nlp.segment.dictionary.CommonDictionary;
 import com.mayabot.nlp.segment.recognition.personname.NRTag;
@@ -38,7 +38,7 @@ public class NRDictionary extends CommonDictionary<EnumFreqPair<NRTag>> {
 
 
     @Inject
-    public NRDictionary(MynlpIOC mynlp) throws Exception {
+    public NRDictionary(MynlpEnv mynlp) throws Exception {
         super(mynlp);
     }
 

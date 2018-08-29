@@ -24,7 +24,8 @@ import com.google.common.io.ByteStreams;
 import com.google.common.io.Files;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.mayabot.nlp.MynlpIOC;
+import com.mayabot.nlp.MynlpEnv;
+import com.mayabot.nlp.Setting;
 import com.mayabot.nlp.Settings;
 import com.mayabot.nlp.caching.MynlpCacheable;
 import com.mayabot.nlp.collection.dat.DoubleArrayTrie;
@@ -50,21 +51,24 @@ public class CustomDictionary implements MynlpCacheable {
 
     static InternalLogger logger = InternalLoggerFactory.getInstance(CustomDictionary.class);
 
-    private final MynlpIOC mynlp;
+    private final MynlpEnv mynlp;
 
     private DoubleArrayTrie<NatureAttribute> dat;
 
     private List<String> resourceUrls;
+
     private boolean isNormalization = false;
+
+    public static Setting<String> customDictSetting = Setting.string("custom.dictionary.path", null);
 
     //dictionary/custom/*
 
     @Inject
-    public CustomDictionary(Settings setting, MynlpIOC mynlp) throws Exception {
+    public CustomDictionary(Settings setting, MynlpEnv mynlp) throws Exception {
 
         this.mynlp = mynlp;
 
-        List<String> resourceUrls = setting.getAsList("custom.dictionary.path");
+        List<String> resourceUrls = setting.getAsList(customDictSetting);
 
         if (resourceUrls == null || resourceUrls.isEmpty()) {
             return;

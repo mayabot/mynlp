@@ -19,7 +19,7 @@ package com.mayabot.nlp.segment.recognition.place.ns;
 import com.alibaba.fastjson.TypeReference;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.mayabot.nlp.MynlpIOC;
+import com.mayabot.nlp.MynlpEnv;
 import com.mayabot.nlp.segment.common.EnumFreqPair;
 import com.mayabot.nlp.segment.dictionary.CommonDictionary;
 import com.mayabot.nlp.segment.recognition.place.NSTag;
@@ -33,7 +33,7 @@ import java.util.Map;
 public class NSDictionary extends CommonDictionary<EnumFreqPair<NSTag>> {
 
     @Inject
-    public NSDictionary(MynlpIOC mynlp) throws Exception {
+    public NSDictionary(MynlpEnv mynlp) throws Exception {
         super(mynlp);
     }
 

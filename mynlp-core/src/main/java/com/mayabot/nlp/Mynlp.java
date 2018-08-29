@@ -1,52 +1,41 @@
 package com.mayabot.nlp;
 
+import com.google.inject.Injector;
 import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
 
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Consumer;
-
 /**
- * 包含一个IOC容器，管理Mynlp所有的资源。
- * 在项目Mynlp对象应该作为单例，不需要重复创建。
- *
  * @author jimichan
  */
-public final class Mynlp {
+public class Mynlp {
 
-    public static InternalLogger logger = InternalLoggerFactory.getInstance("com.mayabot.nlp.Mynlp");
+    public static InternalLogger logger = InternalLoggerFactory.getInstance(Mynlp.class);
 
-    private static final ConcurrentHashMap<String, MynlpIOC> map = new ConcurrentHashMap<>();
+    private MynlpEnv env;
 
-    public static void install(Consumer<MynlpIOCBuilder> consumer) {
-        if (map.isEmpty()) {
-            MynlpIOCBuilder builder = new MynlpIOCBuilder();
-            consumer.accept(builder);
-            map.put("I", builder.build());
-        } else {
-            throw new RuntimeException("Do install action before call get()!");
-        }
+    /**
+     * guice injector
+     */
+    private Injector injector;
+
+    public Mynlp(MynlpEnv env, Injector injector) {
+        this.env = env;
+        this.injector = injector;
     }
 
-    public static void clear() {
-        map.clear();
+    public MynlpEnv getEnv() {
+        return env;
     }
 
-    public static MynlpIOC get() {
-        return map.computeIfAbsent("I", Mynlp::create);
+    public <T> T getInstance(Class<T> clazz) {
+        return injector.getInstance(clazz);
     }
 
-    private static MynlpIOC create(String s) {
-        return new MynlpIOCBuilder().build();
+    public void injectMembers(Object object) {
+        injector.injectMembers(object);
     }
 
-
-    private Mynlp() {
-
+    public Injector getInjector() {
+        return injector;
     }
-
-    public static <T> T getInstance(Class<T> clazz) {
-        return get().getInstance(clazz);
-    }
-
 }
