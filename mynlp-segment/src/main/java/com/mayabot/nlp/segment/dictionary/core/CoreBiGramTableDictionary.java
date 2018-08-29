@@ -21,7 +21,7 @@ import com.google.common.io.Files;
 import com.google.common.primitives.Ints;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.mayabot.nlp.MynlpIOC;
+import com.mayabot.nlp.MynlpEnv;
 import com.mayabot.nlp.Setting;
 import com.mayabot.nlp.caching.MynlpCacheable;
 import com.mayabot.nlp.common.matrix.CSRSparseMatrix;
@@ -45,7 +45,7 @@ import java.util.regex.Pattern;
 @Singleton
 public class CoreBiGramTableDictionary implements MynlpCacheable {
 
-    private final MynlpIOC mynlp;
+    private final MynlpEnv mynlp;
 
     private CSRSparseMatrix matrix;
 
@@ -57,7 +57,7 @@ public class CoreBiGramTableDictionary implements MynlpCacheable {
     private final CoreDictionary coreDictionary;
 
     @Inject
-    public CoreBiGramTableDictionary(CoreDictionary coreDictionary, MynlpIOC mynlp) throws
+    public CoreBiGramTableDictionary(CoreDictionary coreDictionary, MynlpEnv mynlp) throws
             Exception {
         this.coreDictionary = coreDictionary;
         this.mynlp = mynlp;

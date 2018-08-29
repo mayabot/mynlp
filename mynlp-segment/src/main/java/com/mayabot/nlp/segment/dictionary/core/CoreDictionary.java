@@ -17,7 +17,7 @@ package com.mayabot.nlp.segment.dictionary.core;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.mayabot.nlp.MynlpIOC;
+import com.mayabot.nlp.MynlpEnv;
 import com.mayabot.nlp.Setting;
 import com.mayabot.nlp.caching.MynlpCacheable;
 import com.mayabot.nlp.collection.dat.DATMatcher;
@@ -133,7 +133,7 @@ public class CoreDictionary implements MynlpCacheable {
 
     public final int XX_WORD_ID;
 
-    private final MynlpIOC mynlp;
+    private final MynlpEnv mynlp;
 
 //    private InternalLogger logger = InternalLoggerFactory.getInstance(CoreDictionary.class);
 
@@ -147,7 +147,7 @@ public class CoreDictionary implements MynlpCacheable {
     public int MAX_FREQUENCY = 221894;
 
     @Inject
-    public CoreDictionary(MynlpIOC Mynlp) throws Exception {
+    public CoreDictionary(MynlpEnv Mynlp) throws Exception {
         this.mynlp = Mynlp;
 
         this.restore();

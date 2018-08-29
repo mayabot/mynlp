@@ -36,6 +36,8 @@ import java.util.function.Supplier;
 /**
  * 系统属性 mynlp.conf 可以配置配置文件加载的目录,默认当前工作目录的conf
  *
+ * TODO 读取过的属性,就不能再次修改了。
+ *
  * @author jimichan
  */
 public class Settings {
@@ -138,8 +140,8 @@ public class Settings {
         return settings.getOrDefault(setting, defaultValue);
     }
 
-    public List<String> getAsList(String setting) {
-        return getAsList(setting, null);
+    public List<String> getAsList(Setting<String> setting) {
+        return getAsList(setting.getKey(), setting.getDefaultValue());
     }
 
     public List<String> getAsList(String setting, String default_) {

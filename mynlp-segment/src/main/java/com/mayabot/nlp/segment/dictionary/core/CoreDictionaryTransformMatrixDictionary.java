@@ -17,7 +17,7 @@ package com.mayabot.nlp.segment.dictionary.core;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.mayabot.nlp.MynlpIOC;
+import com.mayabot.nlp.MynlpEnv;
 import com.mayabot.nlp.Setting;
 import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
@@ -42,7 +42,7 @@ public class CoreDictionaryTransformMatrixDictionary {
     protected InternalLogger logger = InternalLoggerFactory.getInstance(this.getClass());
 
     @Inject
-    public CoreDictionaryTransformMatrixDictionary(MynlpIOC mynlp) throws IOException {
+    public CoreDictionaryTransformMatrixDictionary(MynlpEnv mynlp) throws IOException {
         transformMatrixDictionary = new TransformMatrix();
         long t1 = System.currentTimeMillis();
 

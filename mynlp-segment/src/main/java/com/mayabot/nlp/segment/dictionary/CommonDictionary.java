@@ -19,7 +19,7 @@ import com.google.common.base.Splitter;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import com.google.common.io.Files;
-import com.mayabot.nlp.MynlpIOC;
+import com.mayabot.nlp.MynlpEnv;
 import com.mayabot.nlp.caching.MynlpCacheable;
 import com.mayabot.nlp.collection.dat.DoubleArrayTrie;
 import com.mayabot.nlp.collection.dat.DoubleArrayTrieBuilder;
@@ -44,22 +44,17 @@ public abstract class CommonDictionary<V> implements MynlpCacheable {
     protected InternalLogger logger = InternalLoggerFactory.getInstance(this.getClass());
 
 
-    private final MynlpIOC mynlp;
+    private final MynlpEnv mynlp;
 
     private DoubleArrayTrie<V> trie;
 
-    public CommonDictionary(MynlpIOC mynlp) throws Exception {
+    public CommonDictionary(MynlpEnv mynlp) throws Exception {
         this.mynlp = mynlp;
 
         this.restore();
     }
 
-    @Override
-    public File cacheFileName() {
-        String hash = mynlp.loadResource(dicFilePath()).hash();
 
-        return new File(mynlp.getCacheDir(), hash + "." + this.getClass().getSimpleName());
-    }
 
     protected abstract String dicFilePath();
 
@@ -71,6 +66,13 @@ public abstract class CommonDictionary<V> implements MynlpCacheable {
 
     protected void filtermap(TreeMap<String, V> map) {
 
+    }
+
+    @Override
+    public File cacheFileName() {
+        String hash = mynlp.loadResource(dicFilePath()).hash();
+
+        return new File(mynlp.getCacheDir(), hash + "." + this.getClass().getSimpleName());
     }
 
     @Override
@@ -90,10 +92,12 @@ public abstract class CommonDictionary<V> implements MynlpCacheable {
         }
     }
 
-    private final Splitter splitter = Splitter.on(Pattern.compile("\\s"));
 
     @Override
     public void loadFromRealData() throws Exception {
+
+        final Splitter splitter = Splitter.on(Pattern.compile("\\s"));
+
         TreeMap<String, V> map = new TreeMap<>();
 
         NlpResource resource = mynlp.loadResource(dicFilePath());

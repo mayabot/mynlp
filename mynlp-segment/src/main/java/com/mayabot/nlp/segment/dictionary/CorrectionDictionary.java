@@ -27,7 +27,8 @@ import com.google.common.io.ByteStreams;
 import com.google.common.io.Files;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.mayabot.nlp.MynlpIOC;
+import com.mayabot.nlp.MynlpEnv;
+import com.mayabot.nlp.Setting;
 import com.mayabot.nlp.caching.MynlpCacheable;
 import com.mayabot.nlp.collection.dat.DoubleArrayTrie;
 import com.mayabot.nlp.collection.dat.DoubleArrayTrieBuilder;
@@ -55,23 +56,22 @@ import java.util.TreeSet;
 public class CorrectionDictionary implements MynlpCacheable {
 
     static InternalLogger logger = InternalLoggerFactory.getInstance(CorrectionDictionary.class);
-    private final MynlpIOC mynlp;
+
+    private final MynlpEnv mynlp;
 
     private DoubleArrayTrie<AdjustWord> doubleArrayTrie;
 
     private List<String> resourceUrls;
 
-//    public final Setting<String> humanAdjustKey =
-//            Setting.string("correction.dict", "dictionary/core/CoreNatureDictionary.txt");
+    public static Setting<String> correctionDict = Setting.string("correction.dict", "dictionary/correction/adjust.txt");
 
 
     @Inject
-    public CorrectionDictionary(MynlpIOC mynlp) throws Exception {
+    public CorrectionDictionary(MynlpEnv mynlp) throws Exception {
 
         this.mynlp = mynlp;
 
-        List<String> resourceUrls = mynlp.getSettings().getAsList(
-                "correction.dict", "dictionary/correction/adjust.txt");
+        List<String> resourceUrls = mynlp.getSettings().getAsList(correctionDict);
 
         if (resourceUrls.isEmpty()) {
             return;
@@ -80,7 +80,6 @@ public class CorrectionDictionary implements MynlpCacheable {
         this.resourceUrls = resourceUrls;
 
         restore();
-
     }
 
     @Override
@@ -116,7 +115,6 @@ public class CorrectionDictionary implements MynlpCacheable {
             DataInput dataInput = new DataInputStream(inputStream);
             this.doubleArrayTrie = DoubleArrayTrie.read(dataInput, AdjustWord::read);
         }
-
     }
 
     @Override
