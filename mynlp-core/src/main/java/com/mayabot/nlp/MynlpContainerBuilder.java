@@ -24,15 +24,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class MynlpIOCBuilder {
+/**
+ * @author jimichan
+ */
+public class MynlpContainerBuilder {
 
-    public static InternalLogger logger = InternalLoggerFactory.getInstance("com.mayabot.nlp.Mynlp");
+    public static InternalLogger logger = InternalLoggerFactory.getInstance("com.mayabot.nlp.Mynlps");
 
     /**
      * 数据目录默认在当前工作目录
      */
     private String dataDir = "data";
-
 
     /**
      * 各种缓存文件放置的地方。默认在dataDir目录下面的caches
@@ -46,57 +48,65 @@ public class MynlpIOCBuilder {
 
     private Map<Class, Object> preObj = Maps.newHashMap();
 
-    MynlpIOC build() throws RuntimeException {
-        MynlpIOC ioc = new MynlpIOC();
+    public static void main(String[] args) {
+        System.out.println(System.getProperties());
+    }
+
+    Mynlp build() throws RuntimeException {
         try {
+
+            /**
+             * 在全局配置文件中 data.dir 可以指定dir目录，默认是当前工作目录下面的data
+             */
+            dataDir = Settings.defaultSettings().get("data.dir", "data");
+
             logger.info("Current Working Dir is " + new File(".").getAbsolutePath());
 
 
             File dataDirFile = ensureDir(new File(dataDir));
-            logger.info("Mynlp data dir is " + dataDirFile.getAbsolutePath());
-            ioc.dataDir = dataDirFile;
+            logger.info("Mynlps data dir is " + dataDirFile.getAbsolutePath());
 
-            File cacheDirFile = null;
+
+            File cacheDirFile;
             if (cacheDir == null) {
-                cacheDirFile = ensureDir(new File(dataDirFile, "caches"));
+                cacheDirFile = ensureDir(new File(System.getProperty("java.io.tmpdir"), "mynlp"));
             } else {
                 cacheDirFile = ensureDir(new File(cacheDir));
             }
-            ioc.cacheDir = cacheDirFile;
 
-            logger.info("Mynlp cache dir is {}", cacheDirFile.getAbsolutePath());
+            logger.info("Mynlps cache dir is {}", cacheDirFile.getAbsolutePath());
 
             //
             resourceFactoryList.add(new FileNlpResourceFactory(dataDirFile));
-            resourceFactoryList.add(new ClasspathNlpResourceFactory(Mynlp.class.getClassLoader()));
+            resourceFactoryList.add(new ClasspathNlpResourceFactory(Mynlps.class.getClassLoader()));
 
-            ioc.resourceFactory = ImmutableList.copyOf(resourceFactoryList);
+            ImmutableList.copyOf(resourceFactoryList);
 
             if (settings == null) {
-                ioc.settings = Settings.defaultSettings();
+                this.settings = Settings.defaultSettings();
             } else {
-                ioc.settings = Settings.merge(Settings.defaultSettings(), settings);
+                this.settings = Settings.merge(Settings.defaultSettings(), settings);
             }
 
-            ioc.injector = createInject(ioc);
+            MynlpEnv env = new MynlpEnv(dataDirFile, cacheDirFile, resourceFactoryList, settings);
 
+            Injector injector = createInject(env);
 
-            return ioc;
+            return new Mynlp(env, injector);
         } catch (Exception e) {
             throw new RuntimeException((e));
         }
     }
 
-
-    private Injector createInject(MynlpIOC mynlp) {
+    private Injector createInject(MynlpEnv mynlp) {
 
         ArrayList<Module> modules = Lists.newArrayList();
 
         modules.add(new AbstractModule() {
             @Override
             protected void configure() {
-                bind(MynlpIOC.class).toInstance(mynlp);
-                bind(Settings.class).toInstance(mynlp.settings);
+                bind(MynlpEnv.class).toInstance(mynlp);
+
                 preObj.forEach((k, v) -> bind(k).toInstance(v));
             }
         });
@@ -114,7 +124,7 @@ public class MynlpIOCBuilder {
             return classes.stream().map(clazz -> {
                 try {
                     try {
-                        Constructor<? extends Module> c1 = clazz.getConstructor(Mynlp.class);
+                        Constructor<? extends Module> c1 = clazz.getConstructor(Mynlps.class);
                         if (c1 != null) {
                             return c1.newInstance(this);
                         }
@@ -147,7 +157,7 @@ public class MynlpIOCBuilder {
         return dataDir;
     }
 
-    public MynlpIOCBuilder setDataDir(String dataDir) {
+    public MynlpContainerBuilder setDataDir(String dataDir) {
         this.dataDir = dataDir;
         return this;
     }
@@ -156,7 +166,7 @@ public class MynlpIOCBuilder {
         return cacheDir;
     }
 
-    public MynlpIOCBuilder setCacheDir(String cacheDir) {
+    public MynlpContainerBuilder setCacheDir(String cacheDir) {
         this.cacheDir = cacheDir;
         return this;
     }
@@ -168,22 +178,22 @@ public class MynlpIOCBuilder {
         return settings;
     }
 
-    public MynlpIOCBuilder set(String key, String value) {
+    public MynlpContainerBuilder set(String key, String value) {
         getSettings().put(key, value);
         return this;
     }
 
-    public MynlpIOCBuilder set(Setting key, String value) {
+    public MynlpContainerBuilder set(Setting key, String value) {
         getSettings().put(key, value);
         return this;
     }
 
-    public MynlpIOCBuilder setSettings(Settings settings) {
+    public MynlpContainerBuilder setSettings(Settings settings) {
         this.settings = settings;
         return this;
     }
 
-    public <T> MynlpIOCBuilder bind(Class<T> clazz, T object) {
+    public <T> MynlpContainerBuilder bind(Class<T> clazz, T object) {
         this.preObj.put(clazz, object);
         return this;
     }

@@ -16,7 +16,7 @@
 
 package com.mayabot.nlp.pinyin;
 
-import com.mayabot.nlp.Mynlp;
+import com.mayabot.nlp.Mynlps;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -24,12 +24,12 @@ public class PinyinTest {
 
     @Test
     public void testSpeed() {
-        Mynlp.getInstance(PinyinService.class);
-        Mynlp.getInstance(PinyinService.class);
+        Mynlps.getInstance(PinyinService.class);
+        Mynlps.getInstance(PinyinService.class);
 
         long t1 = System.currentTimeMillis();
         for (int i = 0; i < 10000; i++) {
-            Mynlp.getInstance(PinyinService.class);
+            Mynlps.getInstance(PinyinService.class);
         }
         long t2 = System.currentTimeMillis();
 
@@ -49,9 +49,9 @@ public class PinyinTest {
 
     @Test
     public void test2() {
-        Mynlp.clear();
+        Mynlps.clear();
 
-        Mynlp.install(builder -> {
+        Mynlps.install(builder -> {
             builder.set(PinyinDictionary.pinyinExtDicSetting, "pinyin.txt");
         });
 
@@ -69,17 +69,17 @@ public class PinyinTest {
 
     @Test
     public void test3() {
-        Mynlp.clear();
+        Mynlps.clear();
 
         CustomPinyin customPinyin = new CustomPinyin();
 
         customPinyin.put("朝朝盈", "zhao1,zhao1,yin2");
 
-        Mynlp.install(builder -> {
+        Mynlps.install(builder -> {
             builder.bind(CustomPinyin.class, customPinyin);
         });
 
-        PinyinService pinyinService = Mynlp.getInstance(PinyinService.class);
+        PinyinService pinyinService = Mynlps.getInstance(PinyinService.class);
 
 
         PinyinResult result = pinyinService.text2Pinyin("123aed,.你好朝朝暮暮,银行");
@@ -96,7 +96,7 @@ public class PinyinTest {
     @Test
     public void test4() {
 
-        PinyinDictionary instance = Mynlp.getInstance(PinyinDictionary.class);
+        PinyinDictionary instance = Mynlps.getInstance(PinyinDictionary.class);
 
 
         //instance.getCustomPinyin().put("xxx");

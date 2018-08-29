@@ -27,19 +27,19 @@ import java.util.Iterator;
  */
 public abstract class AbstractAnalyzerWraper implements MynlpAnalyzer {
 
-    protected MynlpAnalyzer myAnalyzer;
+    protected MynlpAnalyzer analyzer;
 
-    public AbstractAnalyzerWraper(MynlpAnalyzer myAnalyzer) {
-        this.myAnalyzer = myAnalyzer;
+    public AbstractAnalyzerWraper(MynlpAnalyzer analyzer) {
+        this.analyzer = analyzer;
     }
 
     @Override
     public MynlpAnalyzer reset(Reader reader) {
-        return myAnalyzer.reset(reader);
+        return analyzer.reset(reader);
     }
 
     @Override
     public Iterator<WordTerm> iterator() {
-        return myAnalyzer.iterator();
+        return analyzer.iterator();
     }
 }

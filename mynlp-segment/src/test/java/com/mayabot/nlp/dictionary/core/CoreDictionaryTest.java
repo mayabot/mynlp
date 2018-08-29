@@ -17,7 +17,7 @@
 package com.mayabot.nlp.dictionary.core;
 
 import com.mayabot.nlp.Mynlp;
-import com.mayabot.nlp.MynlpIOC;
+import com.mayabot.nlp.Mynlps;
 import com.mayabot.nlp.segment.dictionary.core.CoreDictionary;
 import org.junit.Test;
 
@@ -26,7 +26,8 @@ public class CoreDictionaryTest {
 
     @Test
     public void get() throws Exception {
-        MynlpIOC mynlp = Mynlp.get();
+
+        Mynlp mynlp = Mynlps.get();
 
         CoreDictionary dictionary = mynlp.getInstance(CoreDictionary.class);
 
