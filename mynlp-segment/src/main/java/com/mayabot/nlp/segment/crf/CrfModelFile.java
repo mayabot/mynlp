@@ -80,6 +80,7 @@ public class CrfModelFile {
             model.write(file);
             long t2 = System.currentTimeMillis();
 
+            logger.info("Save crf bin file use " + (t2 - t1) + " ms");
 
             return model;
         }

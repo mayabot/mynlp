@@ -17,17 +17,17 @@
 package com.mayabot.nlp.segment;
 
 import com.google.common.collect.Lists;
-import com.mayabot.nlp.segment.support.DefaultMynlpAnalyzer;
+import com.mayabot.nlp.segment.analyzer.DefaultMynlpAnalyzer;
 
 import java.io.Reader;
 import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * MynlpTokenizer是一个一个切词器接口。
- * 和MynlpAnalyzer的差别是MynlpTokenizer只需要关心把一句话或一小段有限的文本分词完成。
- * MynlpTokenizer切词器的实现类是个无状态，所以可以多线程安全，系统只需要一个实例共享使用。
- * 所以一个固定的算法的切分,只需要一个实例
+ * MynlpTokenizer切词器接口。
+ * MynlpTokenizer只需要关心把一句话或一小段有限的文本分词完成,切词器的实现类是个无状态，所以可以多线程安全，同一个配置只需要一个实例共享使用。
+ * 所以一个固定的算法的切分,只需要一个实例。
+ *
  * @author jimichan
  */
 public interface MynlpTokenizer {

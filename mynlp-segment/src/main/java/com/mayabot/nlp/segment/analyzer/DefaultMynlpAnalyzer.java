@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.mayabot.nlp.segment.support;
+package com.mayabot.nlp.segment.analyzer;
 
 import com.google.common.collect.Lists;
 import com.mayabot.nlp.segment.CharNormalize;
@@ -146,7 +146,8 @@ public class DefaultMynlpAnalyzer implements MynlpAnalyzer {
                     }
                 }
 
-                if (buffer.list.size() > 5000) { //如果buffer太大了就
+                //如果buffer太大了就
+                if (buffer.list.size() > 5000) {
                     buffer.list = Lists.newArrayListWithExpectedSize(256);
                 }
                 tokenizer.token(text, this.buffer.list);
@@ -160,8 +161,8 @@ public class DefaultMynlpAnalyzer implements MynlpAnalyzer {
         if (term == null) {
             return null;
         }
-
-        if (baseOffset != 0) { //补充偏移量
+        //补充偏移量
+        if (baseOffset != 0) {
             term.setOffset(term.getOffset() + baseOffset);
         }
         return term;
@@ -199,8 +200,8 @@ public class DefaultMynlpAnalyzer implements MynlpAnalyzer {
     public DefaultMynlpAnalyzer reset(Reader reader) {
         close();
         this.reader = reader;
-
-        this.paragraphReader = new ParagraphReaderSmart(reader); //智能分段器
+        //智能分段器
+        this.paragraphReader = new ParagraphReaderSmart(reader);
         baseOffset = 0;
         lastTextLength = -1;
         return this;

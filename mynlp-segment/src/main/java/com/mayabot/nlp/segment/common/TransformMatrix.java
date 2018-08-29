@@ -148,8 +148,11 @@ public class TransformMatrix {
         totalFrequency = _tf;
 
         // 下面计算HMM四元组
-        states = matrix.rowKeyList(); // 状态标签数组
-        HashMap<String, Double> _start_probability = Maps.newHashMap(); // 初始概率
+
+        // 状态标签数组
+        states = matrix.rowKeyList();
+        // 初始概率
+        HashMap<String, Double> _start_probability = Maps.newHashMap();
         for (String label : states) {
             double frequency = total.get(label) + 1e-8;
             _start_probability
@@ -196,7 +199,7 @@ public class TransformMatrix {
     public long getTotalFrequency(String from) {
         Long v = total.get(from);
         if (v == null) {
-            //FIXME 这里会不会有问题
+            // FIXME 这里会不会有问题
             return 0;
         }
         return v.longValue();

@@ -14,29 +14,16 @@
  * limitations under the License.
  */
 
-package com.mayabot.nlp.segment.support;
+package com.mayabot.nlp.segment.analyzer;
 
-import com.mayabot.nlp.segment.MynlpAnalyzer;
-import com.mayabot.nlp.segment.WordTerm;
+import com.mayabot.nlp.segment.CharNormalize;
+import com.mayabot.nlp.utils.CharacterUtils;
 
-import java.io.Reader;
-import java.util.Iterator;
-
-public abstract class MynlpAnalyzerWarp implements MynlpAnalyzer {
-
-    protected MynlpAnalyzer myAnalyzer;
-
-    public MynlpAnalyzerWarp(MynlpAnalyzer myAnalyzer) {
-        this.myAnalyzer = myAnalyzer;
-    }
+public class UpperCaseCharNormalize implements CharNormalize {
 
     @Override
-    public MynlpAnalyzer reset(Reader reader) {
-        return myAnalyzer.reset(reader);
+    public void normal(char[] text) {
+        CharacterUtils.toUpperCase(text, 0, text.length);
     }
 
-    @Override
-    public Iterator<WordTerm> iterator() {
-        return myAnalyzer.iterator();
-    }
 }

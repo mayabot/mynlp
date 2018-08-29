@@ -23,7 +23,10 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * 提供通用的二阶Viterbi实现
+ * 提供通用的二阶Viterbi实现.
+ * 滚动的计算了两层，没有全局地计算。
+ * 从Hanlp代码中重构而来。
+ * @author jimichan
  */
 public class Viterbi {
 
@@ -84,7 +87,6 @@ public class Viterbi {
         E perfect_tag = pre;
 
         // 第一个是确定的
-        //tagList.add(pre);
         processer.confirm(first, pre);
 
         for (int i = 1; i < roleTagList.length; ++i) {

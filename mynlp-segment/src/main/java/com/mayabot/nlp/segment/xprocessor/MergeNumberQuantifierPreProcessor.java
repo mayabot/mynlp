@@ -21,10 +21,10 @@ import com.mayabot.nlp.fst.FST;
 import com.mayabot.nlp.fst.FstMatcher;
 import com.mayabot.nlp.fst.FstNode;
 import com.mayabot.nlp.segment.WordpathProcessor;
+import com.mayabot.nlp.segment.common.BaseMynlpComponent;
 import com.mayabot.nlp.segment.dictionary.Nature;
 import com.mayabot.nlp.segment.dictionary.NatureAttribute;
 import com.mayabot.nlp.segment.dictionary.core.CoreDictionary;
-import com.mayabot.nlp.segment.support.BaseNlpComponent;
 import com.mayabot.nlp.segment.wordnet.Vertex;
 import com.mayabot.nlp.segment.wordnet.Wordpath;
 
@@ -37,7 +37,7 @@ import static com.mayabot.nlp.segment.wordnet.Vertexs.hasNature;
  *
  * @author jimichan
  */
-public class MergeNumberQuantifierPreProcessor extends BaseNlpComponent implements WordpathProcessor {
+public class MergeNumberQuantifierPreProcessor extends BaseMynlpComponent implements WordpathProcessor {
 
     private CoreDictionary coreDictionary;
 

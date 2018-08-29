@@ -24,8 +24,8 @@ ext {
     guava_version = "19.0"
 }
 
-def buildVersion = "1.1.0"
-def snapShot = true
+def buildVersion = "2.0.0-BETA1"
+def snapShot = false
 
 subprojects {
     if(project.path==":plugins" ){

@@ -21,10 +21,10 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.mayabot.nlp.algorithm.SimpleViterbi;
 import com.mayabot.nlp.segment.WordpathProcessor;
+import com.mayabot.nlp.segment.common.BaseMynlpComponent;
 import com.mayabot.nlp.segment.common.TransformMatrix;
 import com.mayabot.nlp.segment.dictionary.Nature;
 import com.mayabot.nlp.segment.dictionary.core.CoreDictionaryTransformMatrixDictionary;
-import com.mayabot.nlp.segment.support.BaseNlpComponent;
 import com.mayabot.nlp.segment.wordnet.Vertex;
 import com.mayabot.nlp.segment.wordnet.Wordpath;
 
@@ -34,7 +34,7 @@ import com.mayabot.nlp.segment.wordnet.Wordpath;
  * @author jimichan
  */
 @Singleton
-public class PartOfSpeechTaggingComputerProcessor extends BaseNlpComponent implements WordpathProcessor {
+public class PartOfSpeechTaggingComputerProcessor extends BaseMynlpComponent implements WordpathProcessor {
 
     private TransformMatrix transformMatrix;
 

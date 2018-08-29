@@ -17,7 +17,7 @@
 package com.mayabot.nlp.segment.xprocessor;
 
 import com.mayabot.nlp.segment.WordpathProcessor;
-import com.mayabot.nlp.segment.support.BaseNlpComponent;
+import com.mayabot.nlp.segment.common.BaseMynlpComponent;
 import com.mayabot.nlp.segment.wordnet.Vertex;
 import com.mayabot.nlp.segment.wordnet.VertexRow;
 import com.mayabot.nlp.segment.wordnet.Wordnet;
@@ -34,7 +34,7 @@ import java.util.Iterator;
  * <p>
  * 是不是每种情况都要切分出来。
  */
-public class IndexSubwordProcessor extends BaseNlpComponent implements WordpathProcessor {
+public class IndexSubwordProcessor extends BaseMynlpComponent implements WordpathProcessor {
 
     @Override
     public Wordpath process(Wordpath wordPath) {
