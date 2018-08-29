@@ -19,6 +19,7 @@ package com.mayabot.nlp.segment.recognition.personname;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.mayabot.nlp.segment.OptimizeProcessor;
+import com.mayabot.nlp.segment.common.BaseMynlpComponent;
 import com.mayabot.nlp.segment.common.EnumFreqPair;
 import com.mayabot.nlp.segment.common.VertexTagCharSequenceTempChar;
 import com.mayabot.nlp.segment.common.Viterbi;
@@ -27,7 +28,6 @@ import com.mayabot.nlp.segment.dictionary.NatureAttribute;
 import com.mayabot.nlp.segment.dictionary.core.CoreDictionary;
 import com.mayabot.nlp.segment.recognition.personname.nr.NRDictionary;
 import com.mayabot.nlp.segment.recognition.personname.nr.PersonDictionary;
-import com.mayabot.nlp.segment.support.BaseNlpComponent;
 import com.mayabot.nlp.segment.wordnet.Vertex;
 import com.mayabot.nlp.segment.wordnet.Wordnet;
 
@@ -41,7 +41,7 @@ import static com.mayabot.nlp.segment.recognition.personname.NRTag.A;
  * @author jimichan
  */
 
-public class PersonRecognition extends BaseNlpComponent implements OptimizeProcessor {
+public class PersonRecognition extends BaseMynlpComponent implements OptimizeProcessor {
 
     public static PersonRecognition build(Injector injector) {
         return injector.getInstance(PersonRecognition.class);

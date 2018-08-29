@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.mayabot.nlp.segment.support;
+package com.mayabot.nlp.segment.analyzer;
 
 import com.mayabot.nlp.segment.MynlpAnalyzer;
 import com.mayabot.nlp.segment.WordTerm;

@@ -48,7 +48,7 @@ import java.util.*;
 public class CharSet implements Serializable {
 
     /**
-     * Required for serialization support. Lang version 2.0.
+     * Required for serialization analyzer. Lang version 2.0.
      *
      * @see Serializable
      */

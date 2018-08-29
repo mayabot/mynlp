@@ -2,9 +2,9 @@ package com.mayabot.nlp.segment.recognition;
 
 import com.google.inject.Inject;
 import com.mayabot.nlp.segment.WordpathProcessor;
+import com.mayabot.nlp.segment.common.BaseMynlpComponent;
 import com.mayabot.nlp.segment.dictionary.NatureAttribute;
 import com.mayabot.nlp.segment.dictionary.core.CoreDictionary;
-import com.mayabot.nlp.segment.support.BaseNlpComponent;
 import com.mayabot.nlp.segment.wordnet.Vertex;
 import com.mayabot.nlp.segment.wordnet.Wordnet;
 import com.mayabot.nlp.segment.wordnet.Wordpath;
@@ -16,7 +16,7 @@ import com.mayabot.nlp.utils.CharSet;
  *
  * @author jimichan jimichan@gmail.com
  */
-public class RepairWordnetProcessor extends BaseNlpComponent implements WordpathProcessor {
+public class RepairWordnetProcessor extends BaseMynlpComponent implements WordpathProcessor {
 
     private CoreDictionary coreDictionary;
 

@@ -20,7 +20,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.inject.Inject;
 import com.mayabot.nlp.segment.OptimizeProcessor;
 import com.mayabot.nlp.segment.WordpathProcessor;
-import com.mayabot.nlp.segment.support.BaseNlpComponent;
+import com.mayabot.nlp.segment.common.BaseMynlpComponent;
 import com.mayabot.nlp.segment.wordnet.Vertex;
 import com.mayabot.nlp.segment.wordnet.Wordnet;
 import com.mayabot.nlp.segment.wordnet.Wordpath;
@@ -29,7 +29,7 @@ import com.mayabot.nlp.segment.wordnet.Wordpath;
  * 优化网络处理器
  * @author jimichan
  */
-public class OptimizeWordPathProcessor extends BaseNlpComponent implements WordpathProcessor {
+public class OptimizeWordPathProcessor extends BaseMynlpComponent implements WordpathProcessor {
 
     private ImmutableList<OptimizeProcessor> optimizeProcessorList = ImmutableList.of();
 

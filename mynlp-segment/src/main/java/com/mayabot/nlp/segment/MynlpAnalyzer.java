@@ -19,7 +19,6 @@ package com.mayabot.nlp.segment;
 import com.google.common.collect.AbstractIterator;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
-import com.mayabot.nlp.segment.support.DefaultMynlpAnalyzer;
 
 import java.io.Reader;
 import java.io.StringReader;
@@ -34,14 +33,34 @@ import java.util.List;
  */
 public interface MynlpAnalyzer extends Iterable<WordTerm> {
 
+    /**
+     * 返回下一个词
+     *
+     * @return 返回null表示已经完全返回完毕
+     */
     WordTerm next();
 
+
+    /**
+     * 重置切词源
+     * @param reader
+     * @return
+     */
     MynlpAnalyzer reset(Reader reader);
 
+    /**
+     * 默认实现，String版本的源
+     * @param text
+     * @return
+     */
     default MynlpAnalyzer reset(String text) {
         return this.reset(new StringReader(text));
     }
 
+    /**
+     * 默认实现Iterable接口，便于使用Java的For来访问WordTerm元素。
+     * @return
+     */
     @Override
     default Iterator<WordTerm> iterator() {
         return new AbstractIterator<WordTerm>() {
@@ -64,17 +83,6 @@ public interface MynlpAnalyzer extends Iterable<WordTerm> {
      */
     default List<String> toList() {
         return Lists.newArrayList(Iterators.transform(iterator(), WordTerm::getWord));
-    }
-
-    /**
-     * 创建DefaultMynlpSegment的工厂方法
-     *
-     * @param reader
-     * @param tokenizer
-     * @return
-     */
-    static DefaultMynlpAnalyzer create(Reader reader, MynlpTokenizer tokenizer) {
-        return new DefaultMynlpAnalyzer(reader, tokenizer);
     }
 
 }
