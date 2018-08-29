@@ -56,12 +56,6 @@ public class CorrectionProcessor extends BaseMynlpComponent implements WordpathP
 
         while (datSearch.next()) {
             int offset = datSearch.getBegin();
-//            int length = datSearch.getLength();
-//
-//            System.out.println("offset = " + offset);
-//            System.out.println("length = " + length);
-
-            //wordPath.combine()
 
             CorrectionDictionary.AdjustWord adjsutword = datSearch.getValue();
 

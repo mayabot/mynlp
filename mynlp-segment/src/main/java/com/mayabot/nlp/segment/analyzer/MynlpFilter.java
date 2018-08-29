@@ -19,20 +19,25 @@ package com.mayabot.nlp.segment.analyzer;
 import com.mayabot.nlp.segment.MynlpAnalyzer;
 import com.mayabot.nlp.segment.WordTerm;
 
-public abstract class MynlpAnalyzerFilter extends AbstractAnalyzerWraper {
+/**
+ * 抽象的过滤器。子类只需要实现accept方法
+ *
+ * @author jimichan
+ */
+public abstract class MynlpFilter extends AbstractAnalyzerWraper {
 
-    public MynlpAnalyzerFilter(MynlpAnalyzer myAnalyzer) {
+    public MynlpFilter(MynlpAnalyzer myAnalyzer) {
         super(myAnalyzer);
     }
 
     @Override
     public WordTerm next() {
-        WordTerm next = myAnalyzer.next();
+        WordTerm next = analyzer.next();
         while (next != null) {
             if (accept(next)) {
                 return next;
             } else {
-                next = myAnalyzer.next();
+                next = analyzer.next();
             }
         }
         return null;

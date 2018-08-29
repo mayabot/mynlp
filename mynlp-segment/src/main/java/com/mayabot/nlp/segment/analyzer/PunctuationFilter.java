@@ -22,8 +22,9 @@ import com.mayabot.nlp.utils.Characters;
 
 /**
  * 过滤标点符号
+ * @author jimichan
  */
-public class PunctuationFilter extends MynlpAnalyzerFilter {
+public class PunctuationFilter extends MynlpFilter {
 
     @Override
     boolean accept(WordTerm term) {
