@@ -16,8 +16,6 @@
 
 package com.mayabot.nlp.segment;
 
-import com.mayabot.nlp.Mynlps;
-
 /**
  * MynlpSegments 是mynlp-segment模块对外门面。此后只可以增加方法
  *
@@ -25,20 +23,20 @@ import com.mayabot.nlp.Mynlps;
  */
 public final class MynlpSegments {
 
-    public static WordnetTokenizerBuilder tokenizerBuilder() {
-        return WordnetTokenizerBuilder.create(Mynlps.get());
+    public static WordnetTokenizerBuilder builder() {
+        return WordnetTokenizer.builder();
     }
 
     public static MynlpTokenizer nlpTokenizer() {
-        return WordnetTokenizerBuilder.create(Mynlps.get()).build();
+        return builder().coreDict().build();
     }
 
     public static MynlpTokenizer crfTokenizer() {
-        return tokenizerBuilder().crf().build();
+        return builder().crf().build();
     }
 
     public static WordnetTokenizerBuilder crfTokenizerBuilder() {
-        return WordnetTokenizerBuilder.create(Mynlps.get()).crf();
+        return builder().crf();
     }
 
 }
