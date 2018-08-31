@@ -54,12 +54,11 @@ public class CorrectionDictionary {
 
     static InternalLogger logger = InternalLoggerFactory.getInstance(CorrectionDictionary.class);
 
-    private final MynlpEnv mynlp;
+    private MynlpEnv mynlp;
 
     private DoubleArrayTrie<AdjustWord> doubleArrayTrie;
 
-
-    public static Setting<String> correctionDict = Setting.string("correction.dict", "dictionary/correction/adjust.txt");
+    public final static Setting<String> correctionDict = Setting.string("correction.dict", "dictionary/correction/adjust.txt");
 
 
     @Inject
@@ -75,6 +74,10 @@ public class CorrectionDictionary {
 
         loadFromRealData(resourceUrls);
     }
+
+    public CorrectionDictionary() {
+    }
+
 
     public void loadFromRealData(List<String> resourceUrls) throws Exception {
         TreeMap<String, AdjustWord> map = new TreeMap<>();

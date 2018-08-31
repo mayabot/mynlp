@@ -28,5 +28,6 @@ dependencies {
    // compile group: 'it.unimi.dsi', NAME: 'sux4j', version: '4.2.0'
     testCompile 'junit:junit:4.12'
     testCompile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
+    exampleCompile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
 
 }
