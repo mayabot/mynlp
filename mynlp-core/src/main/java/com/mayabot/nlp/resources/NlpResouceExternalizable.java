@@ -14,48 +14,59 @@
  * limitations under the License.
  */
 
-package com.mayabot.nlp.caching;
+package com.mayabot.nlp.resources;
 
 import com.google.common.io.Files;
+import com.mayabot.nlp.MynlpEnv;
 import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.OutputStream;
+import java.io.*;
 
-public interface MynlpCacheable {
+/**
+ * 可以被序列化的对象，有些词典对象从原始文本中读取、解析，需要消耗比较长的时间。
+ * 这些对象可以被序列化为二进制版本，下次加载时，加快读取速度.
+ *
+ * @author jimichan
+ */
+public abstract class NlpResouceExternalizable implements Externalizable {
 
     /**
-     * cache 的文件名，这个要更具组件的具体状态，比如来源的hash值
+     * 返回资源的Hash版本，可以不要过长
      *
-     * @return
+     * @return 资源版本号
      */
-    File cacheFileName();
+    public abstract String sourceVersion(MynlpEnv mynlp);
 
-    void saveToCache(OutputStream out) throws Exception;
+    /**
+     * 从原始内容加载
+     *
+     * @param mynlp
+     * @throws Exception
+     */
+    public abstract void loadFromSource(MynlpEnv mynlp) throws Exception;
 
-    void readFromCache(File inputStream) throws Exception;
-
-    void loadFromRealData() throws Exception;
-
-    default void restore() throws Exception {
+    /**
+     * @throws Exception
+     */
+    public void restore(MynlpEnv mynlp) throws Exception {
 
         InternalLogger logger = InternalLoggerFactory.getInstance(this.getClass());
 
         boolean success = false;
-        File cache = cacheFileName();
+
+        String sourceName = this.getClass().getSimpleName();
+
+        File cache = new File(mynlp.getCacheDir(), sourceName + "_" + sourceVersion(mynlp) + ".bin");
 
         boolean loadFromBin = false;
         if (cache != null && cache.exists() && cache.canRead()) {
-            try {
+            try (ObjectInputStream in = new ObjectInputStream(
+                    new BufferedInputStream(new FileInputStream(cache), 1024 * 64))) {
 
                 long t1 = System.currentTimeMillis();
 
-//                try (
-                        //InputStream in = new BufferedInputStream(Files.asByteSource(cache).openStream(), 64 * 1024)) {
-                        readFromCache(cache);
-//                }
+                readExternal(in);
 
                 long t2 = System.currentTimeMillis();
 
@@ -69,21 +80,22 @@ public interface MynlpCacheable {
 
         if (!success) {
             long t1 = System.currentTimeMillis();
-            loadFromRealData();
+            loadFromSource(mynlp);
             long t2 = System.currentTimeMillis();
 
-            logger.info("restore from real data success, use time " + (t2 - t1) + " ms");
+            logger.info("restore from data source, use time " + (t2 - t1) + " ms");
 
             if (!loadFromBin && cache != null) {
                 long t3 = System.currentTimeMillis();
 
-
-                try (OutputStream outputStream = new BufferedOutputStream(Files.asByteSink(cache).openStream(), 64 * 1024)) {
-                    saveToCache(outputStream);
+                try (ObjectOutputStream outputStream =
+                             new ObjectOutputStream(new BufferedOutputStream(Files.asByteSink(cache).openStream(), 64 * 1024))) {
+                    writeExternal(outputStream);
+                    outputStream.flush();
                 }
                 long t4 = System.currentTimeMillis();
 
-                logger.info("save to cache file, use time " + (t4 - t3) + " ms");
+                logger.info("save cache file success, use time " + (t4 - t3) + " ms");
             }
         }
 

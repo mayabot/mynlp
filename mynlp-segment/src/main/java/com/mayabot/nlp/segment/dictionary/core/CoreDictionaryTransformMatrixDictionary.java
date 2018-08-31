@@ -18,7 +18,6 @@ package com.mayabot.nlp.segment.dictionary.core;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.mayabot.nlp.MynlpEnv;
-import com.mayabot.nlp.Setting;
 import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
 import com.mayabot.nlp.resources.NlpResource;
@@ -36,8 +35,7 @@ public class CoreDictionaryTransformMatrixDictionary {
     private TransformMatrix transformMatrixDictionary;
 
 
-    public final Setting<String> coreDictTrSetting =
-            Setting.string("core.dict.tr", "dictionary/core/CoreNatureDictionary.tr.txt");
+    public final String path = "dictionary/core/CoreNatureDictionary.tr.txt";
 
     protected InternalLogger logger = InternalLoggerFactory.getInstance(this.getClass());
 
@@ -46,11 +44,10 @@ public class CoreDictionaryTransformMatrixDictionary {
         transformMatrixDictionary = new TransformMatrix();
         long t1 = System.currentTimeMillis();
 
-        NlpResource resource = mynlp.loadResource(coreDictTrSetting);
+        NlpResource resource = mynlp.loadResource(path);
         transformMatrixDictionary.load(resource.openInputStream());
         long t2 = System.currentTimeMillis();
-        logger.info("加载核心词典词性转移矩阵" + resource + "成功，耗时：" + (t2 - t1)
-                + " ms");
+        logger.info("加载核心词典词性转移矩阵" + resource + "成功，耗时：" + (t2 - t1) + " ms");
     }
 
     public TransformMatrix getTransformMatrixDictionary() {

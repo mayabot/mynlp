@@ -32,10 +32,10 @@ import java.util.Map;
  * 一个好用的人名词典
  *
  * @author hankcs
+ * @author jimichan
  */
 @Singleton
 public class NRDictionary extends CommonDictionary<EnumFreqPair<NRTag>> {
-
 
     @Inject
     public NRDictionary(MynlpEnv mynlp) throws Exception {
