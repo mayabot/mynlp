@@ -38,10 +38,7 @@ import java.util.Map;
  * <p>
  * <p>
  * 放弃了HanLp中使用Enum的做法，直接使用了string。
- * 而且内部数据结果采用了Guava的Table
  * <p>
- * //TODO 可以进一步提高查询效率
- *
  * @author jimichan
  */
 public class TransformMatrix {

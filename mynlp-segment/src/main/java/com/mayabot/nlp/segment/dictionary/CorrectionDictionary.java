@@ -16,7 +16,6 @@
 
 package com.mayabot.nlp.segment.dictionary;
 
-import com.alibaba.fastjson.JSON;
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
@@ -29,6 +28,7 @@ import com.mayabot.nlp.collection.dat.DoubleArrayTrieBuilder;
 import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
 import com.mayabot.nlp.resources.NlpResource;
+import com.mayabot.nlp.segment.common.FastJson;
 import com.mayabot.nlp.utils.CharSourceLineReader;
 
 import java.io.DataInput;
@@ -116,7 +116,7 @@ public class CorrectionDictionary {
             try {
                 out.writeUTF(a.path);
                 out.writeUTF(a.raw);
-                out.writeUTF(JSON.toJSONString(a.words));
+                out.writeUTF(FastJson.toJson(a.words));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -128,7 +128,7 @@ public class CorrectionDictionary {
 
                 a.path = in.readUTF();
                 a.raw = in.readUTF();
-                a.words = JSON.parseArray(in.readUTF(), Integer.class);
+                a.words = FastJson.fromJsonListInteger(in.readUTF());
 
                 return a;
             } catch (IOException e) {
