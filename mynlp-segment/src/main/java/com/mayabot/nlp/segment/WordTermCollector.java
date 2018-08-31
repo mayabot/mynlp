@@ -1,5 +1,6 @@
 package com.mayabot.nlp.segment;
 
+import com.google.common.base.CharMatcher;
 import com.google.common.collect.Lists;
 import com.mayabot.nlp.segment.wordnet.Vertex;
 import com.mayabot.nlp.segment.wordnet.Wordnet;
@@ -24,11 +25,19 @@ public interface WordTermCollector {
      */
     WordTermCollector bestPath = (wordnet, wordPath, target) -> {
         Iterator<Vertex> vertexIterator = wordPath.iteratorBestPath();
+
+        CharMatcher whitespace = CharMatcher.whitespace();
+
         while (vertexIterator.hasNext()) {
             Vertex vertex = vertexIterator.next();
 
             WordTerm term = new WordTerm(vertex.realWord(), vertex.guessNature());
             term.setOffset(vertex.getRowNum());
+
+            //默认把空白的字符去除掉
+            if (whitespace.matchesAnyOf(term.word)) {
+                continue;
+            }
 
             if (vertex.subWords != null) {
                 term.setSubword(Lists.newArrayListWithCapacity(vertex.subWords.size()));
@@ -38,6 +47,7 @@ public interface WordTermCollector {
                     term.getSubword().add(sub);
                 }
             }
+
 
             target.add(term);
         }
@@ -51,6 +61,9 @@ public interface WordTermCollector {
      */
     WordTermCollector bestpath_subword_flat = (wordnet, wordPath, target) -> {
         Iterator<Vertex> vertexIterator = wordPath.iteratorBestPath();
+        CharMatcher whitespace = CharMatcher.whitespace();
+
+
         while (vertexIterator.hasNext()) {
             Vertex vertex = vertexIterator.next();
 
@@ -62,6 +75,10 @@ public interface WordTermCollector {
                 }
             } else {
                 WordTerm term = new WordTerm(vertex.realWord(), vertex.guessNature());
+                //默认把空白的字符去除掉
+                if (whitespace.matchesAnyOf(term.word)) {
+                    continue;
+                }
                 term.setOffset(vertex.getRowNum());
 
                 target.add(term);
@@ -76,6 +93,8 @@ public interface WordTermCollector {
      */
     WordTermCollector indexs_ = (wordnet, wordPath, target) -> {
         Iterator<Vertex> vertexIterator = wordPath.iteratorBestPath();
+        CharMatcher whitespace = CharMatcher.whitespace();
+
         while (vertexIterator.hasNext()) {
             Vertex vertex = vertexIterator.next();
 
@@ -88,6 +107,11 @@ public interface WordTermCollector {
             } else {
                 WordTerm term = new WordTerm(vertex.realWord(), vertex.guessNature());
                 term.setOffset(vertex.getRowNum());
+
+                //默认把空白的字符去除掉
+                if (whitespace.matchesAnyOf(term.word)) {
+                    continue;
+                }
 
                 target.add(term);
             }

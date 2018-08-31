@@ -1,7 +1,5 @@
-package com.mayabot.nlp.analyzes;
+package com.mayabot.nlp.segment;
 
-import com.mayabot.nlp.segment.MynlpSegments;
-import com.mayabot.nlp.segment.MynlpTokenizer;
 import org.junit.Test;
 
 /**

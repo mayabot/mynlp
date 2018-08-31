@@ -17,21 +17,21 @@
 package com.mayabot.nlp.segment.dictionary.core;
 
 import com.google.common.collect.TreeBasedTable;
-import com.google.common.io.Files;
 import com.google.common.primitives.Ints;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.mayabot.nlp.MynlpEnv;
-import com.mayabot.nlp.Setting;
-import com.mayabot.nlp.caching.MynlpCacheable;
 import com.mayabot.nlp.common.matrix.CSRSparseMatrix;
 import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
+import com.mayabot.nlp.resources.NlpResouceExternalizable;
 import com.mayabot.nlp.resources.NlpResource;
 import com.mayabot.nlp.utils.CharSourceLineReader;
 import com.mayabot.nlp.utils.DataInOutputUtils;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -43,14 +43,11 @@ import java.util.regex.Pattern;
  * @author jimichan
  */
 @Singleton
-public class CoreBiGramTableDictionary implements MynlpCacheable {
-
-    private final MynlpEnv mynlp;
+public class CoreBiGramTableDictionary extends NlpResouceExternalizable {
 
     private CSRSparseMatrix matrix;
 
-    public final Setting<String> coreDictNgramSetting =
-            Setting.string("core.dict.ngram", "dictionary/core/CoreNatureDictionary.ngram.txt");
+    public final String path = "dictionary/core/CoreNatureDictionary.ngram.txt";
 
     protected InternalLogger logger = InternalLoggerFactory.getInstance(this.getClass());
 
@@ -60,49 +57,25 @@ public class CoreBiGramTableDictionary implements MynlpCacheable {
     public CoreBiGramTableDictionary(CoreDictionary coreDictionary, MynlpEnv mynlp) throws
             Exception {
         this.coreDictionary = coreDictionary;
-        this.mynlp = mynlp;
 
-        this.restore();
+        this.restore(mynlp);
     }
 
     @Override
-    public File cacheFileName() {
-        String hash = mynlp.loadResource(coreDictNgramSetting).hash();
-        return new File(mynlp.getCacheDir(), hash + ".core.ngram.dict");
+    public String sourceVersion(MynlpEnv mynlp) {
+        return mynlp.loadResource(path).hash().substring(0, 5);
     }
 
-    @Override
-    public void saveToCache(OutputStream out) throws Exception {
 
-        DataOutput dataOutputStream = new DataOutputStream(out);
-
-        DataInOutputUtils.writeIntArray(matrix.getColumnIndices(), dataOutputStream);
-        DataInOutputUtils.writeIntArray(matrix.getRowOffset(), dataOutputStream);
-        DataInOutputUtils.writeIntArray(matrix.getValues(), dataOutputStream);
-
-        out.flush();
-    }
+    private final Pattern pattern = Pattern.compile("^(.+)@(.+)\\s+(\\d+)$");
 
     @Override
-    public void readFromCache(File file) throws Exception {
-        try (InputStream inputStream = new BufferedInputStream(Files.asByteSource(file).openStream(), 64 * 1024)) {
-            DataInput dataInput = new DataInputStream(inputStream);
+    public void loadFromSource(MynlpEnv mynlp) throws Exception {
 
-            int[] columnIndices = DataInOutputUtils.readIntArray(dataInput);
-            int[] rowOffset = DataInOutputUtils.readIntArray(dataInput);
-            int[] values = DataInOutputUtils.readIntArray(dataInput);
-            this.matrix = new CSRSparseMatrix(rowOffset, columnIndices, values);
-        }
-
-    }
-
-    @Override
-    public void loadFromRealData() throws Exception {
-        NlpResource source = mynlp.loadResource(coreDictNgramSetting);
+        NlpResource source = mynlp.loadResource(path);
 
         TreeBasedTable<Integer, Integer, Integer> table = TreeBasedTable.create();
 
-        Pattern pattern = Pattern.compile("^(.+)@(.+)\\s+(\\d+)$");
         try (CharSourceLineReader reader = source.openLineReader()) {
             while (reader.hasNext()) {
                 String line = reader.next();
@@ -124,6 +97,21 @@ public class CoreBiGramTableDictionary implements MynlpCacheable {
         }
 
         this.matrix = new CSRSparseMatrix(table, coreDictionary.size());
+    }
+
+    @Override
+    public void writeExternal(ObjectOutput out) throws IOException {
+        DataInOutputUtils.writeIntArray(matrix.getColumnIndices(), out);
+        DataInOutputUtils.writeIntArray(matrix.getRowOffset(), out);
+        DataInOutputUtils.writeIntArray(matrix.getValues(), out);
+    }
+
+    @Override
+    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+        int[] columnIndices = DataInOutputUtils.readIntArray(in);
+        int[] rowOffset = DataInOutputUtils.readIntArray(in);
+        int[] values = DataInOutputUtils.readIntArray(in);
+        this.matrix = new CSRSparseMatrix(rowOffset, columnIndices, values);
     }
 
     /**
