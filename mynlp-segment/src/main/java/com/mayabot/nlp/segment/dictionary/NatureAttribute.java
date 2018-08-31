@@ -74,7 +74,7 @@ public final class NatureAttribute {
     static int[] empty = new int[0];
 
     private static int[] quickJson(String json) {
-        if (json.equals("[]")) {
+        if ("[]".equals(json)) {
             return empty;
         }
         String[] split = json.split(",");
