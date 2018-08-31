@@ -5,6 +5,12 @@ import com.google.common.collect.Table;
 
 import java.util.*;
 
+/**
+ * 一个定制的数据结构,快速根据String，String查询对应的double值。
+ * 只能在小数据范围的情况下使用
+ *
+ * @author jimichan
+ */
 public class QuickStringDoubleTable {
 
     private int[] labelBase;
@@ -31,6 +37,12 @@ public class QuickStringDoubleTable {
         }
     }
 
+    /**
+     * 这个方法执行速度应该想飞一样
+     * @param row
+     * @param col
+     * @return
+     */
     public double get(String row, String col) {
         int rowid = labelBase[row.hashCode() % labelSize];
         int colid = labelBase[col.hashCode() % labelSize];
