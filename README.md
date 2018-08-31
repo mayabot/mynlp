@@ -34,5 +34,4 @@ CRF明文模型文件下载 https://pan.baidu.com/s/1izg_ElEdFArgVa5UkKO1xw
 ## TODO
 1. 文档完善
 2. 控制自定义词典
-3. 优化cache文件存储和命名、自动清除的逻辑
 4. 

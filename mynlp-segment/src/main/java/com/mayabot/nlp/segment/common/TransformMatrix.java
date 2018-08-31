@@ -17,7 +17,10 @@
 package com.mayabot.nlp.segment.common;
 
 import com.google.common.base.Splitter;
-import com.google.common.collect.*;
+import com.google.common.collect.ArrayTable;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Maps;
 import com.google.common.io.ByteSource;
 import com.mayabot.nlp.resources.NlpResource;
 
@@ -46,7 +49,7 @@ public class TransformMatrix {
     /**
      * 储存转移矩阵
      */
-    private ArrayTable<String, String, Integer> matrix;
+    private QuickStringIntTable matrix;
 
     /**
      * 储存每个标签出现的次数
@@ -70,19 +73,34 @@ public class TransformMatrix {
     /**
      * 转移概率
      */
-    public Table<String, String, Double> transititon_probability;
+    public QuickStringDoubleTable transititon_probability;
 
 
     public double getTP(String a, String b) {
-
-        Double d = transititon_probability.get(a, b);
-        // 这里没有做自动补齐，有些键值对是不存在的
-        if (d == null
-                ) {
+        double d = transititon_probability.get(a, b);
+        if (d == Double.MIN_VALUE) {
             return 0;
         }
-        return d.doubleValue();
+
+        return d;
     }
+
+    /**
+     * 获取转移频次
+     *
+     * @param from
+     * @param to
+     * @return
+     */
+
+    public int getFrequency(String from, String to) {
+        int v = matrix.get(from, to);
+        if (v == Integer.MIN_VALUE) {
+            return 0;
+        }
+        return v;
+    }
+
 
 
     public boolean load(ByteSource source) throws IOException {
@@ -106,9 +124,11 @@ public class TransformMatrix {
                 "UTF-8"))) {
             String firstLine = br.readLine();
             List<String> lablist = splitter.splitToList(firstLine);
+
+
             // 为了制表方便，第一个label是空白，所以要抹掉它
             // //之后就描述了矩阵
-            matrix = ArrayTable.create(lablist.subList(1, lablist.size()),
+            ArrayTable<String, String, Integer> matrix = ArrayTable.create(lablist.subList(1, lablist.size()),
                     lablist.subList(1, lablist.size()));
             String line;
             while ((line = br.readLine()) != null) {
@@ -119,15 +139,21 @@ public class TransformMatrix {
                     row.put(lablist.get(i), Integer.parseInt(paramArray.get(i)));
                 }
             }
+
+            this.matrix = new QuickStringIntTable(matrix);
+
+            tongji(matrix);
+
+
         }
 
 
-        tongji();
+
 
         return true;
     }
 
-    private void tongji() {
+    private void tongji(ArrayTable<String, String, Integer> matrix) {
 
         // 需要统计一下每个标签出现的次数
         HashMap<String, Long> _total = Maps.newHashMap();
@@ -164,7 +190,7 @@ public class TransformMatrix {
         }
         this.start_probability = ImmutableMap.copyOf(_start_probability);
 
-        transititon_probability = ArrayTable.create(matrix.rowKeyList(),
+        ArrayTable<String, String, Double> transititon_probability = ArrayTable.create(matrix.rowKeyList(),
                 matrix.columnKeyList());
 
 
@@ -176,23 +202,7 @@ public class TransformMatrix {
             }
         }
 
-        transititon_probability = ImmutableTable.copyOf(transititon_probability);
-    }
-
-    /**
-     * 获取转移频次
-     *
-     * @param from
-     * @param to
-     * @return
-     */
-    public int getFrequency(String from, String to) {
-
-        Integer v = matrix.get(from, to);
-        if (v == null) {
-            return 0;
-        }
-        return v.intValue();
+        this.transititon_probability = new QuickStringDoubleTable(transititon_probability);
     }
 
     /**
