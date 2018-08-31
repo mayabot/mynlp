@@ -16,15 +16,12 @@
 package com.mayabot.nlp.segment.dictionary;
 
 import com.google.common.base.Splitter;
-import com.google.common.io.ByteArrayDataOutput;
-import com.google.common.io.ByteStreams;
-import com.google.common.io.Files;
 import com.mayabot.nlp.MynlpEnv;
-import com.mayabot.nlp.caching.MynlpCacheable;
 import com.mayabot.nlp.collection.dat.DoubleArrayTrie;
 import com.mayabot.nlp.collection.dat.DoubleArrayTrieBuilder;
 import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
+import com.mayabot.nlp.resources.NlpResouceExternalizable;
 import com.mayabot.nlp.resources.NlpResource;
 import com.mayabot.nlp.utils.CharSourceLineReader;
 
@@ -39,22 +36,16 @@ import java.util.regex.Pattern;
  * @author hankcs
  * @author jimichan
  */
-public abstract class CommonDictionary<V> implements MynlpCacheable {
+public abstract class CommonDictionary<V> extends NlpResouceExternalizable {
 
     protected InternalLogger logger = InternalLoggerFactory.getInstance(this.getClass());
 
 
-    private final MynlpEnv mynlp;
-
     private DoubleArrayTrie<V> trie;
 
     public CommonDictionary(MynlpEnv mynlp) throws Exception {
-        this.mynlp = mynlp;
-
-        this.restore();
+        this.restore(mynlp);
     }
-
-
 
     protected abstract String dicFilePath();
 
@@ -69,34 +60,14 @@ public abstract class CommonDictionary<V> implements MynlpCacheable {
     }
 
     @Override
-    public File cacheFileName() {
-        String hash = mynlp.loadResource(dicFilePath()).hash();
-
-        return new File(mynlp.getCacheDir(), hash + "." + this.getClass().getSimpleName());
+    public String sourceVersion(MynlpEnv mynlp) {
+        return mynlp.loadResource(dicFilePath()).hash().substring(0, 6);
     }
 
-    @Override
-    public void saveToCache(OutputStream out) throws Exception {
-        ByteArrayDataOutput dataOutput = ByteStreams.newDataOutput();
-
-        DoubleArrayTrie.write(trie, dataOutput, this::writeItem);
-
-        out.write(dataOutput.toByteArray());
-    }
+    private final Splitter splitter = Splitter.on(Pattern.compile("\\s"));
 
     @Override
-    public void readFromCache(File file) throws Exception {
-        try (InputStream inputStream = new BufferedInputStream(Files.asByteSource(file).openStream(), 64 * 1024)) {
-            DataInput dataInput = new DataInputStream(inputStream);
-            this.trie = DoubleArrayTrie.read(dataInput, this::readItem);
-        }
-    }
-
-
-    @Override
-    public void loadFromRealData() throws Exception {
-
-        final Splitter splitter = Splitter.on(Pattern.compile("\\s"));
+    public void loadFromSource(MynlpEnv mynlp) throws Exception {
 
         TreeMap<String, V> map = new TreeMap<>();
 
@@ -120,6 +91,15 @@ public abstract class CommonDictionary<V> implements MynlpCacheable {
         this.trie = builder.build(map);
     }
 
+    @Override
+    public void writeExternal(ObjectOutput out) throws IOException {
+        DoubleArrayTrie.write(trie, out, this::writeItem);
+    }
+
+    @Override
+    public void readExternal(ObjectInput in) throws IOException {
+        this.trie = DoubleArrayTrie.read(in, this::readItem);
+    }
 
     /**
      * 查询一个单词

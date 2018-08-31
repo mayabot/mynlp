@@ -25,6 +25,10 @@ public class FileNlpResourceFactory implements NlpResourceFactory {
     @Override
     public NlpResource load(String resourceName, Charset charset) {
 
+        if (!baseDir.exists() || baseDir.isFile()) {
+            return null;
+        }
+
         File file = new File(baseDir, resourceName.replace('/', File.separatorChar));
 
         if (file.exists() && file.canRead()) {

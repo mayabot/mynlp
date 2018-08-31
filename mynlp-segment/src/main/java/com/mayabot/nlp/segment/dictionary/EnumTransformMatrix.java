@@ -25,7 +25,7 @@ import java.io.InputStream;
 
 /**
  * 转移矩阵词典
- *
+ * @author jimichan
  * @param <E> 标签的枚举类型
  */
 public class EnumTransformMatrix<E extends Enum<E>> {

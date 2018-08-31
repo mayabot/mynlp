@@ -14,24 +14,10 @@
  * limitations under the License.
  */
 
-package com.mayabot.nlp.analyzes;
+package com.mayabot.nlp.wordnet;
 
-import com.mayabot.nlp.segment.MynlpSegments;
-import com.mayabot.nlp.segment.MynlpTokenizer;
-import org.junit.Test;
+public class WordnetTest {
 
-public class CrfTest {
 
-    @Test
-    public void test() {
 
-        MynlpTokenizer tokenizer = MynlpSegments.crfTokenizer();
-
-        String line = "这个 第二十三届尾牙宴，不要 把文件系统123.456中路径和环境变量的路径混淆。" +
-                "办理镇保门急诊统筹登记缴费手续";
-
-        tokenizer.tokenToList(line).forEach(
-                System.out::println
-        );
-    }
 }

@@ -104,12 +104,13 @@ public class TransformMatrix {
         Splitter splitter = Splitter.on(',').trimResults();
         try (BufferedReader br = new BufferedReader(new InputStreamReader(in,
                 "UTF-8"))) {
-            String firstline = br.readLine();
-            List<String> lablist = splitter.splitToList(firstline);
-            matrix = ArrayTable.create(lablist.subList(1, lablist.size()),
-                    lablist.subList(1, lablist.size())); // 为了制表方便，第一个label是空白，所以要抹掉它
+            String firstLine = br.readLine();
+            List<String> lablist = splitter.splitToList(firstLine);
+            // 为了制表方便，第一个label是空白，所以要抹掉它
             // //之后就描述了矩阵
-            String line = null;
+            matrix = ArrayTable.create(lablist.subList(1, lablist.size()),
+                    lablist.subList(1, lablist.size()));
+            String line;
             while ((line = br.readLine()) != null) {
                 List<String> paramArray = splitter.splitToList(line);
                 String row_lable = paramArray.get(0);
@@ -120,11 +121,14 @@ public class TransformMatrix {
             }
         }
 
+
         tongji();
+
         return true;
     }
 
     private void tongji() {
+
         // 需要统计一下每个标签出现的次数
         HashMap<String, Long> _total = Maps.newHashMap();
         for (String label : matrix.rowKeyList()) {
@@ -162,6 +166,7 @@ public class TransformMatrix {
 
         transititon_probability = ArrayTable.create(matrix.rowKeyList(),
                 matrix.columnKeyList());
+
 
         for (String from : states) {
             for (String to : states) {
