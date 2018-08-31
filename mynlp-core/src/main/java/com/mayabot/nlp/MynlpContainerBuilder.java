@@ -1,5 +1,6 @@
 package com.mayabot.nlp;
 
+import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -22,6 +23,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -32,7 +35,8 @@ public class MynlpContainerBuilder {
     public static InternalLogger logger = InternalLoggerFactory.getInstance("com.mayabot.nlp.Mynlps");
 
     /**
-     * 数据目录默认在当前工作目录
+     * 数据目录默认在当前工作目录.
+     * 注意这个文件夹不一定存在
      */
     private String dataDir = "data";
 
@@ -48,9 +52,7 @@ public class MynlpContainerBuilder {
 
     private Map<Class, Object> preObj = Maps.newHashMap();
 
-    public static void main(String[] args) {
-        System.out.println(System.getProperties());
-    }
+
 
     Mynlp build() throws RuntimeException {
         try {
@@ -63,7 +65,7 @@ public class MynlpContainerBuilder {
             logger.info("Current Working Dir is " + new File(".").getAbsolutePath());
 
 
-            File dataDirFile = ensureDir(new File(dataDir));
+            File dataDirFile = new File(dataDir);
             logger.info("Mynlps data dir is " + dataDirFile.getAbsolutePath());
 
 
@@ -73,6 +75,8 @@ public class MynlpContainerBuilder {
             } else {
                 cacheDirFile = ensureDir(new File(cacheDir));
             }
+
+            cleanCacheFile(cacheDirFile);
 
             logger.info("Mynlps cache dir is {}", cacheDirFile.getAbsolutePath());
 
@@ -207,5 +211,49 @@ public class MynlpContainerBuilder {
             throw new IOException(file + " is not dir");
         }
         return file;
+    }
+
+
+    /**
+     * 启动的时候检查缓存文件
+     * <p>
+     * CoreDictionary_d65f2.bin
+     *
+     * @param cacheDirFile
+     */
+    private void cleanCacheFile(File cacheDirFile) {
+        File[] files = cacheDirFile.listFiles((dir, name) -> name.endsWith(".bin"));
+
+        Pattern pattern = Pattern.compile("^(.*?)_(.*?)\\.bin$");
+
+        HashMultimap<String, File> xx = HashMultimap.create();
+        for (int i = 0; i < files.length; i++) {
+            File file = files[i];
+
+            Matcher matcher = pattern.matcher(file.getName());
+
+            if (matcher.find()) {
+                String name = matcher.group(1);
+                String version = matcher.group(2);
+                xx.put(name, file);
+            }
+        }
+
+        //简单处理，只有存在版本冲突，就删除之
+        List<File> delete = Lists.newArrayList();
+        for (String name : xx.keys()) {
+            if (xx.get(name).size() > 1) {
+                delete.addAll(xx.get(name));
+            }
+        }
+
+        for (int i = 0; i < delete.size(); i++) {
+            try {
+                java.nio.file.Files.delete(delete.get(i).toPath());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
     }
 }

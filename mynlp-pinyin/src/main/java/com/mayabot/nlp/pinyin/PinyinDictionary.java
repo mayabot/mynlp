@@ -19,18 +19,17 @@ package com.mayabot.nlp.pinyin;
 import com.google.common.base.Charsets;
 import com.google.common.collect.Lists;
 import com.google.common.hash.Hashing;
-import com.google.common.io.Files;
 import com.google.common.primitives.Ints;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.mayabot.nlp.MynlpEnv;
 import com.mayabot.nlp.Setting;
-import com.mayabot.nlp.caching.MynlpCacheable;
 import com.mayabot.nlp.collection.ahocorasick.AhoCoraickDoubleArrayTrieBuilder;
 import com.mayabot.nlp.collection.ahocorasick.AhoCorasickDoubleArrayTrie;
 import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
 import com.mayabot.nlp.pinyin.model.Pinyin;
+import com.mayabot.nlp.resources.NlpResouceExternalizable;
 import com.mayabot.nlp.resources.NlpResource;
 import com.mayabot.nlp.utils.CharSourceLineReader;
 
@@ -46,7 +45,7 @@ import static com.mayabot.nlp.Setting.string;
  * @author jimichan
  */
 @Singleton
-public class PinyinDictionary implements MynlpCacheable {
+public class PinyinDictionary extends NlpResouceExternalizable {
 
     InternalLogger logger = InternalLoggerFactory.getInstance(PinyinDictionary.class);
 
@@ -68,23 +67,13 @@ public class PinyinDictionary implements MynlpCacheable {
         long t1 = System.currentTimeMillis();
         this.customPinyin = customPinyin;
 
-        this.restore();
+        this.restore(mynlp);
         long t2 = System.currentTimeMillis();
         logger.info("Loaded pinyin dictionary success! " + (t2 - t1) + " ms");
     }
 
-    public void reload() {
-        try {
-            this.restore();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-
     @Override
-    public File cacheFileName() {
-
+    public String sourceVersion(MynlpEnv mynlp) {
         String hash = mynlp.loadResource(pinyinSetting).hash();
 
         NlpResource ext = mynlp.loadResource(pinyinExtDicSetting);
@@ -96,74 +85,11 @@ public class PinyinDictionary implements MynlpCacheable {
 
         hash = Hashing.md5().hashString(hash, Charsets.UTF_8).toString();
 
-        return new File(mynlp.getCacheDir(), "pinyin.dict." + hash);
+        return hash.substring(0, 8);
     }
 
     @Override
-    public void saveToCache(OutputStream out) throws Exception {
-        DataOutputStream dataOutput = new DataOutputStream(out);
-
-        AhoCorasickDoubleArrayTrie.write(trie, dataOutput, PinyinDictionary::write);
-
-        dataOutput.flush();
-    }
-
-
-    public static void write(Pinyin[] pinyins, DataOutput out) {
-        try {
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < pinyins.length; i++) {
-                sb.append(pinyins[i].ordinal()).append(",");
-            }
-            out.writeUTF(sb.toString());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    static Pinyin[] pinyinByOrdinal;
-
-    static {
-        pinyinByOrdinal = new Pinyin[Pinyin.values().length+1];
-
-        Pinyin[] values = Pinyin.values();
-        for (int i = values.length - 1; i >= 0; i--) {
-            pinyinByOrdinal[values[i].ordinal()] = values[i];
-        }
-    }
-
-    public static Pinyin[] read(DataInput in) {
-        try {
-            String line = in.readUTF();
-            String[] split = line.split(",");
-
-            Pinyin[] pinyins = new Pinyin[split.length];
-
-            for (int i = 0; i < split.length; i++) {
-                Integer xx = Ints.tryParse(split[i]);
-                Pinyin pinyin = pinyinByOrdinal[xx];
-                pinyins[i] = pinyin;
-            }
-
-            return pinyins;
-
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-    }
-
-    @Override
-    public void readFromCache(File file) throws Exception {
-        try(InputStream inputStream = new BufferedInputStream(Files.asByteSource(file).openStream(), 64 * 1024)) {
-            DataInput dataInput = new DataInputStream(inputStream);
-            this.trie = AhoCorasickDoubleArrayTrie.read(dataInput, PinyinDictionary::read);
-        }
-    }
-
-    @Override
-    public void loadFromRealData() throws Exception {
-
+    public void loadFromSource(MynlpEnv mynlp) throws Exception {
         List<NlpResource> list = Lists.newArrayList();
 
         list.add(mynlp.loadResource(pinyinSetting));
@@ -202,7 +128,70 @@ public class PinyinDictionary implements MynlpCacheable {
 
         AhoCoraickDoubleArrayTrieBuilder<Pinyin[]> builder = new AhoCoraickDoubleArrayTrieBuilder<>();
         this.trie = builder.build(map);
+    }
 
+    @Override
+    public void writeExternal(ObjectOutput out) throws IOException {
+        AhoCorasickDoubleArrayTrie.write(trie, out, PinyinDictionary::write);
+    }
+
+    @Override
+    public void readExternal(ObjectInput in) throws IOException {
+        this.trie = AhoCorasickDoubleArrayTrie.read(in, PinyinDictionary::read);
+    }
+
+    public void reload() {
+        try {
+            this.restore(mynlp);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    static Pinyin[] pinyinByOrdinal;
+
+    static {
+        pinyinByOrdinal = new Pinyin[Pinyin.values().length + 1];
+
+        Pinyin[] values = Pinyin.values();
+        for (int i = values.length - 1; i >= 0; i--) {
+            pinyinByOrdinal[values[i].ordinal()] = values[i];
+        }
+    }
+
+    public static Pinyin[] read(DataInput in) {
+        try {
+            String line = in.readUTF();
+            String[] split = line.split(",");
+
+            Pinyin[] pinyins = new Pinyin[split.length];
+
+            for (int i = 0; i < split.length; i++) {
+                Integer xx = Ints.tryParse(split[i]);
+                Pinyin pinyin = pinyinByOrdinal[xx];
+                pinyins[i] = pinyin;
+            }
+
+            return pinyins;
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+
+    public static void write(Pinyin[] pinyins, DataOutput out) {
+        try {
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < pinyins.length; i++) {
+                sb.append(pinyins[i].ordinal()).append(",");
+            }
+            out.writeUTF(sb.toString());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private Pinyin[] parse(String text) {

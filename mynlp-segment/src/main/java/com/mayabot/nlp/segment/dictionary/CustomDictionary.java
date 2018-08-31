@@ -17,17 +17,10 @@
 package com.mayabot.nlp.segment.dictionary;
 
 
-import com.google.common.base.Charsets;
-import com.google.common.hash.Hashing;
-import com.google.common.io.ByteArrayDataOutput;
-import com.google.common.io.ByteStreams;
-import com.google.common.io.Files;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.mayabot.nlp.MynlpEnv;
 import com.mayabot.nlp.Setting;
-import com.mayabot.nlp.Settings;
-import com.mayabot.nlp.caching.MynlpCacheable;
 import com.mayabot.nlp.collection.dat.DoubleArrayTrie;
 import com.mayabot.nlp.collection.dat.DoubleArrayTrieBuilder;
 import com.mayabot.nlp.logging.InternalLogger;
@@ -35,19 +28,18 @@ import com.mayabot.nlp.logging.InternalLoggerFactory;
 import com.mayabot.nlp.resources.NlpResource;
 import com.mayabot.nlp.utils.CharSourceLineReader;
 
-import java.io.*;
 import java.util.List;
 import java.util.TreeMap;
-import java.util.TreeSet;
 
 /**
  * 用户自定义词典
  * 缓存用户的自定义词典，查询出
  * <p>
  * reload watch
+ * @author jimichan
  */
 @Singleton
-public class CustomDictionary implements MynlpCacheable {
+public class CustomDictionary {
 
     static InternalLogger logger = InternalLoggerFactory.getInstance(CustomDictionary.class);
 
@@ -64,11 +56,11 @@ public class CustomDictionary implements MynlpCacheable {
     //dictionary/custom/*
 
     @Inject
-    public CustomDictionary(Settings setting, MynlpEnv mynlp) throws Exception {
+    public CustomDictionary(MynlpEnv mynlp) throws Exception {
 
         this.mynlp = mynlp;
 
-        List<String> resourceUrls = setting.getAsList(customDictSetting);
+        List<String> resourceUrls = mynlp.getSettings().getAsList(customDictSetting);
 
         if (resourceUrls == null || resourceUrls.isEmpty()) {
             return;
@@ -77,48 +69,48 @@ public class CustomDictionary implements MynlpCacheable {
         // db://dictionary/custom/abc.txt
 
         this.resourceUrls = resourceUrls;
-        isNormalization = setting.getAsBoolean("custom.dictionary.normalization", Boolean.FALSE);
+        isNormalization = mynlp.getSettings().getAsBoolean("custom.dictionary.normalization", Boolean.FALSE);
 
-        restore();
+        loadFromRealData(resourceUrls);
     }
 
-    @Override
-    public File cacheFileName() {
-        if (resourceUrls.isEmpty()) {
-            return null;
-        }
-        TreeSet<String> set = new TreeSet<>();
+//    @Override
+//    public File cacheFileName() {
+//        if (resourceUrls.isEmpty()) {
+//            return null;
+//        }
+//        TreeSet<String> set = new TreeSet<>();
+//
+//        for (String url : resourceUrls) {
+//            NlpResource resource = mynlp.loadResource(url);
+//
+//            set.add(resource.hash());
+//        }
+//
+//        String hash = Hashing.md5().hashString(set.toString(), Charsets.UTF_8).toString();
+//
+//        return new File(mynlp.getCacheDir(), hash + ".custom.dict");
+//    }
+//
+//    @Override
+//    public void saveToCache(OutputStream out) throws Exception {
+//        ByteArrayDataOutput dataOutput = ByteStreams.newDataOutput();
+//
+//        DoubleArrayTrie.write(dat, dataOutput, NatureAttribute::write);
+//
+//        out.write(dataOutput.toByteArray());
+//    }
+//
+//    @Override
+//    public void readFromCache(File file) throws Exception {
+//        try (InputStream inputStream = new BufferedInputStream(Files.asByteSource(file).openStream(), 64 * 1024)) {
+//            DataInput dataInput = new DataInputStream(inputStream);
+//            this.dat = DoubleArrayTrie.read(dataInput, NatureAttribute::read);
+//        }
+//    }
 
-        for (String url : resourceUrls) {
-            NlpResource resource = mynlp.loadResource(url);
-
-            set.add(resource.hash());
-        }
-
-        String hash = Hashing.md5().hashString(set.toString(), Charsets.UTF_8).toString();
-
-        return new File(mynlp.getCacheDir(), hash + ".custom.dict");
-    }
-
-    @Override
-    public void saveToCache(OutputStream out) throws Exception {
-        ByteArrayDataOutput dataOutput = ByteStreams.newDataOutput();
-
-        DoubleArrayTrie.write(dat, dataOutput, NatureAttribute::write);
-
-        out.write(dataOutput.toByteArray());
-    }
-
-    @Override
-    public void readFromCache(File file) throws Exception {
-        try (InputStream inputStream = new BufferedInputStream(Files.asByteSource(file).openStream(), 64 * 1024)) {
-            DataInput dataInput = new DataInputStream(inputStream);
-            this.dat = DoubleArrayTrie.read(dataInput, NatureAttribute::read);
-        }
-    }
-
-    @Override
-    public void loadFromRealData() throws Exception {
+    //    @Override
+    public void loadFromRealData(List<String> resourceUrls) throws Exception {
         TreeMap<String, NatureAttribute> map = new TreeMap<>();
 
         Nature defaultNature = Nature.n;
