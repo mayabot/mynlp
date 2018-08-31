@@ -3,6 +3,7 @@ package com.mayabot.nlp.segment;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.mayabot.nlp.Mynlp;
+import com.mayabot.nlp.Mynlps;
 import com.mayabot.nlp.segment.crf.CrfBaseSegment;
 import com.mayabot.nlp.segment.recognition.OptimizeWordPathProcessor;
 import com.mayabot.nlp.segment.recognition.org.OrganizationRecognition;
@@ -36,17 +37,22 @@ public class WordnetTokenizerBuilder implements MynlpTokenizerBuilder {
 
     private ArrayList<WordpathProcessor> pipeLine = Lists.newArrayList();
 
-    private List<Consumer<WordpathProcessor>> listenerWordpathProcessor = Lists.newArrayList();
-    private List<Consumer<OptimizeProcessor>> listenerOptimizeProcessor = Lists.newArrayList();
+    private static class Pair {
+        Class clazz;
+        Consumer consumer;
+
+        public Pair(Class clazz, Consumer consumer) {
+            this.clazz = clazz;
+            this.consumer = consumer;
+        }
+    }
+
+    private List<Pair> configListener = Lists.newArrayList();
 
     private Set<Class> disabledComponentSet = Sets.newHashSet();
 
-    public static WordnetTokenizerBuilder create(Mynlp mynlp) {
-        return new WordnetTokenizerBuilder(mynlp);
-    }
-
-    private WordnetTokenizerBuilder(Mynlp mynlp) {
-        this.mynlp = mynlp;
+    WordnetTokenizerBuilder() {
+        this.mynlp = Mynlps.get();
     }
 
     @Override
@@ -75,33 +81,16 @@ public class WordnetTokenizerBuilder implements MynlpTokenizerBuilder {
         return tokenizer;
     }
 
-    public <T extends WordpathProcessor> void dddd(Class<T> wp, Consumer<T> consumer) {
 
+    public <T> WordnetTokenizerBuilder config(Class<T> clazz, Consumer<T> listener) {
+        configListener.add(new Pair(clazz, listener));
+        return this;
     }
-
-    public void test() {
-        WordnetTokenizerBuilder builder = null;
-
-        builder.dddd(CommonPatternProcessor.class, x -> {
-            x.setEnableEmail(false);
-        });
-
-    }
-
 
     public void disabledComponent(Class clazz) {
         disabledComponentSet.add(clazz);
     }
 
-    public WordnetTokenizerBuilder beforeBuild(Consumer<WordpathProcessor> listener) {
-        listenerWordpathProcessor.add(listener);
-        return this;
-    }
-
-    public WordnetTokenizerBuilder beforeBuildOptimizeProcessor(Consumer<OptimizeProcessor> listener) {
-        listenerOptimizeProcessor.add(listener);
-        return this;
-    }
 
     private ArrayList<WordpathProcessor> prepare(ArrayList<WordpathProcessor> pipeLine) {
 
@@ -109,32 +98,36 @@ public class WordnetTokenizerBuilder implements MynlpTokenizerBuilder {
             setDefaultPipeline();
         }
 
-        //
-        beforeBuild(x -> {
-            if (disabledComponentSet.contains(x)) {
-                x.setEnabled(false);
+        config(OptimizeProcessor.class, p -> {
+            if (disabledComponentSet.contains(p.getClass())) {
+                p.setEnabled(false);
+            }
+        });
+        config(WordpathProcessor.class, p -> {
+            if (disabledComponentSet.contains(p.getClass())) {
+                p.setEnabled(false);
             }
         });
 
-        beforeBuildOptimizeProcessor(x -> {
-            if (disabledComponentSet.contains(x)) {
-                x.setEnabled(false);
-            }
+
+        // 执行这些监听动作
+        configListener.forEach(pair -> {
+            pipeLine.forEach(it -> {
+
+                if (pair.clazz.equals(it.getClass()) || pair.clazz.isAssignableFrom(it.getClass())) {
+                    pair.consumer.accept(it);
+                }
+
+                if (it instanceof OptimizeWordPathProcessor) {
+                    OptimizeWordPathProcessor op = (OptimizeWordPathProcessor) it;
+                    op.getOptimizeProcessorList().forEach(pp -> {
+                        if (pair.clazz.equals(pp.getClass()) || pair.clazz.isAssignableFrom(pp.getClass())) {
+                            pair.consumer.accept(pp);
+                        }
+                    });
+                }
+            });
         });
-
-
-        //execute listenerWordpathProcessor
-        pipeLine.forEach(it -> {
-            if (it instanceof OptimizeWordPathProcessor) {
-                OptimizeWordPathProcessor op = (OptimizeWordPathProcessor) it;
-                op.getOptimizeProcessorList().forEach(pp -> {
-                    listenerOptimizeProcessor.forEach(x -> x.accept(pp));
-                });
-            } else {
-                listenerWordpathProcessor.forEach(x -> x.accept(it));
-            }
-        });
-
 
         return pipeLine;
     }
@@ -186,17 +179,19 @@ public class WordnetTokenizerBuilder implements MynlpTokenizerBuilder {
         return this;
     }
 
-    public void addLastOptimizeProcessor(List<? extends OptimizeProcessor> ops) {
+    public WordnetTokenizerBuilder addLastOptimizeProcessor(List<? extends OptimizeProcessor> ops) {
         OptimizeWordPathProcessor instance = mynlp.getInstance(OptimizeWordPathProcessor.class);
         instance.addAllOptimizeProcessor(ops);
+        pipeLine.add(instance);
+        return this;
     }
 
 
-    public void addLastOptimizeProcessorClass(List<Class<? extends OptimizeProcessor>> ops) {
+    public WordnetTokenizerBuilder addLastOptimizeProcessorClass(List<Class<? extends OptimizeProcessor>> ops) {
         List<OptimizeProcessor> list =
                 ops.stream().map(it -> mynlp.getInstance(it)).collect(Collectors.toList());
 
-        addLastOptimizeProcessor(list);
+        return addLastOptimizeProcessor(list);
     }
 
 

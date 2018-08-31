@@ -35,6 +35,9 @@ import java.util.List;
  */
 public class WordnetTokenizer implements MynlpTokenizer {
 
+    public static WordnetTokenizerBuilder builder() {
+        return new WordnetTokenizerBuilder();
+    }
 
     private static InternalLogger logger = InternalLoggerFactory.getInstance(WordnetTokenizer.class);
 
