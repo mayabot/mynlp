@@ -61,7 +61,7 @@ subprojects {
     {
         sourceSets {
             example {
-                compileClasspath += sourceSets.main.runtimeClasspath
+                compileClasspath += sourceSets.main.compileClasspath
                 runtimeClasspath += sourceSets.main.runtimeClasspath
             }
         }

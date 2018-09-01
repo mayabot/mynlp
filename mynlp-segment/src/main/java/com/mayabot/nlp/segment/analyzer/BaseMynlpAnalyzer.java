@@ -40,7 +40,7 @@ import java.util.function.Consumer;
  *
  * @author jimichan
  */
-public class DefaultMynlpAnalyzer implements MynlpAnalyzer {
+public class BaseMynlpAnalyzer implements MynlpAnalyzer {
 
     private MynlpTokenizer tokenizer;
 
@@ -67,7 +67,7 @@ public class DefaultMynlpAnalyzer implements MynlpAnalyzer {
      * @param reader    需要分词的数据源
      * @param tokenizer 具体的分词器
      */
-    public DefaultMynlpAnalyzer(Reader reader, MynlpTokenizer tokenizer) {
+    public BaseMynlpAnalyzer(Reader reader, MynlpTokenizer tokenizer) {
         this.reset(reader);
         this.tokenizer = tokenizer;
     }
@@ -79,7 +79,7 @@ public class DefaultMynlpAnalyzer implements MynlpAnalyzer {
      * @param text      需要分词的String文本
      * @param tokenizer 具体的分词器
      */
-    public DefaultMynlpAnalyzer(String text, MynlpTokenizer tokenizer) {
+    public BaseMynlpAnalyzer(String text, MynlpTokenizer tokenizer) {
         this.reset(new StringReader(text));
         this.tokenizer = tokenizer;
     }
@@ -104,7 +104,7 @@ public class DefaultMynlpAnalyzer implements MynlpAnalyzer {
      *
      * @param tokenizer 具体的分词器
      */
-    public DefaultMynlpAnalyzer(MynlpTokenizer tokenizer) {
+    public BaseMynlpAnalyzer(MynlpTokenizer tokenizer) {
         this.reset(new StringReader(""));
         this.tokenizer = tokenizer;
     }
@@ -197,7 +197,7 @@ public class DefaultMynlpAnalyzer implements MynlpAnalyzer {
      * @return
      */
     @Override
-    public DefaultMynlpAnalyzer reset(Reader reader) {
+    public BaseMynlpAnalyzer reset(Reader reader) {
         close();
         this.reader = reader;
         //智能分段器

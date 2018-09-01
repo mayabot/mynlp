@@ -19,4 +19,8 @@ public interface MynlpComponent {
     boolean isEnabled();
 
     void setEnabled(boolean enable);
+
+    void enable();
+
+    void disable();
 }

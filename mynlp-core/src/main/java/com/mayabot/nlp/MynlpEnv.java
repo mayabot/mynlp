@@ -4,6 +4,7 @@ import com.google.common.base.Charsets;
 import com.google.common.collect.ImmutableList;
 import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
+import com.mayabot.nlp.resources.ClasspathNlpResourceFactory;
 import com.mayabot.nlp.resources.NlpResource;
 import com.mayabot.nlp.resources.NlpResourceFactory;
 
@@ -31,7 +32,7 @@ public class MynlpEnv {
      */
     private File cacheDir;
 
-    private List<NlpResourceFactory> resourceFactory = ImmutableList.of();
+    private List<NlpResourceFactory> resourceFactory;
 
     private Settings settings;
 
@@ -41,6 +42,16 @@ public class MynlpEnv {
         this.resourceFactory = ImmutableList.copyOf(resourceFactory);
         this.settings = settings;
     }
+
+
+    /**
+     * 给只从classpath下加载资源的环境
+     */
+    public MynlpEnv() {
+        resourceFactory = ImmutableList.of(new ClasspathNlpResourceFactory(Mynlps.class.getClassLoader()));
+        settings = Settings.defaultSettings();
+    }
+
 
     public Settings getSettings() {
         return settings;
