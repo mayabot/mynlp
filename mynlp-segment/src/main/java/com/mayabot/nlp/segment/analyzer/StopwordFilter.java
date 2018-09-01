@@ -56,8 +56,12 @@ public class StopwordFilter extends MynlpFilter {
 
     public StopwordFilter(MynlpAnalyzer myAnalyzer, Set<String> stopwords) {
         super(myAnalyzer);
-        this.stopWords = new HashSet<>();
-        this.stopWords.addAll(stopwords);
+        stopWords = new HashSet<>();
+        if (stopwords == null) {
+            stopWords.addAll(defaultSet);
+        } else {
+            this.stopWords.addAll(stopwords);
+        }
     }
 
     public void add(String word) {

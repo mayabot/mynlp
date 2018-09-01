@@ -17,9 +17,8 @@
 package com.mayabot.nlp.segment;
 
 import com.google.common.collect.Lists;
-import com.mayabot.nlp.segment.analyzer.DefaultMynlpAnalyzer;
+import com.mayabot.nlp.segment.analyzer.StandardAnalyzerFactory;
 
-import java.io.Reader;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -81,11 +80,8 @@ public interface MynlpTokenizer {
         return target;
     }
 
-    default MynlpAnalyzer createAnalyzer() {
-        return new DefaultMynlpAnalyzer("", this);
+    default MynlpAnalyzer standardAnalyzer() {
+        return new StandardAnalyzerFactory(this).create("");
     }
 
-    default MynlpAnalyzer createAnalyzer(Reader reader) {
-        return new DefaultMynlpAnalyzer(reader, this);
-    }
 }

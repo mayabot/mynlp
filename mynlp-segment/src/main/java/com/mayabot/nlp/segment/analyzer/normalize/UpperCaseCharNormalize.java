@@ -14,16 +14,23 @@
  * limitations under the License.
  */
 
-package com.mayabot.nlp.segment.analyzer;
+package com.mayabot.nlp.segment.analyzer.normalize;
 
 import com.mayabot.nlp.segment.CharNormalize;
 import com.mayabot.nlp.utils.CharacterUtils;
 
+/**
+ * 转换为大写字母
+ *
+ * @author jimichan
+ */
 public class UpperCaseCharNormalize implements CharNormalize {
 
     @Override
     public void normal(char[] text) {
         CharacterUtils.toUpperCase(text, 0, text.length);
     }
+
+    public static final UpperCaseCharNormalize instance = new UpperCaseCharNormalize();
 
 }

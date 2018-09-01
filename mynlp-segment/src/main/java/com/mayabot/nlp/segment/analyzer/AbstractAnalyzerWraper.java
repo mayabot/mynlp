@@ -17,10 +17,8 @@
 package com.mayabot.nlp.segment.analyzer;
 
 import com.mayabot.nlp.segment.MynlpAnalyzer;
-import com.mayabot.nlp.segment.WordTerm;
 
 import java.io.Reader;
-import java.util.Iterator;
 
 /**
  *
@@ -38,8 +36,5 @@ public abstract class AbstractAnalyzerWraper implements MynlpAnalyzer {
         return analyzer.reset(reader);
     }
 
-    @Override
-    public Iterator<WordTerm> iterator() {
-        return analyzer.iterator();
-    }
+
 }
