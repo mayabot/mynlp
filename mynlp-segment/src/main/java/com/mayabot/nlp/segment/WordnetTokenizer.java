@@ -18,7 +18,6 @@ package com.mayabot.nlp.segment;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
-import com.google.inject.Inject;
 import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
 import com.mayabot.nlp.segment.common.VertexHelper;
@@ -44,30 +43,34 @@ public class WordnetTokenizer implements MynlpTokenizer {
     /**
      * 当wordnet创建后，调用这些处理器来填充里面的节点
      */
-    WordnetInitializer wordnetInitializer = null;
+    private WordnetInitializer initer;
 
     /**
      * 处理器网络
      */
-    List<WordpathProcessor> pipeline;
+    private WordpathProcessor[] pipeline;
 
-    BestPathComputer bestPathComputer;
+    private BestPathComputer bestPathComputer;
 
-    private WordTermCollector termCollector = WordTermCollector.bestPath;
+    private WordTermCollector collector;
 
     private VertexHelper vertexHelper;
 
-    @Inject
-    WordnetTokenizer(
-            VertexHelper vertexHelper) {
+    WordnetTokenizer(WordnetInitializer initer,
+                     WordpathProcessor[] pipeline,
+                     BestPathComputer bestPathComputer,
+                     WordTermCollector termCollector,
+                     VertexHelper vertexHelper) {
+        this.initer = initer;
+        this.pipeline = pipeline;
+        this.bestPathComputer = bestPathComputer;
+        this.collector = termCollector;
         this.vertexHelper = vertexHelper;
-    }
 
-    public void check() {
         Preconditions.checkNotNull(bestPathComputer);
-        Preconditions.checkNotNull(wordnetInitializer);
+        Preconditions.checkNotNull(this.initer);
         Preconditions.checkNotNull(pipeline);
-        Preconditions.checkArgument(!pipeline.isEmpty());
+        Preconditions.checkArgument(pipeline.length != 0);
     }
 
     @Override
@@ -83,53 +86,33 @@ public class WordnetTokenizer implements MynlpTokenizer {
         }
 
         //构建一个空的Wordnet对象
-        final Wordnet wordnet = initEmptyWordNet(text);
+        final Wordnet wordnet = new Wordnet(text);
+        wordnet.getBeginRow().put(vertexHelper.newBegin());
+        wordnet.getEndRow().put(vertexHelper.newEnd());
 
-        wordnetInitializer.init(wordnet);
+        initer.init(wordnet);
 
 
         //选择一个路径出来(第一次不严谨的分词结果)
         Wordpath wordPath = bestPathComputer.select(wordnet);
 
-        wordPath = process(wordPath);
-
-        termCollector.collect(wordnet, wordPath, target);
-
-
-    }
-
-    private Wordpath process(Wordpath wordPath) {
+        // call WordpathProcessor
         for (WordpathProcessor processor : pipeline) {
             if (processor.isEnabled()) {
                 wordPath = processor.process(wordPath);
             }
         }
-        return wordPath;
+
+        collector.collect(wordnet, wordPath, target);
     }
 
-
-    /**
-     * 模板方法，初始化产生一个词网(Wordnet)
-     *
-     * @param text
-     * @return
-     */
-    private Wordnet initEmptyWordNet(char[] text) {
-        Wordnet wordnet = new Wordnet(text);
-        wordnet.getBeginRow().put(vertexHelper.newBegin());
-        wordnet.getEndRow().put(vertexHelper.newEnd());
-        return wordnet;
-    }
 
     public List<WordpathProcessor> getPipeline() {
         return ImmutableList.copyOf(pipeline);
     }
 
-    public WordTermCollector getTermCollector() {
-        return termCollector;
+    public WordTermCollector getCollector() {
+        return collector;
     }
 
-    public void setTermCollector(WordTermCollector termCollector) {
-        this.termCollector = termCollector;
-    }
 }

@@ -21,6 +21,16 @@ public abstract class BaseMynlpComponent implements MynlpComponent {
 
     @Override
     public void setEnabled(boolean enable) {
-        this.enabled = enabled;
+        this.enabled = enable;
+    }
+
+    @Override
+    public void enable() {
+        this.enabled = true;
+    }
+
+    @Override
+    public void disable() {
+        this.enabled = false;
     }
 }

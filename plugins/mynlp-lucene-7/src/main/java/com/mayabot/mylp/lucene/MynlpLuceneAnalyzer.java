@@ -42,7 +42,7 @@ public class MynlpLuceneAnalyzer extends StopwordAnalyzerBase {
     }
 
     public MynlpLuceneAnalyzer() {
-        //this(new DefaultMynlpAnalyzer(MynlpSegments.nlpTokenizer(MynlpLuceneTokenizerFactory.mynlp)));
+        //this(new BaseMynlpAnalyzer(MynlpSegments.nlpTokenizer(MynlpLuceneTokenizerFactory.mynlp)));
         //FIXME xxxx
     }
 

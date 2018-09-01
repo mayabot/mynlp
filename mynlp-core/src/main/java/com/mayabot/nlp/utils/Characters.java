@@ -23,10 +23,6 @@ import com.google.common.base.CharMatcher;
  */
 public class Characters {
 
-//	public static void main(String[] args) {
-//		System.out.println(fullWidth2halfWidth("大成３６０＋"));
-//	}
-
     /**
      * 把全角字符转成
      * System.out.println(((char)('\u0020'+i)+"   "+(char)('\uFF00'+i)));
@@ -69,6 +65,18 @@ public class Characters {
             return new String(charlist);
         } else {
             return input;
+        }
+    }
+
+    public static void fullWidth2halfWidth(char[] charlist) {
+        for (int i = 0, len = charlist.length; i < len; i++) {
+            char ch = charlist[i];
+            if (ch == 12288) {
+                charlist[i] = ' ';
+            }
+            if ('\uFF00' < ch && ch <= '\uFF5E') {
+                charlist[i] = (char) (ch - cha);
+            }
         }
     }
 
@@ -217,12 +225,4 @@ public class Characters {
         return Character.digit(ch, 10);
     }
 
-    public static void main(String[] args) {
-        System.out.println(halfWidth2fullWidth("abc123 d2"));
-        System.out.println(halfWidth2fullWidth(fullWidth2halfWidth("大成３６０＋")).equals("大成３６０＋"));
-//		System.out.println(isPunctuation(','));
-//		System.out.println(isPunctuation('，'));
-//		System.out.println(isPunctuation('`'));
-//		System.out.println(isPunctuation(' '));
-    }
 }

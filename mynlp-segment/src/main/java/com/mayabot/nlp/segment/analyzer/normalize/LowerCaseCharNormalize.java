@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.mayabot.nlp.segment.analyzer;
+package com.mayabot.nlp.segment.analyzer.normalize;
 
 import com.mayabot.nlp.segment.CharNormalize;
 import com.mayabot.nlp.utils.CharacterUtils;
@@ -25,5 +25,7 @@ public class LowerCaseCharNormalize implements CharNormalize {
     public void normal(char[] text) {
         CharacterUtils.toLowerCase(text, 0, text.length);
     }
+
+    public static final LowerCaseCharNormalize instance = new LowerCaseCharNormalize();
 
 }
