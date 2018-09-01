@@ -26,7 +26,11 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * 一个面向Reader词分析器实现。它是有状态的，不能被多线程访问.
+ * 非线程安全。
+ *
+ * 一个面向Reader词分析器实现。主要负责除了分词具体实现的，其他周边的问题。
+ * 比如大文本的断句
+ * 它是有状态的，不能被多线程访问.
  * 通过调用reset方法，可以重复使用对象
  *
  * @author jimichan
@@ -63,6 +67,7 @@ public interface MynlpAnalyzer extends Iterable<WordTerm> {
      */
     @Override
     default Iterator<WordTerm> iterator() {
+        System.out.println(this);
         return new AbstractIterator<WordTerm>() {
             @Override
             protected WordTerm computeNext() {

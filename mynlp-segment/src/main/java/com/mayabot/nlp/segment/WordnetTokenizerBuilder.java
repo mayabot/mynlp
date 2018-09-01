@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.mayabot.nlp.Mynlp;
 import com.mayabot.nlp.Mynlps;
+import com.mayabot.nlp.segment.common.VertexHelper;
 import com.mayabot.nlp.segment.crf.CrfBaseSegment;
 import com.mayabot.nlp.segment.recognition.OptimizeWordPathProcessor;
 import com.mayabot.nlp.segment.recognition.org.OrganizationRecognition;
@@ -35,6 +36,8 @@ public class WordnetTokenizerBuilder implements MynlpTokenizerBuilder {
 
     private WordnetInitializer wordnetInitializer;
 
+    private WordTermCollector termCollector = WordTermCollector.bestPath;
+
     private ArrayList<WordpathProcessor> pipeLine = Lists.newArrayList();
 
     private static class Pair {
@@ -58,26 +61,25 @@ public class WordnetTokenizerBuilder implements MynlpTokenizerBuilder {
     @Override
     public MynlpTokenizer build() {
 
-        final WordnetTokenizer tokenizer = mynlp.getInstance(WordnetTokenizer.class);
-
         // 1. bestPathComputer
         if (bestPathComputer == null) {
             bestPathComputer = mynlp.getInstance(ViterbiBestPathComputer.class);
         }
 
-        tokenizer.bestPathComputer = bestPathComputer;
-
-
         // 2. WordnetInitializer
         if (wordnetInitializer == null) {
             coreDict();
         }
-        tokenizer.wordnetInitializer = wordnetInitializer;
 
-        tokenizer.pipeline = prepare(pipeLine);
+        WordpathProcessor[] pipeline = prepare(pipeLine).toArray(new WordpathProcessor[0]);
 
+        final WordnetTokenizer tokenizer = new WordnetTokenizer(
+                wordnetInitializer,
+                pipeline,
+                bestPathComputer
+                , termCollector,
+                mynlp.getInstance(VertexHelper.class));
 
-        tokenizer.check();
         return tokenizer;
     }
 
