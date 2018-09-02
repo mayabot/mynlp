@@ -19,12 +19,12 @@ package com.mayabot.nlp.segment.analyzer;
 import com.google.common.base.Charsets;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.io.Resources;
-import com.mayabot.nlp.segment.MynlpAnalyzer;
 import com.mayabot.nlp.segment.WordTerm;
 
 import java.net.URL;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
@@ -32,7 +32,8 @@ import java.util.stream.Collectors;
  *
  * @author jimichan
  */
-public class StopwordFilter extends MynlpFilter {
+public class StopwordFilter extends FilterdWordTermGenerator implements Predicate<WordTerm>,
+        com.google.common.base.Predicate<WordTerm> {
 
     static Set<String> defaultSet = ImmutableSet.of();
 
@@ -47,21 +48,24 @@ public class StopwordFilter extends MynlpFilter {
 
     Set<String> stopWords;
 
-    public StopwordFilter(MynlpAnalyzer myAnalyzer) {
-        super(myAnalyzer);
-        stopWords = new HashSet<>();
-        stopWords.addAll(defaultSet);
-    }
+    public StopwordFilter(WordTermGenerator base, Set<String> stopwords) {
+        super(base);
+        this.stopWords = stopWords;
 
-
-    public StopwordFilter(MynlpAnalyzer myAnalyzer, Set<String> stopwords) {
-        super(myAnalyzer);
         stopWords = new HashSet<>();
         if (stopwords == null) {
             stopWords.addAll(defaultSet);
         } else {
             this.stopWords.addAll(stopwords);
         }
+    }
+
+    public StopwordFilter(WordTermGenerator base) {
+        this(base, null);
+    }
+
+    public Set<String> getStopWords() {
+        return stopWords;
     }
 
     public void add(String word) {
@@ -72,9 +76,14 @@ public class StopwordFilter extends MynlpFilter {
         stopWords.remove(word);
     }
 
+
     @Override
-    boolean accept(WordTerm term) {
+    public boolean apply(WordTerm term) {
         return !stopWords.contains(term.word);
     }
 
+    @Override
+    public boolean test(WordTerm term) {
+        return !stopWords.contains(term.word);
+    }
 }

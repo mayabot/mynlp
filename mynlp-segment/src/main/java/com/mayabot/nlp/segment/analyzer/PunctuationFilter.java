@@ -16,7 +16,6 @@
 
 package com.mayabot.nlp.segment.analyzer;
 
-import com.mayabot.nlp.segment.MynlpAnalyzer;
 import com.mayabot.nlp.segment.WordTerm;
 import com.mayabot.nlp.utils.Characters;
 
@@ -24,14 +23,20 @@ import com.mayabot.nlp.utils.Characters;
  * 过滤标点符号
  * @author jimichan
  */
-public class PunctuationFilter extends MynlpFilter {
+public class PunctuationFilter extends FilterdWordTermGenerator implements
+        com.google.common.base.Predicate<WordTerm> {
+
+    public PunctuationFilter(WordTermGenerator base) {
+        super(base);
+    }
 
     @Override
-    boolean accept(WordTerm term) {
+    public boolean test(WordTerm term) {
         return !Characters.isPunctuation(term.word.charAt(0));
     }
 
-    public PunctuationFilter(MynlpAnalyzer myAnalyzer) {
-        super(myAnalyzer);
+    @Override
+    public boolean apply(WordTerm term) {
+        return !Characters.isPunctuation(term.word.charAt(0));
     }
 }
