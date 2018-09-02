@@ -56,16 +56,20 @@ public class WordnetTokenizer implements MynlpTokenizer {
 
     private VertexHelper vertexHelper;
 
+    private CharNormalize[] charNormalizes;
+
     WordnetTokenizer(WordnetInitializer initer,
                      WordpathProcessor[] pipeline,
                      BestPathComputer bestPathComputer,
                      WordTermCollector termCollector,
+                     List<CharNormalize> charNormalizes,
                      VertexHelper vertexHelper) {
         this.initer = initer;
         this.pipeline = pipeline;
         this.bestPathComputer = bestPathComputer;
         this.collector = termCollector;
         this.vertexHelper = vertexHelper;
+        this.charNormalizes = charNormalizes.toArray(new CharNormalize[0]);
 
         Preconditions.checkNotNull(bestPathComputer);
         Preconditions.checkNotNull(this.initer);
@@ -75,6 +79,12 @@ public class WordnetTokenizer implements MynlpTokenizer {
 
     @Override
     public void token(char[] text, List<WordTerm> target) {
+
+        if (charNormalizes != null) {
+            for (CharNormalize normalize : charNormalizes) {
+                normalize.normal(text);
+            }
+        }
 
         if (!target.isEmpty()) {
             target.clear();
