@@ -1,13 +1,15 @@
 package com.mayabot.mylp.lucene;
 
-import com.mayabot.nlp.segment.MynlpAnalyzer;
+import com.mayabot.nlp.segment.MynlpTokenizer;
 import com.mayabot.nlp.segment.WordTerm;
+import com.mayabot.nlp.segment.analyzer.StandardMynlpAnalyzer;
 import org.apache.lucene.analysis.Tokenizer;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.analysis.tokenattributes.OffsetAttribute;
 import org.apache.lucene.analysis.tokenattributes.PositionIncrementAttribute;
 
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.LinkedList;
 
 public class MynlpLuceneTokenizer extends Tokenizer {
@@ -21,12 +23,14 @@ public class MynlpLuceneTokenizer extends Tokenizer {
     // 距离
     private final PositionIncrementAttribute positionAttr = addAttribute(PositionIncrementAttribute.class);
 
-    private MynlpAnalyzer myAnalyzer;
 
     private LinkedList<WordTerm> buffer;
+    private Iterator<WordTerm> iterator;
 
-    public MynlpLuceneTokenizer(MynlpAnalyzer tokenizer) {
-        myAnalyzer = tokenizer;
+    private StandardMynlpAnalyzer analyzer;
+
+    public MynlpLuceneTokenizer(MynlpTokenizer tokenizer) {
+        analyzer = new StandardMynlpAnalyzer(tokenizer);
     }
 
     @Override
@@ -41,11 +45,11 @@ public class MynlpLuceneTokenizer extends Tokenizer {
             return true;
         }
 
-        WordTerm term = myAnalyzer.next();
-
-        if (term == null) {
+        if (iterator.hasNext()) {
             return false;
         }
+
+        WordTerm term = iterator.next();
 
         if (term.getSubword() != null) {
             buffer = new LinkedList<>(term.getSubword());
@@ -60,14 +64,15 @@ public class MynlpLuceneTokenizer extends Tokenizer {
         return true;
     }
 
+
     /**
      * 必须重载的方法，否则在批量索引文件时将会导致文件索引失败
      */
     @Override
     public void reset() throws IOException {
         super.reset();
-        myAnalyzer.reset(this.input);
+        Iterable<WordTerm> iterable = analyzer.parse(this.input);
+        iterator = iterable.iterator();
     }
-
 
 }

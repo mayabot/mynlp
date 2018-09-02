@@ -2,7 +2,7 @@ package com.mayabot.mylp.lucene;
 
 import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
-import com.mayabot.nlp.segment.MynlpAnalyzer;
+import com.mayabot.nlp.segment.MynlpTokenizer;
 import org.apache.lucene.analysis.*;
 import org.apache.lucene.analysis.standard.StandardFilter;
 
@@ -17,6 +17,9 @@ public class MynlpLuceneAnalyzer extends StopwordAnalyzerBase {
      */
     public static CharArraySet STOP_WORDS_SET;
 
+
+    //TODO 底层已经处理了停用词逻辑，这里需要整合一下
+
     static {
         try {
             URL url = Resources.getResource("maya_data/dictionary/stopwords.txt");
@@ -28,7 +31,7 @@ public class MynlpLuceneAnalyzer extends StopwordAnalyzerBase {
 
     private CharArraySet stopWordsSet = STOP_WORDS_SET;
 
-    private MynlpAnalyzer mynlpAnalyzer;
+    private MynlpTokenizer tokenizer;
 
 
     /**
@@ -46,14 +49,16 @@ public class MynlpLuceneAnalyzer extends StopwordAnalyzerBase {
         //FIXME xxxx
     }
 
-    public MynlpLuceneAnalyzer(MynlpAnalyzer mynlpAnalyzer) {
-        this.mynlpAnalyzer = mynlpAnalyzer;
+    public MynlpLuceneAnalyzer(MynlpTokenizer mynlpTokenizer) {
+        this.tokenizer = mynlpTokenizer;
     }
 
 
     @Override
     protected TokenStreamComponents createComponents(final String fieldName) {
-        final MynlpLuceneTokenizer src = new MynlpLuceneTokenizer(mynlpAnalyzer);
+
+        final MynlpLuceneTokenizer src = new MynlpLuceneTokenizer(tokenizer);
+
         TokenStream tok = new StandardFilter(src);
         tok = new LowerCaseFilter(tok);
         if (stopWordsSet != null) {
