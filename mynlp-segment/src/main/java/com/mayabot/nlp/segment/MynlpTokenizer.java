@@ -17,10 +17,13 @@
 package com.mayabot.nlp.segment;
 
 import com.google.common.collect.Lists;
-import com.mayabot.nlp.segment.analyzer.StandardAnalyzerFactory;
+import com.mayabot.nlp.segment.analyzer.TokenWordTermGenerator;
+import com.mayabot.nlp.segment.analyzer.WordTermGeneratorIterable;
 
+import java.io.Reader;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * MynlpTokenizer切词器接口。
@@ -80,8 +83,12 @@ public interface MynlpTokenizer {
         return target;
     }
 
-    default MynlpAnalyzer standardAnalyzer() {
-        return new StandardAnalyzerFactory(this).create("");
+    default Iterable<WordTerm> parse(Reader reader) {
+        return new WordTermGeneratorIterable(new TokenWordTermGenerator(reader, this));
+    }
+
+    default Stream<WordTerm> stream(Reader reader) {
+        return new WordTermGeneratorIterable(new TokenWordTermGenerator(reader, this)).stream();
     }
 
 }

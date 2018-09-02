@@ -14,27 +14,23 @@
  * limitations under the License.
  */
 
-package com.mayabot.nlp.segment.analyzer;
+package com.mayabot.nlp.segment.common.normalize;
 
-import com.mayabot.nlp.segment.MynlpAnalyzer;
-
-import java.io.Reader;
+import com.mayabot.nlp.segment.CharNormalize;
+import com.mayabot.nlp.utils.CharacterUtils;
 
 /**
+ * 转换为大写字母
  *
+ * @author jimichan
  */
-public abstract class AbstractAnalyzerWraper implements MynlpAnalyzer {
-
-    protected MynlpAnalyzer analyzer;
-
-    public AbstractAnalyzerWraper(MynlpAnalyzer analyzer) {
-        this.analyzer = analyzer;
-    }
+public class UpperCaseCharNormalize implements CharNormalize {
 
     @Override
-    public MynlpAnalyzer reset(Reader reader) {
-        return analyzer.reset(reader);
+    public void normal(char[] text) {
+        CharacterUtils.toUpperCase(text, 0, text.length);
     }
 
+    public static final UpperCaseCharNormalize instance = new UpperCaseCharNormalize();
 
 }

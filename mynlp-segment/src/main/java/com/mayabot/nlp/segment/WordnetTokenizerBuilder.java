@@ -5,6 +5,8 @@ import com.google.common.collect.Sets;
 import com.mayabot.nlp.Mynlp;
 import com.mayabot.nlp.Mynlps;
 import com.mayabot.nlp.segment.common.VertexHelper;
+import com.mayabot.nlp.segment.common.normalize.Full2halfCharNormalize;
+import com.mayabot.nlp.segment.common.normalize.LowerCaseCharNormalize;
 import com.mayabot.nlp.segment.crf.CrfBaseSegment;
 import com.mayabot.nlp.segment.recognition.OptimizeWordPathProcessor;
 import com.mayabot.nlp.segment.recognition.org.OrganizationRecognition;
@@ -39,6 +41,14 @@ public class WordnetTokenizerBuilder implements MynlpTokenizerBuilder {
     private WordTermCollector termCollector = WordTermCollector.bestPath;
 
     private ArrayList<WordpathProcessor> pipeLine = Lists.newArrayList();
+
+    /**
+     * 字符处理器,默认就有最小化和全角半角化
+     */
+    private List<CharNormalize> charNormalizes = Lists.newArrayList(
+            LowerCaseCharNormalize.instance,
+            Full2halfCharNormalize.instace
+    );
 
     private static class Pair {
         Class clazz;
@@ -78,10 +88,12 @@ public class WordnetTokenizerBuilder implements MynlpTokenizerBuilder {
                 pipeline,
                 bestPathComputer
                 , termCollector,
+                this.charNormalizes,
                 mynlp.getInstance(VertexHelper.class));
 
         return tokenizer;
     }
+
 
 
     public <T> WordnetTokenizerBuilder config(Class<T> clazz, Consumer<T> listener) {
@@ -132,6 +144,16 @@ public class WordnetTokenizerBuilder implements MynlpTokenizerBuilder {
         });
 
         return pipeLine;
+    }
+
+    public WordnetTokenizerBuilder addCharNormalizes(CharNormalize charNormalize) {
+        this.charNormalizes.add(charNormalize);
+        return this;
+    }
+
+    public WordnetTokenizerBuilder removeCharNormalizes(Class<CharNormalize> clazz) {
+        this.charNormalizes.removeIf(obj -> clazz.isAssignableFrom(obj.getClass()) || obj.getClass().equals(clazz));
+        return this;
     }
 
     public BestPathComputer getBestPathComputer() {
