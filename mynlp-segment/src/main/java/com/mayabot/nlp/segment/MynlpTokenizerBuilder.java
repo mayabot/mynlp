@@ -11,4 +11,5 @@ public interface MynlpTokenizerBuilder {
      * @return
      */
     MynlpTokenizer build();
+
 }
