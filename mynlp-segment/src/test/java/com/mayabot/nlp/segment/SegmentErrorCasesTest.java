@@ -29,7 +29,7 @@ public class SegmentErrorCasesTest {
 //        });
         for (String s : lines) {
             System.out.println(s);
-            System.out.println(tokenizer.tokenToList(s));
+            System.out.println(tokenizer.tokenToStringList(s));
         }
 
     }

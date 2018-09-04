@@ -16,6 +16,17 @@
 
 package com.mayabot.nlp.segment;
 
+/**
+ * 字符规范化接口
+ *
+ * @author jimichan
+ */
 public interface CharNormalize {
+
+    /**
+     * 对char数组里面的字符进行规范化操作，常见的有最小化和宽体字符处理
+     * @param text
+     */
     void normal(char[] text);
+
 }

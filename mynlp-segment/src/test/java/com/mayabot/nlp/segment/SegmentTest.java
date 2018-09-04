@@ -2,8 +2,6 @@ package com.mayabot.nlp.segment;
 
 import org.junit.Test;
 
-import java.io.StringReader;
-
 public class SegmentTest {
 
     String text1 = "词汇缓存即词汇表缓存，是Deeplearning4j用于处理TF-IDF、词向量和某些信息提取方法等自然语言分析任务的一种通用机制。词汇缓存的作用是充当文本向量化的一站式存储组件，保存词袋和词向量等模型通常需要使用的一些信息。\n" +
@@ -17,7 +15,7 @@ public class SegmentTest {
     public void test() {
         MynlpTokenizer mynlpTokenizer = MynlpSegments.nlpTokenizer();
 
-        Iterable<WordTerm> parse = mynlpTokenizer.parse(new StringReader(text1));
+        Iterable<WordTerm> parse = mynlpTokenizer.tokenToTermList(text1);
 
 
         parse.forEach(System.out::println);
@@ -30,7 +28,7 @@ public class SegmentTest {
     public void test2(){
         MynlpTokenizer mynlpTokenizer = MynlpSegments.nlpTokenizer();
 
-        System.out.println(mynlpTokenizer.tokenToList("年收入达百万"));
+        System.out.println(mynlpTokenizer.tokenToStringList("年收入达百万"));
 
     }
 }

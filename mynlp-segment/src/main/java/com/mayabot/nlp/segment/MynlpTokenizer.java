@@ -17,19 +17,19 @@
 package com.mayabot.nlp.segment;
 
 import com.google.common.collect.Lists;
-import com.mayabot.nlp.segment.analyzer.TokenWordTermGenerator;
-import com.mayabot.nlp.segment.analyzer.WordTermGeneratorIterable;
 
-import java.io.Reader;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.function.Consumer;
 
 /**
- * MynlpTokenizer切词器接口。
- * MynlpTokenizer只需要关心把一句话或一小段有限的文本分词完成,切词器的实现类是个无状态，所以可以多线程安全，同一个配置只需要一个实例共享使用。
+ * MynlpTokenizer切词器接口,只需要关心把一句话或一小段有限的文本分词完成.
+ * 切词器的实现类是个无状态，所以可以多线程安全，同一个配置只需要一个实例共享使用。
  * 所以一个固定的算法的切分,只需要一个实例。
+ * 通过MynlpTokenizerBuilder来创建MynlpTokenizer对象。
  *
+ * @see WordnetTokenizer
+ * @see MynlpTokenizerBuilder
+ * @see WordnetTokenizerBuilder
  * @author jimichan
  */
 public interface MynlpTokenizer {
@@ -37,11 +37,12 @@ public interface MynlpTokenizer {
     /**
      * 对text进行分词，结构保存在List<WordTerm>,
      * token不会对target清空，只会add。
-     * @param text
-     * @param target 结果保存在list里面，这个target如果重复使用的，那么会自动clear
+     *
+     * @param text 分词的文本
+     * @param consumer 对WordTerm对象消费者
      * @return
      */
-    void token(char[] text, List<WordTerm> target);
+    void token(char[] text, Consumer<WordTerm> consumer);
 
     /**
      * 对text是String字符串的一个便捷包装.
@@ -49,7 +50,7 @@ public interface MynlpTokenizer {
      * @param text
      * @param target
      */
-    default void token(String text, List<WordTerm> target) {
+    default void token(String text, Consumer<WordTerm> target) {
         token(text.toCharArray(), target);
     }
 
@@ -59,13 +60,15 @@ public interface MynlpTokenizer {
      * @param text
      * @return
      */
-    default List<String> tokenToList(String text) {
+    default List<String> tokenToStringList(String text) {
         if (text == null || text.isEmpty()) {
             return Lists.newArrayListWithCapacity(1);
         }
-        List<WordTerm> target = Lists.newArrayListWithExpectedSize(text.length() / 2);
-        token(text, target);
-        return target.stream().map(x -> x.word).collect(Collectors.toList());
+        List<String> target = Lists.newArrayListWithExpectedSize(text.length() / 2);
+
+        token(text.toCharArray(), x -> target.add(x.word));
+
+        return target;
     }
 
     /**
@@ -79,16 +82,9 @@ public interface MynlpTokenizer {
             return Lists.newArrayListWithCapacity(1);
         }
         List<WordTerm> target = Lists.newArrayListWithExpectedSize(text.length() / 2);
-        token(text, target);
+
+        token(text.toCharArray(), x -> target.add(x));
         return target;
-    }
-
-    default Iterable<WordTerm> parse(Reader reader) {
-        return new WordTermGeneratorIterable(new TokenWordTermGenerator(reader, this));
-    }
-
-    default Stream<WordTerm> stream(Reader reader) {
-        return new WordTermGeneratorIterable(new TokenWordTermGenerator(reader, this)).stream();
     }
 
 }
