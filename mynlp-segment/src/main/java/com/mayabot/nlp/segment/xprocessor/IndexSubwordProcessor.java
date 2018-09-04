@@ -33,6 +33,7 @@ import java.util.Iterator;
  * 数量词的合成词需要定制切分
  * <p>
  * 是不是每种情况都要切分出来。
+ * @author jimichan
  */
 public class IndexSubwordProcessor extends BaseMynlpComponent implements WordpathProcessor {
 
@@ -62,10 +63,8 @@ public class IndexSubwordProcessor extends BaseMynlpComponent implements Wordpat
                 while (small != null) {
                     try {
 
-                        if (small.length > 1 && i + small.length() <= lastIndex && small != word) { //大于1的词，并且在范围内
-
-                            // System.out.println(small.realWord());
-
+                        if (small.length > 1 && i + small.length() <= lastIndex && small != word) {
+                            //大于1的词，并且在范围内
                             word.addSubWord(small);
                         }
 

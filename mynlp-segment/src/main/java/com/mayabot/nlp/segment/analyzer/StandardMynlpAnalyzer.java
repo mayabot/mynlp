@@ -1,6 +1,5 @@
 package com.mayabot.nlp.segment.analyzer;
 
-import com.mayabot.nlp.segment.MynlpSegments;
 import com.mayabot.nlp.segment.MynlpTokenizer;
 
 /**
@@ -18,7 +17,7 @@ public class StandardMynlpAnalyzer extends BaseMynlpAnalyzer {
 
 
     public StandardMynlpAnalyzer() {
-        this(MynlpSegments.nlpTokenizer());
+        this(MynlpTokenizer.nlpTokenizer());
     }
 
     @Override

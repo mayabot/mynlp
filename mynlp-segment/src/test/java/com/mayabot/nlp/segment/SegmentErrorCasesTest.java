@@ -7,7 +7,7 @@ import org.junit.Test;
  */
 public class SegmentErrorCasesTest {
 
-    MynlpTokenizer tokenizer = MynlpSegments.nlpTokenizer();
+    MynlpTokenizer tokenizer = MynlpTokenizer.nlpTokenizer();
 
     @Test
     public void test1() {

@@ -2,7 +2,6 @@ package com.mayabot.nlp.cli;
 
 import com.mayabot.nlp.Mynlp;
 import com.mayabot.nlp.Mynlps;
-import com.mayabot.nlp.segment.MynlpSegments;
 import com.mayabot.nlp.segment.MynlpTokenizer;
 import org.apache.commons.cli.*;
 
@@ -43,7 +42,7 @@ public class SegmentCmdRunner implements CmdRunner {
 
         Mynlp mynlp = Mynlps.get();
 
-        MynlpTokenizer mynlpTokenizer = MynlpSegments.nlpTokenizer();
+        MynlpTokenizer mynlpTokenizer = MynlpTokenizer.nlpTokenizer();
         line.getArgList().forEach(x->{
             System.out.println(mynlpTokenizer.tokenToStringList(x));
         });

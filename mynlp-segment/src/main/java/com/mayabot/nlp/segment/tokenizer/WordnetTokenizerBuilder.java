@@ -1,24 +1,16 @@
-package com.mayabot.nlp.segment;
+package com.mayabot.nlp.segment.tokenizer;
 
+import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.mayabot.nlp.Mynlp;
 import com.mayabot.nlp.Mynlps;
+import com.mayabot.nlp.segment.*;
 import com.mayabot.nlp.segment.common.VertexHelper;
 import com.mayabot.nlp.segment.common.normalize.Full2halfCharNormalize;
 import com.mayabot.nlp.segment.common.normalize.LowerCaseCharNormalize;
-import com.mayabot.nlp.segment.crf.CrfBaseSegment;
 import com.mayabot.nlp.segment.recognition.OptimizeWordPathProcessor;
-import com.mayabot.nlp.segment.recognition.org.OrganizationRecognition;
-import com.mayabot.nlp.segment.recognition.personname.PersonRecognition;
-import com.mayabot.nlp.segment.recognition.place.PlaceRecognition;
 import com.mayabot.nlp.segment.wordnet.BestPathComputer;
-import com.mayabot.nlp.segment.wordnet.ViterbiBestPathComputer;
-import com.mayabot.nlp.segment.wordnetiniter.AtomSegmenter;
-import com.mayabot.nlp.segment.wordnetiniter.CombineWordnetInit;
-import com.mayabot.nlp.segment.wordnetiniter.ConvertAbstractWord;
-import com.mayabot.nlp.segment.wordnetiniter.CoreDictionaryOriginalSegment;
-import com.mayabot.nlp.segment.xprocessor.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,12 +28,6 @@ public class WordnetTokenizerBuilder implements MynlpTokenizerBuilder {
 
     private BestPathComputer bestPathComputer;
 
-    private WordnetInitializer wordnetInitializer;
-
-    private WordTermCollector termCollector = WordTermCollector.bestPath;
-
-    private ArrayList<WordpathProcessor> pipeLine = Lists.newArrayList();
-
     /**
      * 字符处理器,默认就有最小化和全角半角化
      */
@@ -50,15 +36,12 @@ public class WordnetTokenizerBuilder implements MynlpTokenizerBuilder {
             Full2halfCharNormalize.instace
     );
 
-    private static class Pair {
-        Class clazz;
-        Consumer consumer;
+    private List<WordnetInitializer> wordnetInitializer = Lists.newArrayList();
 
-        public Pair(Class clazz, Consumer consumer) {
-            this.clazz = clazz;
-            this.consumer = consumer;
-        }
-    }
+    private WordTermCollector termCollector = WordTermCollector.bestPath;
+
+    private ArrayList<WordpathProcessor> pipeLine = Lists.newArrayList();
+
 
     private List<Pair> configListener = Lists.newArrayList();
 
@@ -72,14 +55,15 @@ public class WordnetTokenizerBuilder implements MynlpTokenizerBuilder {
     public MynlpTokenizer build() {
 
         // 1. bestPathComputer
-        if (bestPathComputer == null) {
-            bestPathComputer = mynlp.getInstance(ViterbiBestPathComputer.class);
-        }
+        Preconditions.checkNotNull(bestPathComputer);
 
         // 2. WordnetInitializer
-        if (wordnetInitializer == null) {
-            coreDict();
-        }
+        Preconditions.checkState(!wordnetInitializer.isEmpty());
+
+
+        // 3.termCollector
+        Preconditions.checkNotNull(termCollector);
+
 
         WordpathProcessor[] pipeline = prepare(pipeLine).toArray(new WordpathProcessor[0]);
 
@@ -95,6 +79,10 @@ public class WordnetTokenizerBuilder implements MynlpTokenizerBuilder {
     }
 
 
+    public WordnetTokenizerBuilder setTermCollector(WordTermCollector termCollector) {
+        this.termCollector = termCollector;
+        return this;
+    }
 
     public <T> WordnetTokenizerBuilder config(Class<T> clazz, Consumer<T> listener) {
         configListener.add(new Pair(clazz, listener));
@@ -107,10 +95,6 @@ public class WordnetTokenizerBuilder implements MynlpTokenizerBuilder {
 
 
     private ArrayList<WordpathProcessor> prepare(ArrayList<WordpathProcessor> pipeLine) {
-
-        if (pipeLine.isEmpty()) {
-            setDefaultPipeline();
-        }
 
         config(OptimizeProcessor.class, p -> {
             if (disabledComponentSet.contains(p.getClass())) {
@@ -151,7 +135,7 @@ public class WordnetTokenizerBuilder implements MynlpTokenizerBuilder {
         return this;
     }
 
-    public WordnetTokenizerBuilder removeCharNormalizes(Class<CharNormalize> clazz) {
+    public WordnetTokenizerBuilder removeCharNormalizes(Class<? extends CharNormalize> clazz) {
         this.charNormalizes.removeIf(obj -> clazz.isAssignableFrom(obj.getClass()) || obj.getClass().equals(clazz));
         return this;
     }
@@ -167,24 +151,6 @@ public class WordnetTokenizerBuilder implements MynlpTokenizerBuilder {
 
     public WordnetTokenizerBuilder setBestPathComputer(Class<? extends BestPathComputer> clazz) {
         this.bestPathComputer = mynlp.getInstance(clazz);
-        return this;
-    }
-
-    public WordnetTokenizerBuilder coreDict() {
-        wordnetInitializer = new CombineWordnetInit(
-                mynlp.getInstance(CoreDictionaryOriginalSegment.class),
-                mynlp.getInstance(AtomSegmenter.class),
-                mynlp.getInstance(ConvertAbstractWord.class)
-        );
-        return this;
-    }
-
-    public WordnetTokenizerBuilder crf() {
-        wordnetInitializer = new CombineWordnetInit(
-                mynlp.getInstance(CrfBaseSegment.class),
-                mynlp.getInstance(AtomSegmenter.class),
-                mynlp.getInstance(ConvertAbstractWord.class)
-        );
         return this;
     }
 
@@ -219,22 +185,32 @@ public class WordnetTokenizerBuilder implements MynlpTokenizerBuilder {
     }
 
 
-    private void setDefaultPipeline() {
-        addLastProcessor(CustomDictionaryProcessor.class);
-        addLastProcessor(MergeNumberQuantifierPreProcessor.class);
-        addLastProcessor(MergeNumberAndLetterPreProcessor.class);
-        addLastProcessor(CommonPatternProcessor.class);
+    public WordnetTokenizerBuilder addWordnetInitializer(WordnetInitializer... initializers) {
 
-        addLastOptimizeProcessorClass(Lists.newArrayList(
-                PersonRecognition.class,
-                PlaceRecognition.class,
-                OrganizationRecognition.class));
+        for (WordnetInitializer initializer : initializers) {
+            this.wordnetInitializer.add(initializer);
+        }
 
-
-        addLastProcessor(CorrectionProcessor.class);
-        addLastProcessor(PartOfSpeechTaggingComputerProcessor.class);
+        return this;
     }
 
+    public WordnetTokenizerBuilder setWordnetInitializer(List<WordnetInitializer> initializers) {
+
+        wordnetInitializer = initializers;
+
+        return this;
+    }
+
+
+    private static class Pair {
+        Class clazz;
+        Consumer consumer;
+
+        public Pair(Class clazz, Consumer consumer) {
+            this.clazz = clazz;
+            this.consumer = consumer;
+        }
+    }
 
     public ArrayList<WordpathProcessor> getPipeLine() {
         return pipeLine;
