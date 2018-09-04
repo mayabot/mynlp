@@ -8,7 +8,7 @@ import java.util.List;
 public class CrfSegmentTest {
     @Test
     public void test() {
-        MynlpTokenizer tokenizer = MynlpSegments.crfTokenizer();
+        MynlpTokenizer tokenizer = MynlpTokenizer.crfTokenizer();
 
         List<WordTerm> strings = tokenizer.tokenToTermList("新华社北京8月27日电（记者 赵超、安蓓）中共中央总书记、国家主席、中央军委主席习近平27日在北京人民大会堂出席推进“一带一路”建设工作5周年座谈会并发表重要讲话强调，共建“一带一路”顺应了全球治理体系变革的内在要求，彰显了同舟共济、权责共担的命运共同体意识，为完善全球治理体系变革提供了新思路新方案。我们要坚持对话协商、共建共享、合作共赢、交流互鉴，同沿线国家谋求合作的最大公约数，推动各国加强政治互信、经济互融、人文互通，一步一个脚印推进实施，一点一滴抓出成果，推动共建“一带一路”走深走实，造福沿线国家人民，推动构建人类命运共同体。\n" +
                 "\n" +

@@ -35,8 +35,7 @@ import com.mayabot.nlp.utils.Characters;
  * 寻找wordnet中的连续空白行, 识别出字符串、数字（浮点数）、等固定模式。
  * 通过FST实现，可以自由扩展模式。
  * 主要作用把粗分之间的空格搞定
- * 做原子分词用
- * 填充他们
+ * 做原子分词用填充他们
  *
  * @author jimichan
  */
