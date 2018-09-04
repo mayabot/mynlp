@@ -1,15 +1,19 @@
 package com.mayabot.nlp.segment.analyzer;
 
-import com.google.common.collect.Lists;
 import com.mayabot.nlp.segment.MynlpTokenizer;
 import com.mayabot.nlp.segment.WordTerm;
+import com.mayabot.nlp.utils.FastCharReader;
 import com.mayabot.nlp.utils.ParagraphReader;
 import com.mayabot.nlp.utils.ParagraphReaderSmart;
+import com.mayabot.nlp.utils.ParagraphReaderString;
 
 import java.io.IOException;
 import java.io.Reader;
-import java.util.ArrayList;
+import java.util.LinkedList;
 
+/**
+ * @author jimichan
+ */
 public class TokenWordTermGenerator implements WordTermGenerator {
 
     private MynlpTokenizer tokenizer;
@@ -26,9 +30,7 @@ public class TokenWordTermGenerator implements WordTermGenerator {
      */
     private int lastTextLength = -1;
 
-    private MynlpTermBuffer buffer = new MynlpTermBuffer();
-
-    private Reader reader;
+    private LinkedList<WordTerm> buffer = new LinkedList();
 
     /**
      * 构造函数
@@ -41,6 +43,13 @@ public class TokenWordTermGenerator implements WordTermGenerator {
         this.tokenizer = tokenizer;
     }
 
+    public TokenWordTermGenerator(String text, MynlpTokenizer tokenizer) {
+        this.setString(text);
+        this.tokenizer = tokenizer;
+    }
+
+    long time = 0;
+
     /**
      * 返回下一个词项，如果到达最后的结果，那么返回null
      *
@@ -49,11 +58,12 @@ public class TokenWordTermGenerator implements WordTermGenerator {
     @Override
     public WordTerm nextWord() {
 
-        if (!buffer.hasRemain()) {
+        if (buffer.isEmpty()) {
 
             String paragraph;
             try {
                 paragraph = paragraphReader.next();
+
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -72,13 +82,8 @@ public class TokenWordTermGenerator implements WordTermGenerator {
 
                 char[] text = paragraph.toCharArray();
 
-                //如果buffer太大了就
-                if (buffer.list.size() > 5000) {
-                    buffer.list = Lists.newArrayListWithExpectedSize(256);
-                }
-                tokenizer.token(text, this.buffer.list);
+                tokenizer.token(text, term -> this.buffer.add(term));
 
-                buffer.reset();
             }
         }
 
@@ -95,46 +100,19 @@ public class TokenWordTermGenerator implements WordTermGenerator {
         return term;
     }
 
-    static private class MynlpTermBuffer {
-        ArrayList<WordTerm> list = Lists.newArrayListWithExpectedSize(256);
-        int po = 0;
-        int cap = 0;
-
-        public boolean hasRemain() {
-            return po < cap;
-        }
-
-        public WordTerm pop() {
-            if (po >= cap) {
-                return null;
-            }
-            return list.get(po++);
-        }
-
-        public void reset() {
-            cap = list.size();
-            po = 0;
-        }
-    }
-
     private void setReader(Reader reader) {
-        this.reader = reader;
         //智能分段器
-        this.paragraphReader = new ParagraphReaderSmart(reader);
+        this.paragraphReader = new ParagraphReaderSmart(
+                new FastCharReader(reader, 128),
+                1024);
         baseOffset = 0;
         lastTextLength = -1;
     }
 
-//    public void close() {
-////        if (reader != null) {
-////            try {
-////                reader.close();
-////            } catch (IOException e) {
-////                throw new RuntimeException("", e);
-////            }
-////        }
-//        tokenizer = null;
-//        reader = null;
-//        this.paragraphReader = null;
-//    }
+    private void setString(String text) {
+        this.paragraphReader = new ParagraphReaderString(text);
+        baseOffset = 0;
+        lastTextLength = -1;
+    }
+
 }

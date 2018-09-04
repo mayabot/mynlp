@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
  *
  * @author jimichan
  */
-public class StopwordFilter extends FilterdWordTermGenerator implements Predicate<WordTerm>,
+public class StopwordFilter extends FilterWordTermGenerator implements Predicate<WordTerm>,
         com.google.common.base.Predicate<WordTerm> {
 
     static Set<String> defaultSet = ImmutableSet.of();

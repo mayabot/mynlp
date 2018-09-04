@@ -23,7 +23,7 @@ import com.mayabot.nlp.utils.Characters;
  * 过滤标点符号
  * @author jimichan
  */
-public class PunctuationFilter extends FilterdWordTermGenerator implements
+public class PunctuationFilter extends FilterWordTermGenerator implements
         com.google.common.base.Predicate<WordTerm> {
 
     public PunctuationFilter(WordTermGenerator base) {

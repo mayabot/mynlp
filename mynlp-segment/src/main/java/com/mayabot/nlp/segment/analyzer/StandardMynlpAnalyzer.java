@@ -21,7 +21,6 @@ public class StandardMynlpAnalyzer extends BaseMynlpAnalyzer {
         this(MynlpSegments.nlpTokenizer());
     }
 
-
     @Override
     protected WordTermGenerator warp(WordTermGenerator base) {
         base = new PunctuationFilter(base);

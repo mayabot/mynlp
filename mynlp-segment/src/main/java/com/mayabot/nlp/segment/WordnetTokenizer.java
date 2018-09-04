@@ -26,6 +26,7 @@ import com.mayabot.nlp.segment.wordnet.Wordnet;
 import com.mayabot.nlp.segment.wordnet.Wordpath;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * 一个基于词图的流水线 要求里面所有的组件都是无状态的，线程安全的类
@@ -78,16 +79,12 @@ public class WordnetTokenizer implements MynlpTokenizer {
     }
 
     @Override
-    public void token(char[] text, List<WordTerm> target) {
+    public void token(char[] text, Consumer<WordTerm> consumer) {
 
         if (charNormalizes != null) {
             for (CharNormalize normalize : charNormalizes) {
                 normalize.normal(text);
             }
-        }
-
-        if (!target.isEmpty()) {
-            target.clear();
         }
 
         // 处理为空的特殊情况
@@ -113,7 +110,7 @@ public class WordnetTokenizer implements MynlpTokenizer {
             }
         }
 
-        collector.collect(wordnet, wordPath, target);
+        collector.collect(wordnet, wordPath, consumer);
     }
 
 
