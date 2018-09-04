@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-package com.mayabot.nlp.segment;
+package com.mayabot.nlp.segment.tokenizer;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
+import com.mayabot.nlp.segment.*;
 import com.mayabot.nlp.segment.common.VertexHelper;
 import com.mayabot.nlp.segment.wordnet.BestPathComputer;
 import com.mayabot.nlp.segment.wordnet.Wordnet;
@@ -44,7 +45,7 @@ public class WordnetTokenizer implements MynlpTokenizer {
     /**
      * 当wordnet创建后，调用这些处理器来填充里面的节点
      */
-    private WordnetInitializer initer;
+    private WordnetInitializer[] initer;
 
     /**
      * 处理器网络
@@ -59,13 +60,13 @@ public class WordnetTokenizer implements MynlpTokenizer {
 
     private CharNormalize[] charNormalizes;
 
-    WordnetTokenizer(WordnetInitializer initer,
+    WordnetTokenizer(List<WordnetInitializer> initer,
                      WordpathProcessor[] pipeline,
                      BestPathComputer bestPathComputer,
                      WordTermCollector termCollector,
                      List<CharNormalize> charNormalizes,
                      VertexHelper vertexHelper) {
-        this.initer = initer;
+        this.initer = initer.toArray(new WordnetInitializer[0]);
         this.pipeline = pipeline;
         this.bestPathComputer = bestPathComputer;
         this.collector = termCollector;
@@ -97,8 +98,9 @@ public class WordnetTokenizer implements MynlpTokenizer {
         wordnet.getBeginRow().put(vertexHelper.newBegin());
         wordnet.getEndRow().put(vertexHelper.newEnd());
 
-        initer.init(wordnet);
-
+        for (WordnetInitializer initializer : initer) {
+            initializer.init(wordnet);
+        }
 
         //选择一个路径出来(第一次不严谨的分词结果)
         Wordpath wordPath = bestPathComputer.select(wordnet);

@@ -17,7 +17,6 @@
 package com.mayabot.nlp.segment.recognition.personname;
 
 import com.google.inject.Inject;
-import com.google.inject.Injector;
 import com.mayabot.nlp.segment.OptimizeProcessor;
 import com.mayabot.nlp.segment.common.BaseMynlpComponent;
 import com.mayabot.nlp.segment.common.EnumFreqPair;
@@ -42,10 +41,6 @@ import static com.mayabot.nlp.segment.recognition.personname.NRTag.A;
  */
 
 public class PersonRecognition extends BaseMynlpComponent implements OptimizeProcessor {
-
-    public static PersonRecognition build(Injector injector) {
-        return injector.getInstance(PersonRecognition.class);
-    }
 
     private PersonDictionary personDictionary;
 

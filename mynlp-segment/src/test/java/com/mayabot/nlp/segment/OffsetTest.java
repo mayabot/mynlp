@@ -20,7 +20,7 @@ public class OffsetTest {
 
     @Test
     public void test() {
-        List<WordTerm> wordTerms = MynlpSegments.nlpTokenizer().tokenToTermList(text);
+        List<WordTerm> wordTerms = MynlpTokenizer.nlpTokenizer().tokenToTermList(text);
 
 
         long count = wordTerms.stream().

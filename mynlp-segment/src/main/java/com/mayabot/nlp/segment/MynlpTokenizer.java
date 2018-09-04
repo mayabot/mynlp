@@ -17,6 +17,10 @@
 package com.mayabot.nlp.segment;
 
 import com.google.common.collect.Lists;
+import com.mayabot.nlp.segment.tokenizer.CoreTokenizerBuilder;
+import com.mayabot.nlp.segment.tokenizer.CrfTokenizerBuilder;
+import com.mayabot.nlp.segment.tokenizer.WordnetTokenizer;
+import com.mayabot.nlp.segment.tokenizer.WordnetTokenizerBuilder;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -34,6 +38,14 @@ import java.util.function.Consumer;
  */
 public interface MynlpTokenizer {
 
+    static MynlpTokenizer nlpTokenizer() {
+        return new CoreTokenizerBuilder().build();
+    }
+
+    static MynlpTokenizer crfTokenizer() {
+        return new CrfTokenizerBuilder().build();
+    }
+
     /**
      * 对text进行分词，结构保存在List<WordTerm>,
      * token不会对target清空，只会add。
@@ -43,6 +55,7 @@ public interface MynlpTokenizer {
      * @return
      */
     void token(char[] text, Consumer<WordTerm> consumer);
+
 
     /**
      * 对text是String字符串的一个便捷包装.
