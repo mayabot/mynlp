@@ -2,6 +2,9 @@ package com.mayabot.nlp.segment.analyzer;
 
 import com.mayabot.nlp.segment.WordTerm;
 
+/**
+ * @author jimichan
+ */
 public interface WordTermGenerator {
 
     /**

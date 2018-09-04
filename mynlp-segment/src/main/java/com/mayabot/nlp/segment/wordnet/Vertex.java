@@ -44,6 +44,7 @@ public class Vertex extends VertexExt {
     VertexRow vertexRow;
 
     // 链表使用的相关属性
+
     Vertex next;
     Vertex prev;
 
@@ -177,12 +178,15 @@ public class Vertex extends VertexExt {
      *
      * @return
      */
+    private String realWord;
     public String realWord() {
         if (vertexRow.rowNum == -1) {
             return "";
         }
-        // TODO 这里偏移量可能有问题
-        return new String(vertexRow.wordnet.getCharArray(), vertexRow.rowNum, length);
+        if (realWord == null) {
+            realWord = new String(vertexRow.wordnet.getCharArray(), vertexRow.rowNum, length);
+        }
+        return realWord;
     }
 
     public int realWordOffset() {

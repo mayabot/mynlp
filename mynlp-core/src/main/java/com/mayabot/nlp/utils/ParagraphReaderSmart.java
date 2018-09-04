@@ -36,8 +36,9 @@ public class ParagraphReaderSmart implements ParagraphReader {
     private int expectSize;
     private int pad; //最后加塞的大小
     private int max;
+
     private static final int minPad = 128;
-    private static final int defaultExpect = 128 + 64;
+    private static final int defaultExpect = 128 + 512;
 
     /**
      * reader 要求
@@ -76,7 +77,7 @@ public class ParagraphReaderSmart implements ParagraphReader {
      */
     public static ParagraphReader prepare(String string) {
         if (string.length() < 256) {
-            return new ParagraphReaderFake(string);
+            return new ParagraphReaderString(string);
         } else {
             return new ParagraphReaderSmart(new FastCharReader(string));
         }
@@ -98,16 +99,18 @@ public class ParagraphReaderSmart implements ParagraphReader {
      */
     @Override
     public String next() throws IOException {
+
         StringBuilder result = new StringBuilder(max);
 
-        int l = -1;
+        int l;
         int count = 0;
         while (count < max && (l = fastCharReader.read()) != -1) {
             char _ch = (char) l;
             result.append(_ch);
             count++;
 
-            if (count > expectSize) { //已经超出.越到第一个
+            //已经超出.越到第一个
+            if (count > expectSize) {
                 if (Characters.isPunctuation(_ch)) {
                     break;
                 }
@@ -120,6 +123,7 @@ public class ParagraphReaderSmart implements ParagraphReader {
             offset = offset + lastlen;
             lastlen = result.length();
         }
+
 
         if (result.length() == 0) {
             return null;

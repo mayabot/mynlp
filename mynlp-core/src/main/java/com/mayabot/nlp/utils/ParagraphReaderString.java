@@ -16,23 +16,21 @@
 
 package com.mayabot.nlp.utils;
 
-import java.io.IOException;
-
 /**
  * 有的时候给定的文本很短，那么就做个假的
  *
  * @author jimichan
  */
-public class ParagraphReaderFake implements ParagraphReader {
+public class ParagraphReaderString implements ParagraphReader {
 
     private String string = null;
 
-    public ParagraphReaderFake(String string) {
+    public ParagraphReaderString(String string) {
         this.string = string;
     }
 
     @Override
-    public String next() throws IOException {
+    public String next() {
         String old = string;
         string = null;
         return old;

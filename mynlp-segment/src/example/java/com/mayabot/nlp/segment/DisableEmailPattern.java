@@ -21,7 +21,7 @@ public class DisableEmailPattern {
                 }).build();
 
 
-        List<String> list = tokenizer.tokenToList("这是我的email jimichan@gmail.com");
+        List<String> list = tokenizer.tokenToStringList("这是我的email jimichan@gmail.com");
 
         System.out.println(list);
 

@@ -4,9 +4,12 @@ import com.mayabot.nlp.segment.WordTerm;
 
 import java.util.function.Predicate;
 
-public abstract class FilterdWordTermGenerator extends BaseWordTermGeneratorWraper implements Predicate<WordTerm> {
+/**
+ * @author jimichan
+ */
+public abstract class FilterWordTermGenerator extends BaseWordTermGeneratorWraper implements Predicate<WordTerm> {
 
-    public FilterdWordTermGenerator(WordTermGenerator base) {
+    public FilterWordTermGenerator(WordTermGenerator base) {
         super(base);
     }
 
