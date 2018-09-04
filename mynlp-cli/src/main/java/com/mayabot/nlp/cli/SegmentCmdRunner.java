@@ -45,7 +45,7 @@ public class SegmentCmdRunner implements CmdRunner {
 
         MynlpTokenizer mynlpTokenizer = MynlpSegments.nlpTokenizer();
         line.getArgList().forEach(x->{
-            System.out.println(mynlpTokenizer.tokenToList(x));
+            System.out.println(mynlpTokenizer.tokenToStringList(x));
         });
 
 

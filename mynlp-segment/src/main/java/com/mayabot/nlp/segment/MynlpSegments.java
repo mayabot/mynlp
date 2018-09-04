@@ -23,16 +23,16 @@ package com.mayabot.nlp.segment;
  */
 public final class MynlpSegments {
 
-    public static WordnetTokenizerBuilder builder() {
-        return WordnetTokenizer.builder();
-    }
-
     public static MynlpTokenizer nlpTokenizer() {
         return builder().coreDict().build();
     }
 
     public static MynlpTokenizer crfTokenizer() {
         return builder().crf().build();
+    }
+
+    public static WordnetTokenizerBuilder builder() {
+        return WordnetTokenizer.builder();
     }
 
     public static WordnetTokenizerBuilder crfTokenizerBuilder() {

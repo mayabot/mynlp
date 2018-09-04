@@ -16,7 +16,7 @@
 
 package com.mayabot.nlp.segment.wordnetiniter;
 
-import com.google.common.collect.Lists;
+import com.google.common.collect.ImmutableList;
 import com.mayabot.nlp.segment.WordnetInitializer;
 import com.mayabot.nlp.segment.wordnet.Wordnet;
 
@@ -32,7 +32,7 @@ public class CombineWordnetInit implements WordnetInitializer {
     private List<WordnetInitializer> list;
 
     public CombineWordnetInit(WordnetInitializer... list) {
-        this.list = Lists.newArrayList(list);
+        this.list = ImmutableList.copyOf(list);
     }
 
     @Override

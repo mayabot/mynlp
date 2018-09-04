@@ -7,7 +7,7 @@ import com.mayabot.nlp.segment.wordnet.Wordnet;
 import com.mayabot.nlp.segment.wordnet.Wordpath;
 
 import java.util.Iterator;
-import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * Mynlp收集器
@@ -16,7 +16,7 @@ import java.util.List;
  */
 public interface WordTermCollector {
 
-    void collect(Wordnet wordnet, Wordpath wordPath, List<WordTerm> target);
+    void collect(Wordnet wordnet, Wordpath wordPath, Consumer<WordTerm> target);
 
     /**
      * 最优路径选择器。
@@ -49,7 +49,7 @@ public interface WordTermCollector {
             }
 
 
-            target.add(term);
+            target.accept(term);
         }
     };
 
@@ -71,7 +71,7 @@ public interface WordTermCollector {
                 for (Vertex subWord : vertex.subWords) {
                     WordTerm sub = new WordTerm(subWord.realWord(), null);
                     sub.setOffset(subWord.getRowNum());
-                    target.add(sub);
+                    target.accept(sub);
                 }
             } else {
                 WordTerm term = new WordTerm(vertex.realWord(), vertex.guessNature());
@@ -81,7 +81,7 @@ public interface WordTermCollector {
                 }
                 term.setOffset(vertex.getRowNum());
 
-                target.add(term);
+                target.accept(term);
             }
 
         }
@@ -102,7 +102,7 @@ public interface WordTermCollector {
                 for (Vertex subWord : vertex.subWords) {
                     WordTerm sub = new WordTerm(subWord.realWord(), null);
                     sub.setOffset(subWord.getRowNum());
-                    target.add(sub);
+                    target.accept(sub);
                 }
             } else {
                 WordTerm term = new WordTerm(vertex.realWord(), vertex.guessNature());
@@ -113,7 +113,7 @@ public interface WordTermCollector {
                     continue;
                 }
 
-                target.add(term);
+                target.accept(term);
             }
 
         }
