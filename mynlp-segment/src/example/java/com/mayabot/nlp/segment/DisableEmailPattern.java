@@ -1,6 +1,7 @@
 package com.mayabot.nlp.segment;
 
-import com.mayabot.nlp.segment.recognition.personname.PersonRecognition;
+import com.mayabot.nlp.segment.tokenizer.CoreTokenizerBuilder;
+import com.mayabot.nlp.segment.tokenizer.WordnetTokenizerBuilder;
 import com.mayabot.nlp.segment.xprocessor.CommonPatternProcessor;
 
 import java.util.List;
@@ -8,17 +9,12 @@ import java.util.List;
 public class DisableEmailPattern {
 
     public static void main(String[] args) {
-        MynlpTokenizer tokenizer = MynlpSegments.builder()
-                .config(CommonPatternProcessor.class, p -> {
-                    p.setEnableEmail(true);
-                }).config(WordpathProcessor.class, p -> {
-                    // 你看，这里指定WordpathProcessor就可以配置所有的子类
-                    System.out.println("xxt \t" + p);
-                }).config(OptimizeProcessor.class, p -> {
-                    System.out.println("yyyy \t" + p);
-                }).config(PersonRecognition.class, p -> {
-                    System.out.println("--------- \t" + p);
-                }).build();
+        MynlpTokenizer tokenizer = new CoreTokenizerBuilder() {
+            @Override
+            public void setUp(WordnetTokenizerBuilder builder) {
+                builder.config(CommonPatternProcessor.class, p -> p.setEnableEmail(false));
+            }
+        }.build();
 
 
         List<String> list = tokenizer.tokenToStringList("这是我的email jimichan@gmail.com");
