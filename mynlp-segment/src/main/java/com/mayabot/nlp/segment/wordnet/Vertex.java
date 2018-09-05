@@ -107,7 +107,7 @@ public class Vertex extends VertexExt {
     /**
      * copy to new object , in abstractWord length wordinfo
      *
-     * @return
+     * @return 新的Vertex对象
      */
     public Vertex copy() {
         return new Vertex(this);
@@ -129,7 +129,7 @@ public class Vertex extends VertexExt {
      * @param wordID    核心词典的词下标(包括等效词下标)
      * @param word      等效词()
      * @param attribute 属性(包含了词性等信息)
-     * @return
+     * @return 自己本身
      */
     public Vertex setWordInfo(int wordID, String word, NatureAttribute attribute) {
         this.wordID = wordID;

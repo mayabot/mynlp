@@ -25,7 +25,7 @@ public abstract class BaseTokenizerBuilderApi implements MynlpTokenizerBuilder {
      *
      * @param builder
      */
-    abstract void setUp(WordnetTokenizerBuilder builder);
+    public abstract void setUp(WordnetTokenizerBuilder builder);
 
     private boolean lowerCaseCharNormalize = true;
 

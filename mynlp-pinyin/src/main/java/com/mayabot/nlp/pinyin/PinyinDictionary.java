@@ -16,24 +16,15 @@
 
 package com.mayabot.nlp.pinyin;
 
-import com.google.common.base.Charsets;
 import com.google.common.collect.Lists;
-import com.google.common.hash.Hashing;
-import com.google.common.primitives.Ints;
 import com.google.inject.Inject;
-import com.google.inject.Singleton;
 import com.mayabot.nlp.MynlpEnv;
 import com.mayabot.nlp.Setting;
-import com.mayabot.nlp.collection.ahocorasick.AhoCoraickDoubleArrayTrieBuilder;
-import com.mayabot.nlp.collection.ahocorasick.AhoCorasickDoubleArrayTrie;
-import com.mayabot.nlp.logging.InternalLogger;
-import com.mayabot.nlp.logging.InternalLoggerFactory;
 import com.mayabot.nlp.pinyin.model.Pinyin;
-import com.mayabot.nlp.resources.NlpResouceExternalizable;
 import com.mayabot.nlp.resources.NlpResource;
 import com.mayabot.nlp.utils.CharSourceLineReader;
 
-import java.io.*;
+import javax.inject.Singleton;
 import java.util.List;
 import java.util.TreeMap;
 
@@ -45,9 +36,8 @@ import static com.mayabot.nlp.Setting.string;
  * @author jimichan
  */
 @Singleton
-public class PinyinDictionary extends NlpResouceExternalizable {
+public class PinyinDictionary extends BasePinyinDictionary {
 
-    InternalLogger logger = InternalLoggerFactory.getInstance(PinyinDictionary.class);
 
     public final static Setting<String> pinyinSetting =
             string("pinyin.dict", "dictionary/pinyin.txt");
@@ -55,41 +45,19 @@ public class PinyinDictionary extends NlpResouceExternalizable {
     public final static Setting<String> pinyinExtDicSetting =
             string("pinyin.ext.dict", null);
 
-    private MynlpEnv mynlp;
-
-    private AhoCorasickDoubleArrayTrie<Pinyin[]> trie = null;
-
-    private CustomPinyin customPinyin;
+    private final MynlpEnv mynlp;
 
     @Inject
-    public PinyinDictionary(MynlpEnv mynlp, CustomPinyin customPinyin) throws Exception {
+    public PinyinDictionary(MynlpEnv mynlp) {
+        super();
         this.mynlp = mynlp;
-        long t1 = System.currentTimeMillis();
-        this.customPinyin = customPinyin;
 
-        this.restore(mynlp);
-        long t2 = System.currentTimeMillis();
-        logger.info("Loaded pinyin dictionary success! " + (t2 - t1) + " ms");
+        rebuild();
+
     }
 
     @Override
-    public String sourceVersion(MynlpEnv mynlp) {
-        String hash = mynlp.loadResource(pinyinSetting).hash();
-
-        NlpResource ext = mynlp.loadResource(pinyinExtDicSetting);
-        if (ext != null) {
-            hash += ext.hash();
-        }
-
-        hash += customPinyin.hash();
-
-        hash = Hashing.md5().hashString(hash, Charsets.UTF_8).toString();
-
-        return hash.substring(0, 8);
-    }
-
-    @Override
-    public void loadFromSource(MynlpEnv mynlp) throws Exception {
+    TreeMap<String, Pinyin[]> load() {
         List<NlpResource> list = Lists.newArrayList();
 
         list.add(mynlp.loadResource(pinyinSetting));
@@ -116,113 +84,11 @@ public class PinyinDictionary extends NlpResouceExternalizable {
                         map.put(key, pinyins);
                     }
                 }
+            } catch (Exception e) {
+                logger.error("", e);
             }
         }
-
-        customPinyin.getMap().forEach((key, value) -> {
-            Pinyin[] pinyins = parse(value);
-            if (pinyins != null) {
-                map.put(key, pinyins);
-            }
-        });
-
-        AhoCoraickDoubleArrayTrieBuilder<Pinyin[]> builder = new AhoCoraickDoubleArrayTrieBuilder<>();
-        this.trie = builder.build(map);
+        return map;
     }
 
-    @Override
-    public void writeExternal(ObjectOutput out) throws IOException {
-        AhoCorasickDoubleArrayTrie.write(trie, out, PinyinDictionary::write);
-    }
-
-    @Override
-    public void readExternal(ObjectInput in) throws IOException {
-        this.trie = AhoCorasickDoubleArrayTrie.read(in, PinyinDictionary::read);
-    }
-
-    public void reload() {
-        try {
-            this.restore(mynlp);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-
-    static Pinyin[] pinyinByOrdinal;
-
-    static {
-        pinyinByOrdinal = new Pinyin[Pinyin.values().length + 1];
-
-        Pinyin[] values = Pinyin.values();
-        for (int i = values.length - 1; i >= 0; i--) {
-            pinyinByOrdinal[values[i].ordinal()] = values[i];
-        }
-    }
-
-    public static Pinyin[] read(DataInput in) {
-        try {
-            String line = in.readUTF();
-            String[] split = line.split(",");
-
-            Pinyin[] pinyins = new Pinyin[split.length];
-
-            for (int i = 0; i < split.length; i++) {
-                Integer xx = Ints.tryParse(split[i]);
-                Pinyin pinyin = pinyinByOrdinal[xx];
-                pinyins[i] = pinyin;
-            }
-
-            return pinyins;
-
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-    }
-
-
-    public static void write(Pinyin[] pinyins, DataOutput out) {
-        try {
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < pinyins.length; i++) {
-                sb.append(pinyins[i].ordinal()).append(",");
-            }
-            out.writeUTF(sb.toString());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private Pinyin[] parse(String text) {
-        String[] values = text.split(",");
-
-
-        Pinyin[] pinyins = new Pinyin[values.length];
-        boolean error = false;
-        for (int i = 0; i < values.length; i++) {
-            try {
-                Pinyin pinyin = Pinyin.valueOf(values[i]);
-                pinyins[i] = pinyin;
-
-            } catch (IllegalArgumentException e) {
-                logger.warn("读取拼音词典，解析" + text + "错误");
-                error = true;
-            }
-        }
-        if (!error) {
-            return pinyins;
-        } else {
-            return null;
-        }
-    }
-
-    public CustomPinyin getCustomPinyin() {
-        return customPinyin;
-    }
-
-
-    public AhoCorasickDoubleArrayTrie<Pinyin[]> getTrie() {
-        return trie;
-    }
 }
