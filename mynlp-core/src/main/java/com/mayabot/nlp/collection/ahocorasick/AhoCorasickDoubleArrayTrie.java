@@ -36,6 +36,8 @@ import static com.mayabot.nlp.utils.DataInOutputUtils.*;
 /**
  * 基于双数组Trie树的AhoCorasick自动机
  *
+ * FROM HANLP https://github.com/hankcs/HanLP
+ *
  * @author hankcs
  */
 public class AhoCorasickDoubleArrayTrie<V> {

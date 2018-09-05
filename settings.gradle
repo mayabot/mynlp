@@ -23,7 +23,7 @@ List projects = [
         'mynlp-segment',
         'mynlp-segment-resources',
         'mynlp-pinyin',
-        'mynlp-jian-fan',
+        'mynlp-transform',
         'mynlp-cli',
         'plugins:mynlp-lucene-7'
 

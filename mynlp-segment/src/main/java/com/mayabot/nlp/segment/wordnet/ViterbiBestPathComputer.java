@@ -30,9 +30,6 @@ import com.mayabot.nlp.segment.dictionary.core.CoreBiGramTableDictionary;
 @Singleton
 public class ViterbiBestPathComputer implements BestPathComputer {
 
-    public final static String NAME = "viterbi";
-
-
     private CoreBiGramTableDictionary coreBiGramTableDictionary;
 
     @Inject

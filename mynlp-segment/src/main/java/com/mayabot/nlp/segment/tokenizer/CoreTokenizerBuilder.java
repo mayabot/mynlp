@@ -25,7 +25,7 @@ public class CoreTokenizerBuilder extends BaseTokenizerBuilderApi {
 
 
     @Override
-    void setUp(WordnetTokenizerBuilder builder) {
+    public void setUp(WordnetTokenizerBuilder builder) {
 
         //wordnet初始化填充
         builder.setWordnetInitializer(
