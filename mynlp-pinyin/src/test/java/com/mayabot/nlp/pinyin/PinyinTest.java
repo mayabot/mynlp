@@ -24,12 +24,11 @@ public class PinyinTest {
 
     @Test
     public void testSpeed() {
-        Mynlps.getInstance(PinyinService.class);
-        Mynlps.getInstance(PinyinService.class);
+        Mynlps.getInstance(PinyinDictionary.class);
 
         long t1 = System.currentTimeMillis();
         for (int i = 0; i < 10000; i++) {
-            Mynlps.getInstance(PinyinService.class);
+            Mynlps.getInstance(PinyinDictionary.class);
         }
         long t2 = System.currentTimeMillis();
 
@@ -71,15 +70,12 @@ public class PinyinTest {
     public void test3() {
         Mynlps.clear();
 
-        CustomPinyin customPinyin = new CustomPinyin();
+        PinyinDictionary pinyinService = Mynlps.getInstance(PinyinDictionary.class);
 
+        CustomPinyin customPinyin = pinyinService.getCustomPinyin();
         customPinyin.put("朝朝盈", "zhao1,zhao1,yin2");
 
-        Mynlps.install(builder -> {
-            builder.bind(CustomPinyin.class, customPinyin);
-        });
-
-        PinyinService pinyinService = Mynlps.getInstance(PinyinService.class);
+        pinyinService.rebuild();
 
 
         PinyinResult result = pinyinService.text2Pinyin("123aed,.你好朝朝暮暮,银行");
@@ -93,15 +89,6 @@ public class PinyinTest {
 
     }
 
-    @Test
-    public void test4() {
-
-        PinyinDictionary instance = Mynlps.getInstance(PinyinDictionary.class);
-
-
-        //instance.getCustomPinyin().put("xxx");
-
-    }
 
 
 }

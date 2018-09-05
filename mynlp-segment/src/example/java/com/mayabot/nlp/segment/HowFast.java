@@ -2,7 +2,7 @@ package com.mayabot.nlp.segment;
 
 import com.google.common.base.Joiner;
 import com.mayabot.nlp.segment.analyzer.StandardMynlpAnalyzer;
-import com.mayabot.nlp.segment.tokenizer.CoreTokenizerBuilder;
+import com.mayabot.nlp.segment.tokenizer.SimpleDictTokenizerBuilder;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -19,9 +19,11 @@ public class HowFast {
         List<String> lines = Files.readAllLines(file.toPath()).stream().filter(it -> !it.isEmpty()).collect(Collectors.toList());
 
 
-        MynlpTokenizer tokenizer = new CoreTokenizerBuilder()
-                .setPersonRecognition(false)
-                .build();
+//        MynlpTokenizer tokenizer = new CoreTokenizerBuilder()
+//                .setPersonRecognition(false)
+//                .build();
+
+        MynlpTokenizer tokenizer = new SimpleDictTokenizerBuilder().build();
 
         int charNum = lines.stream().mapToInt(it -> it.length()).sum();
 
@@ -34,11 +36,13 @@ public class HowFast {
 
         String text = Joiner.on("\n").join(lines);
 
+
         try (BufferedReader reader = new BufferedReader(new StringReader(text))) {
             analyzer.stream(reader).limit(10).forEach(x -> {
             });
         }
 
+        System.out.println("---");
 
         {
             long t1 = System.currentTimeMillis();
@@ -55,6 +59,7 @@ public class HowFast {
             System.out.println("速度 " + (int) ((charNum / time) * 1000) + "字/秒");
         }
 
+        System.out.println("xxxx");
 
         {
             long t1 = System.currentTimeMillis();

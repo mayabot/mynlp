@@ -238,6 +238,19 @@ public class VertexRow implements Iterable<Vertex> {
         return set;
     }
 
+    /**
+     * 返回最长的那个词的长度
+     *
+     * @return
+     */
+    public int lastLen() {
+        int len = 0;
+        for (Vertex x = first; x != null; x = x.next) {
+            len = x.length;
+        }
+        return len;
+    }
+
 
     /**
      * Unlinks non-null node x.
