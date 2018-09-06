@@ -1,6 +1,7 @@
 package com.mayabot.nlp.segment.analyzer;
 
 import com.mayabot.nlp.segment.MynlpTokenizer;
+import com.mayabot.nlp.segment.MynlpTokenizers;
 
 /**
  * 标准的，包含过滤标点符号和停用词.
@@ -17,7 +18,7 @@ public class StandardMynlpAnalyzer extends BaseMynlpAnalyzer {
 
 
     public StandardMynlpAnalyzer() {
-        this(MynlpTokenizer.nlpTokenizer());
+        this(MynlpTokenizers.coreTokenizer());
     }
 
     @Override

@@ -9,7 +9,7 @@
 //
 //    @Test
 //    public void testStopword() {
-//        MynlpTokenizer tokenizer = MynlpSegments.nlpTokenizer();
+//        MynlpTokenizer tokenizer = MynlpSegments.coreTokenizer();
 //
 //        StandardAnalyzerFactory factory = new StandardAnalyzerFactory(tokenizer);
 //
