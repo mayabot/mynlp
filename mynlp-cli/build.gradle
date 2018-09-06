@@ -14,16 +14,22 @@
  * limitations under the License.
  */
 plugins {
-    id 'com.github.johnrengelman.shadow' version '2.0.4'
+//    id 'com.github.johnrengelman.shadow' version '2.0.4'
+    id 'application'
 }
 
 description = "mynlp-cli,包含了命令行程序。该程序不发布到maven仓库中。"
 
+mainClassName = 'com.mayabot.nlp.cli.Application'
+
 jar {
+
     manifest {
-        attributes 'Main-Class': 'com.mayabot.nlp.cli.Application'
+        attributes 'Mynlp-Version': project.version
+
     }
 }
+
 
 dependencies {
 
@@ -37,25 +43,25 @@ dependencies {
 //    shadow 'com.mayabot.mynlp:mynlp-segment-resources:1.0.0'
 
 }
-
-shadowJar {
-    classifier ''
-//    relocate 'com.google', 'com.mayabot.t.google'
-//    relocate 'org.apache.commons.lang3', 'com.mayabot.t.lang3'
-//    relocate 'org.apache.commons.cli', 'com.mayabot.t.cli'
-//    relocate 'com.alibaba', 'com.mayabot.t.alibaba'
-//    relocate 'org.fusesource', 'com.mayabot.t.fusesource'
 //
-//    relocate 'org.xerial.snappy', 'com.mayabot.t.snappy'
-//    relocate 'com.esotericsoftware', 'com.mayabot.t.esotericsoftware'
-//    relocate 'org.objenesis', 'com.mayabot.t.objenesis'
-//    relocate 'org.codehaus.mojo', 'com.mayabot.t.mojo'
-
-//    dependencies {
-//        exclude(project(':mynlp-segment-resources'))
-//        exclude(project(':mynlp-segment-resources'))
-//    }
-}
+//shadowJar {
+//    classifier ''
+////    relocate 'com.google', 'com.mayabot.t.google'
+////    relocate 'org.apache.commons.lang3', 'com.mayabot.t.lang3'
+////    relocate 'org.apache.commons.cli', 'com.mayabot.t.cli'
+////    relocate 'com.alibaba', 'com.mayabot.t.alibaba'
+////    relocate 'org.fusesource', 'com.mayabot.t.fusesource'
+////
+////    relocate 'org.xerial.snappy', 'com.mayabot.t.snappy'
+////    relocate 'com.esotericsoftware', 'com.mayabot.t.esotericsoftware'
+////    relocate 'org.objenesis', 'com.mayabot.t.objenesis'
+////    relocate 'org.codehaus.mojo', 'com.mayabot.t.mojo'
+//
+////    dependencies {
+////        exclude(project(':mynlp-segment-resources'))
+////        exclude(project(':mynlp-segment-resources'))
+////    }
+//}
 
 // disable all publish
 project.afterEvaluate {
