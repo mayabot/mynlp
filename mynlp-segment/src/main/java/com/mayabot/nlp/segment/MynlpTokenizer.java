@@ -17,8 +17,6 @@
 package com.mayabot.nlp.segment;
 
 import com.google.common.collect.Lists;
-import com.mayabot.nlp.segment.tokenizer.CoreTokenizerBuilder;
-import com.mayabot.nlp.segment.tokenizer.CrfTokenizerBuilder;
 import com.mayabot.nlp.segment.tokenizer.WordnetTokenizer;
 import com.mayabot.nlp.segment.tokenizer.WordnetTokenizerBuilder;
 
@@ -37,14 +35,6 @@ import java.util.function.Consumer;
  * @author jimichan
  */
 public interface MynlpTokenizer {
-
-    static MynlpTokenizer nlpTokenizer() {
-        return new CoreTokenizerBuilder().build();
-    }
-
-    static MynlpTokenizer crfTokenizer() {
-        return new CrfTokenizerBuilder().build();
-    }
 
     /**
      * 对text进行分词，结构保存在List<WordTerm>,

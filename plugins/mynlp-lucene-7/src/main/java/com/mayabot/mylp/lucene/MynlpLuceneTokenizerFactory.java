@@ -19,7 +19,7 @@ public class MynlpLuceneTokenizerFactory extends TokenizerFactory {
 
     @Override
     public Tokenizer create(AttributeFactory factory) {
-        //return new MynlpLuceneTokenizer(new BaseMynlpAnalyzer(MynlpSegments.nlpTokenizer(mynlp)));
+        //return new MynlpLuceneTokenizer(new BaseMynlpAnalyzer(MynlpSegments.coreTokenizer(mynlp)));
         //FIXME xxx
         return null;
     }
