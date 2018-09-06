@@ -22,6 +22,8 @@ import org.apache.commons.cli.HelpFormatter;
 
 import java.net.URL;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Application {
 
@@ -75,6 +77,10 @@ public class Application {
 
 
     public static void main(String[] args) throws Exception {
+
+        Logger logger = Logger.getLogger("com.mayabot");
+        logger.setLevel(Level.WARNING);
+
 
         if (args.length == 0) {
             printHelp();
