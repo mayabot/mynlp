@@ -535,7 +535,7 @@ public class BytesSuccinctBitVector
             4, 3, 3, 2, 3, 2, 2, 1, 3, 2, 2, 1, 2, 1, 1, 0,
     };
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         System.out.println("\tprivate static final byte[][] BITPOS0 = {");
         for (int i = 0; i < 256; i++) {
             int count = 0;

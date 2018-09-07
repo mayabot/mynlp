@@ -47,10 +47,8 @@ public interface FstCondition<T> {
 
 
     FstCondition readEndFlag = (index, obj) -> {
-        if (index == Integer.MAX_VALUE) { // -2 表示读入了$ 序列终止符号
-            return true;
-        }
-        return false;
+        // -2 表示读入了$ 序列终止符号
+        return index == Integer.MAX_VALUE;
     };
 
 

@@ -26,7 +26,6 @@ public abstract class IterableAdapter<T, U> implements Iterable<U> {
                 it.remove();
             }
 
-            ;
         };
     }
 

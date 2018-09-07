@@ -1,4 +1,5 @@
 /*
+/*
  * Copyright 2018 mayabot.com authors. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -125,11 +126,7 @@ public class BinTrieTree<T> implements Trie<T>, BinTrieNode<T> {
             return false;
         }
         // 下面这句可以保证只有成词的节点被返回
-        if (!(branch.getStatus() == Status_End || branch.getStatus() == Status_Continue)) {
-            return false;
-        } else {
-            return true;
-        }
+        return branch.getStatus() == Status_End || branch.getStatus() == Status_Continue;
     }
 
     @Override

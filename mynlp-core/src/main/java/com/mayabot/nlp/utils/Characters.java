@@ -186,9 +186,7 @@ public class Characters {
                 return true;
             }
 
-            if ('\u3000' <= c && c <= '\u303F') {
-                return true;
-            }
+            return '\u3000' <= c && c <= '\u303F';
         }
 
         return false;

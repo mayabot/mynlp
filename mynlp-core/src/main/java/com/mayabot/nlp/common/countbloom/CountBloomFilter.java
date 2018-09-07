@@ -286,7 +286,7 @@ public final class CountBloomFilter<T> implements Serializable {
 		return data&0x0FFFF ;
 	}
 	public static void main(String[] args) {
-		System.out.println("");
+		System.out.println();
 		CountBloomFilter<String> bf = create(new Funnel<String>() {
 			@Override
 			public void funnel(String from, PrimitiveSink into) {

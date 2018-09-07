@@ -33,7 +33,7 @@ public interface TermIdTrie extends Trie {
      * @return root node.
      */
     @Override
-    public TermIdNode getRoot();
+    TermIdNode getRoot();
 
     /**
      * Returns the ID for text. If text doesn't exist in this Trie, this

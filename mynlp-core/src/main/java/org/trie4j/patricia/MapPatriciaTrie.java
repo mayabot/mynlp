@@ -95,8 +95,6 @@ public class MapPatriciaTrie<T>
         return ret;
     }
 
-    ;
-
     private class Entry implements Map.Entry<String, T> {
         public Entry(String key, MapPatriciaTrieNode<T> node) {
             this.key = key;

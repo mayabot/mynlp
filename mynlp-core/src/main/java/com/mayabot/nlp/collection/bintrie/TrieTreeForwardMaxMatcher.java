@@ -149,10 +149,7 @@ public class TrieTreeForwardMaxMatcher<T> implements TrieTreeMatcher<T> {
     }
 
     private boolean isE(char c) {
-        if (c == '.' || ((c >= 'a') && (c <= 'z'))) {
-            return true;
-        }
-        return false;
+        return c == '.' || ((c >= 'a') && (c <= 'z'));
     }
 
 //    public void reset(String content) {
