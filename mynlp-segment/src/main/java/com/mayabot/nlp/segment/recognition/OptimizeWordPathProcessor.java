@@ -87,7 +87,7 @@ public class OptimizeWordPathProcessor extends BaseMynlpComponent implements Wor
         }
 
         if (change) {
-            wordPath = wordPath.getBestPathComputer().select(wordnet);
+            wordPath = wordPath.getWordnet().getBestPathComputer().select(wordnet);
             repairWordnet.process(wordPath);
         }
 

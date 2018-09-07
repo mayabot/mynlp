@@ -5,6 +5,7 @@ import com.mayabot.nlp.segment.OptimizeProcessor;
 import com.mayabot.nlp.segment.recognition.org.OrganizationRecognition;
 import com.mayabot.nlp.segment.recognition.personname.PersonRecognition;
 import com.mayabot.nlp.segment.recognition.place.PlaceRecognition;
+import com.mayabot.nlp.segment.tokenizer.collector.SentenceCollector;
 import com.mayabot.nlp.segment.wordnet.ViterbiBestPathComputer;
 import com.mayabot.nlp.segment.wordnetiniter.AtomSegmenter;
 import com.mayabot.nlp.segment.wordnetiniter.ConvertAbstractWord;
@@ -53,7 +54,7 @@ public class CoreTokenizerBuilder extends BaseTokenizerBuilderApi {
 
 
         //结果收集器
-        builder.setTermCollector(WordTermCollectors.bestPath);
+        builder.setTermCollector(mynlp.getInstance(SentenceCollector.class));
 
 
         if (!personRecognition) {

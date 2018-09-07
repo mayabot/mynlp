@@ -20,8 +20,6 @@ import com.mayabot.nlp.segment.dictionary.Nature;
 import com.mayabot.nlp.segment.dictionary.NatureAttribute;
 import com.mayabot.nlp.segment.dictionary.core.CoreDictionary;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -75,9 +73,6 @@ public class Vertex extends VertexExt {
     private Nature guaseNature = null;
 
     private int natureFreq;
-
-
-    public List<Vertex> subWords;
 
 
     /////////////////////////////////////////////
@@ -325,14 +320,6 @@ public class Vertex extends VertexExt {
     public Vertex setWordID(int wordID) {
         this.wordID = wordID;
         return this;
-    }
-
-
-    public void addSubWord(Vertex sub) {
-        if (subWords == null) {
-            subWords = new ArrayList<>(length);
-        }
-        subWords.add(sub);
     }
 
     public Vertex getNext() {
