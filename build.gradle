@@ -24,7 +24,7 @@ ext {
     guava_version = "19.0"
 }
 
-def buildVersion = "2.0.0-BETA3"
+def buildVersion = "2.0.0-BETA4"
 def snapShot = false
 
 subprojects {
@@ -61,9 +61,14 @@ subprojects {
     {
         sourceSets {
             example {
-                compileClasspath += sourceSets.main.compileClasspath
-                runtimeClasspath += sourceSets.main.runtimeClasspath
+                compileClasspath += sourceSets.main.output
+                runtimeClasspath += sourceSets.main.output
             }
+        }
+
+        configurations {
+            exampleImplementation.extendsFrom implementation
+            exampleRuntimeOnly.extendsFrom runtimeOnly
         }
     }
 
