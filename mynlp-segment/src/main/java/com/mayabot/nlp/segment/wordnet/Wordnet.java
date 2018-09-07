@@ -225,9 +225,6 @@ public class Wordnet implements CharSequence {
      * @return
      */
     private VertexRow indexAt(int sindex) {
-        // if(sindex<-1 || sindex>charSize){ //取消校验
-        // throw new IllegalArgumentException();
-        // }
 
         if (sindex == -1) {
             return begin;
@@ -235,12 +232,6 @@ public class Wordnet implements CharSequence {
         if (sindex == charSize) {
             return end;
         }
-
-        //        if (l == null && build) {
-//            l = new VertexRow(sindex, this);
-//            slotList[sindex] = l;
-//        }
-
         return slotList[sindex];
     }
 
