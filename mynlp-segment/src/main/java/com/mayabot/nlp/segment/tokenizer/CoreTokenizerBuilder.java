@@ -2,7 +2,6 @@ package com.mayabot.nlp.segment.tokenizer;
 
 import com.google.common.collect.Lists;
 import com.mayabot.nlp.segment.OptimizeProcessor;
-import com.mayabot.nlp.segment.WordTermCollector;
 import com.mayabot.nlp.segment.recognition.org.OrganizationRecognition;
 import com.mayabot.nlp.segment.recognition.personname.PersonRecognition;
 import com.mayabot.nlp.segment.recognition.place.PlaceRecognition;
@@ -54,7 +53,7 @@ public class CoreTokenizerBuilder extends BaseTokenizerBuilderApi {
 
 
         //结果收集器
-        builder.setTermCollector(WordTermCollector.bestPath);
+        builder.setTermCollector(WordTermCollectors.bestPath);
 
 
         if (!personRecognition) {

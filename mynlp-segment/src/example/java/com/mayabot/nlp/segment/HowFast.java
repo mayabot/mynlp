@@ -2,7 +2,7 @@ package com.mayabot.nlp.segment;
 
 import com.google.common.base.Joiner;
 import com.mayabot.nlp.segment.analyzer.StandardMynlpAnalyzer;
-import com.mayabot.nlp.segment.tokenizer.SimpleDictTokenizerBuilder;
+import com.mayabot.nlp.segment.tokenizer.CoreTokenizerBuilder;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -19,11 +19,13 @@ public class HowFast {
         List<String> lines = Files.readAllLines(file.toPath()).stream().filter(it -> !it.isEmpty()).collect(Collectors.toList());
 
 
-//        MynlpTokenizer tokenizer = new CoreTokenizerBuilder()
-//                .setPersonRecognition(false)
-//                .build();
+        MynlpTokenizer tokenizer = new CoreTokenizerBuilder()
+                .setPersonRecognition(false)
+                .setOrganizationRecognition(false)
+                .setPlaceRecognition(false)
+                .build();
 
-        MynlpTokenizer tokenizer = new SimpleDictTokenizerBuilder().build();
+//        MynlpTokenizer tokenizer = new SimpleDictTokenizerBuilder().build();
 
         int charNum = lines.stream().mapToInt(it -> it.length()).sum();
 

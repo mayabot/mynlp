@@ -1,7 +1,11 @@
 package com.mayabot.nlp.segment;
 
 
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
+
 import java.io.Reader;
+import java.util.List;
 import java.util.stream.Stream;
 
 /**
@@ -31,6 +35,12 @@ public interface MynlpAnalyzer {
      * @return
      */
     Iterable<WordTerm> parse(String text);
+
+
+    default List<String> parseToStringList(String text) {
+        return Lists.newArrayList(Iterables.transform(parse(text), x -> x.word));
+    }
+
 
     /**
      * 对文本进行分词，返回一个延迟计算的StreamWord&lt;Term&gt;。
