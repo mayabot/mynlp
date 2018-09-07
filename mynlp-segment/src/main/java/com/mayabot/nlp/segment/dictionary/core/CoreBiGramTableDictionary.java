@@ -63,7 +63,7 @@ public class CoreBiGramTableDictionary extends NlpResouceExternalizable {
 
     @Override
     public String sourceVersion(MynlpEnv mynlp) {
-        return mynlp.loadResource(path).hash().substring(0, 5);
+        return mynlp.loadResource(path).hash().substring(0, 6);
     }
 
 
@@ -107,7 +107,8 @@ public class CoreBiGramTableDictionary extends NlpResouceExternalizable {
     }
 
     @Override
-    public void readExternal(ObjectInput in) throws IOException {
+    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+
         int[] columnIndices = DataInOutputUtils.readIntArray(in);
         int[] rowOffset = DataInOutputUtils.readIntArray(in);
         int[] values = DataInOutputUtils.readIntArray(in);

@@ -95,6 +95,8 @@ public class WordnetTokenizer implements MynlpTokenizer {
 
         //构建一个空的Wordnet对象
         final Wordnet wordnet = new Wordnet(text);
+        wordnet.setBestPathComputer(bestPathComputer);
+
         wordnet.getBeginRow().put(vertexHelper.newBegin());
         wordnet.getEndRow().put(vertexHelper.newEnd());
 

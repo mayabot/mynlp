@@ -8,4 +8,8 @@ public class MynlpTokenizers {
         return new CoreTokenizerBuilder().build();
     }
 
+    public static CoreTokenizerBuilder coreTokenizerBuilder() {
+        return new CoreTokenizerBuilder();
+    }
+
 }

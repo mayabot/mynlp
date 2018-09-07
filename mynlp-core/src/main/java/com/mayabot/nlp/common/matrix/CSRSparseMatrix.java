@@ -88,6 +88,7 @@ public class CSRSparseMatrix implements Serializable {
 
     }
 
+
     /**
      * 获得矩阵的cell值
      *
@@ -96,6 +97,7 @@ public class CSRSparseMatrix implements Serializable {
      * @return
      */
     public int get(int row, int col) {
+
         if (row < 0 || col < 0) {
             return 0;
         }
