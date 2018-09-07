@@ -1,7 +1,6 @@
 package com.mayabot.nlp.transform;
 
 import javax.inject.Singleton;
-import java.io.IOException;
 import java.util.TreeMap;
 
 /**

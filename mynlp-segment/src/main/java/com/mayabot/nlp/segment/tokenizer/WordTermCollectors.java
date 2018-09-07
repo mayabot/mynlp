@@ -22,7 +22,7 @@ public class WordTermCollectors {
                     + "\u3000\u2004\u3000\u3000\u2028\n\u2007\u3000";
     static CharSet whitespaceCharset = CharSet.getInstance(TABLE);
 
-    private static final boolean isWhiteSpace(String word) {
+    private static boolean isWhiteSpace(String word) {
         return whitespaceCharset.contains(word.charAt(0));
     }
 
