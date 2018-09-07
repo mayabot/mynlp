@@ -22,7 +22,7 @@ import java.io.UnsupportedEncodingException;
 
 public class StreamUtil {
     public static String readAsString(InputStream is, String encoding)
-            throws UnsupportedEncodingException, IOException {
+            throws IOException {
         InputStreamReader reader = new InputStreamReader(is, encoding);
         char[] buff = new char[65536];
         StringBuilder ret = new StringBuilder();

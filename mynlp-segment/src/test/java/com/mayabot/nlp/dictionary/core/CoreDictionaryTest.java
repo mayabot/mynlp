@@ -25,7 +25,7 @@ public class CoreDictionaryTest {
 
 
     @Test
-    public void get() throws Exception {
+    public void get() {
 
         Mynlp mynlp = Mynlps.get();
 

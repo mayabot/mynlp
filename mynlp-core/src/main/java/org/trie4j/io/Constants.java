@@ -16,20 +16,20 @@
 package org.trie4j.io;
 
 public interface Constants {
-    public static final int TYPE_TRIE_PATRICIA = 0x0010;
-    public static final int TYPE_TRIE_PATRICIA_TAIL = 0x0011;
-    public static final int TYPE_TRIE_DOUBLEARRAY = 0x0020;
-    public static final int TYPE_TRIE_DOUBLEARRAY_TAIL = 0x0021;
-    public static final int TYPE_TRIE_LOUDS = 0x0030;
-    public static final int TYPE_TRIE_LOUDS_TAIL = 0x0031;
-    public static final int TYPE_BVTREE_LOUDS = 0x0040;
-    public static final int TYPE_BVTREE_LOUDSPP = 0x0041;
-    public static final int TYPE_TAILARRAY_DEFAULT = 0x0050;
-    public static final int TYPE_TAILINDEX_ARRAY = 0x0060;
-    public static final int TYPE_TAILINDEX_DENSEARRAY = 0x0061;
-    public static final int TYPE_TAILINDEX_SBV = 0x0062;
-    public static final int TYPE_SBV_BYTES = 0x0070;
-    public static final int TYPE_SBV_RANK0ONLY = 0x0071;
-    public static final int TYPE_SBV_RANK1ONLY = 0x0072;
-    public static final int TYPE_SBV_LONGS = 0x0073;
+    int TYPE_TRIE_PATRICIA = 0x0010;
+    int TYPE_TRIE_PATRICIA_TAIL = 0x0011;
+    int TYPE_TRIE_DOUBLEARRAY = 0x0020;
+    int TYPE_TRIE_DOUBLEARRAY_TAIL = 0x0021;
+    int TYPE_TRIE_LOUDS = 0x0030;
+    int TYPE_TRIE_LOUDS_TAIL = 0x0031;
+    int TYPE_BVTREE_LOUDS = 0x0040;
+    int TYPE_BVTREE_LOUDSPP = 0x0041;
+    int TYPE_TAILARRAY_DEFAULT = 0x0050;
+    int TYPE_TAILINDEX_ARRAY = 0x0060;
+    int TYPE_TAILINDEX_DENSEARRAY = 0x0061;
+    int TYPE_TAILINDEX_SBV = 0x0062;
+    int TYPE_SBV_BYTES = 0x0070;
+    int TYPE_SBV_RANK0ONLY = 0x0071;
+    int TYPE_SBV_RANK1ONLY = 0x0072;
+    int TYPE_SBV_LONGS = 0x0073;
 }

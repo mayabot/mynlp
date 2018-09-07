@@ -117,7 +117,7 @@ public class CoreDictionary extends NlpResouceExternalizable {
     }
 
     @Override
-    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+    public void readExternal(ObjectInput in) throws IOException {
         this.MAX_FREQUENCY = in.readInt();
         this.trie = DoubleArrayTrie.read(in, NatureAttribute::read);
     }

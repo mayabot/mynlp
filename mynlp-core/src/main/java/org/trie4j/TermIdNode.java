@@ -30,7 +30,7 @@ public interface TermIdNode extends Node {
      * @return child node or null if no child has c as first letter
      */
     @Override
-    public TermIdNode getChild(char c);
+    TermIdNode getChild(char c);
 
     /**
      * Returns children.
@@ -38,5 +38,5 @@ public interface TermIdNode extends Node {
      * @return children
      */
     @Override
-    public TermIdNode[] getChildren();
+    TermIdNode[] getChildren();
 }

@@ -12,7 +12,7 @@ import java.util.TreeMap;
 @Singleton
 public class Traditional2Simplified extends BaseTransformDictionary {
 
-    public Traditional2Simplified() throws IOException {
+    public Traditional2Simplified() {
     }
 
     @Override

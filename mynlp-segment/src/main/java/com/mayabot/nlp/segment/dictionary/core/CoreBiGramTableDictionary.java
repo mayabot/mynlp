@@ -107,7 +107,7 @@ public class CoreBiGramTableDictionary extends NlpResouceExternalizable {
     }
 
     @Override
-    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+    public void readExternal(ObjectInput in) throws IOException {
         int[] columnIndices = DataInOutputUtils.readIntArray(in);
         int[] rowOffset = DataInOutputUtils.readIntArray(in);
         int[] values = DataInOutputUtils.readIntArray(in);
