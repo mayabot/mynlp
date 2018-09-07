@@ -67,15 +67,13 @@ public class WordnetTokenizerBuilder implements MynlpTokenizerBuilder {
 
         WordpathProcessor[] pipeline = prepare(pipeLine).toArray(new WordpathProcessor[0]);
 
-        final WordnetTokenizer tokenizer = new WordnetTokenizer(
+        return new WordnetTokenizer(
                 wordnetInitializer,
                 pipeline,
                 bestPathComputer
                 , termCollector,
                 this.charNormalizes,
                 mynlp.getInstance(VertexHelper.class));
-
-        return tokenizer;
     }
 
 
