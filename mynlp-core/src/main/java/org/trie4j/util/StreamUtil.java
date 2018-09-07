@@ -18,7 +18,6 @@ package org.trie4j.util;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 
 public class StreamUtil {
     public static String readAsString(InputStream is, String encoding)
