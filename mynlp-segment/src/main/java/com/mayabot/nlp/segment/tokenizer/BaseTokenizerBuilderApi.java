@@ -4,7 +4,6 @@ import com.mayabot.nlp.Mynlp;
 import com.mayabot.nlp.Mynlps;
 import com.mayabot.nlp.segment.MynlpTokenizer;
 import com.mayabot.nlp.segment.MynlpTokenizerBuilder;
-import com.mayabot.nlp.segment.WordTermCollector;
 import com.mayabot.nlp.segment.common.normalize.Full2halfCharNormalize;
 import com.mayabot.nlp.segment.common.normalize.LowerCaseCharNormalize;
 import com.mayabot.nlp.segment.xprocessor.CorrectionProcessor;
@@ -53,17 +52,17 @@ public abstract class BaseTokenizerBuilderApi implements MynlpTokenizerBuilder {
     }
 
     public BaseTokenizerBuilderApi sentenceResult() {
-        builder.setTermCollector(WordTermCollector.bestPath);
+        builder.setTermCollector(WordTermCollectors.bestPath);
         return this;
     }
 
     public BaseTokenizerBuilderApi sentenceFlatResult() {
-        builder.setTermCollector(WordTermCollector.bestpath_subword_flat);
+        builder.setTermCollector(WordTermCollectors.bestpath_subword_flat);
         return this;
     }
 
     public BaseTokenizerBuilderApi indexResult() {
-        builder.setTermCollector(WordTermCollector.indexs_);
+        builder.setTermCollector(WordTermCollectors.indexs_);
         return this;
     }
 

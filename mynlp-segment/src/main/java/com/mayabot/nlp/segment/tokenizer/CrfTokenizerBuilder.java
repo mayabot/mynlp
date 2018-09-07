@@ -1,7 +1,6 @@
 package com.mayabot.nlp.segment.tokenizer;
 
 import com.google.common.collect.Lists;
-import com.mayabot.nlp.segment.WordTermCollector;
 import com.mayabot.nlp.segment.crf.CrfBaseSegment;
 import com.mayabot.nlp.segment.wordnet.ViterbiBestPathComputer;
 import com.mayabot.nlp.segment.wordnetiniter.AtomSegmenter;
@@ -47,8 +46,7 @@ public class CrfTokenizerBuilder extends BaseTokenizerBuilderApi {
 //        builder.addLastOptimizeProcessorClass(optimizeProcessor);
 
 
-
-        builder.setTermCollector(WordTermCollector.bestPath);
+        builder.setTermCollector(WordTermCollectors.bestPath);
 
 
     }

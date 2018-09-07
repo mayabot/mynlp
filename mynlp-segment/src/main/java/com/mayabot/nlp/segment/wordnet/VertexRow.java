@@ -24,18 +24,27 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * 代表一个槽位的行.
+ * 一行中有多个Vertex节点，每个Vertex的len的是按照从小到大的排序，且具有唯一性
+ *
+ * @author jimichan
+ */
 public class VertexRow implements Iterable<Vertex> {
 
-    private Vertex first;
+    Vertex first;
 
-    // 暂定和sindex一样，-1表示#start
+    /**
+     * 和sindex一样，-1表示#start
+     */
     int rowNum;
 
     Wordnet wordnet;
 
-    //private Vertex select; //Path 路径选择指针
-
-    private int size;
+    /**
+     * 包含Vertex的数量
+     */
+    int size;
 
 
     VertexRow(int rowNum, Wordnet wordnet) {
@@ -71,84 +80,46 @@ public class VertexRow implements Iterable<Vertex> {
             return null;
         }
 
-        //优化1个元素的情况
         if (size == 1) {
             if (first.length == length) {
                 return first;
             } else {
                 return null;
             }
-        }
-
-        //优化2个元素的情况
-        if (size == 2) {
-            if (first.length == length) {
-                return first;
-            } else if (first.next.length == length) {
-                return first.next;
-            } else {
-                return null;
-            }
-        }
-
-        //优化3个元素的情况
-        if (size == 3) {
-            if (first.length == length) {
-                return first;
-            } else if (first.next.length == length) {
-                return first.next;
-            } else if (first.next.next.length == length) {
-                return first.next.next;
-            } else {
-                return null;
-            }
-        }
-
-        //更多 使用循环
-        for (Vertex x = first; x != null; x = x.next) {
-            if (x.length == length) {
-                return x;
-            }
-
-            //提高检索性能
-            Vertex _next = x.next;
-            if (_next != null) {
-                if (length == _next.length) {
-                    return _next;
-                } else if (length < _next.length) {
+        } else {
+            for (Vertex x = first; x != null; x = x.next) {
+                if (x.length == length) {
+                    return x;
+                } else if (length < x.length) {
+                    // 2 5 因为是从小到大排序的，所以已经是小于当前值了，所以肯定找不到
                     return null;
                 }
-            } else {
-                return null;
             }
         }
+
         return null;
     }
 
     /**
      * 移除长度为length的节点。成功就返回被删除的节点
      *
-     * @param length
-     * @return
+     * @param length 词的长度
+     * @return 被删除的节点，null表示没有节点被删除
      */
     public Vertex remove(short length) {
         Vertex v = get(length);
         if (v != null) {
             unlink(v);
-            //this.wordnet.subtractionFlag(this.rowNum+v.length); //给被链入的行记数字
-//			if(v == select){
-//				select = null;
-//			}
         }
 
         return v;
     }
 
     /**
-     * 设置 vertext 以 length为key ,如果替换了返回被替换者
+     * 设置 Vertex 以 length为key ,如果替换了返回被替换者
      *
      * @param v
-     * @return
+     * @return 被替换的节点对象，null表示这是新增的Vertex
      */
     public Vertex put(Vertex v) {
 
@@ -158,7 +129,8 @@ public class VertexRow implements Iterable<Vertex> {
             v.setOptimizeNewNode(true);
         }
 
-        if (v.length != 0) { //END节点的length就是0
+        //END节点的length就是0
+        if (v.length != 0) {
             //this.wordnet.addFlag(this.rowNum+v.length); //给被链入的行记数字
         }
 
@@ -168,9 +140,6 @@ public class VertexRow implements Iterable<Vertex> {
         v.next = null;
         v.prev = null;
 
-//		if(v.length==3 && v.realWord().equals("大观园")){
-//			System.out.println();
-//		}
 
         if (isEmpty()) {
             linkFirst(v);
@@ -393,14 +362,6 @@ public class VertexRow implements Iterable<Vertex> {
     public Vertex first() {
         return first;
     }
-
-//	public Vertex getSelect() {
-//		return select;
-//	}
-//
-//	void selectVertex(Vertex select) {
-//		this.select = select;
-//	}
 
     public char theChar() {
         return wordnet.charAt(rowNum);

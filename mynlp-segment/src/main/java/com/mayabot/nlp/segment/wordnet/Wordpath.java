@@ -98,7 +98,7 @@ public class Wordpath {
                 final int from = pointer.getFrom();
                 final int len = pointer.getLen();
 
-                Vertex theVertex = wordnet.getVertex(from, (short) len);
+                Vertex theVertex = wordnet.getVertex(from, len);
 
                 if (theVertex == null) {
                     // 正则表达式，combin词后，的确或出现这种情况.
