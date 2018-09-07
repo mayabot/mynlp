@@ -121,6 +121,6 @@ enum CountBloomFilterStrategies implements CountBloomFilter.Strategy {
             }
             return count;
         }
-    };
+    }
 
 }

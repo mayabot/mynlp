@@ -35,7 +35,7 @@ import java.util.*;
 public class TailLOUDSTrie
         extends AbstractTermIdTrie
         implements Externalizable, TermIdTrie {
-    protected static interface NodeListener {
+    protected interface NodeListener {
         void listen(Node node, int id);
     }
 

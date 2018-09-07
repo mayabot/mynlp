@@ -28,7 +28,7 @@ import java.util.*;
 public class DoubleArray
         extends AbstractTermIdTrie
         implements Externalizable, TermIdTrie {
-    public static interface TermNodeListener {
+    public interface TermNodeListener {
         void listen(Node node, int nodeIndex);
     }
 

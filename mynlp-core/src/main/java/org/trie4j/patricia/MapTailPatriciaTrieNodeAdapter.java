@@ -65,8 +65,6 @@ public class MapTailPatriciaTrieNodeAdapter<T> implements MapNode<T> {
         node.setValue(value);
     }
 
-    ;
-
     private MapTailPatriciaTrieNode<T> node;
     private CharSequence tails;
 }
