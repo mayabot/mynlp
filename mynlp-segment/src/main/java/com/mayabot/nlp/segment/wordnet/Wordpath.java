@@ -47,13 +47,11 @@ public class Wordpath {
 
     private Wordnet wordnet;
 
-    private final BestPathComputer computer;
 
-    public Wordpath(Wordnet wordnet, BestPathComputer computer) {
+    public Wordpath(Wordnet wordnet) {
         this.wordnet = wordnet;
         this.length = wordnet.length();
         this.bitSet = new BitSet(length);
-        this.computer = computer;
 
         //每个字后面都有切分符号,默认切成单子
         bitSet.set(0, length);
@@ -69,7 +67,7 @@ public class Wordpath {
     public Iterable<Vertex> getBestPathWithBE() {
         //FIXME 此处可以优化
         Iterable<Vertex> b = ImmutableList.of(wordnet.getBeginRow().getFirst());
-        Iterable<Vertex> m = this::iteratorBestPath;
+        Iterable<Vertex> m = this::iteratorVertex;
         Iterable<Vertex> e = ImmutableList.of(wordnet.getEndRow().getFirst());
 
         return Iterables.concat(b, m, e);
@@ -80,7 +78,7 @@ public class Wordpath {
      *
      * @return 不包含开始和结束的点路径
      */
-    public Iterator<Vertex> iteratorBestPath() {
+    public Iterator<Vertex> iteratorVertex() {
         return new AbstractIterator<Vertex>() {
 
             private WordPointer pointer = wordPointer();
@@ -101,15 +99,10 @@ public class Wordpath {
                 Vertex theVertex = wordnet.getVertex(from, len);
 
                 if (theVertex == null) {
-                    // 正则表达式，combin词后，的确或出现这种情况.
-                    //theVertex = wordnet.put(from,len);
-                    // 一个行，但是没有去做选择
-                    // @ RepairWordnetProcessor 这里去修复了这个错误，到时要在之前去调用
+                    //@ RepairWordnetProcessor 这里去修复了这个错误，到时要在之前去调用
                     logger.error("row: " + from + " len " + len + " select is null");
                     throw new IllegalStateException("row: " + from + " len " + len + " select is null");
 
-                    // 要不要自动补齐
-                    //Wordnet.this.getRow(from).put(new Vertex(len));
                 }
 
                 return theVertex;
@@ -297,9 +290,5 @@ public class Wordpath {
 
     public void reset() {
         this.bitSet.set(0, length);
-    }
-
-    public BestPathComputer getBestPathComputer() {
-        return computer;
     }
 }

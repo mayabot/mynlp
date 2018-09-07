@@ -44,6 +44,8 @@ public class Wordnet implements CharSequence {
 
     static InternalLogger logger = InternalLoggerFactory.getInstance(Wordnet.class);
 
+    private BestPathComputer bestPathComputer;
+
     /**
      * 节点，每一行都是前缀词，和 char数字一一对应
      */
@@ -366,7 +368,7 @@ public class Wordnet implements CharSequence {
 ////		optimumWordnet.getEndRow().selectVertex(optimumWordnet.getEndRow().getFirst());
 //
 //        // 把最优路径选择出来
-//        Iterator<Vertex> ite = iteratorBestPath();
+//        Iterator<Vertex> ite = iteratorVertex();
 //        while (ite.hasNext()) {
 //            Vertex node = ite.next();
 //            Vertex new_node = node.copy();
@@ -383,7 +385,7 @@ public class Wordnet implements CharSequence {
      * 目前最有路径上的点，标记为优化网络
      */
     public void tagOptimizeNetVertex(Wordpath wordPath) {
-        Iterator<Vertex> ite = wordPath.iteratorBestPath();
+        Iterator<Vertex> ite = wordPath.iteratorVertex();
         while (ite.hasNext()) {
             Vertex node = ite.next();
             node.setOptimize(true);
@@ -475,5 +477,14 @@ public class Wordnet implements CharSequence {
 
     public VertexRow[] getSlotList() {
         return slotList;
+    }
+
+    public BestPathComputer getBestPathComputer() {
+        return bestPathComputer;
+    }
+
+    public Wordnet setBestPathComputer(BestPathComputer bestPathComputer) {
+        this.bestPathComputer = bestPathComputer;
+        return this;
     }
 }

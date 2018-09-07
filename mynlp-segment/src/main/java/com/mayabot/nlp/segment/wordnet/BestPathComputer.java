@@ -41,7 +41,7 @@ public interface BestPathComputer {
         @Override
         public Wordpath select(Wordnet wordnet) {
             //从后到前，获得完整的路径
-            final Wordpath wordPath = new Wordpath(wordnet, this);
+            final Wordpath wordPath = new Wordpath(wordnet);
 
             int point = 0;
             final int len = wordnet.length() - 1;

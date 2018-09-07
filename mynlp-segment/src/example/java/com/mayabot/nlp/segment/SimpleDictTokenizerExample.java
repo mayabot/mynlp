@@ -16,7 +16,7 @@ public class SimpleDictTokenizerExample {
         );
 
         System.out.println("--------------------");
-        tokenizer = new SimpleDictTokenizerBuilder().sentenceFlatResult().build();
+        tokenizer = new SimpleDictTokenizerBuilder().sentenceIndexCollector().build();
 
         tokenizer.tokenToTermList(text1).forEach(
                 System.out::println
