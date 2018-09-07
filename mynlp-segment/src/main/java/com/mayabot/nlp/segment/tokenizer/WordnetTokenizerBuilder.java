@@ -38,7 +38,7 @@ public class WordnetTokenizerBuilder implements MynlpTokenizerBuilder {
 
     private List<WordnetInitializer> wordnetInitializer = Lists.newArrayList();
 
-    private WordTermCollector termCollector = WordTermCollector.bestPath;
+    private WordTermCollector termCollector = WordTermCollectors.bestPath;
 
     private ArrayList<WordpathProcessor> pipeLine = Lists.newArrayList();
 
