@@ -274,10 +274,7 @@ public class Wordpath {
         //词尾原来是不是又插板，如果true，返回false
         int to = from + len - 1;
         //to 0 1 2 3
-        if (!bitSet.get(to)) {
-            return true;
-        }
-        return false;
+        return !bitSet.get(to);
     }
 
     @Override

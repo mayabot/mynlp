@@ -27,7 +27,7 @@ import java.io.*;
 import java.util.*;
 
 public class TailDoubleArray extends AbstractTermIdTrie implements TermIdTrie, Externalizable {
-    public static interface TermNodeListener {
+    public interface TermNodeListener {
         void listen(Node node, int nodeIndex);
     }
 

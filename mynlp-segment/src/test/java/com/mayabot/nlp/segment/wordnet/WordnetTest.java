@@ -23,10 +23,9 @@ public class WordnetTest {
     /**
      * 测试寻找没有被覆盖的字符
      *
-     * @throws Exception
      */
     @Test
-    public void findNoOverWords() throws Exception {
+    public void findNoOverWords() {
 
     }
 }
