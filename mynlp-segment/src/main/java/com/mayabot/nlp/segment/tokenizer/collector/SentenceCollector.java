@@ -29,6 +29,8 @@ public class SentenceCollector implements WordTermCollector {
             if (StringUtils.isWhiteSpace(term.word)) {
                 continue;
             }
+
+            consumer.accept(term);
         }
     }
 }

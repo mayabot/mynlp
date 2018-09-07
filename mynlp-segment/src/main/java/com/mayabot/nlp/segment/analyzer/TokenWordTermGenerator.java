@@ -1,5 +1,6 @@
 package com.mayabot.nlp.segment.analyzer;
 
+import com.google.common.base.Preconditions;
 import com.mayabot.nlp.segment.MynlpTokenizer;
 import com.mayabot.nlp.segment.WordTerm;
 import com.mayabot.nlp.utils.FastCharReader;
@@ -39,11 +40,15 @@ public class TokenWordTermGenerator implements WordTermGenerator {
      * @param tokenizer 具体的分词器
      */
     public TokenWordTermGenerator(Reader reader, MynlpTokenizer tokenizer) {
+        Preconditions.checkNotNull(tokenizer);
+        Preconditions.checkNotNull(reader);
         this.setReader(reader);
         this.tokenizer = tokenizer;
     }
 
     public TokenWordTermGenerator(String text, MynlpTokenizer tokenizer) {
+        Preconditions.checkNotNull(tokenizer);
+        Preconditions.checkNotNull(text);
         this.setString(text);
         this.tokenizer = tokenizer;
     }
