@@ -170,11 +170,10 @@ public class CorrectionDictionary {
 
         @Override
         public String toString() {
-            String sb = "AdjustWord{" + "path='" + path + '\'' +
+            return "AdjustWord{" + "path='" + path + '\'' +
                     ", raw='" + raw + '\'' +
                     ", words=" + words +
                     '}';
-            return sb;
         }
 
     }

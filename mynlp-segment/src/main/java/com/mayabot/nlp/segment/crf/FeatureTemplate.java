@@ -81,9 +81,8 @@ public class FeatureTemplate implements Serializable {
 
     @Override
     public String toString() {
-        String sb = "FeatureTemplate{" + "template='" + template + '\'' +
+        return "FeatureTemplate{" + "template='" + template + '\'' +
                 ", delimiterList=" + delimiterList +
                 '}';
-        return sb;
     }
 }
