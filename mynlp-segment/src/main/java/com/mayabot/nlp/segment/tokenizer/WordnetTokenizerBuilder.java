@@ -38,7 +38,7 @@ public class WordnetTokenizerBuilder implements MynlpTokenizerBuilder {
 
     private List<WordnetInitializer> wordnetInitializer = Lists.newArrayList();
 
-    private WordTermCollector termCollector = WordTermCollectors.bestPath;
+    private WordTermCollector termCollector;
 
     private ArrayList<WordpathProcessor> pipeLine = Lists.newArrayList();
 
@@ -105,6 +105,14 @@ public class WordnetTokenizerBuilder implements MynlpTokenizerBuilder {
             }
         });
 
+
+        //看看要不要配置 WordTermCollector
+        configListener.forEach(pair -> {
+            if (pair.clazz.equals(termCollector.getClass()) ||
+                    pair.clazz.isAssignableFrom(termCollector.getClass())) {
+                pair.consumer.accept(termCollector);
+            }
+        });
 
         // 执行这些监听动作
         configListener.forEach(pair -> {

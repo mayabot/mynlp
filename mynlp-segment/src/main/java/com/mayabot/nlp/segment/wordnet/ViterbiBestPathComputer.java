@@ -159,6 +159,13 @@ public class ViterbiBestPathComputer implements BestPathComputer {
      * @param to
      * @return
      */
+    static double partA = (1 - Predefine.dSmoothingPara);
+    static double partB = (1 - Predefine.dTemp);
+    static double PARTA_PARTB = partA * partB;
+    static double PARTTA_Dtemp = partA * Predefine.dTemp;
+    static double PartZ = Predefine.dSmoothingPara / Predefine.MAX_FREQUENCY;
+
+
     private double calculateWeight(Vertex from, Vertex to) {
         int frequency = from.natureAttribute.getTotalFrequency();
         if (frequency == 0) {
@@ -173,9 +180,16 @@ public class ViterbiBestPathComputer implements BestPathComputer {
 //		}
 
         int nTwoWordsFreq = coreBiGramTableDictionary.getBiFrequency(from.wordID, to.wordID);
+//        double value = -Math
+//                .log(Predefine.dSmoothingPara * frequency / (Predefine.MAX_FREQUENCY) +
+//                        partA* (partB * nTwoWordsFreq / frequency + Predefine.dTemp));
         double value = -Math
-                .log(Predefine.dSmoothingPara * frequency / (Predefine.MAX_FREQUENCY) + (1 - Predefine.dSmoothingPara)
-                        * ((1 - Predefine.dTemp) * nTwoWordsFreq / frequency + Predefine.dTemp));
+                .log(PartZ * frequency
+                        +
+                        PARTA_PARTB * nTwoWordsFreq / frequency
+
+                        + PARTTA_Dtemp
+                );
         if (value < 0.0) {
             value = -value;
         }
@@ -193,7 +207,7 @@ public class ViterbiBestPathComputer implements BestPathComputer {
      */
     private Wordpath buildPath(Wordnet wordnet) {
         //从后到前，获得完整的路径
-        Wordpath wordPath = new Wordpath(wordnet, this);
+        Wordpath wordPath = new Wordpath(wordnet);
 
         Vertex last = null;
 
