@@ -1,5 +1,6 @@
 package com.mayabot.mylp.lucene;
 
+import com.mayabot.nlp.segment.MynlpAnalyzer;
 import com.mayabot.nlp.segment.MynlpTokenizer;
 import com.mayabot.nlp.segment.WordTerm;
 import com.mayabot.nlp.segment.analyzer.StandardMynlpAnalyzer;
@@ -10,58 +11,55 @@ import org.apache.lucene.analysis.tokenattributes.PositionIncrementAttribute;
 
 import java.io.IOException;
 import java.util.Iterator;
-import java.util.LinkedList;
 
+/**
+ * @author jimichan
+ */
 public class MynlpLuceneTokenizer extends Tokenizer {
 
-    // 当前词
+    /**
+     * 当前词
+     */
     private final CharTermAttribute termAtt = addAttribute(CharTermAttribute.class);
 
-    // 偏移量
+    /**
+     * 偏移量
+     */
     private final OffsetAttribute offsetAtt = addAttribute(OffsetAttribute.class);
 
-    // 距离
+    /**
+     * 距离
+     */
     private final PositionIncrementAttribute positionAttr = addAttribute(PositionIncrementAttribute.class);
 
 
-    private LinkedList<WordTerm> buffer;
     private Iterator<WordTerm> iterator;
 
-    private StandardMynlpAnalyzer analyzer;
+    private MynlpAnalyzer analyzer;
 
     public MynlpLuceneTokenizer(MynlpTokenizer tokenizer) {
         analyzer = new StandardMynlpAnalyzer(tokenizer);
+    }
+
+    public MynlpLuceneTokenizer(MynlpAnalyzer analyzer) {
+        analyzer = analyzer;
     }
 
     @Override
     public boolean incrementToken() {
         clearAttributes();
 
-        if (buffer != null && !buffer.isEmpty()) {
-            WordTerm subword = buffer.pop();
-            positionAttr.setPositionIncrement(1);
-            termAtt.setEmpty().append(subword.word);
-            offsetAtt.setOffset(subword.getOffset(), subword.getOffset() + subword.length());
-            return true;
-        }
-
         if (iterator.hasNext()) {
+            WordTerm next = iterator.next();
+
+            positionAttr.setPositionIncrement(1);
+            termAtt.setEmpty().append(next.word);
+            offsetAtt.setOffset(next.getOffset(), next.getOffset() + next.length());
+
+            return true;
+        } else {
             return false;
         }
-
-        WordTerm term = iterator.next();
-
-        if (term.getSubword() != null) {
-            buffer = new LinkedList<>(term.getSubword());
-        } else {
-            buffer = null;
-        }
-
-        positionAttr.setPositionIncrement(1);
-
-        termAtt.setEmpty().append(term.word);
-        offsetAtt.setOffset(term.getOffset(), term.getOffset() + term.length());
-        return true;
     }
 
 
