@@ -1,6 +1,6 @@
 version = "1.1.0"
 
-def publish_resource = false
+def publish_resource = true
 
 if(!publish_resource){
     project.afterEvaluate {
@@ -8,4 +8,8 @@ if(!publish_resource){
             enabled = false
         }
     }
+}
+
+sourceJar{
+    getMainSpec().exclude("maya_data/**")
 }

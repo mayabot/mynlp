@@ -21,6 +21,7 @@ public class UseAnalyzer {
             System.out.print(tokenStream.getAttribute(OffsetAttribute.class).startOffset());
             System.out.print("\t");
             System.out.print(tokenStream.getAttribute(PositionIncrementAttribute.class).getPositionIncrement());
+            System.out.println();
         }
 
         analyzer.close();
