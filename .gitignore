@@ -30,6 +30,7 @@ mynlp_work/**
 /data/
 /data_dir/
 **/data
+example.data
 
 /dependency-reduced-pom.xml
 *.iml

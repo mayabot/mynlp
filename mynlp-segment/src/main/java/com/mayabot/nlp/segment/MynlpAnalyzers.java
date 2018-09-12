@@ -1,6 +1,7 @@
 package com.mayabot.nlp.segment;
 
 import com.mayabot.nlp.segment.analyzer.BaseMynlpAnalyzer;
+import com.mayabot.nlp.segment.analyzer.PunctuationFilter;
 import com.mayabot.nlp.segment.analyzer.StandardMynlpAnalyzer;
 import com.mayabot.nlp.segment.analyzer.WordTermGenerator;
 
@@ -29,6 +30,16 @@ public class MynlpAnalyzers {
         return new BaseMynlpAnalyzer(tokenizer) {
             @Override
             protected WordTermGenerator warp(WordTermGenerator base) {
+                return base;
+            }
+        };
+    }
+
+    public static MynlpAnalyzer noPunctuation(MynlpTokenizer tokenizer) {
+        return new BaseMynlpAnalyzer(tokenizer) {
+            @Override
+            protected WordTermGenerator warp(WordTermGenerator base) {
+                base = new PunctuationFilter(base);
                 return base;
             }
         };
