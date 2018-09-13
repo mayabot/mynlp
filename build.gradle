@@ -24,7 +24,7 @@ ext {
     guava_version = "19.0"
 }
 
-def buildVersion = "2.0.0-BETA6"
+def buildVersion = "2.0.0-BETA7"
 def snapShot = false
 
 subprojects {

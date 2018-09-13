@@ -38,25 +38,38 @@ public abstract class BaseTokenizerBuilderApi implements MynlpTokenizerBuilder {
      */
     private boolean correction = true;
 
-    private boolean subWord = false;
-
 
     /**
      * 是否开启词性分析
      */
     private boolean pos;
 
+    /**
+     * WordTerm 收集器
+     */
+    private WordTermCollector wordTermCollector;
+
+    /**
+     * 是否开启分词纠错
+     *
+     * @param correction
+     * @return
+     */
     public BaseTokenizerBuilderApi setCorrection(boolean correction) {
         this.correction = correction;
         return this;
     }
 
+    /**
+     * 是否开启词性分析
+     * @param pos
+     * @return
+     */
     public BaseTokenizerBuilderApi setPos(boolean pos) {
         this.pos = pos;
         return this;
     }
 
-    private WordTermCollector wordTermCollector;
 
     public BaseTokenizerBuilderApi sentenceCollector() {
         wordTermCollector = mynlp.getInstance(SentenceCollector.class);
@@ -87,9 +100,6 @@ public abstract class BaseTokenizerBuilderApi implements MynlpTokenizerBuilder {
             builder.addLastProcessor(CorrectionProcessor.class);
         }
 
-        if (subWord) {
-
-        }
 
         if (pos) {
             builder.addLastProcessor(PartOfSpeechTaggingComputerProcessor.class);

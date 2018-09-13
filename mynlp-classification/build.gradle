@@ -18,7 +18,7 @@ description = '文本分类.使用Fasttext算法.'
 
 dependencies {
     compile project(':mynlp-segment')
-    compile 'com.mayabot:fastText4j:1.2.1'
+    compile 'com.mayabot:fastText4j:1.2.2'
 
     testCompile 'junit:junit:4.12'
     testCompile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
