@@ -23,11 +23,16 @@ import com.mayabot.nlp.collection.dat.DoubleArrayTrie;
 import com.mayabot.nlp.segment.WordpathProcessor;
 import com.mayabot.nlp.segment.common.BaseMynlpComponent;
 import com.mayabot.nlp.segment.dictionary.CorrectionDictionary;
-import com.mayabot.nlp.segment.wordnet.Vertex;
+import com.mayabot.nlp.segment.dictionary.CorrectionDictionary.AdjustWord;
 import com.mayabot.nlp.segment.wordnet.Wordpath;
 
 /**
  * 人工纠错。
+ * 纠错的逻辑仅限：
+ * 1.一个词拆为多个词
+ * 2.多词组合和拆分 AB CDE FG => ABC DE FG
+ *
+ * 一定不能把已经成词的边界破坏掉
  * Created by jimichan on 2017/7/3.
  * @author jimichan
  */
@@ -42,30 +47,39 @@ public class CorrectionProcessor extends BaseMynlpComponent implements WordpathP
         this.dictionary = dictionary;
     }
 
+    public CorrectionDictionary getDictionary() {
+        return dictionary;
+    }
+
     @Override
     public Wordpath process(Wordpath wordPath) {
 
-        DoubleArrayTrie<CorrectionDictionary.AdjustWord> dat = dictionary.getDoubleArrayTrie();
+        DoubleArrayTrie<AdjustWord> dat = dictionary.getDoubleArrayTrie();
+
         if (dat == null) {
             return wordPath;
         }
 
-        DATMatcher<CorrectionDictionary.AdjustWord> datSearch
+        DATMatcher<AdjustWord> datSearch
                 = dat.match(wordPath.getWordnet().getCharArray(), 0);
 
 
         while (datSearch.next()) {
             int offset = datSearch.getBegin();
 
-            CorrectionDictionary.AdjustWord adjsutword = datSearch.getValue();
+            // 这里不允许破坏已经成词的边界
+            if (wordPath.willCutOtherWords(offset, datSearch.getLength())) {
+                continue;
+            }
+
+            AdjustWord adjsutword = datSearch.getValue();
 
             for (int len : adjsutword.getWords()) {
 
-                Vertex newword = wordPath.combine(offset, len);
+                wordPath.combine(offset, len);
 
                 offset += len;
             }
-
 
         }
 

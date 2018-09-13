@@ -1,6 +1,7 @@
 package com.mayabot.nlp.segment.tokenizer;
 
 import com.google.common.collect.Lists;
+import com.mayabot.nlp.segment.tokenizer.collector.SentenceCollector;
 import com.mayabot.nlp.segment.wordnet.BestPathComputer;
 import com.mayabot.nlp.segment.wordnetiniter.AtomSegmenter;
 import com.mayabot.nlp.segment.wordnetiniter.ConvertAbstractWord;
@@ -30,6 +31,9 @@ public class SimpleDictTokenizerBuilder extends BaseTokenizerBuilderApi {
 
 
         builder.addLastProcessor(CustomDictionaryProcessor.class);
+
+        //结果收集器
+        builder.setTermCollector(mynlp.getInstance(SentenceCollector.class));
     }
 
 
