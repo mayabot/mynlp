@@ -61,7 +61,6 @@ public class SentenceIndexWordCollector implements WordTermCollector {
                                 term.setOffset(small.getRowNum());
                                 //大于1的词，并且在范围内
                                 subwords.add(smallterm);
-
                             }
 
                         } finally {

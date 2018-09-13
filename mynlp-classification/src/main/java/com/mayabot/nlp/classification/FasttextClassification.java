@@ -6,7 +6,6 @@ import com.google.common.collect.Lists;
 import com.mayabot.mynlp.fasttext.*;
 import com.mayabot.nlp.segment.MynlpAnalyzer;
 import com.mayabot.nlp.segment.MynlpAnalyzers;
-import com.mayabot.nlp.segment.analyzer.StandardMynlpAnalyzer;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -21,12 +20,6 @@ import java.util.List;
  */
 public class FasttextClassification {
 
-    public static void main(String[] args) {
-        List<String> strings = new StandardMynlpAnalyzer().parseToStringList("非常一般的酒店最过分的是早餐居然在地下负一层而且基本没什么吃的!酒店的位置也非常一般四周景色非常不好!");
-
-        System.out.println(strings);
-
-    }
 
     /**
      * 训练Fasttext模型

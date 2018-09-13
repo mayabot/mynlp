@@ -19,6 +19,7 @@ package com.mayabot.nlp.segment.dictionary;
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
+import com.google.common.primitives.Ints;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.mayabot.nlp.MynlpEnv;
@@ -28,24 +29,20 @@ import com.mayabot.nlp.collection.dat.DoubleArrayTrieBuilder;
 import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
 import com.mayabot.nlp.resources.NlpResource;
-import com.mayabot.nlp.segment.common.FastJson;
 import com.mayabot.nlp.utils.CharSourceLineReader;
 
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
 import java.util.List;
 import java.util.TreeMap;
 
 
 /**
  * 人工纠错词典
+ *
  * <p>
+ * 格式 第几套/房
+ *
+ *
  * <p>
- * 第几套房 => 第几套/v 房
- * 词可以后面跟随 词性
- * <p>
- * 以后要做出支持多个词典的加载，然后每个项目都可以有不一样的设定
  *
  * @author jimichan
  */
@@ -53,18 +50,14 @@ import java.util.TreeMap;
 public class CorrectionDictionary {
 
     static InternalLogger logger = InternalLoggerFactory.getInstance(CorrectionDictionary.class);
+    public final static Setting<String> correctionDict = Setting.string("correction.dict", "dictionary/correction/adjust.txt");
 
-    private MynlpEnv mynlp;
 
     private DoubleArrayTrie<AdjustWord> doubleArrayTrie;
-
-    public final static Setting<String> correctionDict = Setting.string("correction.dict", "dictionary/correction/adjust.txt");
 
 
     @Inject
     public CorrectionDictionary(MynlpEnv mynlp) throws Exception {
-
-        this.mynlp = mynlp;
 
         List<String> resourceUrls = mynlp.getSettings().getAsList(correctionDict);
 
@@ -72,14 +65,16 @@ public class CorrectionDictionary {
             return;
         }
 
-        loadFromRealData(resourceUrls);
+        loadFromRealData(mynlp, resourceUrls);
     }
 
-    public CorrectionDictionary() {
+    public CorrectionDictionary(TreeMap<String, AdjustWord> data) {
+        DoubleArrayTrie dat = new DoubleArrayTrieBuilder().build(data);
+        doubleArrayTrie = dat;
     }
 
 
-    public void loadFromRealData(List<String> resourceUrls) throws Exception {
+    public void loadFromRealData(MynlpEnv mynlp, List<String> resourceUrls) throws Exception {
         TreeMap<String, AdjustWord> map = new TreeMap<>();
 
         for (String url : resourceUrls) {
@@ -113,36 +108,11 @@ public class CorrectionDictionary {
     public static class AdjustWord {
         String path;
         String raw;
-        List<Integer> words = Lists.newArrayListWithExpectedSize(4);
-
-        public static void write(AdjustWord a, DataOutput out) {
-            try {
-                out.writeUTF(a.path);
-                out.writeUTF(a.raw);
-                out.writeUTF(FastJson.toJson(a.words));
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-
-        public static AdjustWord read(DataInput in) {
-            try {
-                AdjustWord a = new AdjustWord();
-
-                a.path = in.readUTF();
-                a.raw = in.readUTF();
-                a.words = FastJson.fromJsonListInteger(in.readUTF());
-
-                return a;
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-
-        }
+        int[] words;
 
         static Splitter splitter = Splitter.on("/").trimResults().omitEmptyStrings();
 
-        public List<Integer> getWords() {
+        public int[] getWords() {
             return words;
         }
 
@@ -154,17 +124,24 @@ public class CorrectionDictionary {
             return raw;
         }
 
+        /**
+         * 第几套/房
+         *
+         * @param line
+         * @return
+         */
         public static AdjustWord parse(String line) {
             AdjustWord adjustWord = new AdjustWord();
             adjustWord.raw = line.trim();
 
             List<String> list = splitter.splitToList(adjustWord.raw);
             adjustWord.path = Joiner.on("").join(list);
+            List<Integer> words = Lists.newArrayList();
             for (String s : list) {
-                adjustWord.words.add(s.length());
+                words.add(s.length());
             }
 
-
+            adjustWord.words = Ints.toArray(words);
             return adjustWord;
         }
 
