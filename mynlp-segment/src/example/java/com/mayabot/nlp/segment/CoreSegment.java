@@ -10,5 +10,8 @@ public class CoreSegment {
         List<String> x = mynlpTokenizer.tokenToStringList("你好好 _lable_pos");
 
         System.out.println(x);
+
+        MynlpAnalyzer standard = MynlpAnalyzers.standard();
+
     }
 }
