@@ -9,7 +9,7 @@ import com.mayabot.nlp.segment.*;
 import com.mayabot.nlp.segment.common.VertexHelper;
 import com.mayabot.nlp.segment.common.normalize.Full2halfCharNormalize;
 import com.mayabot.nlp.segment.common.normalize.LowerCaseCharNormalize;
-import com.mayabot.nlp.segment.recognition.OptimizeWordPathProcessor;
+import com.mayabot.nlp.segment.tokenizer.recognition.OptimizeWordPathProcessor;
 import com.mayabot.nlp.segment.wordnet.BestPathComputer;
 
 import java.util.ArrayList;
@@ -36,7 +36,7 @@ public class WordnetTokenizerBuilder implements MynlpTokenizerBuilder {
             Full2halfCharNormalize.instace
     );
 
-    private List<WordnetInitializer> wordnetInitializer = Lists.newArrayList();
+    private List<WordnetFiller> wordnetFiller = Lists.newArrayList();
 
     private WordTermCollector termCollector;
 
@@ -57,8 +57,8 @@ public class WordnetTokenizerBuilder implements MynlpTokenizerBuilder {
         // 1. bestPathComputer
         Preconditions.checkNotNull(bestPathComputer);
 
-        // 2. WordnetInitializer
-        Preconditions.checkState(!wordnetInitializer.isEmpty());
+        // 2. WordnetFiller
+        Preconditions.checkState(!wordnetFiller.isEmpty());
 
 
         // 3.termCollector
@@ -68,7 +68,7 @@ public class WordnetTokenizerBuilder implements MynlpTokenizerBuilder {
         WordpathProcessor[] pipeline = prepare(pipeLine).toArray(new WordpathProcessor[0]);
 
         return new WordnetTokenizer(
-                wordnetInitializer,
+                wordnetFiller,
                 pipeline,
                 bestPathComputer
                 , termCollector,
@@ -112,6 +112,16 @@ public class WordnetTokenizerBuilder implements MynlpTokenizerBuilder {
                     pair.clazz.isAssignableFrom(termCollector.getClass())) {
                 pair.consumer.accept(termCollector);
             }
+        });
+
+        configListener.forEach(pair -> {
+            wordnetFiller.forEach(wf -> {
+                if (pair.clazz.equals(wf.getClass()) ||
+                        pair.clazz.isAssignableFrom(wf.getClass())) {
+                    pair.consumer.accept(wf);
+                }
+            });
+
         });
 
         // 执行这些监听动作
@@ -191,18 +201,18 @@ public class WordnetTokenizerBuilder implements MynlpTokenizerBuilder {
     }
 
 
-    public WordnetTokenizerBuilder addWordnetInitializer(WordnetInitializer... initializers) {
+    public WordnetTokenizerBuilder addLastWordnetFiller(WordnetFiller... initializers) {
 
-        for (WordnetInitializer initializer : initializers) {
-            this.wordnetInitializer.add(initializer);
+        for (WordnetFiller initializer : initializers) {
+            this.wordnetFiller.add(initializer);
         }
 
         return this;
     }
 
-    public WordnetTokenizerBuilder setWordnetInitializer(List<WordnetInitializer> initializers) {
+    public WordnetTokenizerBuilder addLastWordnetFiller(List<WordnetFiller> initializers) {
 
-        wordnetInitializer = initializers;
+        wordnetFiller.addAll(initializers);
 
         return this;
     }

@@ -251,7 +251,7 @@ public class MynlpContainerBuilder {
             try {
                 java.nio.file.Files.delete(delete.get(i).toPath());
             } catch (IOException e) {
-                e.printStackTrace();
+                //e.printStackTrace();
             }
         }
 

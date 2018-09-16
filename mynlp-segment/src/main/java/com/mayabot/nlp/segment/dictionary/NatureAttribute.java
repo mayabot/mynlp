@@ -42,36 +42,89 @@ public final class NatureAttribute {
 
     }
 
-    public static void write(NatureAttribute a, DataOutput out) {
-        try {
-            out.writeInt(a.totalFrequency);
 
-            int size = a.map.size();
+    public int size() {
+        return map.size();
+    }
 
-            if (size == 0) {
-                out.writeUTF("[]");
-            } else if (size == 1) {
-                Map.Entry<Nature, Integer> x = a.map.entrySet().iterator().next();
-                out.writeUTF(x.getKey().ord + "," + x.getValue());
-            } else {
-                StringBuilder line = new StringBuilder();
-                for (Map.Entry<Nature, Integer> x : a.map.entrySet()) {
-                    if (line.length() > 0) {
-                        line.append(",");
-                    }
-                    line.append(x.getKey().ord + "," + x.getValue());
-                }
-                out.writeUTF(line.toString());
-            }
-
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+    public Map.Entry<Nature, Integer> one() {
+        if (one == null) {
+            one = map.entrySet().iterator().next();
         }
+        return one;
+    }
+
+    public ImmutableMap<Nature, Integer> getMap() {
+        return map;
     }
 
 
-    //19,17,1,2
-    static int[] empty = new int[0];
+    public boolean hasNature(Nature xnature) {
+        return map.containsKey(xnature);
+    }
+
+    /**
+     * 使用单个词性，默认词频1000构造
+     *
+     * @param nature
+     */
+    public static NatureAttribute create1000(Nature nature) {
+        return create(nature, 1000);
+    }
+
+    /**
+     * 获取词性的词频
+     *
+     * @param nature 词性
+     * @return 词频
+     */
+    public int getNatureFrequency(final Nature nature) {
+        return map.getOrDefault(nature, 0);
+    }
+
+
+    private void computeTotal() {
+        int c = 0;
+        for (Integer i : map.values()) {
+            c += i;
+        }
+        this.totalFrequency = c;
+    }
+
+
+    @Override
+    public String toString() {
+        return map.toString();
+    }
+
+    public int getTotalFrequency() {
+        return totalFrequency;
+    }
+
+
+    public static NatureAttribute create() {
+        return new NatureAttribute();
+    }
+
+    public static NatureAttribute create(Nature nature, int frequency) {
+        NatureAttribute natureAttribute = new NatureAttribute();
+        natureAttribute.map = ImmutableMap.of(nature, frequency);
+        natureAttribute.totalFrequency = frequency;
+        return natureAttribute;
+    }
+
+    public static NatureAttribute create(String... param) {
+        NatureAttribute natureAttribute = new NatureAttribute();
+        int natureCount = param.length / 2;
+        ImmutableMap.Builder<Nature, Integer> builder = ImmutableMap.builder();
+        for (int i = 0; i < natureCount; ++i) {
+            builder.put(Nature.valueOf(param[1 + 2 * i]), Integer.parseInt(param[2 + 2 * i]));
+        }
+        natureAttribute.map = builder.build();
+        natureAttribute.computeTotal();
+        return natureAttribute;
+    }
+
 
     private static int[] quickJson(String json) {
         if ("[]".equals(json)) {
@@ -117,85 +170,36 @@ public final class NatureAttribute {
 
     }
 
-    public int size() {
-        return map.size();
-    }
+    public static void write(NatureAttribute a, DataOutput out) {
+        try {
+            out.writeInt(a.totalFrequency);
 
-    public Map.Entry<Nature, Integer> one() {
-        if (one == null) {
-            one = map.entrySet().iterator().next();
+            int size = a.map.size();
+
+            if (size == 0) {
+                out.writeUTF("[]");
+            } else if (size == 1) {
+                Map.Entry<Nature, Integer> x = a.map.entrySet().iterator().next();
+                out.writeUTF(x.getKey().ord + "," + x.getValue());
+            } else {
+                StringBuilder line = new StringBuilder();
+                for (Map.Entry<Nature, Integer> x : a.map.entrySet()) {
+                    if (line.length() > 0) {
+                        line.append(",");
+                    }
+                    line.append(x.getKey().ord + "," + x.getValue());
+                }
+                out.writeUTF(line.toString());
+            }
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
-        return one;
-    }
-
-    public ImmutableMap<Nature, Integer> getMap() {
-        return map;
     }
 
 
-    public static NatureAttribute create() {
-        return new NatureAttribute();
-    }
+    //19,17,1,2
+    static int[] empty = new int[0];
 
-    public static NatureAttribute create(Nature nature, int frequency) {
-        NatureAttribute natureAttribute = new NatureAttribute();
-        natureAttribute.map = ImmutableMap.of(nature, frequency);
-        natureAttribute.totalFrequency = frequency;
-        return natureAttribute;
-    }
-
-    public static NatureAttribute create(String... param) {
-        NatureAttribute natureAttribute = new NatureAttribute();
-        int natureCount = param.length / 2;
-        ImmutableMap.Builder<Nature, Integer> builder = ImmutableMap.builder();
-        for (int i = 0; i < natureCount; ++i) {
-            builder.put(Nature.valueOf(param[1 + 2 * i]), Integer.parseInt(param[2 + 2 * i]));
-        }
-        natureAttribute.map = builder.build();
-        natureAttribute.computeTotal();
-        return natureAttribute;
-    }
-
-    public boolean hasNature(Nature xnature) {
-        return map.containsKey(xnature);
-    }
-
-    /**
-     * 使用单个词性，默认词频1000构造
-     *
-     * @param nature
-     */
-    public static NatureAttribute create1000(Nature nature) {
-        return create(nature, 1000);
-    }
-
-    /**
-     * 获取词性的词频
-     *
-     * @param nature 词性
-     * @return 词频
-     */
-    public int getNatureFrequency(final Nature nature) {
-        return map.getOrDefault(nature, 0);
-    }
-
-
-    private void computeTotal() {
-        int c = 0;
-        for (Integer i : map.values()) {
-            c += i;
-        }
-        this.totalFrequency = c;
-    }
-
-
-    @Override
-    public String toString() {
-        return map.toString();
-    }
-
-    public int getTotalFrequency() {
-        return totalFrequency;
-    }
 
 }
