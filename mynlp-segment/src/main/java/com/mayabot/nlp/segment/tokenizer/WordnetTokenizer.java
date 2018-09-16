@@ -18,11 +18,9 @@ package com.mayabot.nlp.segment.tokenizer;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
-import com.mayabot.nlp.logging.InternalLogger;
-import com.mayabot.nlp.logging.InternalLoggerFactory;
 import com.mayabot.nlp.segment.*;
 import com.mayabot.nlp.segment.common.VertexHelper;
-import com.mayabot.nlp.segment.wordnet.BestPathComputer;
+import com.mayabot.nlp.segment.wordnet.BestPathAlgorithm;
 import com.mayabot.nlp.segment.wordnet.Wordnet;
 import com.mayabot.nlp.segment.wordnet.Wordpath;
 
@@ -40,19 +38,17 @@ public class WordnetTokenizer implements MynlpTokenizer {
         return new WordnetTokenizerBuilder();
     }
 
-    private static InternalLogger logger = InternalLoggerFactory.getInstance(WordnetTokenizer.class);
-
     /**
      * 当wordnet创建后，调用这些处理器来填充里面的节点
      */
-    private WordnetFiller[] initer;
+    private WordnetInitializer[] initer;
 
     /**
      * 处理器网络
      */
     private WordpathProcessor[] pipeline;
 
-    private BestPathComputer bestPathComputer;
+    private BestPathAlgorithm bestPathAlgorithm;
 
     private WordTermCollector collector;
 
@@ -60,20 +56,20 @@ public class WordnetTokenizer implements MynlpTokenizer {
 
     private CharNormalize[] charNormalizes;
 
-    WordnetTokenizer(List<WordnetFiller> initer,
+    WordnetTokenizer(List<WordnetInitializer> initer,
                      WordpathProcessor[] pipeline,
-                     BestPathComputer bestPathComputer,
+                     BestPathAlgorithm bestPathAlgorithm,
                      WordTermCollector termCollector,
                      List<CharNormalize> charNormalizes,
                      VertexHelper vertexHelper) {
-        this.initer = initer.toArray(new WordnetFiller[0]);
+        this.initer = initer.toArray(new WordnetInitializer[0]);
         this.pipeline = pipeline;
-        this.bestPathComputer = bestPathComputer;
+        this.bestPathAlgorithm = bestPathAlgorithm;
         this.collector = termCollector;
         this.vertexHelper = vertexHelper;
         this.charNormalizes = charNormalizes.toArray(new CharNormalize[0]);
 
-        Preconditions.checkNotNull(bestPathComputer);
+        Preconditions.checkNotNull(bestPathAlgorithm);
         Preconditions.checkNotNull(this.initer);
         Preconditions.checkNotNull(pipeline);
         Preconditions.checkArgument(pipeline.length != 0);
@@ -95,23 +91,22 @@ public class WordnetTokenizer implements MynlpTokenizer {
 
         //构建一个空的Wordnet对象
         final Wordnet wordnet = new Wordnet(text);
-        wordnet.setBestPathComputer(bestPathComputer);
+        wordnet.setBestPathAlgorithm(bestPathAlgorithm);
 
         wordnet.getBeginRow().put(vertexHelper.newBegin());
         wordnet.getEndRow().put(vertexHelper.newEnd());
 
-        for (WordnetFiller initializer : initer) {
+        for (WordnetInitializer initializer : initer) {
             initializer.fill(wordnet);
         }
 
 //        System.out.println("\n"+wordnet.toMoreString());
 
         //选择一个路径出来(第一次不严谨的分词结果)
-        Wordpath wordPath = bestPathComputer.select(wordnet);
+        Wordpath wordPath = bestPathAlgorithm.select(wordnet);
 
 //        System.out.println("\n"+wordnet.toMoreString());
 //        System.out.println(wordPath);
-
 
 
         // call WordpathProcessor

@@ -29,12 +29,12 @@ import com.mayabot.nlp.segment.wordnet.*;
  * @author jimichan
  */
 @Singleton
-public class ViterbiBestPathComputer implements BestPathComputer {
+public class ViterbiBestPathAlgorithm implements BestPathAlgorithm {
 
     private CoreBiGramTableDictionary coreBiGramTableDictionary;
 
     @Inject
-    public ViterbiBestPathComputer(CoreBiGramTableDictionary coreBiGramTableDictionary) {
+    public ViterbiBestPathAlgorithm(CoreBiGramTableDictionary coreBiGramTableDictionary) {
         this.coreBiGramTableDictionary = coreBiGramTableDictionary;
     }
 

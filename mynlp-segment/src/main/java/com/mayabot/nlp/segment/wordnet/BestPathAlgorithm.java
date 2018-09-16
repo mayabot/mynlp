@@ -14,22 +14,21 @@
  * limitations under the License.
  */
 
-package com.mayabot.nlp.segment;
-
-import com.mayabot.nlp.segment.wordnet.Wordnet;
+package com.mayabot.nlp.segment.wordnet;
 
 /**
- * 对Wordnet数据结构开始初始化填充.
- * 在基于Wordnet数据结构的分词系统中，第一步就是填充初始化wordnet，一般通过词典、规则、CRF等基础分词工具进行填充.
+ * 选择最佳路径。viterbi 维特比 viterbi算法 dijkstra算法 NShort算法 最笨的前向最大路径算法
  * @author jimichan
  */
-public interface WordnetFiller {
+public interface BestPathAlgorithm {
 
     /**
-     * 初始化
+     * 从词图网络中选择一条从头到尾的路径
      *
      * @param wordnet
+     * @return
      */
-    void fill(Wordnet wordnet);
+    Wordpath select(Wordnet wordnet);
+
 
 }
