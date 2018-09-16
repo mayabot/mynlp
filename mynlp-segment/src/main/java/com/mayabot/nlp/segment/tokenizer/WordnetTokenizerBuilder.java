@@ -1,3 +1,19 @@
+/*
+ * Copyright 2018 mayabot.com authors. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.mayabot.nlp.segment.tokenizer;
 
 import com.google.common.base.Preconditions;
@@ -10,23 +26,29 @@ import com.mayabot.nlp.segment.common.VertexHelper;
 import com.mayabot.nlp.segment.common.normalize.Full2halfCharNormalize;
 import com.mayabot.nlp.segment.common.normalize.LowerCaseCharNormalize;
 import com.mayabot.nlp.segment.tokenizer.recognition.OptimizeWordPathProcessor;
-import com.mayabot.nlp.segment.wordnet.BestPathComputer;
+import com.mayabot.nlp.segment.wordnet.BestPathAlgorithm;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
+ * WordnetTokenizer构建器
+ * <p>
+ * 调用WordnetTokenizer.builder()来创建WordnetTokenizerBuilder对象
+ *
  * @author jimichan
  */
 public class WordnetTokenizerBuilder implements MynlpTokenizerBuilder {
 
     private final Mynlp mynlp;
 
-    private BestPathComputer bestPathComputer;
+    /**
+     * 词图最优路径选择器
+     */
+    private BestPathAlgorithm bestPathAlgorithm;
 
     /**
      * 字符处理器,默认就有最小化和全角半角化
@@ -36,17 +58,34 @@ public class WordnetTokenizerBuilder implements MynlpTokenizerBuilder {
             Full2halfCharNormalize.instace
     );
 
-    private List<WordnetFiller> wordnetFiller = Lists.newArrayList();
+    /**
+     * 词图初始填充器
+     */
+    private List<WordnetInitializer> wordnetInitializer = Lists.newArrayList();
 
-    private WordTermCollector termCollector;
-
+    /**
+     * 分词逻辑管线
+     */
     private ArrayList<WordpathProcessor> pipeLine = Lists.newArrayList();
 
+    /**
+     * 保存后置监听器逻辑
+     */
+    private List<ConsumerPair> configListener = Lists.newArrayList();
 
-    private List<Pair> configListener = Lists.newArrayList();
-
+    /**
+     * 禁用组件的class集合
+     */
     private Set<Class> disabledComponentSet = Sets.newHashSet();
 
+    /**
+     * 最终结构收集器
+     */
+    private WordTermCollector termCollector;
+
+    /**
+     * 默认构造函数。不公开
+     */
     WordnetTokenizerBuilder() {
         this.mynlp = Mynlps.get();
     }
@@ -54,45 +93,32 @@ public class WordnetTokenizerBuilder implements MynlpTokenizerBuilder {
     @Override
     public MynlpTokenizer build() {
 
-        // 1. bestPathComputer
-        Preconditions.checkNotNull(bestPathComputer);
+        // 1. bestPathAlgorithm
+        Preconditions.checkNotNull(bestPathAlgorithm);
 
-        // 2. WordnetFiller
-        Preconditions.checkState(!wordnetFiller.isEmpty());
-
+        // 2. WordnetInitializer
+        Preconditions.checkState(!wordnetInitializer.isEmpty());
 
         // 3.termCollector
         Preconditions.checkNotNull(termCollector);
 
-
-        WordpathProcessor[] pipeline = prepare(pipeLine).toArray(new WordpathProcessor[0]);
+        // 4
+        callListener();
 
         return new WordnetTokenizer(
-                wordnetFiller,
-                pipeline,
-                bestPathComputer
+                wordnetInitializer,
+                pipeLine.toArray(new WordpathProcessor[0]),
+                bestPathAlgorithm
                 , termCollector,
                 this.charNormalizes,
                 mynlp.getInstance(VertexHelper.class));
     }
 
 
-    public WordnetTokenizerBuilder setTermCollector(WordTermCollector termCollector) {
-        this.termCollector = termCollector;
-        return this;
-    }
-
-    public <T> WordnetTokenizerBuilder config(Class<T> clazz, Consumer<T> listener) {
-        configListener.add(new Pair(clazz, listener));
-        return this;
-    }
-
-    public void disabledComponent(Class clazz) {
-        disabledComponentSet.add(clazz);
-    }
-
-
-    private ArrayList<WordpathProcessor> prepare(ArrayList<WordpathProcessor> pipeLine) {
+    /**
+     * 调用后置监听器
+     */
+    private void callListener() {
 
         config(OptimizeProcessor.class, p -> {
             if (disabledComponentSet.contains(p.getClass())) {
@@ -115,7 +141,7 @@ public class WordnetTokenizerBuilder implements MynlpTokenizerBuilder {
         });
 
         configListener.forEach(pair -> {
-            wordnetFiller.forEach(wf -> {
+            wordnetInitializer.forEach(wf -> {
                 if (pair.clazz.equals(wf.getClass()) ||
                         pair.clazz.isAssignableFrom(wf.getClass())) {
                     pair.consumer.accept(wf);
@@ -143,48 +169,116 @@ public class WordnetTokenizerBuilder implements MynlpTokenizerBuilder {
             });
         });
 
-        return pipeLine;
     }
 
-    public WordnetTokenizerBuilder addCharNormalizes(CharNormalize charNormalize) {
+    /**
+     * 设定针对WordpathProcessor，WordnetInitializer，WordTermCollector等组件后置逻辑。
+     * 通过这个方法可以已经创建的组件进行配置
+     *
+     * @param clazz
+     * @param listener
+     * @param <T>
+     * @return
+     */
+    public <T> WordnetTokenizerBuilder config(Class<T> clazz, Consumer<T> listener) {
+        configListener.add(new ConsumerPair(clazz, listener));
+        return this;
+    }
+
+    /**
+     * 禁用指定的组件
+     *
+     * @param clazz 组件的Class
+     * @return
+     */
+    public WordnetTokenizerBuilder disabledComponent(Class clazz) {
+        disabledComponentSet.add(clazz);
+        return this;
+    }
+
+    /**
+     * 添加CharNormalize
+     *
+     * @param charNormalizeClass 通过Guice来初始化该对象
+     * @return self
+     */
+    public WordnetTokenizerBuilder addCharNormalize(Class<? extends CharNormalize> charNormalizeClass) {
+        this.charNormalizes.add(mynlp.getInstance(charNormalizeClass));
+        return this;
+    }
+
+    /**
+     * 添加CharNormalize
+     *
+     * @param charNormalize
+     * @return self
+     */
+    public WordnetTokenizerBuilder addCharNormalize(CharNormalize charNormalize) {
         this.charNormalizes.add(charNormalize);
         return this;
     }
 
-    public WordnetTokenizerBuilder removeCharNormalizes(Class<? extends CharNormalize> clazz) {
+    /**
+     * 移除CharNormalize
+     *
+     * @param clazz
+     * @return
+     */
+    public WordnetTokenizerBuilder removeCharNormalize(Class<? extends CharNormalize> clazz) {
         this.charNormalizes.removeIf(obj -> clazz.isAssignableFrom(obj.getClass()) || obj.getClass().equals(clazz));
         return this;
     }
 
-    public BestPathComputer getBestPathComputer() {
-        return bestPathComputer;
-    }
-
-    public WordnetTokenizerBuilder setBestPathComputer(BestPathComputer bestPathComputer) {
-        this.bestPathComputer = bestPathComputer;
+    /**
+     * 设置BestPathComputer的实现对象
+     *
+     * @param bestPathAlgorithm
+     * @return
+     */
+    public WordnetTokenizerBuilder setBestPathAlgorithm(BestPathAlgorithm bestPathAlgorithm) {
+        this.bestPathAlgorithm = bestPathAlgorithm;
         return this;
     }
 
-    public WordnetTokenizerBuilder setBestPathComputer(Class<? extends BestPathComputer> clazz) {
-        this.bestPathComputer = mynlp.getInstance(clazz);
+    /**
+     * 设置BestPathComputer的实现类，有Guice创建对象
+     *
+     * @param clazz
+     * @return
+     */
+    public WordnetTokenizerBuilder setBestPathComputer(Class<? extends BestPathAlgorithm> clazz) {
+        this.bestPathAlgorithm = mynlp.getInstance(clazz);
         return this;
     }
 
+    /**
+     * 增加一个WordpathProcessor实现对象
+     *
+     * @param processor
+     * @return
+     */
     public WordnetTokenizerBuilder addLastProcessor(WordpathProcessor processor) {
         pipeLine.add(processor);
         return this;
     }
 
+    /**
+     * 增加一个WordpathProcessor实现类
+     *
+     * @param clazz
+     * @return
+     */
     public WordnetTokenizerBuilder addLastProcessor(Class<? extends WordpathProcessor> clazz) {
         pipeLine.add(mynlp.getInstance(clazz));
         return this;
     }
 
-    public WordnetTokenizerBuilder addLastProcessor(Function<Mynlp, ? extends WordpathProcessor> factory) {
-        pipeLine.add(factory.apply(mynlp));
-        return this;
-    }
-
+    /**
+     * 增加一组OptimizeProcessor实现
+     *
+     * @param ops
+     * @return
+     */
     public WordnetTokenizerBuilder addLastOptimizeProcessor(List<? extends OptimizeProcessor> ops) {
         OptimizeWordPathProcessor instance = mynlp.getInstance(OptimizeWordPathProcessor.class);
         instance.addAllOptimizeProcessor(ops);
@@ -192,7 +286,12 @@ public class WordnetTokenizerBuilder implements MynlpTokenizerBuilder {
         return this;
     }
 
-
+    /**
+     * 增加一组OptimizeProcessor实现类
+     *
+     * @param ops
+     * @return
+     */
     public WordnetTokenizerBuilder addLastOptimizeProcessorClass(List<Class<? extends OptimizeProcessor>> ops) {
         List<OptimizeProcessor> list =
                 ops.stream().map(it -> mynlp.getInstance(it)).collect(Collectors.toList());
@@ -200,36 +299,63 @@ public class WordnetTokenizerBuilder implements MynlpTokenizerBuilder {
         return addLastOptimizeProcessor(list);
     }
 
+    /**
+     * 增加WordnetInitializer对象
+     *
+     * @param initializers
+     * @return
+     */
+    public WordnetTokenizerBuilder addLastWordnetInitializer(WordnetInitializer... initializers) {
 
-    public WordnetTokenizerBuilder addLastWordnetFiller(WordnetFiller... initializers) {
-
-        for (WordnetFiller initializer : initializers) {
-            this.wordnetFiller.add(initializer);
+        for (WordnetInitializer initializer : initializers) {
+            this.wordnetInitializer.add(initializer);
         }
-
         return this;
     }
 
-    public WordnetTokenizerBuilder addLastWordnetFiller(List<WordnetFiller> initializers) {
+    /**
+     * 增加WordnetInitializer
+     *
+     * @param initializers
+     * @return
+     */
+    public WordnetTokenizerBuilder addLastWordnetInitializer(Class<? extends WordnetInitializer>... initializers) {
 
-        wordnetFiller.addAll(initializers);
-
+        for (Class<? extends WordnetInitializer> clazz : initializers) {
+            this.wordnetInitializer.add(mynlp.getInstance(clazz));
+        }
         return this;
     }
 
+    /**
+     * 设置分词结果收集器
+     *
+     * @param termCollector
+     * @return
+     */
+    public WordnetTokenizerBuilder setTermCollector(WordTermCollector termCollector) {
+        this.termCollector = termCollector;
+        return this;
+    }
 
-    private static class Pair {
+    /**
+     * 设置分词结果收集器
+     *
+     * @param termCollectorClass
+     * @return
+     */
+    public WordnetTokenizerBuilder setTermCollector(Class<? extends WordTermCollector> termCollectorClass) {
+        this.termCollector = mynlp.getInstance(termCollectorClass);
+        return this;
+    }
+
+    private static class ConsumerPair {
         Class clazz;
         Consumer consumer;
 
-        public Pair(Class clazz, Consumer consumer) {
+        public ConsumerPair(Class clazz, Consumer consumer) {
             this.clazz = clazz;
             this.consumer = consumer;
         }
     }
-
-    public ArrayList<WordpathProcessor> getPipeLine() {
-        return pipeLine;
-    }
-
 }
