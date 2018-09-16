@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package com.mayabot.nlp.segment.tokenizer.filler;
+package com.mayabot.nlp.segment.tokenizer.initializer;
 
 import com.google.inject.Inject;
-import com.mayabot.nlp.segment.WordnetFiller;
+import com.mayabot.nlp.segment.WordnetInitializer;
 import com.mayabot.nlp.segment.dictionary.NatureAttribute;
 import com.mayabot.nlp.segment.dictionary.core.CoreDictionary;
 import com.mayabot.nlp.segment.wordnet.Vertex;
@@ -30,12 +30,12 @@ import com.mayabot.nlp.segment.wordnet.Wordnet;
  * 后面有些识别器需要这些设置的属性
  * @author jimichan
  */
-public class ConvertAbstractWordFiller implements WordnetFiller {
+public class ConvertAbstractWordInitializer implements WordnetInitializer {
 
     private final CoreDictionary coreDictionary;
 
     @Inject
-    public ConvertAbstractWordFiller(CoreDictionary coreDictionary) {
+    public ConvertAbstractWordInitializer(CoreDictionary coreDictionary) {
         this.coreDictionary = coreDictionary;
     }
 

@@ -9,10 +9,7 @@ public class DisableEmailPattern {
 
     public static void main(String[] args) {
         MynlpTokenizer tokenizer = new CoreTokenizerBuilder()
-                .custom(
-                        b ->
-                                b.config(TimeStringProcessor.class, it -> it.setEnableEmail(false))
-                ).build();
+                .config(TimeStringProcessor.class, it -> it.setEnableEmail(false)).build();
 
 
         List<String> list = tokenizer.tokenToStringList("这是我的email jimichan@gmail.com");

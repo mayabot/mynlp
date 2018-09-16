@@ -13,10 +13,9 @@ public class CombineTest {
         MynlpTokenizerBuilder builder =
                 MynlpTokenizers.coreTokenizerBuilder()
                         .setPersonRecognition(false)
-                        .custom(b -> {
-                            b.config(CombineProcessor.class, x -> x.setEnableShuLiang(true));
+                        .config(CombineProcessor.class, x -> x.setEnableShuLiang(true));
 
-                        });
+
 
         MynlpTokenizer tokenizer = builder.build();
 

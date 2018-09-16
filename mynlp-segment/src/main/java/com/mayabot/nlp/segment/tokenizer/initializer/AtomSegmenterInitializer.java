@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package com.mayabot.nlp.segment.tokenizer.filler;
+package com.mayabot.nlp.segment.tokenizer.initializer;
 
 import com.google.inject.Inject;
 import com.mayabot.nlp.fst.FST;
 import com.mayabot.nlp.fst.FstCondition;
 import com.mayabot.nlp.fst.FstMatcher;
 import com.mayabot.nlp.fst.FstNode;
-import com.mayabot.nlp.segment.WordnetFiller;
+import com.mayabot.nlp.segment.WordnetInitializer;
 import com.mayabot.nlp.segment.dictionary.Nature;
 import com.mayabot.nlp.segment.dictionary.NatureAttribute;
 import com.mayabot.nlp.segment.dictionary.core.CoreDictionary;
@@ -38,7 +38,7 @@ import com.mayabot.nlp.utils.Characters;
  *
  * @author jimichan
  */
-public class AtomSegmenterFiller implements WordnetFiller {
+public class AtomSegmenterInitializer implements WordnetInitializer {
 
     //原子分词: 连续空的，相同的type作为整体
 
@@ -49,7 +49,7 @@ public class AtomSegmenterFiller implements WordnetFiller {
     final int numWordId;
 
     @Inject
-    public AtomSegmenterFiller(CoreDictionary coreDictionary) {
+    public AtomSegmenterInitializer(CoreDictionary coreDictionary) {
         this.coreDictionary = coreDictionary;
 
         fst = new FST<>();

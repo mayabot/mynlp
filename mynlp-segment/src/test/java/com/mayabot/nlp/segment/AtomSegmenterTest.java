@@ -26,7 +26,7 @@ public class AtomSegmenterTest {
 //        wordnet.put(5,2);
 //        wordnet.put(7,2);
 //
-//        FstMatcher<VertexRow, VertexRow> m = AtomSegmenterFiller.emptyFST.newMatcher(wordnet.getSlotList()
+//        FstMatcher<VertexRow, VertexRow> m = AtomSegmenterInitializer.emptyFST.newMatcher(wordnet.getSlotList()
 //        );
 //
 //        StringBuilder sb = new StringBuilder();
@@ -48,7 +48,7 @@ public class AtomSegmenterTest {
 //        wordnet.put(5,2);
 //        wordnet.put(7,2);
 //
-//        FstMatcher<VertexRow, VertexRow> m2 = AtomSegmenterFiller.emptyFST.newMatcher(wordnet.getSlotList()
+//        FstMatcher<VertexRow, VertexRow> m2 = AtomSegmenterInitializer.emptyFST.newMatcher(wordnet.getSlotList()
 //        );
 //        while (m2.find()) {
 //
@@ -56,7 +56,7 @@ public class AtomSegmenterTest {
 //
 //        long t1 = System.currentTimeMillis();
 //        for (int i = 0; i <1000000; i++) {
-//            FstMatcher<VertexRow, VertexRow> m = AtomSegmenterFiller.emptyFST.newMatcher(wordnet.getSlotList()
+//            FstMatcher<VertexRow, VertexRow> m = AtomSegmenterInitializer.emptyFST.newMatcher(wordnet.getSlotList()
 //            );
 //            while (m.find()) {
 //
