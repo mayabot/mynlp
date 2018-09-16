@@ -33,12 +33,14 @@ public class VertexHelper {
 
     private CoreDictionary coreDictionary;
 
-    private final NatureAttribute bigin_attr = NatureAttribute.create(Nature.begin, Predefine.MAX_FREQUENCY / 10);
-    private final NatureAttribute endbigin_attr = NatureAttribute.create(Nature.end, Predefine.MAX_FREQUENCY / 10);
+    private final NatureAttribute bigin_attr;
+    private final NatureAttribute endbigin_attr;
 
     @Inject
     public VertexHelper(CoreDictionary coreDictionary) {
         this.coreDictionary = coreDictionary;
+        bigin_attr = NatureAttribute.create(Nature.begin, coreDictionary.TOTAL_FREQUENCY / 10);
+        endbigin_attr = NatureAttribute.create(Nature.end, coreDictionary.TOTAL_FREQUENCY / 10);
     }
 
     /**

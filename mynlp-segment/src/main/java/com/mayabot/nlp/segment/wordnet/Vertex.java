@@ -23,16 +23,15 @@ import com.mayabot.nlp.segment.dictionary.core.CoreDictionary;
 import java.util.Map;
 
 /**
- * WordNode中的一个节点。顶点 它同时实现了LinkedList中节点的功能指针，免除了大量小对象的创建
+ * WordNode中的一个节点。顶点 它同时实现了LinkedList中节点的功能指针
  * <p>
- * 相对于Hanlp里面的Vertex类
  *
  * @author jimichan
  */
 public class Vertex extends VertexExt {
 
     /**
-     * realword词的长度占位。short类型已经够用了
+     * 词的长度
      */
     public final int length;
 
@@ -60,7 +59,7 @@ public class Vertex extends VertexExt {
     public int wordID = -1;
 
     /**
-     * 词的属性，谨慎修改属性内部的数据，因为会影响到字典<br>
+     * 词的属性
      * 如果要修改，应当new一个Attribute
      */
     public NatureAttribute natureAttribute;
@@ -70,7 +69,7 @@ public class Vertex extends VertexExt {
     /**
      * 词性分析计算出来的词性,计算后的结果
      */
-    private Nature guaseNature = null;
+    private Nature guessNature = null;
 
     private int natureFreq;
 
@@ -199,8 +198,8 @@ public class Vertex extends VertexExt {
      * @return
      */
     public Nature guessNature() {
-        if (guaseNature != null) {
-            return guaseNature;
+        if (guessNature != null) {
+            return guessNature;
         }
 
         if (natureAttribute == null) {
@@ -210,9 +209,9 @@ public class Vertex extends VertexExt {
 
         if (natureAttribute.size() == 1) {
             Map.Entry<Nature, Integer> one = natureAttribute.one();
-            this.guaseNature = one.getKey();
+            this.guessNature = one.getKey();
             this.natureFreq = one.getValue();
-            return guaseNature;
+            return guessNature;
         }
 
         return null;
@@ -228,7 +227,7 @@ public class Vertex extends VertexExt {
             return true;
         }
         if (natureAttribute.size() == 1 && natureAttribute.one().getKey() == nature) {
-            this.guaseNature = nature;
+            this.guessNature = nature;
             this.natureFreq = natureAttribute.one().getValue();
             return true;
         }
@@ -240,7 +239,7 @@ public class Vertex extends VertexExt {
             result = false;
         }
 
-        guaseNature = nature;
+        guessNature = nature;
         this.natureFreq = frequency;
         return result;
     }

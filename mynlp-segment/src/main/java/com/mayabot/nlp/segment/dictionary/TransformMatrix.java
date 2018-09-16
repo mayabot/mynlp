@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.mayabot.nlp.segment.common;
+package com.mayabot.nlp.segment.dictionary;
 
 import com.google.common.base.Splitter;
 import com.google.common.collect.ArrayTable;
@@ -23,6 +23,8 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import com.google.common.io.ByteSource;
 import com.mayabot.nlp.resources.NlpResource;
+import com.mayabot.nlp.segment.common.QuickStringDoubleTable;
+import com.mayabot.nlp.segment.common.QuickStringIntTable;
 
 import java.io.BufferedReader;
 import java.io.IOException;
