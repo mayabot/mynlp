@@ -8,4 +8,5 @@ package com.mayabot.nlp.segment.wordnet;
  *
  * 还提供了Wordpath数据结构，wordpath采用bitSet去实现对选中路径的描述，避免和wordnet数据结构的纠缠，
  * 让规则程序更容易去进行重新划分词语，为识别器和业务规则的编码带来便利，降低了程序复杂度。
+ * @author jimichan 
  **/
