@@ -45,7 +45,7 @@ public class WordnetTokenizer implements MynlpTokenizer {
     /**
      * 当wordnet创建后，调用这些处理器来填充里面的节点
      */
-    private WordnetInitializer[] initer;
+    private WordnetFiller[] initer;
 
     /**
      * 处理器网络
@@ -60,13 +60,13 @@ public class WordnetTokenizer implements MynlpTokenizer {
 
     private CharNormalize[] charNormalizes;
 
-    WordnetTokenizer(List<WordnetInitializer> initer,
+    WordnetTokenizer(List<WordnetFiller> initer,
                      WordpathProcessor[] pipeline,
                      BestPathComputer bestPathComputer,
                      WordTermCollector termCollector,
                      List<CharNormalize> charNormalizes,
                      VertexHelper vertexHelper) {
-        this.initer = initer.toArray(new WordnetInitializer[0]);
+        this.initer = initer.toArray(new WordnetFiller[0]);
         this.pipeline = pipeline;
         this.bestPathComputer = bestPathComputer;
         this.collector = termCollector;
@@ -100,12 +100,19 @@ public class WordnetTokenizer implements MynlpTokenizer {
         wordnet.getBeginRow().put(vertexHelper.newBegin());
         wordnet.getEndRow().put(vertexHelper.newEnd());
 
-        for (WordnetInitializer initializer : initer) {
-            initializer.init(wordnet);
+        for (WordnetFiller initializer : initer) {
+            initializer.fill(wordnet);
         }
+
+//        System.out.println("\n"+wordnet.toMoreString());
 
         //选择一个路径出来(第一次不严谨的分词结果)
         Wordpath wordPath = bestPathComputer.select(wordnet);
+
+//        System.out.println("\n"+wordnet.toMoreString());
+//        System.out.println(wordPath);
+
+
 
         // call WordpathProcessor
         for (WordpathProcessor processor : pipeline) {

@@ -9,8 +9,10 @@ import com.mayabot.nlp.segment.common.normalize.Full2halfCharNormalize;
 import com.mayabot.nlp.segment.common.normalize.LowerCaseCharNormalize;
 import com.mayabot.nlp.segment.tokenizer.collector.SentenceCollector;
 import com.mayabot.nlp.segment.tokenizer.collector.SentenceIndexWordCollector;
-import com.mayabot.nlp.segment.xprocessor.CorrectionProcessor;
-import com.mayabot.nlp.segment.xprocessor.PartOfSpeechTaggingComputerProcessor;
+import com.mayabot.nlp.segment.tokenizer.xprocessor.CorrectionProcessor;
+import com.mayabot.nlp.segment.tokenizer.xprocessor.PartOfSpeechTaggingComputerProcessor;
+
+import java.util.function.Consumer;
 
 /**
  * @author jimichan
@@ -20,6 +22,7 @@ public abstract class BaseTokenizerBuilderApi implements MynlpTokenizerBuilder {
     protected WordnetTokenizerBuilder builder = WordnetTokenizer.builder();
 
     protected Mynlp mynlp = Mynlps.get();
+    private Consumer<WordnetTokenizerBuilder> consumer;
 
 
     /**
@@ -27,7 +30,7 @@ public abstract class BaseTokenizerBuilderApi implements MynlpTokenizerBuilder {
      *
      * @param builder
      */
-    public abstract void setUp(WordnetTokenizerBuilder builder);
+    protected abstract void setUp(WordnetTokenizerBuilder builder);
 
     private boolean lowerCaseCharNormalize = true;
 
@@ -81,11 +84,17 @@ public abstract class BaseTokenizerBuilderApi implements MynlpTokenizerBuilder {
         return this;
     }
 
+    public MynlpTokenizerBuilder custom(Consumer<WordnetTokenizerBuilder> consumer) {
+        this.consumer = consumer;
+        return this;
+    }
+
 
     @Override
     public MynlpTokenizer build() {
 
         setUp(builder);
+
 
         if (!lowerCaseCharNormalize) {
             builder.removeCharNormalizes(LowerCaseCharNormalize.class);
@@ -100,13 +109,19 @@ public abstract class BaseTokenizerBuilderApi implements MynlpTokenizerBuilder {
             builder.addLastProcessor(CorrectionProcessor.class);
         }
 
-
         if (pos) {
             builder.addLastProcessor(PartOfSpeechTaggingComputerProcessor.class);
         }
 
         if (wordTermCollector != null) {
             builder.setTermCollector(wordTermCollector);
+        } else {
+            builder.setTermCollector(mynlp.getInstance(SentenceCollector.class));
+        }
+
+
+        if (consumer != null) {
+            consumer.accept(builder);
         }
 
         return builder.build();

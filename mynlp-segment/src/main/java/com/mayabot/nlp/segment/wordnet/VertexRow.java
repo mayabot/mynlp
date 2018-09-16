@@ -52,7 +52,7 @@ public class VertexRow implements Iterable<Vertex> {
         this.wordnet = wordnet;
     }
 
-    public Vertex getOrCrete(short length) {
+    public Vertex getOrCrete(int length) {
 
         Vertex v = get(length);
 

@@ -1,7 +1,7 @@
 package com.mayabot.nlp.segment;
 
 import com.mayabot.nlp.segment.dictionary.Nature;
-import com.mayabot.nlp.segment.tokenizer.CrfTokenizerBuilder;
+import com.mayabot.nlp.segment.tokenizer.crf.CrfTokenizerBuilder;
 import org.junit.Test;
 
 import java.util.List;

@@ -99,6 +99,10 @@ public class Vertex extends VertexExt {
         this.natureAttribute = node.natureAttribute;
     }
 
+    public static boolean hasNature(Vertex vertex, Nature nature) {
+        return vertex != null && vertex.natureAttribute != null && vertex.natureAttribute.hasNature(nature);
+    }
+
     /**
      * copy to new object , in abstractWord length wordinfo
      *

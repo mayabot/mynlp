@@ -32,11 +32,22 @@ public class PunctuationFilter extends FilterWordTermGenerator implements
 
     @Override
     public boolean test(WordTerm term) {
-        return !Characters.isPunctuation(term.word.charAt(0));
+        if (term.word.length() == 1) {
+            return !Characters.isPunctuation(term.word.charAt(0));
+        } else if (term.word.length() == 2) {
+
+            return !Characters.isPunctuation(term.word.charAt(0)) &&
+                    !Characters.isPunctuation(term.word.charAt(1));
+        } else {
+            return !Characters.isPunctuation(term.word.charAt(0)) &&
+                    !Characters.isPunctuation(term.word.charAt(1)) &&
+                    !Characters.isPunctuation(term.word.charAt(2));
+        }
+
     }
 
     @Override
     public boolean apply(WordTerm term) {
-        return !Characters.isPunctuation(term.word.charAt(0));
+        return test(term);
     }
 }
