@@ -44,7 +44,7 @@ public class Wordnet implements CharSequence {
 
     static InternalLogger logger = InternalLoggerFactory.getInstance(Wordnet.class);
 
-    private BestPathComputer bestPathComputer;
+    private BestPathAlgorithm bestPathAlgorithm;
 
     /**
      * 节点，每一行都是前缀词，和 char数字一一对应
@@ -479,12 +479,12 @@ public class Wordnet implements CharSequence {
         return slotList;
     }
 
-    public BestPathComputer getBestPathComputer() {
-        return bestPathComputer;
+    public BestPathAlgorithm getBestPathAlgorithm() {
+        return bestPathAlgorithm;
     }
 
-    public Wordnet setBestPathComputer(BestPathComputer bestPathComputer) {
-        this.bestPathComputer = bestPathComputer;
+    public Wordnet setBestPathAlgorithm(BestPathAlgorithm bestPathAlgorithm) {
+        this.bestPathAlgorithm = bestPathAlgorithm;
         return this;
     }
 }

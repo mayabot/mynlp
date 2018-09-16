@@ -18,7 +18,7 @@ package com.mayabot.nlp.segment.tokenizer.xprocessor;
 
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
-import com.mayabot.nlp.segment.WordnetFiller;
+import com.mayabot.nlp.segment.WordnetInitializer;
 import com.mayabot.nlp.segment.WordpathProcessor;
 import com.mayabot.nlp.segment.common.BaseMynlpComponent;
 import com.mayabot.nlp.segment.dictionary.Nature;
@@ -38,7 +38,7 @@ import java.util.regex.Pattern;
  *
  * @author jimichan
  */
-public class TimeStringProcessor extends BaseMynlpComponent implements WordpathProcessor, WordnetFiller {
+public class TimeStringProcessor extends BaseMynlpComponent implements WordpathProcessor, WordnetInitializer {
 
 
     private List<Pattern> patternList = Lists.newArrayList();
