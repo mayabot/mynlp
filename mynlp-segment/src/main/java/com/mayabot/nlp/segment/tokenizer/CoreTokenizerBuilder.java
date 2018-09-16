@@ -1,19 +1,24 @@
 package com.mayabot.nlp.segment.tokenizer;
 
 import com.google.common.collect.Lists;
+import com.google.inject.Inject;
+import com.mayabot.nlp.collection.dat.DATMatcher;
 import com.mayabot.nlp.segment.OptimizeProcessor;
-import com.mayabot.nlp.segment.recognition.org.OrganizationRecognition;
-import com.mayabot.nlp.segment.recognition.personname.PersonRecognition;
-import com.mayabot.nlp.segment.recognition.place.PlaceRecognition;
+import com.mayabot.nlp.segment.WordnetFiller;
+import com.mayabot.nlp.segment.dictionary.NatureAttribute;
+import com.mayabot.nlp.segment.dictionary.core.CoreDictionary;
+import com.mayabot.nlp.segment.tokenizer.bestpath.ViterbiBestPathComputer;
 import com.mayabot.nlp.segment.tokenizer.collector.SentenceCollector;
-import com.mayabot.nlp.segment.wordnet.ViterbiBestPathComputer;
-import com.mayabot.nlp.segment.wordnetiniter.AtomSegmenter;
-import com.mayabot.nlp.segment.wordnetiniter.ConvertAbstractWord;
-import com.mayabot.nlp.segment.wordnetiniter.CoreDictionaryOriginalSegment;
-import com.mayabot.nlp.segment.xprocessor.CommonPatternProcessor;
-import com.mayabot.nlp.segment.xprocessor.CustomDictionaryProcessor;
-import com.mayabot.nlp.segment.xprocessor.MergeNumberAndLetterPreProcessor;
-import com.mayabot.nlp.segment.xprocessor.MergeNumberQuantifierPreProcessor;
+import com.mayabot.nlp.segment.tokenizer.filler.AtomSegmenterFiller;
+import com.mayabot.nlp.segment.tokenizer.filler.ConvertAbstractWordFiller;
+import com.mayabot.nlp.segment.tokenizer.recognition.org.OrganizationRecognition;
+import com.mayabot.nlp.segment.tokenizer.recognition.personname.PersonRecognition;
+import com.mayabot.nlp.segment.tokenizer.recognition.place.PlaceRecognition;
+import com.mayabot.nlp.segment.tokenizer.xprocessor.CombineProcessor;
+import com.mayabot.nlp.segment.tokenizer.xprocessor.CustomDictionaryProcessor;
+import com.mayabot.nlp.segment.tokenizer.xprocessor.TimeStringProcessor;
+import com.mayabot.nlp.segment.wordnet.Vertex;
+import com.mayabot.nlp.segment.wordnet.Wordnet;
 
 import java.util.List;
 
@@ -25,15 +30,16 @@ public class CoreTokenizerBuilder extends BaseTokenizerBuilderApi {
 
 
     @Override
-    public void setUp(WordnetTokenizerBuilder builder) {
+    protected void setUp(WordnetTokenizerBuilder builder) {
 
         //wordnet初始化填充
-        builder.setWordnetInitializer(
-                Lists.newArrayList(
-                        mynlp.getInstance(CoreDictionaryOriginalSegment.class),
-                        mynlp.getInstance(AtomSegmenter.class),
-                        mynlp.getInstance(ConvertAbstractWord.class))
+        builder.addLastWordnetFiller(
+                mynlp.getInstance(CoreDictionaryFiller.class),
+                mynlp.getInstance(AtomSegmenterFiller.class),
+                mynlp.getInstance(ConvertAbstractWordFiller.class)
         );
+        builder.addLastWordnetFiller(mynlp.getInstance(TimeStringProcessor.class));
+
 
         //最优路径算法
         builder.setBestPathComputer(ViterbiBestPathComputer.class);
@@ -41,9 +47,9 @@ public class CoreTokenizerBuilder extends BaseTokenizerBuilderApi {
 
         // Pipeline处理器
         builder.addLastProcessor(CustomDictionaryProcessor.class);
-        builder.addLastProcessor(MergeNumberQuantifierPreProcessor.class);
-        builder.addLastProcessor(MergeNumberAndLetterPreProcessor.class);
-        builder.addLastProcessor(CommonPatternProcessor.class);
+
+        builder.addLastProcessor(CombineProcessor.class);
+        builder.addLastProcessor(TimeStringProcessor.class);
 
         List<Class<? extends OptimizeProcessor>> optimizeProcessor = Lists.newArrayList(
                 PersonRecognition.class,
@@ -95,4 +101,42 @@ public class CoreTokenizerBuilder extends BaseTokenizerBuilderApi {
         this.organizationRecognition = organizationRecognition;
         return this;
     }
+
+    /**
+     * 基于核心词典的基础切词器
+     *
+     * @author jimichan
+     */
+
+    public static class CoreDictionaryFiller implements WordnetFiller {
+
+        private CoreDictionary coreDictionary;
+
+        @Inject
+        public CoreDictionaryFiller(CoreDictionary coreDictionary) {
+            this.coreDictionary = coreDictionary;
+        }
+
+        @Override
+        public void fill(Wordnet wordnet) {
+            char[] text = wordnet.getCharArray();
+
+            // 核心词典查询
+            DATMatcher<NatureAttribute> searcher = coreDictionary.match(text, 0);
+
+            while (searcher.next()) {
+                int offset = searcher.getBegin();
+                int length = searcher.getLength();
+                int wordId = searcher.getIndex();
+
+                //没有等效词
+                Vertex v = new Vertex(length).setWordInfo(wordId, searcher.getValue());
+
+                wordnet.put(offset, v);
+            }
+        }
+
+
+    }
+
 }

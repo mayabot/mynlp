@@ -2,11 +2,10 @@ package com.mayabot.nlp.segment.tokenizer;
 
 import com.google.common.collect.Lists;
 import com.mayabot.nlp.segment.tokenizer.collector.SentenceCollector;
+import com.mayabot.nlp.segment.tokenizer.filler.AtomSegmenterFiller;
+import com.mayabot.nlp.segment.tokenizer.filler.ConvertAbstractWordFiller;
+import com.mayabot.nlp.segment.tokenizer.xprocessor.CustomDictionaryProcessor;
 import com.mayabot.nlp.segment.wordnet.BestPathComputer;
-import com.mayabot.nlp.segment.wordnetiniter.AtomSegmenter;
-import com.mayabot.nlp.segment.wordnetiniter.ConvertAbstractWord;
-import com.mayabot.nlp.segment.wordnetiniter.CoreDictionaryOriginalSegment;
-import com.mayabot.nlp.segment.xprocessor.CustomDictionaryProcessor;
 
 /**
  * 简单快速版本的词典分词，路径选择最大词
@@ -16,15 +15,15 @@ import com.mayabot.nlp.segment.xprocessor.CustomDictionaryProcessor;
 public class SimpleDictTokenizerBuilder extends BaseTokenizerBuilderApi {
 
     @Override
-    public void setUp(WordnetTokenizerBuilder builder) {
+    protected void setUp(WordnetTokenizerBuilder builder) {
         setCorrection(false);
 
         //wordnet初始化填充
-        builder.setWordnetInitializer(
+        builder.addLastWordnetFiller(
                 Lists.newArrayList(
-                        mynlp.getInstance(CoreDictionaryOriginalSegment.class),
-                        mynlp.getInstance(AtomSegmenter.class),
-                        mynlp.getInstance(ConvertAbstractWord.class))
+                        mynlp.getInstance(CoreTokenizerBuilder.CoreDictionaryFiller.class),
+                        mynlp.getInstance(AtomSegmenterFiller.class),
+                        mynlp.getInstance(ConvertAbstractWordFiller.class))
         );
 
         builder.setBestPathComputer(BestPathComputer.longpath);
