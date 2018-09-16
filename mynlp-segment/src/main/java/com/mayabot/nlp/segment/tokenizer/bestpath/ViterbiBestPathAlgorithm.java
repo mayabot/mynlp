@@ -19,8 +19,8 @@ package com.mayabot.nlp.segment.tokenizer.bestpath;
 import com.google.common.base.Preconditions;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.mayabot.nlp.segment.common.Predefine;
 import com.mayabot.nlp.segment.dictionary.core.CoreBiGramTableDictionary;
+import com.mayabot.nlp.segment.dictionary.core.CoreDictionary;
 import com.mayabot.nlp.segment.wordnet.*;
 
 /**
@@ -33,10 +33,41 @@ public class ViterbiBestPathAlgorithm implements BestPathAlgorithm {
 
     private CoreBiGramTableDictionary coreBiGramTableDictionary;
 
+
+    /**
+     * 平滑参数
+     */
+    public final double dSmoothingPara = 0.1;
+    /**
+     * Smoothing 平滑因子
+     */
+    public final double dTemp;
+
+    /**
+     * 来自Hanlp里面的算法
+     *
+     * @param from
+     * @param to
+     * @return
+     */
+    final double partA = (1 - dSmoothingPara);
+    final double partB;
+    final double PARTA_PARTB;
+    final double PARTTA_Dtemp;
+    final double PartZ;
+
+
     @Inject
-    public ViterbiBestPathAlgorithm(CoreBiGramTableDictionary coreBiGramTableDictionary) {
+    public ViterbiBestPathAlgorithm(CoreBiGramTableDictionary coreBiGramTableDictionary,
+                                    CoreDictionary coreDictionary) {
         this.coreBiGramTableDictionary = coreBiGramTableDictionary;
+        dTemp = (double) 1 / coreDictionary.TOTAL_FREQUENCY + 0.00001;
+        partB = (1 - dTemp);
+        PARTA_PARTB = partA * partB;
+        PARTTA_Dtemp = partA * dTemp;
+        PartZ = dSmoothingPara / coreDictionary.TOTAL_FREQUENCY;
     }
+
 
     /**
      * 在原因的path基础上。多个识别器做了修改。
@@ -153,20 +184,6 @@ public class ViterbiBestPathAlgorithm implements BestPathAlgorithm {
     }
 
 
-    /**
-     * 来自Hanlp里面的算法
-     *
-     * @param from
-     * @param to
-     * @return
-     */
-    static double partA = (1 - Predefine.dSmoothingPara);
-    static double partB = (1 - Predefine.dTemp);
-    static double PARTA_PARTB = partA * partB;
-    static double PARTTA_Dtemp = partA * Predefine.dTemp;
-    static double PartZ = Predefine.dSmoothingPara / Predefine.MAX_FREQUENCY;
-
-
     private double calculateWeight(Vertex from, Vertex to) {
         int frequency = from.natureAttribute.getTotalFrequency();
         if (frequency == 0) {
@@ -182,7 +199,7 @@ public class ViterbiBestPathAlgorithm implements BestPathAlgorithm {
 
         int nTwoWordsFreq = coreBiGramTableDictionary.getBiFrequency(from.wordID, to.wordID);
 //        double value = -Math
-//                .log(Predefine.dSmoothingPara * frequency / (Predefine.MAX_FREQUENCY) +
+//                .log(Predefine.dSmoothingPara * frequency / (Predefine.TOTAL_FREQUENCY) +
 //                        partA* (partB * nTwoWordsFreq / frequency + Predefine.dTemp));
         double value = -Math
                 .log(PartZ * frequency

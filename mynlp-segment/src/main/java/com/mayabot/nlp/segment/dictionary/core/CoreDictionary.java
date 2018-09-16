@@ -47,12 +47,19 @@ import java.util.TreeMap;
  */
 @Singleton
 public class CoreDictionary extends NlpResouceExternalizable {
+    /**
+     * 现在总词频25146057
+     */
+    public static int MAX_FREQUENCY = 2516595;
 
 //    private InternalLogger logger = InternalLoggerFactory.getInstance(CoreDictionary.class);
 
     public final String path = "dictionary/core/CoreNatureDictionary.txt";
 
-    public int MAX_FREQUENCY = 221894;
+    /**
+     * 词频总和
+     */
+    public int TOTAL_FREQUENCY;
 
     private DoubleArrayTrie<NatureAttribute> trie;
 
@@ -72,6 +79,8 @@ public class CoreDictionary extends NlpResouceExternalizable {
         X_WORD_ID = getWordID(TAG_CLUSTER);
         M_WORD_ID = getWordID(TAG_NUMBER);
         NX_WORD_ID = getWordID(TAG_PROPER);
+
+        MAX_FREQUENCY = this.TOTAL_FREQUENCY;
     }
 
     @Override
@@ -95,7 +104,7 @@ public class CoreDictionary extends NlpResouceExternalizable {
             }
         }
 
-        this.MAX_FREQUENCY = maxFreq;
+        this.TOTAL_FREQUENCY = maxFreq;
 
         if (map.isEmpty()) {
             throw new RuntimeException("not found core dict file ");
@@ -111,14 +120,14 @@ public class CoreDictionary extends NlpResouceExternalizable {
 
     @Override
     public void writeExternal(ObjectOutput out) throws IOException {
-        out.writeInt(MAX_FREQUENCY);
+        out.writeInt(TOTAL_FREQUENCY);
         DoubleArrayTrie.write(trie, out, NatureAttribute::write);
         out.flush();
     }
 
     @Override
     public void readExternal(ObjectInput in) throws IOException {
-        this.MAX_FREQUENCY = in.readInt();
+        this.TOTAL_FREQUENCY = in.readInt();
         this.trie = DoubleArrayTrie.read(in, NatureAttribute::read);
     }
 

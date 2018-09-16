@@ -1,4 +1,4 @@
-package com.mayabot.nlp.segment.common.normalize;
+package com.mayabot.nlp.segment.tokenizer.normalize;
 
 import com.mayabot.nlp.segment.CharNormalize;
 import com.mayabot.nlp.utils.Characters;

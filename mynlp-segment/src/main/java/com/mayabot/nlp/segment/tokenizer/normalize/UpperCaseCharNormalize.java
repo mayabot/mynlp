@@ -13,22 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.mayabot.nlp.segment.common;
+
+package com.mayabot.nlp.segment.tokenizer.normalize;
+
+import com.mayabot.nlp.segment.CharNormalize;
+import com.mayabot.nlp.utils.CharacterUtils;
 
 /**
- * 一些预定义的静态全局变量
+ * 转换为大写字母
+ *
+ * @author jimichan
  */
-public class Predefine {
+public class UpperCaseCharNormalize implements CharNormalize {
 
-    //// 现在总词频25146057
-    public static final int MAX_FREQUENCY = 25146057;
-    /**
-     * Smoothing 平滑因子
-     */
-    public static final double dTemp = (double) 1 / MAX_FREQUENCY + 0.00001;
-    /**
-     * 平滑参数
-     */
-    public static final double dSmoothingPara = 0.1;
+    @Override
+    public void normal(char[] text) {
+        CharacterUtils.toUpperCase(text, 0, text.length);
+    }
+
+    public static final UpperCaseCharNormalize instance = new UpperCaseCharNormalize();
 
 }
