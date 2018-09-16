@@ -23,8 +23,8 @@ import com.mayabot.nlp.Mynlp;
 import com.mayabot.nlp.Mynlps;
 import com.mayabot.nlp.segment.*;
 import com.mayabot.nlp.segment.common.VertexHelper;
-import com.mayabot.nlp.segment.common.normalize.Full2halfCharNormalize;
-import com.mayabot.nlp.segment.common.normalize.LowerCaseCharNormalize;
+import com.mayabot.nlp.segment.tokenizer.normalize.Full2halfCharNormalize;
+import com.mayabot.nlp.segment.tokenizer.normalize.LowerCaseCharNormalize;
 import com.mayabot.nlp.segment.tokenizer.recognition.OptimizeWordPathProcessor;
 import com.mayabot.nlp.segment.wordnet.BestPathAlgorithm;
 

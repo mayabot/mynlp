@@ -21,7 +21,7 @@ import com.mayabot.nlp.MynlpEnv;
 import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
 import com.mayabot.nlp.resources.NlpResource;
-import com.mayabot.nlp.segment.common.TransformMatrix;
+import com.mayabot.nlp.segment.dictionary.TransformMatrix;
 
 import java.io.IOException;
 
