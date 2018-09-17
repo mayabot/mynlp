@@ -28,9 +28,9 @@ import com.google.common.primitives.Ints;
  */
 public interface MynlpComponent extends Comparable<MynlpComponent> {
 
-    int ORDER_FIRST = Integer.MIN_VALUE;
+    int ORDER_FIRST = Integer.MIN_VALUE + 1000;
     int ORDER_MIDDLE = 0;
-    int ORDER_LASTEST = Integer.MAX_VALUE;
+    int ORDER_LASTEST = Integer.MAX_VALUE - 1000;
 
     /**
      * @return
