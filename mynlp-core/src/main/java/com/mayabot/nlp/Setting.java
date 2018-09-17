@@ -21,6 +21,7 @@ import com.google.common.primitives.Ints;
 import java.util.function.Function;
 
 /**
+ * 一个配置项
  * @author jimichan
  * @param <T>
  */

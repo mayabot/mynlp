@@ -43,9 +43,10 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
+ * Mynlp构建器
  * @author jimichan
  */
-public class MynlpContainerBuilder {
+public class MynlpBuilder {
 
     public static InternalLogger logger = InternalLoggerFactory.getInstance("com.mayabot.nlp.Mynlps");
 
@@ -53,7 +54,7 @@ public class MynlpContainerBuilder {
      * 数据目录默认在当前工作目录.
      * 注意这个文件夹不一定存在
      */
-    private String dataDir = "data";
+    private String dataDir;
 
     /**
      * 各种缓存文件放置的地方。默认在dataDir目录下面的caches
@@ -65,22 +66,33 @@ public class MynlpContainerBuilder {
 
     private Settings settings;
 
-    private Map<Class, Object> preObj = Maps.newHashMap();
+    private Map<Class, Object> injectInstance = Maps.newHashMap();
 
 
     Mynlp build() throws RuntimeException {
         try {
-
-            /**
-             * 在全局配置文件中 data.dir 可以指定dir目录，默认是当前工作目录下面的data
-             */
-            dataDir = Settings.defaultSettings().get("data.dir", "data");
-
             logger.info("Current Working Dir is " + new File(".").getAbsolutePath());
+
+            if (dataDir == null) {
+                /**
+                 * 在全局配置文件中 data.dir 可以指定dir目录，默认是当前工作目录下面的data
+                 */
+                dataDir = Settings.defaultSystemSettings().get("data.dir", "data");
+
+
+                //通过JVM系统属性配置 -Dmynlp.data=/path/data
+                if (System.getProperty("mynlp.data") != null) {
+                    dataDir = System.getProperty("mynlp.data");
+                }
+            }
+
+            if (dataDir == null) {
+                dataDir = "data";
+            }
 
 
             File dataDirFile = new File(dataDir);
-            logger.info("Mynlps data dir is " + dataDirFile.getAbsolutePath());
+            logger.info("Mynlp data dir is " + dataDirFile.getAbsolutePath());
 
 
             File cacheDirFile;
@@ -92,7 +104,7 @@ public class MynlpContainerBuilder {
 
             cleanCacheFile(cacheDirFile);
 
-            logger.info("Mynlps cache dir is {}", cacheDirFile.getAbsolutePath());
+            logger.info("Mynlp cache dir is {}", cacheDirFile.getAbsolutePath());
 
             //
             resourceFactoryList.add(new FileNlpResourceFactory(dataDirFile));
@@ -101,9 +113,9 @@ public class MynlpContainerBuilder {
             ImmutableList.copyOf(resourceFactoryList);
 
             if (settings == null) {
-                this.settings = Settings.defaultSettings();
+                this.settings = Settings.defaultSystemSettings();
             } else {
-                this.settings = Settings.merge(Settings.defaultSettings(), settings);
+                this.settings = Settings.merge(Settings.defaultSystemSettings(), settings);
             }
 
             MynlpEnv env = new MynlpEnv(dataDirFile, cacheDirFile, resourceFactoryList, settings);
@@ -125,7 +137,7 @@ public class MynlpContainerBuilder {
             protected void configure() {
                 bind(MynlpEnv.class).toInstance(mynlp);
 
-                preObj.forEach((k, v) -> bind(k).toInstance(v));
+                injectInstance.forEach((k, v) -> bind(k).toInstance(v));
             }
         });
 
@@ -175,7 +187,7 @@ public class MynlpContainerBuilder {
         return dataDir;
     }
 
-    public MynlpContainerBuilder setDataDir(String dataDir) {
+    public MynlpBuilder setDataDir(String dataDir) {
         this.dataDir = dataDir;
         return this;
     }
@@ -184,7 +196,7 @@ public class MynlpContainerBuilder {
         return cacheDir;
     }
 
-    public MynlpContainerBuilder setCacheDir(String cacheDir) {
+    public MynlpBuilder setCacheDir(String cacheDir) {
         this.cacheDir = cacheDir;
         return this;
     }
@@ -196,23 +208,23 @@ public class MynlpContainerBuilder {
         return settings;
     }
 
-    public MynlpContainerBuilder set(String key, String value) {
+    public MynlpBuilder set(String key, String value) {
         getSettings().put(key, value);
         return this;
     }
 
-    public MynlpContainerBuilder set(Setting key, String value) {
+    public MynlpBuilder set(Setting key, String value) {
         getSettings().put(key, value);
         return this;
     }
 
-    public MynlpContainerBuilder setSettings(Settings settings) {
+    public MynlpBuilder setSettings(Settings settings) {
         this.settings = settings;
         return this;
     }
 
-    public <T> MynlpContainerBuilder bind(Class<T> clazz, T object) {
-        this.preObj.put(clazz, object);
+    public <T> MynlpBuilder bind(Class<T> clazz, T object) {
+        this.injectInstance.put(clazz, object);
         return this;
     }
 

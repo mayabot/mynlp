@@ -110,17 +110,6 @@ public class Settings {
         return new Settings(map);
     }
 
-    /**
-     * 填充一个POJO配置对象
-     *
-     * @param objectToConfig
-     */
-    public void fillSettingConfigObject(Object objectToConfig) {
-        //TODO 待实现
-    }
-
-
-    //private final Splitter splitter = Splitter.on('.').omitEmptyStrings().trimResults();
 
     /**
      * Returns the setting value associated with the setting key.
@@ -273,7 +262,7 @@ public class Settings {
      *
      * @return
      */
-    public static Settings defaultSettings() {
+    public static Settings defaultSystemSettings() {
         @SuppressWarnings("unchecked")
         List<Supplier<InputStream>> list = Lists.newArrayList(
                 () -> {
