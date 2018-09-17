@@ -39,7 +39,6 @@ import java.util.regex.Pattern;
  * 核心词典的二元接续词典，采用整型储存，高性能。
  * 表示一个词接着另外一个词的概率次数
  *
- * @author hankcs
  * @author jimichan
  */
 @Singleton
