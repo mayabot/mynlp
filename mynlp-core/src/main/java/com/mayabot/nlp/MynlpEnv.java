@@ -64,7 +64,7 @@ public class MynlpEnv {
      */
     public MynlpEnv() {
         resourceFactory = ImmutableList.of(new ClasspathNlpResourceFactory(Mynlps.class.getClassLoader()));
-        settings = Settings.defaultSettings();
+        settings = Settings.defaultSystemSettings();
     }
 
 
