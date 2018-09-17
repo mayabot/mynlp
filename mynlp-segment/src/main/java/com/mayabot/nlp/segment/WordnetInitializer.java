@@ -23,7 +23,7 @@ import com.mayabot.nlp.segment.wordnet.Wordnet;
  * 在基于Wordnet数据结构的分词系统中，第一步就是填充初始化wordnet，一般通过词典、规则、CRF等基础分词工具进行填充.
  * @author jimichan
  */
-public interface WordnetInitializer {
+public interface WordnetInitializer extends MynlpComponent {
 
     /**
      * 初始化

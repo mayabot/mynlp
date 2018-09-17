@@ -18,6 +18,7 @@ package com.mayabot.nlp.segment.tokenizer.xprocessor;
 
 import com.google.common.collect.ImmutableList;
 import com.google.inject.Inject;
+import com.mayabot.nlp.Mynlps;
 import com.mayabot.nlp.collection.dat.DATMatcher;
 import com.mayabot.nlp.collection.dat.DoubleArrayTrie;
 import com.mayabot.nlp.segment.WordpathProcessor;
@@ -48,18 +49,24 @@ public class CustomDictionaryProcessor extends BaseMynlpComponent implements Wor
     public CustomDictionaryProcessor(CustomDictionary dictionary, CoreDictionary coreDictionary) {
         this.dictionary = dictionary;
         this.coreDictionary = coreDictionary;
+        this.setOrder(ORDER_MIDDLE - 10);
+
+    }
+
+    public CustomDictionaryProcessor(CustomDictionary dictionary) {
+        this(dictionary, Mynlps.getInstance(CoreDictionary.class));
     }
 
     @Override
     public Wordpath process(Wordpath wordPath) {
 
-        DoubleArrayTrie<NatureAttribute> dat = dictionary.getDat();
+        DoubleArrayTrie<NatureAttribute> dat = dictionary.getTrie();
+
         if (dat == null) {
             return wordPath;
         }
 
         Wordnet wordnet = wordPath.getWordnet();
-        boolean change = false;
         char[] text = wordnet.getCharArray();
 
         for (DoubleArrayTrie<NatureAttribute> d : ImmutableList.of(dat)) {
@@ -67,16 +74,12 @@ public class CustomDictionaryProcessor extends BaseMynlpComponent implements Wor
                 continue;
             }
 
-            //d.transition()
-
             DATMatcher<NatureAttribute> datSearch = d.match(text, 0);
 
             while (datSearch.next()) {
                 int offset = datSearch.getBegin();
                 int length = datSearch.getLength();
 
-                //FIXME 这里的效率没有直接跳转的那么高
-                // 需要检测是否真的联合了多个词汇
                 boolean willCutOtherWords = wordPath.willCutOtherWords(offset, length);
 
                 if (!willCutOtherWords) {
@@ -88,7 +91,6 @@ public class CustomDictionaryProcessor extends BaseMynlpComponent implements Wor
                         Vertex v = wordPath.combine(offset, length);
                         //没有等效果词
                         v.setWordInfo(coreDictionary.X_WORD_ID, CoreDictionary.TAG_CLUSTER, attr);
-                        change = true;
                     } else {
                         //FIXME 要不要覆盖attr.
                         //也就是自定义词典里面包含了重复的词汇

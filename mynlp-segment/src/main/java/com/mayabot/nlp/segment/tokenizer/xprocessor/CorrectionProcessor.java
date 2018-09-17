@@ -32,9 +32,10 @@ import com.mayabot.nlp.segment.wordnet.Wordpath;
  * 纠错的逻辑仅限：
  * 1.一个词拆为多个词
  * 2.多词组合和拆分 AB CDE FG => ABC DE FG
- *
+ * <p>
  * 一定不能把已经成词的边界破坏掉
  * Created by jimichan on 2017/7/3.
+ *
  * @author jimichan
  */
 @Singleton
@@ -46,16 +47,14 @@ public class CorrectionProcessor extends BaseMynlpComponent implements WordpathP
     public CorrectionProcessor(
             CorrectionDictionary dictionary) {
         this.dictionary = dictionary;
+        setOrder(ORDER_LASTEST - 100);
     }
 
-    public CorrectionDictionary getDictionary() {
-        return dictionary;
-    }
 
     @Override
     public Wordpath process(Wordpath wordPath) {
 
-        DoubleArrayTrie<AdjustWord> dat = dictionary.getDoubleArrayTrie();
+        DoubleArrayTrie<AdjustWord> dat = dictionary.getTrie();
 
         if (dat == null) {
             return wordPath;
@@ -73,9 +72,9 @@ public class CorrectionProcessor extends BaseMynlpComponent implements WordpathP
                 continue;
             }
 
-            AdjustWord adjsutword = datSearch.getValue();
+            AdjustWord aw = datSearch.getValue();
 
-            for (int len : adjsutword.getWords()) {
+            for (int len : aw.getWords()) {
 
                 wordPath.combine(offset, len);
 
@@ -87,5 +86,6 @@ public class CorrectionProcessor extends BaseMynlpComponent implements WordpathP
 
         return wordPath;
     }
+
 
 }

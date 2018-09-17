@@ -33,4 +33,16 @@ public abstract class BaseMynlpComponent implements MynlpComponent {
     public void disable() {
         this.enabled = false;
     }
+
+    private int order = 0;
+
+    @Override
+    public int getOrder() {
+        return order;
+    }
+
+    @Override
+    public void setOrder(int order) {
+        this.order = order;
+    }
 }

@@ -19,6 +19,8 @@ package com.mayabot.nlp.segment;
 /**
  * 字符规范化接口
  *
+ * 分词之前可以对char进行转换。
+ *
  * @author jimichan
  */
 public interface CharNormalize {
