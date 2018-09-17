@@ -18,10 +18,11 @@ package com.mayabot.nlp.segment.wordnet;
 
 
 /**
- * 各种扩展属性. 将来可以设计动态扩展属性
+ * 各种扩展属性
+ * @author jimichan
  */
-@SuppressWarnings("unchecked")
 public class VertexExt {
+
     // ########################################//
     // 在最短路相关计算中用到的几个变量 //
     // ########################################//
@@ -51,19 +52,8 @@ public class VertexExt {
      */
     private boolean optimizeNewNode = false;
 
-//    public boolean change = false;
-
-
-//    private ObjectDoubleMap<Vertex> cache = new ObjectDoubleScatterMap(8);
-
-//
-//    private ObjectCharMap<Enum> cmap = null;
-//    private ObjectIntMap<Enum> intmap = null;
-//    private ObjectObjectMap<Enum, String> stringmap = null;
-//    private ObjectDoubleMap<Enum> doublemap = null;
-//    private ObjectObjectMap<Enum, Object> objectMap = null;
-
     private Object tempObj;
+
     private char tempChar;
 
     public void clearTemp() {

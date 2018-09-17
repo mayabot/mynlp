@@ -13,7 +13,7 @@ import com.mayabot.nlp.segment.analyzer.WordTermGenerator;
 public class MynlpAnalyzers {
 
     /**
-     * 准分词
+     * 准分词。
      *
      * @param tokenizer
      * @return
@@ -25,6 +25,7 @@ public class MynlpAnalyzers {
     public static MynlpAnalyzer standard() {
         return new StandardMynlpAnalyzer();
     }
+
 
     public static MynlpAnalyzer base(MynlpTokenizer tokenizer) {
         return new BaseMynlpAnalyzer(tokenizer) {

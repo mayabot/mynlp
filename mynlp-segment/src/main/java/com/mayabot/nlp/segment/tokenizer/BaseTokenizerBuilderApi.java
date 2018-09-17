@@ -25,8 +25,6 @@ public abstract class BaseTokenizerBuilderApi implements MynlpTokenizerBuilder {
 
 //    private Consumer<WordnetTokenizerBuilder> consumer;
 
-
-
     /**
      * 子类去设置builder
      *
@@ -104,11 +102,11 @@ public abstract class BaseTokenizerBuilderApi implements MynlpTokenizerBuilder {
 
         //这两个一定是在最后的
         if (correction) {
-            builder.addLastProcessor(CorrectionProcessor.class);
+            builder.addProcessor(CorrectionProcessor.class);
         }
 
         if (pos) {
-            builder.addLastProcessor(PartOfSpeechTaggingComputerProcessor.class);
+            builder.addProcessor(PartOfSpeechTaggingComputerProcessor.class);
         }
 
         if (wordTermCollector != null) {
@@ -203,7 +201,7 @@ public abstract class BaseTokenizerBuilderApi implements MynlpTokenizerBuilder {
      * @return
      */
     public WordnetTokenizerBuilder addLastProcessor(WordpathProcessor processor) {
-        return builder.addLastProcessor(processor);
+        return builder.addProcessor(processor);
     }
 
     /**
@@ -213,7 +211,7 @@ public abstract class BaseTokenizerBuilderApi implements MynlpTokenizerBuilder {
      * @return
      */
     public WordnetTokenizerBuilder addLastProcessor(Class<? extends WordpathProcessor> clazz) {
-        return builder.addLastProcessor(clazz);
+        return builder.addProcessor(clazz);
     }
 
     /**
@@ -223,7 +221,7 @@ public abstract class BaseTokenizerBuilderApi implements MynlpTokenizerBuilder {
      * @return
      */
     public WordnetTokenizerBuilder addLastOptimizeProcessor(List<? extends OptimizeProcessor> ops) {
-        return builder.addLastOptimizeProcessor(ops);
+        return builder.addOptimizeProcessor(ops);
     }
 
     /**
@@ -233,7 +231,7 @@ public abstract class BaseTokenizerBuilderApi implements MynlpTokenizerBuilder {
      * @return
      */
     public WordnetTokenizerBuilder addLastOptimizeProcessorClass(List<Class<? extends OptimizeProcessor>> ops) {
-        return builder.addLastOptimizeProcessorClass(ops);
+        return builder.addOptimizeProcessorClass(ops);
     }
 
     /**
@@ -243,7 +241,7 @@ public abstract class BaseTokenizerBuilderApi implements MynlpTokenizerBuilder {
      * @return
      */
     public WordnetTokenizerBuilder addLastWordnetInitializer(WordnetInitializer... initializers) {
-        return builder.addLastWordnetInitializer(initializers);
+        return builder.addWordnetInitializer(initializers);
     }
 
     /**
@@ -253,7 +251,7 @@ public abstract class BaseTokenizerBuilderApi implements MynlpTokenizerBuilder {
      * @return
      */
     public WordnetTokenizerBuilder addLastWordnetInitializer(Class<? extends WordnetInitializer>... initializers) {
-        return builder.addLastWordnetInitializer(initializers);
+        return builder.addWordnetInitializer(initializers);
     }
 
     /**

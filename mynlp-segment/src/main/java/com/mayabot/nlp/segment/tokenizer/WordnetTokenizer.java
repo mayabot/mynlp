@@ -16,16 +16,20 @@
 
 package com.mayabot.nlp.segment.tokenizer;
 
+import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 import com.mayabot.nlp.segment.*;
 import com.mayabot.nlp.segment.common.VertexHelper;
+import com.mayabot.nlp.segment.tokenizer.recognition.OptimizeWordPathProcessor;
 import com.mayabot.nlp.segment.wordnet.BestPathAlgorithm;
 import com.mayabot.nlp.segment.wordnet.Wordnet;
 import com.mayabot.nlp.segment.wordnet.Wordpath;
 
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 /**
  * 一个基于词图的流水线 要求里面所有的组件都是无状态的，线程安全的类
@@ -73,6 +77,31 @@ public class WordnetTokenizer implements MynlpTokenizer {
         Preconditions.checkNotNull(this.initer);
         Preconditions.checkNotNull(pipeline);
         Preconditions.checkArgument(pipeline.length != 0);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("WordnetTokenizer\n\n");
+        sb.append("BestPathAlgorithm = " + bestPathAlgorithm.getClass().getSimpleName()).append("\n");
+        sb.append("CharNormalize = " + Joiner.on(",").join(Lists.newArrayList(charNormalizes).stream().map(it -> it.getClass().getSimpleName()).collect(Collectors.toList()))).append("\n");
+        sb.append("WordTermCollector = " + collector.getClass().getSimpleName() + "\n");
+
+        sb.append("WordnetInitializer = " + Joiner.on(",").join(Lists.newArrayList(initer).stream().map(it -> it.getClass().getSimpleName()).collect(Collectors.toList()))).append("\n");
+        sb.append("WordpathProcessor = \n");
+        for (WordpathProcessor processor : pipeline) {
+            if (processor instanceof OptimizeWordPathProcessor) {
+                OptimizeWordPathProcessor xp = (OptimizeWordPathProcessor) processor;
+                sb.append("\t" + xp.getOptimizeProcessorList().stream().map(it -> it.getClass().getSimpleName()).collect(Collectors.toList()));
+                sb.append("\n");
+            } else {
+                sb.append("\t" + processor.getClass().getSimpleName()).append("\n");
+            }
+        }
+        System.out.println("\n");
+
+
+        return sb.toString();
     }
 
     @Override

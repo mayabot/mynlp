@@ -18,6 +18,7 @@ package com.mayabot.nlp.segment.tokenizer.initializer;
 
 import com.google.inject.Inject;
 import com.mayabot.nlp.segment.WordnetInitializer;
+import com.mayabot.nlp.segment.common.BaseMynlpComponent;
 import com.mayabot.nlp.segment.dictionary.NatureAttribute;
 import com.mayabot.nlp.segment.dictionary.core.CoreDictionary;
 import com.mayabot.nlp.segment.wordnet.Vertex;
@@ -25,18 +26,18 @@ import com.mayabot.nlp.segment.wordnet.Wordnet;
 
 /**
  * 核心词典查询后，或计算后，需要根据词性，来弥补一些等效词属性或者词性修正。
- * 原来Hanlp里面是放在Vertex里面的一个方法
  * <p>
  * 后面有些识别器需要这些设置的属性
  * @author jimichan
  */
-public class ConvertAbstractWordInitializer implements WordnetInitializer {
+public class ConvertAbstractWordInitializer extends BaseMynlpComponent implements WordnetInitializer {
 
     private final CoreDictionary coreDictionary;
 
     @Inject
     public ConvertAbstractWordInitializer(CoreDictionary coreDictionary) {
         this.coreDictionary = coreDictionary;
+        this.setOrder(ORDER_LASTEST);
     }
 
     @Override

@@ -19,6 +19,7 @@ package com.mayabot.nlp.segment.tokenizer.crf;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.mayabot.nlp.segment.WordnetInitializer;
+import com.mayabot.nlp.segment.common.BaseMynlpComponent;
 import com.mayabot.nlp.segment.dictionary.Nature;
 import com.mayabot.nlp.segment.dictionary.NatureAttribute;
 import com.mayabot.nlp.segment.wordnet.Vertex;
@@ -30,7 +31,7 @@ import com.mayabot.nlp.utils.CharacterHelper;
  * @author jimichan
  */
 @Singleton
-public class CrfBaseSegmentInitializer implements WordnetInitializer {
+public class CrfBaseSegmentInitializer extends BaseMynlpComponent implements WordnetInitializer {
 
     public static final int CRF_WORD_ID = -2;
 
@@ -40,6 +41,7 @@ public class CrfBaseSegmentInitializer implements WordnetInitializer {
     @Inject
     public CrfBaseSegmentInitializer(CrfModelFile crfModelComponent) {
         this.crfModel = crfModelComponent.getCrfSegmentModel();
+        this.setOrder(Integer.MIN_VALUE);
     }
 
     @Override

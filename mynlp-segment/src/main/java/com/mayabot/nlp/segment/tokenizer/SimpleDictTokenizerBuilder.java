@@ -18,7 +18,7 @@ public class SimpleDictTokenizerBuilder extends BaseTokenizerBuilderApi {
         setCorrection(false);
 
         //wordnet初始化填充
-        builder.addLastWordnetInitializer(
+        builder.addWordnetInitializer(
                 mynlp.getInstance(CoreTokenizerBuilder.CoreDictionaryInitializer.class),
                 mynlp.getInstance(AtomSegmenterInitializer.class),
                 mynlp.getInstance(ConvertAbstractWordInitializer.class)
@@ -27,7 +27,7 @@ public class SimpleDictTokenizerBuilder extends BaseTokenizerBuilderApi {
         builder.setBestPathComputer(LongpathBestPathAlgorithm.class);
 
 
-        builder.addLastProcessor(CustomDictionaryProcessor.class);
+        builder.addProcessor(CustomDictionaryProcessor.class);
 
         //结果收集器
         builder.setTermCollector(mynlp.getInstance(SentenceCollector.class));

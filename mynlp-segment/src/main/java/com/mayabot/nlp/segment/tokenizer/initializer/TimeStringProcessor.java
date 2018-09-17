@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-package com.mayabot.nlp.segment.tokenizer.xprocessor;
+package com.mayabot.nlp.segment.tokenizer.initializer;
 
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.mayabot.nlp.segment.WordnetInitializer;
-import com.mayabot.nlp.segment.WordpathProcessor;
 import com.mayabot.nlp.segment.common.BaseMynlpComponent;
 import com.mayabot.nlp.segment.dictionary.Nature;
 import com.mayabot.nlp.segment.dictionary.NatureAttribute;
@@ -27,7 +26,6 @@ import com.mayabot.nlp.segment.dictionary.core.CoreDictionary;
 import com.mayabot.nlp.segment.wordnet.Vertex;
 import com.mayabot.nlp.segment.wordnet.VertexRow;
 import com.mayabot.nlp.segment.wordnet.Wordnet;
-import com.mayabot.nlp.segment.wordnet.Wordpath;
 
 import java.util.List;
 import java.util.regex.Matcher;
@@ -38,7 +36,7 @@ import java.util.regex.Pattern;
  *
  * @author jimichan
  */
-public class TimeStringProcessor extends BaseMynlpComponent implements WordpathProcessor, WordnetInitializer {
+public class TimeStringProcessor extends BaseMynlpComponent implements WordnetInitializer {
 
 
     private List<Pattern> patternList = Lists.newArrayList();
@@ -85,12 +83,6 @@ public class TimeStringProcessor extends BaseMynlpComponent implements WordpathP
         }
     }
 
-    @Override
-    public Wordpath process(Wordpath wordPath) {
-
-
-        return wordPath;
-    }
 
     public boolean isEnableTime() {
         return enableTime;

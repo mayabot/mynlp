@@ -45,6 +45,7 @@ public class PartOfSpeechTaggingComputerProcessor extends BaseMynlpComponent imp
     PartOfSpeechTaggingComputerProcessor(
             CoreDictionaryTransformMatrixDictionary matrixDictionary
     ) {
+        setOrder(ORDER_LASTEST);
         this.transformMatrix = matrixDictionary.getTransformMatrixDictionary();
 
         secondOrderViterbi = new SecondOrderViterbi<>(
