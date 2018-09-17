@@ -25,7 +25,8 @@ import java.util.List;
 /**
  * 提供通用的二阶Viterbi实现.
  * 滚动的计算了两层，没有全局地计算。
- * 从Hanlp代码中重构而来。
+ * 从Hanlp(https://github.com/hankcs/HanLP/)代码中重构而来。
+ *
  * @author jimichan
  */
 public class Viterbi {
