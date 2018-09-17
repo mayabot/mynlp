@@ -30,13 +30,19 @@ import java.util.function.Consumer;
  */
 public final class Mynlps {
 
+    public static void main(String[] args) {
+        Mynlps.install(builder -> {
+
+        });
+    }
+
     public static InternalLogger logger = InternalLoggerFactory.getInstance("com.mayabot.nlp.Mynlps");
 
     private static final ConcurrentHashMap<String, Mynlp> map = new ConcurrentHashMap<>();
 
-    public static void install(Consumer<MynlpContainerBuilder> consumer) {
+    public static void install(Consumer<MynlpBuilder> consumer) {
         if (map.isEmpty()) {
-            MynlpContainerBuilder builder = new MynlpContainerBuilder();
+            MynlpBuilder builder = new MynlpBuilder();
             consumer.accept(builder);
             map.put("I", builder.build());
         } else {
@@ -53,7 +59,7 @@ public final class Mynlps {
     }
 
     private static Mynlp create(String s) {
-        return new MynlpContainerBuilder().build();
+        return new MynlpBuilder().build();
     }
 
     private Mynlps() {
