@@ -1,0 +1,30 @@
+
+plugins {
+    id "org.jetbrains.kotlin.jvm" version "1.2.61"
+}
+
+description = '感知机算法，包含训练和解码。'
+
+//暂时不发布到maven仓库
+def publish_resource = false
+
+if(!publish_resource){
+    project.afterEvaluate {
+        project.tasks.withType(AbstractPublishToMaven.class){
+            enabled = false
+        }
+    }
+}
+
+sourceSets {
+    main.kotlin.srcDirs = main.java.srcDirs
+    test.kotlin.srcDirs = test.java.srcDirs
+}
+
+dependencies {
+
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+
+    compile group: 'com.google.guava', name: 'guava', version: "19.0"
+
+}
