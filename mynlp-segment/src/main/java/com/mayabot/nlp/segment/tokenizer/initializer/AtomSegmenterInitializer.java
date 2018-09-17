@@ -22,6 +22,7 @@ import com.mayabot.nlp.fst.FstCondition;
 import com.mayabot.nlp.fst.FstMatcher;
 import com.mayabot.nlp.fst.FstNode;
 import com.mayabot.nlp.segment.WordnetInitializer;
+import com.mayabot.nlp.segment.common.BaseMynlpComponent;
 import com.mayabot.nlp.segment.dictionary.Nature;
 import com.mayabot.nlp.segment.dictionary.NatureAttribute;
 import com.mayabot.nlp.segment.dictionary.core.CoreDictionary;
@@ -38,7 +39,7 @@ import com.mayabot.nlp.utils.Characters;
  *
  * @author jimichan
  */
-public class AtomSegmenterInitializer implements WordnetInitializer {
+public class AtomSegmenterInitializer extends BaseMynlpComponent implements WordnetInitializer {
 
     //原子分词: 连续空的，相同的type作为整体
 
@@ -51,6 +52,7 @@ public class AtomSegmenterInitializer implements WordnetInitializer {
     @Inject
     public AtomSegmenterInitializer(CoreDictionary coreDictionary) {
         this.coreDictionary = coreDictionary;
+        this.setOrder(ORDER_MIDDLE - 100);
 
         fst = new FST<>();
 

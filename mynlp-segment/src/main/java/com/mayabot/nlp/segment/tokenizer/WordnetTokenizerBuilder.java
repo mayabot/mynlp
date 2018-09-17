@@ -29,6 +29,7 @@ import com.mayabot.nlp.segment.tokenizer.recognition.OptimizeWordPathProcessor;
 import com.mayabot.nlp.segment.wordnet.BestPathAlgorithm;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -104,6 +105,9 @@ public class WordnetTokenizerBuilder implements MynlpTokenizerBuilder {
 
         // 4
         callListener();
+
+        Collections.sort(wordnetInitializer);
+        Collections.sort(pipeLine);
 
         return new WordnetTokenizer(
                 wordnetInitializer,
@@ -257,8 +261,9 @@ public class WordnetTokenizerBuilder implements MynlpTokenizerBuilder {
      * @param processor
      * @return
      */
-    public WordnetTokenizerBuilder addLastProcessor(WordpathProcessor processor) {
+    public WordnetTokenizerBuilder addProcessor(WordpathProcessor processor) {
         pipeLine.add(processor);
+        Collections.sort(pipeLine);
         return this;
     }
 
@@ -268,8 +273,9 @@ public class WordnetTokenizerBuilder implements MynlpTokenizerBuilder {
      * @param clazz
      * @return
      */
-    public WordnetTokenizerBuilder addLastProcessor(Class<? extends WordpathProcessor> clazz) {
+    public WordnetTokenizerBuilder addProcessor(Class<? extends WordpathProcessor> clazz) {
         pipeLine.add(mynlp.getInstance(clazz));
+        Collections.sort(pipeLine);
         return this;
     }
 
@@ -279,10 +285,19 @@ public class WordnetTokenizerBuilder implements MynlpTokenizerBuilder {
      * @param ops
      * @return
      */
-    public WordnetTokenizerBuilder addLastOptimizeProcessor(List<? extends OptimizeProcessor> ops) {
+    public WordnetTokenizerBuilder addOptimizeProcessor(
+            List<? extends OptimizeProcessor> ops,
+            int order) {
         OptimizeWordPathProcessor instance = mynlp.getInstance(OptimizeWordPathProcessor.class);
+        instance.setOrder(order);
         instance.addAllOptimizeProcessor(ops);
-        pipeLine.add(instance);
+        addProcessor(instance);
+        return this;
+    }
+
+    public WordnetTokenizerBuilder addOptimizeProcessor(
+            List<? extends OptimizeProcessor> ops) {
+        this.addOptimizeProcessor(ops, 0);
         return this;
     }
 
@@ -292,12 +307,20 @@ public class WordnetTokenizerBuilder implements MynlpTokenizerBuilder {
      * @param ops
      * @return
      */
-    public WordnetTokenizerBuilder addLastOptimizeProcessorClass(List<Class<? extends OptimizeProcessor>> ops) {
+    public WordnetTokenizerBuilder addOptimizeProcessorClass(
+            List<Class<? extends OptimizeProcessor>> ops, int order) {
         List<OptimizeProcessor> list =
                 ops.stream().map(it -> mynlp.getInstance(it)).collect(Collectors.toList());
 
-        return addLastOptimizeProcessor(list);
+        return addOptimizeProcessor(list, order);
     }
+
+    public WordnetTokenizerBuilder addOptimizeProcessorClass(
+            List<Class<? extends OptimizeProcessor>> ops) {
+        this.addOptimizeProcessorClass(ops, 0);
+        return this;
+    }
+
 
     /**
      * 增加WordnetInitializer对象
@@ -305,11 +328,13 @@ public class WordnetTokenizerBuilder implements MynlpTokenizerBuilder {
      * @param initializers
      * @return
      */
-    public WordnetTokenizerBuilder addLastWordnetInitializer(WordnetInitializer... initializers) {
+    public WordnetTokenizerBuilder addWordnetInitializer(WordnetInitializer... initializers) {
 
         for (WordnetInitializer initializer : initializers) {
             this.wordnetInitializer.add(initializer);
         }
+
+        Collections.sort(wordnetInitializer);
         return this;
     }
 
@@ -319,11 +344,12 @@ public class WordnetTokenizerBuilder implements MynlpTokenizerBuilder {
      * @param initializers
      * @return
      */
-    public WordnetTokenizerBuilder addLastWordnetInitializer(Class<? extends WordnetInitializer>... initializers) {
+    public WordnetTokenizerBuilder addWordnetInitializer(Class<? extends WordnetInitializer>... initializers) {
 
         for (Class<? extends WordnetInitializer> clazz : initializers) {
             this.wordnetInitializer.add(mynlp.getInstance(clazz));
         }
+        Collections.sort(wordnetInitializer);
         return this;
     }
 

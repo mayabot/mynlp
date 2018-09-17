@@ -23,7 +23,7 @@ public class CustomDictionaryTest  {
     @Test
     public void test1() {
 
-//		CustomDictionary dic = new CustomDictionary(new Settings());
+//		DefaultCustomDictionary dic = new DefaultCustomDictionary(new Settings());
 
 
     }
