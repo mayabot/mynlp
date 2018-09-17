@@ -67,7 +67,7 @@ public class CombineProcessor extends BaseMynlpComponent implements WordpathProc
      */
     private boolean enableConnectionSymbol = true;
     //
-    private Pattern connectionSymbolPattern2 = Pattern.compile("[_\\-\\w\\d][_\\-\\w\\d]+");
+    private Pattern connectionSymbolPattern = Pattern.compile("[_\\-\\w\\d][_\\-\\w\\d]+");
 
     private boolean enableEmail = true;
 
@@ -90,7 +90,7 @@ public class CombineProcessor extends BaseMynlpComponent implements WordpathProc
     @Inject
     public CombineProcessor(CoreDictionary coreDictionary) {
         x_cluster_wordid = coreDictionary.getWordID(CoreDictionary.TAG_CLUSTER);
-
+        this.setOrder(ORDER_MIDDLE + 10);
         shuLiang = make(fst -> {
             FstNode<Vertex> shuzi = fst.start().to("shuzi",
                     (index, vertex) -> hasNature(vertex, Nature.m));
@@ -102,6 +102,7 @@ public class CombineProcessor extends BaseMynlpComponent implements WordpathProc
 
             danwei.to("$", (index, vertex) -> true);
         });
+
     }
 
     private FST<Vertex> make(Consumer<FST<Vertex>> x) {
@@ -128,7 +129,7 @@ public class CombineProcessor extends BaseMynlpComponent implements WordpathProc
 
         if (enableConnectionSymbol) {
 
-            run(connectionSymbolPattern2, wordnet, wordPath);
+            run(connectionSymbolPattern, wordnet, wordPath);
         }
 
         if (enableEmail) {

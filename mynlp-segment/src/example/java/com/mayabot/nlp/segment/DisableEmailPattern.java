@@ -1,7 +1,7 @@
 package com.mayabot.nlp.segment;
 
 import com.mayabot.nlp.segment.tokenizer.CoreTokenizerBuilder;
-import com.mayabot.nlp.segment.tokenizer.xprocessor.TimeStringProcessor;
+import com.mayabot.nlp.segment.tokenizer.initializer.TimeStringProcessor;
 
 import java.util.List;
 
