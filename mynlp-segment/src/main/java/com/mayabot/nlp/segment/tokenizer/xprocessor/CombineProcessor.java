@@ -78,9 +78,6 @@ public class CombineProcessor extends BaseMynlpComponent implements WordpathProc
 
     private Pattern bookNamePattern = Pattern.compile("《.+?》");
 
-    private boolean enableDoubleQuotation = true;
-
-    private Pattern DoubleQuotation = Pattern.compile("[\"“].+?[\"”]");
 
     /**
      * 构造函数
@@ -153,25 +150,6 @@ public class CombineProcessor extends BaseMynlpComponent implements WordpathProc
                 Vertex vertex = wordPath.combine(start, end - start);
                 vertex.setWordInfo(wordID, CoreDictionary.TAG_CLUSTER, NatureAttribute.create1000(Nature.n));
 
-            }
-        }
-
-        if (enableDoubleQuotation) {
-            Matcher matcher = DoubleQuotation.matcher(wordnet);
-            while (matcher.find()) {
-                int start = matcher.start();
-                int end = matcher.end();
-
-                int wordID = x_cluster_wordid;
-                Vertex bookName = wordnet.row(start + 1).getOrCrete(end - start - 2);
-                if (bookName.wordID == -1) {
-                    //FIXME 这里不产生wordID有没有问题
-                    //主要给切分子词做一些准备
-                    bookName.setNatureAttribute(NatureAttribute.create1000(Nature.x));
-                }
-
-                Vertex vertex = wordPath.combine(start, end - start);
-                vertex.setWordInfo(wordID, CoreDictionary.TAG_CLUSTER, x_cluster_nature);
             }
         }
 

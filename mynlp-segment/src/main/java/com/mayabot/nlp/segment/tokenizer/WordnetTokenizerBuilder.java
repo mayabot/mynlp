@@ -256,6 +256,31 @@ public class WordnetTokenizerBuilder implements MynlpTokenizerBuilder {
     }
 
     /**
+     * 增加一个WordpathProcessor组件或者WordnetInitializer组件。或者同时实现了这两个接口.
+     *
+     * @param component
+     * @return
+     */
+    public WordnetTokenizerBuilder addComponent(MynlpComponent component) {
+        boolean access = false;
+        if (component instanceof WordpathProcessor) {
+            access = true;
+            addProcessor((WordpathProcessor) component);
+        }
+
+        if (component instanceof WordnetInitializer) {
+            access = true;
+            addWordnetInitializer((WordnetInitializer) component);
+        }
+
+        if (!access) {
+            throw new RuntimeException("Not supoort " + component.getClass());
+        }
+
+        return this;
+    }
+
+    /**
      * 增加一个WordpathProcessor实现对象
      *
      * @param processor
