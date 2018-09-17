@@ -4,11 +4,7 @@ import com.mayabot.nlp.segment.tokenizer.BaseTokenizerBuilderApi;
 import com.mayabot.nlp.segment.tokenizer.WordnetTokenizerBuilder;
 import com.mayabot.nlp.segment.tokenizer.bestpath.ViterbiBestPathAlgorithm;
 import com.mayabot.nlp.segment.tokenizer.collector.SentenceCollector;
-import com.mayabot.nlp.segment.tokenizer.initializer.AtomSegmenterInitializer;
-import com.mayabot.nlp.segment.tokenizer.initializer.ConvertAbstractWordInitializer;
-import com.mayabot.nlp.segment.tokenizer.initializer.TimeStringProcessor;
-import com.mayabot.nlp.segment.tokenizer.xprocessor.CombineProcessor;
-import com.mayabot.nlp.segment.tokenizer.xprocessor.CustomDictionaryProcessor;
+import com.mayabot.nlp.segment.tokenizer.xprocessor.*;
 
 public class CrfTokenizerBuilder extends BaseTokenizerBuilderApi {
 

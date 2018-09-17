@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.mayabot.nlp.segment.tokenizer.initializer;
+package com.mayabot.nlp.segment.tokenizer.xprocessor;
 
 import com.google.inject.Inject;
 import com.mayabot.nlp.segment.WordnetInitializer;
