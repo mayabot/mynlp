@@ -49,7 +49,7 @@ subprojects {
 
 
     task sourceJar(type: Jar) {
-        from sourceSets.main.allJava
+        from sourceSets.main.allSource
     }
 
     task javadocJar(type: Jar, dependsOn: javadoc) {
@@ -57,20 +57,20 @@ subprojects {
         from javadoc.destinationDir
     }
 
-    if(project.path!=':mynlp-all' && project.path!=':mynlp-segment-resources')
-    {
-        sourceSets {
-            example {
-                compileClasspath += sourceSets.main.output
-                runtimeClasspath += sourceSets.main.output
-            }
-        }
-
-        configurations {
-            exampleImplementation.extendsFrom implementation
-            exampleRuntimeOnly.extendsFrom runtimeOnly
-        }
-    }
+//    if(project.path!=':mynlp-all' && project.path!=':mynlp-segment-resources')
+//    {
+//        sourceSets {
+//            example {
+//                compileClasspath += sourceSets.main.output
+//                runtimeClasspath += sourceSets.main.output
+//            }
+//        }
+//
+//        configurations {
+//            exampleImplementation.extendsFrom implementation
+//            exampleRuntimeOnly.extendsFrom runtimeOnly
+//        }
+//    }
 
     publishing {
         publications {

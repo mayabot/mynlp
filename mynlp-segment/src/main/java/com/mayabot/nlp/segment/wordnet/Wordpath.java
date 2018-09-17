@@ -99,6 +99,7 @@ public class Wordpath {
                 Vertex theVertex = wordnet.getVertex(from, len);
 
                 if (theVertex == null) {
+                    //System.out.println(wordnet.toMoreString());
                     //@ RepairWordnetProcessor 这里去修复了这个错误，到时要在之前去调用
                     logger.error("row: " + from + " len " + len + " select is null");
                     throw new IllegalStateException("row: " + from + " len " + len + " select is null");

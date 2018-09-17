@@ -1,4 +1,4 @@
-package com.mayabot.nlp.segment.tokenizer.recognition;
+package com.mayabot.nlp.segment.tokenizer.xprocessor;
 
 import com.google.inject.Inject;
 import com.mayabot.nlp.segment.WordpathProcessor;

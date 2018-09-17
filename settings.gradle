@@ -26,6 +26,8 @@ List projects = [
         'mynlp-transform',
         'mynlp-cli',
         'mynlp-classification',
+        'mynlp-perceptron',
+        'mynlp-example',
         'plugins:mynlp-lucene-7'
 
 ]

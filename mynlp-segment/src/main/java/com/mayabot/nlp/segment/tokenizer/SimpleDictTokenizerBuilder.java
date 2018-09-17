@@ -2,8 +2,8 @@ package com.mayabot.nlp.segment.tokenizer;
 
 import com.mayabot.nlp.segment.tokenizer.bestpath.LongpathBestPathAlgorithm;
 import com.mayabot.nlp.segment.tokenizer.collector.SentenceCollector;
-import com.mayabot.nlp.segment.tokenizer.initializer.AtomSegmenterInitializer;
-import com.mayabot.nlp.segment.tokenizer.initializer.ConvertAbstractWordInitializer;
+import com.mayabot.nlp.segment.tokenizer.xprocessor.AtomSegmenterInitializer;
+import com.mayabot.nlp.segment.tokenizer.xprocessor.ConvertAbstractWordInitializer;
 import com.mayabot.nlp.segment.tokenizer.xprocessor.CustomDictionaryProcessor;
 
 /**
