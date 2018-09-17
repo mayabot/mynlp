@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.mayabot.nlp;
 
 import com.google.inject.Injector;
@@ -20,6 +21,7 @@ import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
 
 /**
+ * 包含了执行环境和Guice IOC容器
  * @author jimichan
  */
 public class Mynlp {
