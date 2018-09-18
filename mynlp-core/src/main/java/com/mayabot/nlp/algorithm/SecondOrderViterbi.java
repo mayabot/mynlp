@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.mayabot.nlp.segment.common;
+package com.mayabot.nlp.algorithm;
 
 import java.util.Iterator;
 import java.util.Map;

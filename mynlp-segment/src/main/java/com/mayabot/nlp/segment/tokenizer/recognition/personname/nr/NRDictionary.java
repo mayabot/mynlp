@@ -15,18 +15,16 @@
  */
 package com.mayabot.nlp.segment.tokenizer.recognition.personname.nr;
 
-import com.alibaba.fastjson.TypeReference;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.mayabot.nlp.MynlpEnv;
-import com.mayabot.nlp.segment.common.EnumFreqPair;
+import com.mayabot.nlp.common.EnumFreqPair;
 import com.mayabot.nlp.segment.dictionary.CommonDictionary;
 import com.mayabot.nlp.segment.tokenizer.recognition.personname.NRTag;
 
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 一个好用的人名词典
@@ -57,14 +55,12 @@ public class NRDictionary extends CommonDictionary<EnumFreqPair<NRTag>> {
         a.writeItem(out);
     }
 
-    final static TypeReference<Map<NRTag, Integer>> typeReference = new TypeReference<Map<NRTag, Integer>>() {
-    };
 
     @Override
     protected EnumFreqPair<NRTag> readItem(DataInput in) {
         EnumFreqPair<NRTag> pair = new EnumFreqPair<>();
 
-        pair.readItem(in, typeReference);
+        pair.readItem(in, NRTag::valueOf);
 
         return pair;
     }

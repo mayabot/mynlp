@@ -83,13 +83,11 @@ public abstract class BaseTokenizerBuilderApi implements MynlpTokenizerBuilder {
         wordTermCollector = mynlp.getInstance(SentenceIndexWordCollector.class);
         return this;
     }
-//
-//    public MynlpTokenizerBuilder custom(Consumer<WordnetTokenizerBuilder> consumer) {
-//        this.consumer = consumer;
-//        return this;
-//    }
 
-    public BaseTokenizerBuilderApi() {
+
+    @Override
+    public MynlpTokenizer build() {
+
         setUp(builder);
 
         if (!lowerCaseCharNormalize) {
@@ -114,10 +112,7 @@ public abstract class BaseTokenizerBuilderApi implements MynlpTokenizerBuilder {
         } else {
             builder.setTermCollector(mynlp.getInstance(SentenceCollector.class));
         }
-    }
 
-    @Override
-    public MynlpTokenizer build() {
         return builder.build();
     }
 

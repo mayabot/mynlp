@@ -13,10 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.mayabot.nlp.segment.common;
+package com.mayabot.nlp.common;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.TypeReference;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.primitives.Ints;
 
@@ -58,16 +56,29 @@ public class EnumFreqPair<E extends Enum> {
 
             switch (size) {
                 case 0:
-                    out.writeUTF("{}");
+                    out.writeUTF("NULL");
                     break;
                 case 1:
                     Map.Entry<E, Integer> next = labelMap.entrySet().iterator().next();
                     String name = next.getKey().name();
                     Integer f = next.getValue();
-                    out.writeUTF("{\"" + name + "\":" + f + "}");
+                    out.writeUTF(name + "," + f);
                     break;
                 default:
-                    out.writeUTF(JSON.toJSONString(labelMap));
+                    StringBuilder sb = new StringBuilder();
+
+                    int count = 0;
+                    for (Map.Entry<E, Integer> e : labelMap.entrySet()) {
+                        count++;
+
+                        sb.append(e.getKey().name())
+                                .append(",").append(e.getValue());
+
+                        if (count != size) {
+                            sb.append(",");
+                        }
+                    }
+                    out.writeUTF(sb.toString());
                     break;
             }
 
@@ -76,13 +87,23 @@ public class EnumFreqPair<E extends Enum> {
         }
     }
 
-    public void readItem(DataInput in, TypeReference<Map<E, Integer>> typeReference) {
+
+    public void readItem(DataInput in, Function<String, E> function) {
         try {
             String json = in.readUTF();
-            //TODO 可以优化速度
-            Map<E, Integer> map = JSON.parseObject(json, typeReference);
 
-            this.labelMap = ImmutableMap.copyOf(map);
+            if ("NULL".equals(json)) {
+                this.labelMap = ImmutableMap.of();
+            } else {
+                ImmutableMap.Builder<E, Integer> builder = ImmutableMap.builder();
+
+                String[] split = json.split(",");
+
+                for (int i = 0; i < split.length; i += 2) {
+                    builder.put(function.apply(split[i]), Integer.parseInt(split[i + 1]));
+                }
+                this.labelMap = builder.build();
+            }
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
