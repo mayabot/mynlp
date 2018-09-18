@@ -61,7 +61,7 @@ public abstract class CommonDictionary<V> extends NlpResouceExternalizable {
 
     @Override
     public String sourceVersion(MynlpEnv mynlp) {
-        return mynlp.loadResource(dicFilePath()).hash().substring(0, 6);
+        return mynlp.loadResource(dicFilePath()).hash().substring(0, 7);
     }
 
     private final Splitter splitter = Splitter.on(Pattern.compile("\\s"));

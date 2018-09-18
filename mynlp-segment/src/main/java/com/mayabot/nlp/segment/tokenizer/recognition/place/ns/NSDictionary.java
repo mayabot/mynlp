@@ -16,18 +16,16 @@
 
 package com.mayabot.nlp.segment.tokenizer.recognition.place.ns;
 
-import com.alibaba.fastjson.TypeReference;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.mayabot.nlp.MynlpEnv;
-import com.mayabot.nlp.segment.common.EnumFreqPair;
+import com.mayabot.nlp.common.EnumFreqPair;
 import com.mayabot.nlp.segment.dictionary.CommonDictionary;
 import com.mayabot.nlp.segment.tokenizer.recognition.place.NSTag;
 
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.util.List;
-import java.util.Map;
 
 @Singleton
 public class NSDictionary extends CommonDictionary<EnumFreqPair<NSTag>> {
@@ -52,14 +50,11 @@ public class NSDictionary extends CommonDictionary<EnumFreqPair<NSTag>> {
         a.writeItem(out);
     }
 
-    final static TypeReference<Map<NSTag, Integer>> typeReference = new TypeReference<Map<NSTag, Integer>>() {
-    };
-
     @Override
     protected EnumFreqPair<NSTag> readItem(DataInput in) {
         EnumFreqPair<NSTag> pair = new EnumFreqPair<>();
 
-        pair.readItem(in, typeReference);
+        pair.readItem(in, NSTag::valueOf);
 
         return pair;
     }
