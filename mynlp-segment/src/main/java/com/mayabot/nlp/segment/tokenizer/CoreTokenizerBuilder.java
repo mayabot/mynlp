@@ -26,17 +26,17 @@ public class CoreTokenizerBuilder extends BaseTokenizerBuilderApi {
     /**
      * 是否启用人名识别
      */
-    boolean personRecognition = true;
+    private boolean personRecognition = true;
 
     /**
      * 是否启用地名识别
      */
-    boolean placeRecognition = true;
+    private boolean placeRecognition = true;
 
     /**
      * 是否启用组织结构名识别
      */
-    boolean organizationRecognition = true;
+    private boolean organizationRecognition = true;
 
 
     /**

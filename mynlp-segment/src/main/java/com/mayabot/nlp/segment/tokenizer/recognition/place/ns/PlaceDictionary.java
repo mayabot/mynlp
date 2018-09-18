@@ -21,10 +21,10 @@ import com.mayabot.nlp.MynlpEnv;
 import com.mayabot.nlp.Setting;
 import com.mayabot.nlp.collection.ahocorasick.AhoCoraickDoubleArrayTrieBuilder;
 import com.mayabot.nlp.collection.ahocorasick.AhoCorasickDoubleArrayTrie;
+import com.mayabot.nlp.common.matrix.EnumTransformMatrix;
 import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
 import com.mayabot.nlp.resources.NlpResource;
-import com.mayabot.nlp.segment.dictionary.EnumTransformMatrix;
 import com.mayabot.nlp.segment.tokenizer.recognition.place.NSTag;
 import com.mayabot.nlp.segment.wordnet.Wordpath;
 

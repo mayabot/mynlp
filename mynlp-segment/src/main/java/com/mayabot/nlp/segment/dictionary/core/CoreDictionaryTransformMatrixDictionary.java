@@ -18,10 +18,10 @@ package com.mayabot.nlp.segment.dictionary.core;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.mayabot.nlp.MynlpEnv;
+import com.mayabot.nlp.common.matrix.TransformMatrix;
 import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
 import com.mayabot.nlp.resources.NlpResource;
-import com.mayabot.nlp.segment.dictionary.TransformMatrix;
 
 import java.io.IOException;
 

@@ -28,5 +28,6 @@ dependencies {
     compile project(':mynlp-transform')
     compile project(':mynlp-pinyin')
     compile project(':plugins:mynlp-lucene-7')
+    compile group: 'org.fusesource.jansi', name: 'jansi', version: '1.16'
     compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
 }

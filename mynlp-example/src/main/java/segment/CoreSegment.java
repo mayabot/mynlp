@@ -12,7 +12,7 @@ public class CoreSegment {
     public static void main(String[] args) {
         MynlpTokenizer mynlpTokenizer = MynlpTokenizers.coreTokenizer();
 
-        List<String> x = mynlpTokenizer.tokenToStringList("你好_lable_pos");
+        List<String> x = mynlpTokenizer.tokenToStringList("你好 _lable_pos");
 
         System.out.println(x);
 

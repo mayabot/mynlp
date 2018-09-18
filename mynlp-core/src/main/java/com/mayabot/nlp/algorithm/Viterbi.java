@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-package com.mayabot.nlp.segment.common;
+package com.mayabot.nlp.algorithm;
 
-import com.mayabot.nlp.segment.dictionary.EnumTransformMatrix;
+import com.mayabot.nlp.common.EnumFreqPair;
+import com.mayabot.nlp.common.matrix.EnumTransformMatrix;
 
 import java.util.Iterator;
 import java.util.LinkedList;
