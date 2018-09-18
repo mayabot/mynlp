@@ -18,12 +18,12 @@ package com.mayabot.nlp.segment.tokenizer.recognition.org;
 
 import com.google.inject.Inject;
 import com.google.inject.Injector;
+import com.mayabot.nlp.algorithm.SecondOrderViterbi;
+import com.mayabot.nlp.common.EnumFreqPair;
+import com.mayabot.nlp.common.matrix.EnumTransformMatrix;
 import com.mayabot.nlp.segment.OptimizeProcessor;
 import com.mayabot.nlp.segment.common.BaseMynlpComponent;
-import com.mayabot.nlp.segment.common.EnumFreqPair;
-import com.mayabot.nlp.segment.common.SecondOrderViterbi;
 import com.mayabot.nlp.segment.common.VertexTagCharSequenceTempChar;
-import com.mayabot.nlp.segment.dictionary.EnumTransformMatrix;
 import com.mayabot.nlp.segment.dictionary.Nature;
 import com.mayabot.nlp.segment.dictionary.NatureAttribute;
 import com.mayabot.nlp.segment.dictionary.core.CoreDictionary;

@@ -13,10 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.mayabot.nlp.segment.dictionary;
+package com.mayabot.nlp.common.matrix;
 
-import com.mayabot.nlp.logging.InternalLogger;
-import com.mayabot.nlp.logging.InternalLoggerFactory;
 import com.mayabot.nlp.resources.NlpResource;
 
 import java.io.IOException;
@@ -28,8 +26,6 @@ import java.io.InputStream;
  * @param <E> 标签的枚举类型
  */
 public class EnumTransformMatrix<E extends Enum<E>> {
-
-    private static InternalLogger logger = InternalLoggerFactory.getInstance(EnumTransformMatrix.class);
 
     private TransformMatrix transformMatrix;
 

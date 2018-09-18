@@ -16,9 +16,9 @@
 
 package com.mayabot.nlp.segment.wordnet;
 
-import java.util.BitSet;
+import org.fusesource.jansi.Ansi;
 
-import static org.fusesource.jansi.Ansi.ansi;
+import java.util.BitSet;
 
 /**
  * 格式化 输出 wordnet
@@ -59,7 +59,6 @@ class WordNetToStringBuilder {
                     _char = '¶';
                 }
             }
-            //line.append(ansi().eraseScreen().render("@|red Hello|@ @|green World|@"));
 
             line.append(String.format("@|cyan %d|@\t@|green %c |@", i, _char));
 
@@ -89,10 +88,12 @@ class WordNetToStringBuilder {
                         if (v.isOptimize()) {
                             line.append("[Y]");
                         }
-                        line.append(text, i, v.length);// 原始词
+                        // 原始词
+                        line.append(text, i, v.length);
 
                         if (v.abstractWord != null) {
-                            line.append("[").append(v.abstractWord).append("]"); // 等效词
+                            // 等效词
+                            line.append("[").append(v.abstractWord).append("]");
                         }
 
                         if (showAttr && v.natureAttribute != null) {
@@ -112,6 +113,14 @@ class WordNetToStringBuilder {
             sb.append(line).append("\n");
         }
 
-        return ansi().eraseScreen().render(sb.toString()).toString();
+        try {
+            Ansi ansi = Ansi.ansi();
+            return ansi.eraseScreen().render(sb.toString()).toString();
+        } catch (Throwable e) {
+            //@|green BEGIN|@
+            //@|cyan 12|@	@|green ¶ |@	@|yellow ||@		@|green END|@
+            return sb.toString().replaceAll("@\\|\\w+? (.+?)\\|@", "$1");
+        }
+
     }
 }

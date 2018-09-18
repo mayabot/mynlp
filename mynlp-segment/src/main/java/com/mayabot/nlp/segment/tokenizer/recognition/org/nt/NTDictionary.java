@@ -16,18 +16,16 @@
 
 package com.mayabot.nlp.segment.tokenizer.recognition.org.nt;
 
-import com.alibaba.fastjson.TypeReference;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.mayabot.nlp.MynlpEnv;
-import com.mayabot.nlp.segment.common.EnumFreqPair;
+import com.mayabot.nlp.common.EnumFreqPair;
 import com.mayabot.nlp.segment.dictionary.CommonDictionary;
 import com.mayabot.nlp.segment.tokenizer.recognition.org.NTTag;
 
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author jimichan
@@ -55,14 +53,11 @@ public class NTDictionary extends CommonDictionary<EnumFreqPair<NTTag>> {
         a.writeItem(out);
     }
 
-    final static TypeReference<Map<NTTag, Integer>> typeReference = new TypeReference<Map<NTTag, Integer>>() {
-    };
-
     @Override
     protected EnumFreqPair<NTTag> readItem(DataInput in) {
         EnumFreqPair<NTTag> pair = new EnumFreqPair<>();
 
-        pair.readItem(in, typeReference);
+        pair.readItem(in, NTTag::valueOf);
 
         return pair;
     }

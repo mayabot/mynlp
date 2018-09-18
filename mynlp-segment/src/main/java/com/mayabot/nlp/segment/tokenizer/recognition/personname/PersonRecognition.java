@@ -17,11 +17,11 @@
 package com.mayabot.nlp.segment.tokenizer.recognition.personname;
 
 import com.google.inject.Inject;
+import com.mayabot.nlp.algorithm.Viterbi;
+import com.mayabot.nlp.common.EnumFreqPair;
 import com.mayabot.nlp.segment.OptimizeProcessor;
 import com.mayabot.nlp.segment.common.BaseMynlpComponent;
-import com.mayabot.nlp.segment.common.EnumFreqPair;
 import com.mayabot.nlp.segment.common.VertexTagCharSequenceTempChar;
-import com.mayabot.nlp.segment.common.Viterbi;
 import com.mayabot.nlp.segment.dictionary.Nature;
 import com.mayabot.nlp.segment.dictionary.NatureAttribute;
 import com.mayabot.nlp.segment.dictionary.core.CoreDictionary;
