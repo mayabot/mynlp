@@ -16,12 +16,12 @@
 package com.mayabot.nlp.segment.analyzer;
 
 import com.google.common.base.Preconditions;
+import com.mayabot.nlp.common.FastCharReader;
+import com.mayabot.nlp.common.ParagraphReader;
+import com.mayabot.nlp.common.ParagraphReaderSmart;
+import com.mayabot.nlp.common.ParagraphReaderString;
 import com.mayabot.nlp.segment.MynlpTokenizer;
 import com.mayabot.nlp.segment.WordTerm;
-import com.mayabot.nlp.utils.FastCharReader;
-import com.mayabot.nlp.utils.ParagraphReader;
-import com.mayabot.nlp.utils.ParagraphReaderSmart;
-import com.mayabot.nlp.utils.ParagraphReaderString;
 
 import java.io.IOException;
 import java.io.Reader;
