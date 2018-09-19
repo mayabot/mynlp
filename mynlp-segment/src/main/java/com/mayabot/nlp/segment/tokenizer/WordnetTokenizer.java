@@ -129,16 +129,9 @@ public class WordnetTokenizer implements MynlpTokenizer {
             initializer.fill(wordnet);
         }
 
-        System.out.println("\n" + wordnet.toMoreString());
-
         //选择一个路径出来(第一次不严谨的分词结果)
         Wordpath wordPath = bestPathAlgorithm.select(wordnet);
 
-//        System.out.println("\n"+wordnet.toMoreString());
-//        System.out.println(wordPath);
-
-
-        // call WordpathProcessor
         for (WordpathProcessor processor : pipeline) {
             if (processor.isEnabled()) {
                 wordPath = processor.process(wordPath);
