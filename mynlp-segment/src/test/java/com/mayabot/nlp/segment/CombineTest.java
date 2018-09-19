@@ -23,7 +23,6 @@ public class CombineTest {
                 "五十八公斤\n" +
                 "产品编号BN-598\n" +
                 "产品编号BN-598-122N\n" +
-                "这个是典型的\"非正常BWW\"综合征\n" +
                 "阅读了《西行漫步》这一本书\n" +
                 "我买了一台 very cool iPhone7\n" +
                 "分词标签是__lable__";
@@ -31,9 +30,8 @@ public class CombineTest {
 
         String[] result = ("体重 182kg\n" +
                 "五十八公斤\n" +
-                "产品 编号 bn-598\n" +
-                "产品 编号 bn-598-122n\n" +
-                "这个 是 典型 的 \"非正常BWW\" 综合征\n" +
+                "产品编号 bn-598\n" +
+                "产品编号 bn-598-122n\n" +
                 "阅读 了 《西行漫步》 这 一 本书\n" +
                 "我 买了 一台 very cool iphone7\n" +
                 "分词 标签 是 __lable__").split("\n");

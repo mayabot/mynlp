@@ -74,6 +74,12 @@ public class PlaceRecognition extends BaseMynlpComponent implements OptimizeProc
     @Override
     public boolean process(Vertex[] pathWithBE, Wordnet wordnet) {
 
+//        地名角色观察：[  S 1163565 ][南翔 G 1 H 1 ][向 A 1076 B 115 X 70 C 49 D 5 ][宁夏 G 1 H 1 ][固原市 G 1 ][彭 C 85 ][阳 D 1255 C 81 B 1 ][县 H 6878 B 25 A 23 D 19 X 3 ][红 C 1000 B 46 A 3 ][河镇 G 1 H 1 ][黑 C 960 B 25 ][牛 D 24 C 8 B 7 ][沟 H 107 D 90 E 36 C 27 B 14 A 3 ][村 H 4467 D 68 B 28 A 8 C 3 ][捐赠 B 10 A 1 ][了 A 4115 B 97 ][挖掘机 B 1 ][  B 1322 ]
+//        地名角色标注：[ /S ,南翔/G ,向/X ,宁夏/G ,固原市/G ,彭/C ,阳/D ,县/H ,红/C ,河镇/H ,黑/C ,牛/D ,沟/E ,村/H ,捐赠/B ,了/A ,挖掘机/B , /S]
+//        识别出地名：彭阳县 CDH
+//        识别出地名：红河镇 CH
+//        识别出地名：黑牛沟村 CDEH
+
         char[] text = wordnet.getCharArray();
 
         // 绑定标签
@@ -81,8 +87,8 @@ public class PlaceRecognition extends BaseMynlpComponent implements OptimizeProc
 
 //		List<EnumFreqPair<NSTag>> xlist = Lists.newArrayList();
 //		for (Vertex v : pathWithBE) {
-//			System.out.print("【 "+v.realWord()+" "+v.getObj(NameKey.freqpair)+" ] ");
-//			xlist.add(v.getObj(NameKey.freqpair));
+//			System.out.print("【 "+v.realWord()+" "+v.getTempObj()+" ] ");
+//			xlist.add(v.getTempObj());
 //		}
 
         //选择标签
@@ -95,7 +101,7 @@ public class PlaceRecognition extends BaseMynlpComponent implements OptimizeProc
                 });
 
 //		for (Vertex v : pathWithBE) {
-//			System.out.print(v.getChar(NameKey.tag)+" ");
+//			System.out.print(v.getTempChar()+" ");
 //		}
 //		System.out.println();
 
@@ -141,23 +147,26 @@ public class PlaceRecognition extends BaseMynlpComponent implements OptimizeProc
      */
     public void roleObserve(char[] text, Vertex[] pathWithBE) {
 
-        //Begin
-        pathWithBE[0].setTempObj(defaultEnumFreqPair);
-
-        //END
-        pathWithBE[pathWithBE.length - 1].setTempObj(defaultEnumFreqPair);
+//        //Begin
+//        pathWithBE[0].setTempObj(defaultEnumFreqPair);
+//
+//        //END
+//        pathWithBE[pathWithBE.length - 1].setTempObj(defaultEnumFreqPair);
 
         NSDictionary nrDictionary = personDictionary.getDictionary();
 
-        for (int i = 1; i < pathWithBE.length - 1; i++) {
+        for (int i = 0; i < pathWithBE.length; i++) {
             Vertex vertex = pathWithBE[i];
 
             if (Nature.ns.equals(vertex.guessNature()) && vertex.natureAttribute.getTotalFrequency() <= 1000) {
-                if (vertex.length <= 3) {
-                    vertex.setTempObj(new EnumFreqPair<>(H, G)); // 二字地名，认为其可以再接一个后缀或前缀
+                if (vertex.length < 3) {
+                    // 二字地名，认为其可以再接一个后缀或前缀
+                    vertex.setTempObj(new EnumFreqPair<>(H, G));
                 } else {
-                    vertex.setTempObj(new EnumFreqPair<>(G));// 否则只可以再加后缀
+                    // 否则只可以再加后缀
+                    vertex.setTempObj(new EnumFreqPair<>(G));
                 }
+                continue;
             }
 
             EnumFreqPair<NSTag> nrEnumFreqPair = null;
