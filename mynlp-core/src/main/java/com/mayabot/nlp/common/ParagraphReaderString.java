@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.mayabot.nlp.utils;
+package com.mayabot.nlp.common;
 
 /**
  * 有的时候给定的文本很短，那么就做个假的
