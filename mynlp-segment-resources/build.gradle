@@ -1,5 +1,6 @@
 version = "1.1.0"
 
+description = "segment使用的基本词典资源。独立版本发布"
 def publish_resource = false
 
 if(!publish_resource){

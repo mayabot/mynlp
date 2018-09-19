@@ -16,90 +16,68 @@
 
 package com.mayabot.nlp.segment.wordnet;
 
+import org.junit.Assert;
+import org.junit.Test;
+
 public class WordpathTest {
 
-//    @Before
-//    public void setUp() throws Exception {
-//        testConsumer();
-//        connect();
-//    }
-//
-//    @Test
-//    public void connect() throws Exception {
-//        String line = "我的中国心";
-//        Wordpath wordPath = new Wordpath(line.length());
-//
-//        wordPath.connect(0, 2);
-//        wordPath.connect(2, 3);
-//
-//        Assert.assertEquals("我的 | 中国心", wordPath.toString(line));
-//    }
-//
-//    @Test
-//    public void connect2() throws Exception {
-//
-//        String line = "一个Path实例代表一个文件系统内的路径。";
-//
-//        Wordpath wordPath = new Wordpath(line.length());
-//
-//        wordPath.connect(0, 2);
-//        wordPath.connect(2, 4);
-//        wordPath.connect(6, 2);
-//        wordPath.connect(8, 2);
-//        wordPath.connect(10, 2);
-//        wordPath.connect(12, 4);
-//        wordPath.connect(16, 1);
-//        wordPath.connect(17, 1);
-//        wordPath.connect(18, 2);
-//        wordPath.connect(19, 1);
-//
-//        Assert.assertEquals("一个 | Path | 实例 | 代表 | 一个 | 文件系统 | 内 | 的 | 路 | 径 | 。", wordPath.toString(line));
-//    }
-//
-//    @Test
-//    public void testConsumer() {
-//        String line = "一个Path实例代表一个文件系统内的路径。";
-//
-//        Wordpath wordPath = new Wordpath(line.length());
-//
-//        wordPath.connect(0, 2);
-//        wordPath.connect(2, 4);
-//        wordPath.connect(6, 2);
-//        wordPath.connect(8, 2);
-//        wordPath.connect(10, 2);
-//        wordPath.connect(12, 4);
-//        wordPath.connect(16, 1);
-//        wordPath.connect(17, 1);
-//        wordPath.connect(18, 2);
-//        wordPath.connect(19, 1);
-//
-//        StringBuilder sb = new StringBuilder();
-//        wordPath.access((from, len) -> {
-//            sb.append(line.substring(from, from + len));
-//            //System.out.println(line.substring(from,from+len));
-//        });
-//
-//        Assert.assertEquals(sb.toString(),line);
-//    }
-//
-//
-//    @Test
-//    public void testConsumer2() {
-//        String line = "一个实例代表";
-//
-//        Wordpath wordPath = new Wordpath(line.length());
-//
-//        wordPath.connect(0, 2);
-//
-//        StringBuilder sb = new StringBuilder();
-//        wordPath.access((from, len) -> {
-//            sb.append(line.substring(from, from + len));
-//            //System.out.println(line.substring(from,from+len));
-//        });
-//
-//        System.out.println(wordPath.bitSet.cardinality());
-//
-//        Assert.assertEquals(sb.toString(),line);
-//    }
 
+    @Test
+    public void combine() throws Exception {
+        String line = "我的中国心";
+        Wordpath wordPath = new Wordpath(new Wordnet(line.toCharArray()));
+
+        wordPath.combine(0, 2);
+        wordPath.combine(2, 3);
+
+        Assert.assertEquals("我的 | 中国心", wordPath.toString());
+    }
+
+    @Test
+    public void combine2() throws Exception {
+
+        String line = "一个Path实例代表一个文件系统内的路径。";
+
+        Wordpath wordPath = new Wordpath(new Wordnet(line.toCharArray()));
+
+        wordPath.combine(0, 2);
+        wordPath.combine(2, 4);
+        wordPath.combine(6, 2);
+        wordPath.combine(8, 2);
+        wordPath.combine(10, 2);
+        wordPath.combine(12, 4);
+        wordPath.combine(16, 1);
+        wordPath.combine(17, 1);
+        wordPath.combine(18, 2);
+        wordPath.combine(20, 1);
+
+        Assert.assertEquals("一个 | Path | 实例 | 代表 | 一个 | 文件系统 | 内 | 的 | 路径 | 。",
+                wordPath.toString());
+    }
+
+    @Test
+    public void testConsumer() {
+        String line = "一个Path实例代表一个文件系统内的路径。";
+
+        Wordpath wordPath = new Wordpath(new Wordnet(line.toCharArray()));
+
+        wordPath.combine(0, 2);
+        wordPath.combine(2, 4);
+        wordPath.combine(6, 2);
+        wordPath.combine(8, 2);
+        wordPath.combine(10, 2);
+        wordPath.combine(12, 4);
+        wordPath.combine(16, 1);
+        wordPath.combine(17, 1);
+        wordPath.combine(18, 2);
+        wordPath.combine(20, 1);
+
+        StringBuilder sb = new StringBuilder();
+        wordPath.iteratorVertex().forEachRemaining(vertex -> {
+            sb.append(line.substring(vertex.realWordOffset(), vertex.realWordOffset() + vertex.length));
+        });
+
+
+        Assert.assertEquals(sb.toString(), line);
+    }
 }

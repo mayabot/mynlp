@@ -18,6 +18,7 @@ package com.mayabot.nlp.segment.dictionary.core;
 
 import com.mayabot.nlp.Mynlp;
 import com.mayabot.nlp.Mynlps;
+import org.junit.Assert;
 import org.junit.Test;
 
 public class CoreDictionaryTest {
@@ -30,7 +31,7 @@ public class CoreDictionaryTest {
 
         CoreDictionary dictionary = mynlp.getInstance(CoreDictionary.class);
 
-        System.out.println(dictionary.get("普查"));
+        Assert.assertTrue("{vn=546, v=237}".equals(dictionary.get("普查").toString()));
 
 //        long t1 = System.currentTimeMillis();
 //        System.out.println(dictionary.indexOf("人口"));

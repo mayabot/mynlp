@@ -24,6 +24,6 @@ public class TokenizerTestHelp {
 
         String out = Joiner.on("|").join(tokenizer.tokenToStringList(input));
 
-        Assert.assertTrue("Out is " + out.replace("|", "/") + " ,Input " + text.replace("|", "/"), text.equals(out));
+        Assert.assertTrue("Out is " + out + " ,Input " + text, text.equalsIgnoreCase(out));
     }
 }
