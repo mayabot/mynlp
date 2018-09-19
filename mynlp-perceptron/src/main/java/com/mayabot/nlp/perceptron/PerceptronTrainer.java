@@ -7,13 +7,13 @@ package com.mayabot.nlp.perceptron;
  *
  * @author jimichan
  */
-public interface PerceptronTrainer {
+public interface PerceptronTrainer<E extends Enum<E>> {
 
     /**
      * 训练一个序列。在一个语料库训练中，改方法需要被调用很多次。
      *
      * @param source 语料库
      */
-    PerceptronModel trainSequenceSource(Iterable<SequenceLabel> source);
+    PerceptronModel<E> train(Iterable<SequenceLabel<E>> source);
 
 }

@@ -7,7 +7,7 @@ import java.io.File;
  *
  * @author jimichan
  */
-public interface PerceptronModel {
+public interface PerceptronModel<E extends Enum<E>> {
     /**
      * 保存感知机模型实例
      *
@@ -30,5 +30,5 @@ public interface PerceptronModel {
      * @param sequence
      * @return 解码后的label序列
      */
-    int[] decode(int[] sequence);
+    E[] decode(int[] sequence);
 }
