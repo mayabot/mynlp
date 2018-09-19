@@ -28,7 +28,7 @@ import java.util.Map;
  *
  * @author jimichan
  */
-public class Vertex extends VertexExt {
+public class Vertex {
 
     /**
      * 词的长度
@@ -327,5 +327,82 @@ public class Vertex extends VertexExt {
 
     public Vertex getNext() {
         return next;
+    }
+
+
+    // ########################################//
+    // 在最短路相关计算中用到的几个变量 //
+    // ########################################//
+
+    /**
+     * 到该节点的最短路径的前驱节点
+     */
+    public Vertex from;
+
+    /**
+     * 最短路径对应的权重
+     */
+    public double weight;
+
+//    /**
+//     * 调节的权重。人工可以控制强制选择或不选择一些节点. 好像是越小越好
+//     */
+//    public double adjustWeight;
+
+    /**
+     * 优化网络的节点标记.
+     */
+    private boolean optimize = false;
+
+    /**
+     * 当网络状态为优化网络。那么之后新增的词，比较为true
+     */
+    private boolean optimizeNewNode = false;
+
+    private Object tempObj;
+
+    private char tempChar;
+
+    public void clearTemp() {
+        tempChar = 0;
+        tempObj = null;
+    }
+
+
+    public boolean isOptimize() {
+        return optimize;
+    }
+
+    public void setOptimize(boolean optimize) {
+        this.optimize = optimize;
+    }
+
+    public boolean isOptimizeNewNode() {
+        return optimizeNewNode;
+    }
+
+    /**
+     * 当网络状态为优化网络。那么之后新增的词，比较为true
+     *
+     * @param optimizeNewNode
+     */
+    public void setOptimizeNewNode(boolean optimizeNewNode) {
+        this.optimizeNewNode = optimizeNewNode;
+    }
+
+    public <T> T getTempObj() {
+        return (T) tempObj;
+    }
+
+    public void setTempObj(Object tempObj) {
+        this.tempObj = tempObj;
+    }
+
+    public char getTempChar() {
+        return tempChar;
+    }
+
+    public void setTempChar(char tempChar) {
+        this.tempChar = tempChar;
     }
 }
