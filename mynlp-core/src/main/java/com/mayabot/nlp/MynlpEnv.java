@@ -59,6 +59,7 @@ public class MynlpEnv {
     }
 
 
+
     /**
      * 给只从classpath下加载资源的环境
      */
@@ -115,8 +116,17 @@ public class MynlpEnv {
         return dataDir;
     }
 
+    public MynlpEnv setDataDir(File dataDir) {
+        this.dataDir = dataDir;
+        return this;
+    }
+
     public File getCacheDir() {
         return cacheDir;
     }
 
+    public MynlpEnv setCacheDir(File cacheDir) {
+        this.cacheDir = cacheDir;
+        return this;
+    }
 }

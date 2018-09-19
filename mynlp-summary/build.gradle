@@ -1,7 +1,7 @@
-
-plugins {
-    id "org.jetbrains.kotlin.jvm" version "1.2.61"
-}
+//
+//plugins {
+//    id "org.jetbrains.kotlin.jvm" version "1.2.61"
+//}
 
 description = '文本摘要模块。包括关键字抽取、文本摘要、基于词向量优化摘要'
 
@@ -16,14 +16,12 @@ if(!publish_resource){
     }
 }
 
-sourceSets {
-    main.kotlin.srcDirs = main.java.srcDirs
-    test.kotlin.srcDirs = test.java.srcDirs
-}
+//sourceSets {
+//    main.kotlin.srcDirs = main.java.srcDirs
+//    test.kotlin.srcDirs = test.java.srcDirs
+//}
 
 dependencies {
-
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
 
     compile project(":mynlp-segment")
 

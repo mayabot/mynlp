@@ -18,6 +18,7 @@ package com.mayabot.nlp.segment.dictionary;
 
 import com.mayabot.nlp.Mynlps;
 import com.mayabot.nlp.segment.dictionary.core.CoreBiGramTableDictionary;
+import org.junit.Assert;
 import org.junit.Test;
 
 public class CoreGiGramTableDictionaryTest{
@@ -25,6 +26,8 @@ public class CoreGiGramTableDictionaryTest{
     @Test
     public void test() {
         CoreBiGramTableDictionary dic = Mynlps.getInstance(CoreBiGramTableDictionary.class);
+
+        Assert.assertTrue(1 == dic.getBiFrequency("一个", "胜利"));
     }
 
 }

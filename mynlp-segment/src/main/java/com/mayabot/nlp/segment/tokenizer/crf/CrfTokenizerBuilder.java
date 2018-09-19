@@ -18,11 +18,11 @@ public class CrfTokenizerBuilder extends BaseTokenizerBuilderApi {
 
         //wordnet初始化填充
         builder.addWordnetInitializer(
-                mynlp.getInstance(CrfBaseSegmentInitializer.class),
-                mynlp.getInstance(AtomSegmenterInitializer.class),
-                mynlp.getInstance(ConvertAbstractWordInitializer.class)
+                CrfBaseSegmentInitializer.class,
+                AtomSegmenterInitializer.class,
+                ConvertAbstractWordInitializer.class
         );
-        builder.addWordnetInitializer(mynlp.getInstance(TimeStringProcessor.class));
+        builder.addWordnetInitializer(TimeStringProcessor.class);
 
         //最优路径算法w
         builder.setBestPathComputer(ViterbiBestPathAlgorithm.class);
