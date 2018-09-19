@@ -16,8 +16,6 @@
 
 package com.mayabot.nlp.segment.wordnet;
 
-import com.mayabot.nlp.logging.InternalLogger;
-import com.mayabot.nlp.logging.InternalLoggerFactory;
 import com.mayabot.nlp.utils.CustomCharSequence;
 
 import java.util.BitSet;
@@ -25,24 +23,20 @@ import java.util.Iterator;
 import java.util.function.Consumer;
 
 /**
- * http://www.hankcs.com/nlp/segment/the-word-graph-is-generated.html Word Net
- * 是如下的数据结构
+ *
  * <p>
  * #S# [0] #Start 品 [1] 品质 质 [2] 质 和 [3] {和、和服} 服 [4] 服务 务 [5] 务 #E# [6] #End
  * <p>
- * 为了字数为 N 的字符串，申请了 长度为 N+2 的slot数量 Start节点和End节点是一直都有的
  * <p>
  * sindex表示智能下标索引，用 -1 表示Start length表示End
  * <p>
  * WordNodeLinkedList 是一个优化过的linkedlist，去除了中间node节点,并增量排序和特殊性质
  * <p>
  * 实现CharSequence接口，可以进行当做字符串类型处理
- *
+ *O
  * @author jimichan
  */
 public class Wordnet implements CharSequence {
-
-    static InternalLogger logger = InternalLoggerFactory.getInstance(Wordnet.class);
 
     private BestPathAlgorithm bestPathAlgorithm;
 
@@ -51,10 +45,14 @@ public class Wordnet implements CharSequence {
      */
     final VertexRow[] slotList;
 
-    // 启始行 下标 -1
+    /**
+     * 启始行 下标 -1
+     */
     private final VertexRow begin;
 
-    // 结尾行 下标 charSize
+    /**
+     * 结尾行 下标 charSize
+     */
     private final VertexRow end;
 
     /**
@@ -62,19 +60,10 @@ public class Wordnet implements CharSequence {
      */
     private final char[] charArray;
 
-//    private final short[] inflag; //被指向的次数
-//
-//    private short endInFlag; //end节点的
-
     /**
      * 字符的数量
      */
     private final int charSize;
-
-//    /**
-//     * 使用切分符号来，划定切分方式。true表示切断，false表示不切断
-//     */
-//    private final WordPath wordPath;
 
     /**
      * 是否工作在优化网络模式
@@ -91,21 +80,19 @@ public class Wordnet implements CharSequence {
         this.charArray = charArray;
 
         this.charSize = charArray.length;
-        //this.inflag = new short[charSize];
 
         this.begin = new VertexRow(-1, this);
         this.end = new VertexRow(charSize, this);
 
         // 创建一个空的数组
         slotList = new VertexRow[charSize];
+
         //初始化数组里面的对象,提前初始化好
         for (int i = 0; i < charSize; i++) {
             slotList[i] = new VertexRow(i, this);
         }
     }
 
-    //记录没有被覆盖的位置
-    //private BitSet noOverWords = new BitSet();
 
     /**
      * 寻找没有被所有路径覆盖的位置
@@ -180,15 +167,6 @@ public class Wordnet implements CharSequence {
         return indexAt(sindex);
     }
 
-//    /**
-//     * 如果row为null就返回null，不会自动创建
-//     *
-//     * @param sindex
-//     * @return
-//     */
-//    public final VertexRow fetchRow(int sindex) {
-//        return indexAt(sindex, false);
-//    }
 
     /**
      * 节点数字，包含了Start，end两个标记节点 动态统计,调用的时候请注意
@@ -336,13 +314,12 @@ public class Wordnet implements CharSequence {
         return row.size();
     }
 
-
     /**
      * 访问网络里面所有的Vertex节点. 从后向前了
      *
      * @param consumer
      */
-    public final void accessAllVertext(Consumer<Vertex> consumer) {
+    public final void accessAllVertex(Consumer<Vertex> consumer) {
         for (int i = slotList.length - 1; i >= 0; i--) {
             VertexRow row = slotList[i];
             if (row != null) {
@@ -353,32 +330,6 @@ public class Wordnet implements CharSequence {
         }
     }
 
-
-//    /**
-//     * 复制一个wordNet出来,内容填充的是最优路径
-//     *
-//     * @return
-//     */
-//    public Wordnet copyWordnetBySelectedPath() {
-//        Wordnet optimumWordnet = new Wordnet(this.getCharArray());
-//
-//        optimumWordnet.getBeginRow().put(getBeginRow().getFirst().copy());
-//        optimumWordnet.getEndRow().put(getEndRow().getFirst().copy());
-////		optimumWordnet.getBeginRow().selectVertex(optimumWordnet.getBeginRow().getFirst());
-////		optimumWordnet.getEndRow().selectVertex(optimumWordnet.getEndRow().getFirst());
-//
-//        // 把最优路径选择出来
-//        Iterator<Vertex> ite = iteratorVertex();
-//        while (ite.hasNext()) {
-//            Vertex node = ite.next();
-//            Vertex new_node = node.copy();
-//            VertexRow row = optimumWordnet.getRow(node.getVertexRow().getRowNum());
-//            row.put(new_node);
-////			row.selectVertex(newnode); //默认就选中了
-//            optimumWordnet.connectWordPath(node);
-//        }
-//        return optimumWordnet;
-//    }
 
     /**
      * 标记优化网络的路径，根据目前的最优路径来标记
@@ -405,7 +356,6 @@ public class Wordnet implements CharSequence {
     public String toString() {
         return new WordNetToStringBuilder(this, false).toString();
     }
-
 
     public String toMoreString() {
         return new WordNetToStringBuilder(this, true).toString();
@@ -466,7 +416,7 @@ public class Wordnet implements CharSequence {
     public void setOptimizeNet(boolean optimizeNet) {
         this.optimizeNet = optimizeNet;
         //重置所有节点的optimize标记为false
-        accessAllVertext(it -> {
+        accessAllVertex(it -> {
             if (it.isOptimize()) {
                 it.setOptimize(false);
                 it.setOptimizeNewNode(false);
