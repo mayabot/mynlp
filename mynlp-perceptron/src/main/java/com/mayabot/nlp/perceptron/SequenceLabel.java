@@ -5,13 +5,13 @@ package com.mayabot.nlp.perceptron;
  *
  * @author jimichan
  */
-public class SequenceLabel {
+public class SequenceLabel<E extends Enum<E>> {
 
     public int[] sequence;
 
-    public int[] label;
+    public E[] label;
 
-    public SequenceLabel(int[] sequence, int[] label) {
+    public SequenceLabel(int[] sequence, E[] label) {
         this.sequence = sequence;
         this.label = label;
     }
@@ -25,12 +25,25 @@ public class SequenceLabel {
         return this;
     }
 
-    public int[] getLabel() {
+    public E[] getLabel() {
         return label;
     }
 
-    public SequenceLabel setLabel(int[] label) {
+    public SequenceLabel setLabel(E[] label) {
         this.label = label;
+        //label[0].ordinal()
         return this;
+    }
+
+    public static void main(String[] args) {
+
+        System.out.println(TAG.B.ordinal());
+        System.out.println(TAG.M.ordinal());
+        System.out.println(TAG.E.ordinal());
+        System.out.println(TAG.S.ordinal());
+    }
+
+    enum TAG {
+        B, M, E, S
     }
 }
