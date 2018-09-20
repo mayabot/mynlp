@@ -2,8 +2,8 @@ package segment;
 
 import com.google.common.base.Joiner;
 import com.mayabot.nlp.segment.MynlpAnalyzer;
+import com.mayabot.nlp.segment.MynlpAnalyzers;
 import com.mayabot.nlp.segment.MynlpTokenizer;
-import com.mayabot.nlp.segment.analyzer.StandardMynlpAnalyzer;
 import com.mayabot.nlp.segment.tokenizer.CoreTokenizerBuilder;
 
 import java.io.BufferedReader;
@@ -35,7 +35,7 @@ public class HowFast {
         tokenizer.tokenToTermList(lines.get(0));
 
 
-        MynlpAnalyzer analyzer = new StandardMynlpAnalyzer(tokenizer);
+        MynlpAnalyzer analyzer = MynlpAnalyzers.base(tokenizer);
         analyzer.stream(new StringReader(lines.get(0))).count();
 
         String text = Joiner.on("\n").join(lines);
@@ -47,23 +47,12 @@ public class HowFast {
         }
 
         System.out.println("---");
-
         {
-            long t1 = System.currentTimeMillis();
-            try (BufferedReader reader = new BufferedReader(new StringReader(text))) {
-                analyzer.parse(reader).forEach(x -> {
-                });
-            }
-
-            long t2 = System.currentTimeMillis();
-
-            double time = (t2 - t1);
-            System.out.println("红楼梦 分词 使用 " + (int) time + " ms");
-
-            System.out.println("速度 " + (int) ((charNum / time) * 1000) + "字/秒");
+            lines.forEach(line -> {
+                tokenizer.tokenToTermList(line);
+            });
         }
-
-        System.out.println("xxxx");
+        System.currentTimeMillis();
 
         {
             long t1 = System.currentTimeMillis();
@@ -79,6 +68,26 @@ public class HowFast {
 
             System.out.println("速度 " + (int) ((charNum / time) * 1000) + "字/秒");
         }
+
+        System.out.printf("xxxxx");
+
+        {
+            long t1 = System.currentTimeMillis();
+            try (StringReader reader = new StringReader(text)) {
+                analyzer.parse(reader).forEach(x -> {
+                });
+            }
+
+            long t2 = System.currentTimeMillis();
+
+            double time = (t2 - t1);
+            System.out.println("红楼梦 分词 使用 " + (int) time + " ms");
+
+            System.out.println("速度 " + (int) ((charNum / time) * 1000) + "字/秒");
+        }
+
+        System.out.println("xxxx");
+
 
 
 //        System.out.println("--------Ansj-----------");
