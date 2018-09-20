@@ -12,7 +12,7 @@ import com.mayabot.nlp.segment.tokenizer.xprocessor.CustomDictionaryProcessor;
  *
  * @author jimichan
  */
-public class SimpleDictTokenizerBuilder extends BaseTokenizerBuilderApi {
+public class SimpleDictTokenizerBuilder extends BaseTokenizerBuilder {
 
     @Override
     protected void setUp(WordnetTokenizerBuilder builder) {

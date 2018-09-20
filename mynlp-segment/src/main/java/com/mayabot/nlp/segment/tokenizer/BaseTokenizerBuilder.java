@@ -1,8 +1,6 @@
 package com.mayabot.nlp.segment.tokenizer;
 
-import com.mayabot.nlp.Mynlps;
 import com.mayabot.nlp.segment.MynlpTokenizer;
-import com.mayabot.nlp.segment.WordTermCollector;
 import com.mayabot.nlp.segment.tokenizer.collector.SentenceCollector;
 import com.mayabot.nlp.segment.tokenizer.collector.SentenceIndexWordCollector;
 import com.mayabot.nlp.segment.tokenizer.normalize.Full2halfCharNormalize;
@@ -13,11 +11,7 @@ import com.mayabot.nlp.segment.tokenizer.xprocessor.PartOfSpeechTaggingComputerP
 /**
  * @author jimichan
  */
-public abstract class BaseTokenizerBuilderApi extends WordnetTokenizerBuilder {
-
-//    protected WordnetTokenizerBuilder builder = WordnetTokenizer.builder();
-
-//    private Consumer<WordnetTokenizerBuilder> consumer;
+public abstract class BaseTokenizerBuilder extends WordnetTokenizerBuilder {
 
     /**
      * 子类去设置builder
@@ -35,16 +29,10 @@ public abstract class BaseTokenizerBuilderApi extends WordnetTokenizerBuilder {
      */
     private boolean correction = true;
 
-
     /**
      * 是否开启词性分析
      */
     private boolean pos;
-
-    /**
-     * WordTerm 收集器
-     */
-    private WordTermCollector wordTermCollector;
 
     /**
      * 是否开启分词纠错
@@ -52,7 +40,7 @@ public abstract class BaseTokenizerBuilderApi extends WordnetTokenizerBuilder {
      * @param correction
      * @return
      */
-    public BaseTokenizerBuilderApi setCorrection(boolean correction) {
+    public BaseTokenizerBuilder setCorrection(boolean correction) {
         this.correction = correction;
         return this;
     }
@@ -62,19 +50,19 @@ public abstract class BaseTokenizerBuilderApi extends WordnetTokenizerBuilder {
      * @param pos
      * @return
      */
-    public BaseTokenizerBuilderApi setPos(boolean pos) {
+    public BaseTokenizerBuilder setPos(boolean pos) {
         this.pos = pos;
         return this;
     }
 
 
-    public BaseTokenizerBuilderApi sentenceCollector() {
-        wordTermCollector = Mynlps.getInstance(SentenceCollector.class);
+    public BaseTokenizerBuilder sentenceCollector() {
+        setTermCollector(SentenceCollector.class);
         return this;
     }
 
-    public BaseTokenizerBuilderApi sentenceIndexCollector() {
-        wordTermCollector = Mynlps.getInstance(SentenceIndexWordCollector.class);
+    public BaseTokenizerBuilder sentenceIndexCollector() {
+        setTermCollector(SentenceIndexWordCollector.class);
         return this;
     }
 
@@ -99,12 +87,6 @@ public abstract class BaseTokenizerBuilderApi extends WordnetTokenizerBuilder {
 
         if (pos) {
             addProcessor(PartOfSpeechTaggingComputerProcessor.class);
-        }
-
-        if (wordTermCollector != null) {
-            setTermCollector(wordTermCollector);
-        } else {
-            setTermCollector(Mynlps.getInstance(SentenceCollector.class));
         }
 
         return super.build();

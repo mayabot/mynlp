@@ -23,6 +23,7 @@ import com.mayabot.nlp.Mynlp;
 import com.mayabot.nlp.Mynlps;
 import com.mayabot.nlp.segment.*;
 import com.mayabot.nlp.segment.common.VertexHelper;
+import com.mayabot.nlp.segment.tokenizer.collector.SentenceCollector;
 import com.mayabot.nlp.segment.tokenizer.normalize.Full2halfCharNormalize;
 import com.mayabot.nlp.segment.tokenizer.normalize.LowerCaseCharNormalize;
 import com.mayabot.nlp.segment.tokenizer.recognition.OptimizeWordPathProcessor;
@@ -82,7 +83,7 @@ public class WordnetTokenizerBuilder implements MynlpTokenizerBuilder {
     /**
      * 最终结构收集器
      */
-    private WordTermCollector termCollector;
+    WordTermCollector termCollector;
 
     /**
      * 默认构造函数。不公开
@@ -101,7 +102,9 @@ public class WordnetTokenizerBuilder implements MynlpTokenizerBuilder {
         Preconditions.checkState(!wordnetInitializer.isEmpty());
 
         // 3.termCollector
-        Preconditions.checkNotNull(termCollector);
+        if (termCollector == null) {
+            termCollector = mynlp.getInstance(SentenceCollector.class);
+        }
 
         // 4
         callListener();
