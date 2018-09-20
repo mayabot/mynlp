@@ -33,6 +33,22 @@ import java.io.Reader;
  */
 public class ParagraphReaderSmart implements ParagraphReader {
 
+
+    /**
+     * 选择一个好的实现
+     *
+     * @param string
+     * @return
+     */
+    public static ParagraphReader prepare(String string) {
+        if (string.length() < 256) {
+            return new ParagraphReaderString(string);
+        } else {
+            return new ParagraphReaderSmart(new FastCharReader(string));
+        }
+    }
+
+
     private FastCharReader fastCharReader;
 
     private int expectSize;
@@ -71,19 +87,6 @@ public class ParagraphReaderSmart implements ParagraphReader {
         this.max = this.expectSize + this.pad;
     }
 
-    /**
-     * 选择一个好的实现
-     *
-     * @param string
-     * @return
-     */
-    public static ParagraphReader prepare(String string) {
-        if (string.length() < 256) {
-            return new ParagraphReaderString(string);
-        } else {
-            return new ParagraphReaderSmart(new FastCharReader(string));
-        }
-    }
 
 
     public int offset() {
