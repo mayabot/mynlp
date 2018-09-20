@@ -129,9 +129,7 @@ public final class WordTerm {
 
 
         if (subword != null) {
-            sb.append("[ ");
             sb.append(subword);
-            sb.append(" ]");
         }
         return sb.toString();
     }

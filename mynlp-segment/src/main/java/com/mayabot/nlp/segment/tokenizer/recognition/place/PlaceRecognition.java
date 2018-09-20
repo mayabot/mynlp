@@ -124,7 +124,7 @@ public class PlaceRecognition extends BaseMynlpComponent implements OptimizeProc
 
                     ai.incrementAndGet();
                     //FIXME 如果已结之前已结存在，那么只需要添加词性和对应的词频，而不是覆盖
-                    wordnet.put(pathWithBE[begin].realWordOffset(), name.length()).
+                    wordnet.put(pathWithBE[begin].offset(), name.length()).
                             setWordInfo(place_word_id, place_word_tag, place_natureAttribute);
                 }
         );
@@ -174,7 +174,7 @@ public class PlaceRecognition extends BaseMynlpComponent implements OptimizeProc
             if (vertex.abstractWord != null) {
                 nrEnumFreqPair = nrDictionary.get(vertex.abstractWord);
             } else {
-                nrEnumFreqPair = nrDictionary.get(text, vertex.realWordOffset(), vertex.length);
+                nrEnumFreqPair = nrDictionary.get(text, vertex.offset(), vertex.length);
             }
 
 

@@ -124,7 +124,7 @@ public class OrganizationRecognition extends BaseMynlpComponent implements Optim
 
                     ai2.count++;
                     //FIXME 如果已结之前已结存在，那么只需要添加词性和对应的词频，而不是覆盖
-                    Vertex word = wordnet.put(pathWithBE[begin].realWordOffset(), name.length());
+                    Vertex word = wordnet.put(pathWithBE[begin].offset(), name.length());
 //					if(word.realWord().equals("信息阿里巴巴股份有限公司")){
 //						System.out.println("");
 //					}
@@ -185,7 +185,7 @@ public class OrganizationRecognition extends BaseMynlpComponent implements Optim
                 if (vertex.abstractWord != null) {
                     nrEnumFreqPair = ntDictionary.get(vertex.abstractWord);
                 } else {
-                    nrEnumFreqPair = ntDictionary.get(text, vertex.realWordOffset(), vertex.length);
+                    nrEnumFreqPair = ntDictionary.get(text, vertex.offset(), vertex.length);
                 }
 
                 if (nrEnumFreqPair == null) {

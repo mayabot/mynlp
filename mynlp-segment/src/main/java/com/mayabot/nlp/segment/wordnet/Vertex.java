@@ -187,7 +187,7 @@ public class Vertex {
         return realWord;
     }
 
-    public int realWordOffset() {
+    public int offset() {
         return vertexRow.rowNum;
     }
 
