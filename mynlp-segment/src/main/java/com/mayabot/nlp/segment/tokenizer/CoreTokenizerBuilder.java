@@ -8,7 +8,6 @@ import com.mayabot.nlp.segment.common.BaseMynlpComponent;
 import com.mayabot.nlp.segment.dictionary.NatureAttribute;
 import com.mayabot.nlp.segment.dictionary.core.CoreDictionary;
 import com.mayabot.nlp.segment.tokenizer.bestpath.ViterbiBestPathAlgorithm;
-import com.mayabot.nlp.segment.tokenizer.collector.SentenceCollector;
 import com.mayabot.nlp.segment.tokenizer.recognition.org.OrganizationRecognition;
 import com.mayabot.nlp.segment.tokenizer.recognition.personname.PersonRecognition;
 import com.mayabot.nlp.segment.tokenizer.recognition.place.PlaceRecognition;
@@ -21,7 +20,11 @@ import com.mayabot.nlp.segment.wordnet.Wordnet;
  *
  * @author jimichan
  */
-public class CoreTokenizerBuilder extends BaseTokenizerBuilderApi {
+public class CoreTokenizerBuilder extends BaseTokenizerBuilder {
+
+    public static CoreTokenizerBuilder builder() {
+        return new CoreTokenizerBuilder();
+    }
 
     /**
      * 是否启用人名识别
@@ -56,9 +59,6 @@ public class CoreTokenizerBuilder extends BaseTokenizerBuilderApi {
 
         //最优路径算法
         builder.setBestPathComputer(ViterbiBestPathAlgorithm.class);
-
-        //结果收集器
-        builder.setTermCollector(SentenceCollector.class);
 
         // Pipeline处理器
         builder.addProcessor(CustomDictionaryProcessor.class);
