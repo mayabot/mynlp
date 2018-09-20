@@ -15,13 +15,33 @@ import java.util.function.Consumer;
 
 /**
  * 对长词进行全切分操作,结果保存在WordTerm的subword里面
+ * 现在HanLP将尝试从/Users/jimichan/project-new/opensource/HanLP读取data……
+ * 主副食品/n [0:4]
+ * 主副食/j [0:3]
+ * 副食品/n [1:4]
+ * 副食/n [1:3]
+ * 食品/n [2:4]
  *
+ * 最细颗粒度切分：
+ * 主副食品/n [0:4]
+ * 主副食/j [0:3]
+ * 主/ag [0:1]
+ * 副食品/n [1:4]
+ * 副食/n [1:3]
+ * 副/b [1:2]
+ * 食品/n [2:4]
+ * 食/v [2:3]
+ * 品/ng [3:4]
  * @author jimichan
  */
 public class SentenceIndexWordCollector implements WordTermCollector {
 
     private int minWordLength = 2;
 
+    /**
+     *
+     */
+    private boolean folded = false;
 
     @Override
     public void collect(Wordnet wordnet, Wordpath wordPath, Consumer<WordTerm> consumer) {
@@ -29,14 +49,11 @@ public class SentenceIndexWordCollector implements WordTermCollector {
         while (vertexIterator.hasNext()) {
             Vertex vertex = vertexIterator.next();
 
-            WordTerm term = new WordTerm(vertex.realWord(), vertex.guessNature());
-            term.setOffset(vertex.getRowNum());
+            WordTerm term = new WordTerm(vertex.realWord(), vertex.guessNature(), vertex.getRowNum());
 
-            //默认把空白的字符去除掉
             if (StringUtils.isWhiteSpace(term.word)) {
                 continue;
             }
-
 
             if (vertex.length > 2) {
 
@@ -54,7 +71,6 @@ public class SentenceIndexWordCollector implements WordTermCollector {
                     Vertex small = row.first();
                     while (small != null) {
                         try {
-
                             if (small.length >= minWordLength && i + small.length() <= lastIndex && small != vertex) {
 
                                 WordTerm smallterm = new WordTerm(small.realWord(), small.guessNature());
