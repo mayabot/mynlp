@@ -20,8 +20,8 @@ package com.mayabot.nlp.utils;
  */
 public class StringUtils {
 
-    public static boolean isWhiteSpace(String word) {
-        switch (word.charAt(0)) {
+    public static boolean isWhiteSpace(char word) {
+        switch (word) {
             case '\u2002':
             case '\u3000':
             case '\r':
@@ -52,6 +52,10 @@ public class StringUtils {
                 return false;
 
         }
+    }
+
+    public static boolean isWhiteSpace(String word) {
+        return isWhiteSpace(word.charAt(0));
     }
 
 

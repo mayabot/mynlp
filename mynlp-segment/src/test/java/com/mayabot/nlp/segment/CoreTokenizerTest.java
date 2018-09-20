@@ -35,6 +35,7 @@ public class CoreTokenizerTest {
         lines.add("这个|是|你|第几套|房|了");
         lines.add("这个|是|你|的|ipad3|么");
         lines.add("以|每|台|约|200|元|的|价格|送到|苹果|售后|维修中心|换|新机|(|苹果|的|保修|基本|是|免费|换新|机");
+        lines.add("受约束|,|需要|遵守|心理学会所|定|的|道德|原则|,|所|需要|时须|说明|该|实验|与|所能|得到|的|知识|的|关系");
 
         for (String line : lines) {
             TokenizerTestHelp.test(tokenizer, line);

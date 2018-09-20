@@ -4,6 +4,7 @@ import com.mayabot.nlp.segment.analyzer.StandardMynlpAnalyzer;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.io.StringReader;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -24,6 +25,21 @@ public class OffsetTest {
 
 
         long count = wordTerms.stream().
+                filter(it -> !text.substring(it.getOffset(), it.getOffset() + it.length())
+                        .toLowerCase()
+                        .equals(it.word))
+                .count();
+
+        Assert.assertTrue(count == 0);
+
+    }
+
+    @Test
+    public void test21() {
+        Stream<WordTerm> wordTerms = new StandardMynlpAnalyzer().stream(new StringReader(text));
+
+
+        long count = wordTerms.
                 filter(it -> !text.substring(it.getOffset(), it.getOffset() + it.length())
                         .toLowerCase()
                         .equals(it.word))
