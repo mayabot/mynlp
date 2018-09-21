@@ -5,7 +5,6 @@ import com.mayabot.nlp.segment.MynlpAnalyzer;
 import com.mayabot.nlp.segment.MynlpAnalyzers;
 import com.mayabot.nlp.segment.MynlpTokenizer;
 import com.mayabot.nlp.segment.tokenizer.CoreTokenizerBuilder;
-import com.mayabot.nlp.segment.tokenizer.xprocessor.CombineProcessor;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -36,7 +35,8 @@ public class HowFast {
                 .setPersonRecognition(false)
                 .setOrganizationRecognition(false)
                 .setPlaceRecognition(false)
-                .disabledComponent(CombineProcessor.class)
+//                .disabledComponent(TimeStringProcessor.class)
+//                .disabledComponent(CombineProcessor.class)
 //                .disabledComponent(CustomDictionaryProcessor.class)
                 .build();
         MynlpAnalyzer analyzer = MynlpAnalyzers.base(tokenizer);
