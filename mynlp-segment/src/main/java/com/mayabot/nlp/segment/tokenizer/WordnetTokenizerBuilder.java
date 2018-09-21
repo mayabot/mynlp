@@ -18,7 +18,6 @@ package com.mayabot.nlp.segment.tokenizer;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 import com.mayabot.nlp.Mynlp;
 import com.mayabot.nlp.Mynlps;
 import com.mayabot.nlp.segment.*;
@@ -32,7 +31,6 @@ import com.mayabot.nlp.segment.wordnet.BestPathAlgorithm;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -74,11 +72,6 @@ public class WordnetTokenizerBuilder implements MynlpTokenizerBuilder {
      * 保存后置监听器逻辑
      */
     private List<ConsumerPair> configListener = Lists.newArrayList();
-
-    /**
-     * 禁用组件的class集合
-     */
-    private Set<Class> disabledComponentSet = Sets.newHashSet();
 
     /**
      * 最终结构收集器
@@ -127,19 +120,7 @@ public class WordnetTokenizerBuilder implements MynlpTokenizerBuilder {
      */
     private void callListener() {
 
-        config(OptimizeProcessor.class, p -> {
-            if (disabledComponentSet.contains(p.getClass())) {
-                p.setEnabled(false);
-            }
-        });
-        config(WordpathProcessor.class, p -> {
-            if (disabledComponentSet.contains(p.getClass())) {
-                p.setEnabled(false);
-            }
-        });
-
-
-        //看看要不要配置 WordTermCollector
+        //WordTermCollector
         configListener.forEach(pair -> {
             if (pair.clazz.equals(termCollector.getClass()) ||
                     pair.clazz.isAssignableFrom(termCollector.getClass())) {
@@ -147,6 +128,7 @@ public class WordnetTokenizerBuilder implements MynlpTokenizerBuilder {
             }
         });
 
+        //wordnetInitializer
         configListener.forEach(pair -> {
             wordnetInitializer.forEach(wf -> {
                 if (pair.clazz.equals(wf.getClass()) ||
@@ -157,7 +139,7 @@ public class WordnetTokenizerBuilder implements MynlpTokenizerBuilder {
 
         });
 
-        // 执行这些监听动作
+        // pipeLine
         configListener.forEach(pair -> {
             pipeLine.forEach(it -> {
 
@@ -193,15 +175,25 @@ public class WordnetTokenizerBuilder implements MynlpTokenizerBuilder {
     }
 
     /**
-     * 禁用指定的组件
-     *
-     * @param clazz 组件的Class
+     * 关闭组件
+     * @param clazz
      * @return
      */
-    public WordnetTokenizerBuilder disabledComponent(Class clazz) {
-        disabledComponentSet.add(clazz);
+    public WordnetTokenizerBuilder disabledComponent(Class<? extends MynlpComponent> clazz) {
+        config(clazz, x -> x.disable());
         return this;
     }
+
+    /**
+     * 启用组件
+     * @param clazz
+     * @return
+     */
+    public WordnetTokenizerBuilder enableComponent(Class<? extends MynlpComponent> clazz) {
+        config(clazz, x -> x.enable());
+        return this;
+    }
+
 
     /**
      * 添加CharNormalize
