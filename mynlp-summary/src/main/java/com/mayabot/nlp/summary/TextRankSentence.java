@@ -72,7 +72,7 @@ class TextRankSentence {
             vertex[cnt] = 1.0;
             ++cnt;
         }
-        for (int _ = 0; _ < max_iter; ++_) {
+        for (int ii = 0; ii < max_iter; ++ii) {
             double[] m = new double[D];
             double max_diff = 0;
             for (int i = 0; i < D; ++i) {
