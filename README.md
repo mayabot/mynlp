@@ -1,4 +1,4 @@
-#MYNLP:中文NLP工具包
+# MYNLP:中文NLP工具包
 
 ![License](https://img.shields.io/github/license/mayabot/mynlp.svg)
 [![Latest release](https://img.shields.io/github/release/mayabot/mynlp.svg)](https://github.com/mayabot/mynlp/releases/latest)
@@ -11,7 +11,7 @@ mynlp包含：中文分词、词性标注、文本分类（情感分析）、拼
 - JRE 1.8+
 
 
-## 在项目中添加mynlp依赖
+## 项目中引入mynlp
 Mynlp的Maven gourp ID是 `com.mayabot.mynlp` ,不同的功能被分拆在各个artifact里面。
 
 - mynlp-segment 分词
