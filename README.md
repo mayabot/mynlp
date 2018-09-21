@@ -1,4 +1,4 @@
-# MYNLP:中文NLP工具包
+# MYNLP 中文NLP工具包
 
 ![License](https://img.shields.io/github/license/mayabot/mynlp.svg)
 [![Latest release](https://img.shields.io/github/release/mayabot/mynlp.svg)](https://github.com/mayabot/mynlp/releases/latest)
@@ -7,8 +7,9 @@
 mynlp包含：中文分词、词性标注、文本分类（情感分析）、拼音转换、简繁体转换、文本摘要等常见NLP功能。
 依托灵活的架构设计、柔性API、高效数据结构，mynlp能在复杂环境中，满足业务需求。算法研究者也可以在mynlp基础上快速开发各种新分算法。
 
-运行需求：
+环境需求：
 - JRE 1.8+
+- Gradle or Maven
 
 
 ## 项目中引入mynlp
