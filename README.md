@@ -1,37 +1,58 @@
-MYNLP是个自然语言处理工具包
-(开发阶段，还未正式发布)
+#MYNLP:中文NLP工具包
 
-如果你需要一个可以轻松自由扩展、能看得懂代码的分词器！
+![License](https://img.shields.io/github/license/mayabot/mynlp.svg)
+[![Latest release](https://img.shields.io/github/release/mayabot/mynlp.svg)](https://github.com/mayabot/mynlp/releases/latest)
 
 
-目标：精简可读的代码、可自由扩展。
+mynlp包含：中文分词、词性标注、文本分类（情感分析）、拼音转换、简繁体转换、文本摘要等常见NLP功能。
+依托灵活的架构设计、柔性API、高效数据结构，mynlp能在复杂环境中，满足业务需求。算法研究者也可以在mynlp基础上快速开发各种新分算法。
 
-#### MYNLP的功能模块
+运行需求：
+- JRE 1.8+
 
-* 中文分词
-* 拼音转换
-* 简繁体转换
-* mynlp-cli 命令行工具
-    * CRF语料工具
-    * 分词工具
 
-MYNLP设计之初的一个重要目标就是基于类似Elasticsearch项目的模块化和插件化体系，来构建整个NLP工具组。
-n-Gram+HMM的中文分词
-* 基于WordNet和WordPath的分词体系
-* CRF中文分词
-* 基于Pipleline的设计，你可以自由组合各种分词插件和逻辑，满足不同场景的需求
-* 命名实体识别（人名、地名、组织机构）
-* 词性识别
-* 自由的插件体系，可以根据业务控制分词逻辑
-* FST工具，让你简化模式识别的代码逻辑
-* 内置歧义词典，高效纠错
-* 正则表达式分词逻辑
-* 自由的词典和自定义词典加载方式：动态、增量从数据库或者其他资源系统加载数据
-* 项目使用Guice进行模块依赖和反转注入，代码逻辑清晰，降低开发人员阅读代码和编写插件的难度
+## 在项目中添加mynlp依赖
+Mynlp的Maven gourp ID是 `com.mayabot.mynlp` ,不同的功能被分拆在各个artifact里面。
 
-CRF明文模型文件下载 https://pan.baidu.com/s/1izg_ElEdFArgVa5UkKO1xw
+- mynlp-segment 分词
+- mynlp-classification 文本分类
+- mynlp-pinyin 拼音转换
+- mynlp-summary 文本摘要
+- mynlp-transform 繁简体转换
+- mynlp-core 基本数据结构（被其他模块依赖）
 
-## TODO
-1. 文档完善
-2. 控制自定义词典
-4. 
+（Fasttext的Java版本实现迁移到独立的项目 [fastText4j](https://github.com/mayabot/fastText4j)）
+
+如需要分词功能就在Mavne中增加如下配置：
+
+```xml
+<dependency>
+  <groupId>com.mayabot.mynlp</groupId>
+  <artifactId>mynlp-segment</artifactId>
+  <version>2.0.0-BETA10</version>
+</dependency>
+```
+
+Gradle:
+
+```gradle
+dependencies {
+  compile 'com.mayabot.mynlp:mynlp-segment:2.0.0-BETA10'
+}
+```
+
+## 如何使用
+    
+[API教程、架构设计文档请在WIKI中查看。](https://github.com/mayabot/mynlp/wiki)
+
+
+## 声明和致谢
+
+mynlp开发之初是对Hanlp和ansj的重构整理，通过多次迭代和项目需求驱动实践，逐渐发展为目前的架构体系。
+向HanLP和ansj在中文NLP开源中做出的贡献致敬！
+
+mynlp项目引用或参考了以下项目代码和资源：
+- [HanLP](https://github.com/hankcs/HanLP)
+- [ansj_seg](https://github.com/NLPchina/ansj_seg)
+- [trie4j](https://github.com/takawitter/trie4j)
+
