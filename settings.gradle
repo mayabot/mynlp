@@ -28,8 +28,7 @@ List projects = [
         'mynlp-classification',
         'mynlp-perceptron',
         'mynlp-example',
-        'mynlp-summary',
-        'plugins:mynlp-lucene-7'
+        'mynlp-summary'
 
 ]
 

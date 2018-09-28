@@ -22,10 +22,13 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.mayabot.nlp.segment.*;
 import com.mayabot.nlp.segment.common.VertexHelper;
+import com.mayabot.nlp.segment.dictionary.Nature;
 import com.mayabot.nlp.segment.tokenizer.recognition.OptimizeWordPathProcessor;
 import com.mayabot.nlp.segment.wordnet.BestPathAlgorithm;
 import com.mayabot.nlp.segment.wordnet.Wordnet;
 import com.mayabot.nlp.segment.wordnet.Wordpath;
+import com.mayabot.nlp.utils.Characters;
+import com.mayabot.nlp.utils.StringUtils;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -118,6 +121,18 @@ public class WordnetTokenizer implements MynlpTokenizer {
             return;
         }
 
+        //处理单子的情况
+        if (text.length == 1 && StringUtils.isWhiteSpace(text[0])) {
+            if (StringUtils.isWhiteSpace(text[0]) || Characters.isPunctuation(text[0])) {
+                WordTerm wordTerm = new WordTerm(new String(text), Nature.w);
+                consumer.accept(wordTerm);
+            } else {
+                WordTerm wordTerm = new WordTerm(new String(text), Nature.x);
+                consumer.accept(wordTerm);
+            }
+            return;
+        }
+
         //构建一个空的Wordnet对象
         final Wordnet wordnet = new Wordnet(text);
         wordnet.setBestPathAlgorithm(bestPathAlgorithm);
@@ -129,16 +144,9 @@ public class WordnetTokenizer implements MynlpTokenizer {
             initializer.fill(wordnet);
         }
 
-        System.out.println("\n" + wordnet.toMoreString());
-
         //选择一个路径出来(第一次不严谨的分词结果)
         Wordpath wordPath = bestPathAlgorithm.select(wordnet);
 
-//        System.out.println("\n"+wordnet.toMoreString());
-//        System.out.println(wordPath);
-
-
-        // call WordpathProcessor
         for (WordpathProcessor processor : pipeline) {
             if (processor.isEnabled()) {
                 wordPath = processor.process(wordPath);

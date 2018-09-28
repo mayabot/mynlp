@@ -37,7 +37,7 @@ public final class WordTerm {
     private Nature nature;
 
     /**
-     * 在文本中的起始位置（需开启分词器的offset选项）
+     * 在文本中的起始位置
      */
     private int offset;
 
@@ -59,6 +59,18 @@ public final class WordTerm {
         this.nature = nature;
     }
 
+    /**
+     * 构造一个单词
+     *
+     * @param word   词语
+     * @param nature 词性
+     * @param offset 文本偏移位置
+     */
+    public WordTerm(String word, Nature nature, int offset) {
+        this.word = word;
+        this.nature = nature;
+        this.offset = offset;
+    }
 
     public WordTerm(String word) {
         this.word = word;
@@ -117,9 +129,7 @@ public final class WordTerm {
 
 
         if (subword != null) {
-            sb.append("[ ");
             sb.append(subword);
-            sb.append(" ]");
         }
         return sb.toString();
     }

@@ -42,7 +42,7 @@ public class ConvertAbstractWordInitializer extends BaseMynlpComponent implement
 
     @Override
     public void fill(Wordnet wordnet) {
-        wordnet.accessAllVertext(this::process);
+        wordnet.accessAllVertex(this::process);
     }
 
     private void process(Vertex v) {

@@ -14,18 +14,26 @@
  * limitations under the License.
  */
 
-package com.mayabot.nlp.segment.wordnet;
+package com.mayabot.nlp.common;
 
-import org.junit.Test;
+/**
+ * 有的时候给定的文本很短，那么就做个假的
+ *
+ * @author jimichan
+ */
+public class ParagraphReaderString implements ParagraphReader {
 
-public class WordnetTest {
+    private String string = null;
 
-    /**
-     * 测试寻找没有被覆盖的字符
-     *
-     */
-    @Test
-    public void findNoOverWords() {
-
+    public ParagraphReaderString(String string) {
+        this.string = string;
     }
+
+    @Override
+    public String next() {
+        String old = string;
+        string = null;
+        return old;
+    }
+
 }
