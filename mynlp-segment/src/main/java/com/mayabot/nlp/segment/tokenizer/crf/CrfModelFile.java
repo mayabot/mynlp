@@ -71,6 +71,10 @@ public class CrfModelFile {
 
         NlpResource resource = mynlp.loadResource(crfModelSetting);
 
+        if (resource == null) {
+            throw new RuntimeException("Not FOUND CRF MODEL FILE " + file.getAbsolutePath());
+        }
+
         try (CharSourceLineReader lineIterator = resource.openLineReader()) {
             CrfSegmentModel model = CrfSegmentModel.loadFromCrfPlusText(lineIterator);
 

@@ -32,12 +32,14 @@ import java.util.Set;
  */
 public class VertexRow implements Iterable<Vertex> {
 
-    Vertex first;
-
     /**
      * 和sindex一样，-1表示#start
      */
     int rowNum;
+
+
+    Vertex first;
+
 
     Wordnet wordnet;
 

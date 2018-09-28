@@ -16,6 +16,9 @@
 
 package com.mayabot.nlp.segment.dictionary;
 
+import com.mayabot.nlp.Mynlps;
+import com.mayabot.nlp.segment.dictionary.custom.DefaultCustomDictionary;
+import org.junit.Assert;
 import org.junit.Test;
 
 public class CustomDictionaryTest  {
@@ -23,9 +26,11 @@ public class CustomDictionaryTest  {
     @Test
     public void test1() {
 
-//		DefaultCustomDictionary dic = new DefaultCustomDictionary(new Settings());
+        DefaultCustomDictionary instance = Mynlps.getInstance(DefaultCustomDictionary.class);
 
+        NatureAttribute na = instance.getTrie().get("七项全能");
 
+        Assert.assertTrue("{v=1}".equals(na.toString()));
     }
 
 }

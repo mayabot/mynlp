@@ -7,31 +7,20 @@ import org.junit.Test;
  */
 public class SegmentErrorCasesTest {
 
-    MynlpTokenizer tokenizer = MynlpTokenizers.coreTokenizer();
-
     @Test
-    public void test1() {
-        //第一次维修更换中间轴前轴承和倒档惰轮总成第二次是20170年6
-        //六万一千公里
-        //此车20171年12月19号来我站报修前照灯进水
-        //我站一辆宝骏5602017年2月16日到我站反映六档挡不进档
-
+    public void carwords() {
+        MynlpTokenizer tokenizer = MynlpTokenizers.coreTokenizer();
         String[] lines = new String[]{
-                "你好   离合器片的生产日期是2013-05-034S回复人635110101001",
-                "第一次维修更换中间轴前轴承和倒档惰轮总成第二次是20170年6",
-                "六万一千公里",
-                "此车20171年12月19号来我站报修前照灯进水",
-                "我站一辆宝骏5602017年2月16日到我站反映六档挡不进档",
+                "你好|离合器|片|的|生产日期|是|2013-05-034S|回复人|635110101001",
+                "第一|次|维修|更换|中间轴|前|轴承|和|倒|档|惰轮|总|成|第二|次|是|20170|年|6",
+                "六万一千|公里",
+                "此|车|20171|年|12月19号|来|我|站|报修|前照灯|进水",
+                "我|站|一|辆|宝骏|5602017|年|2月|16|日|到|我|站|反映|六|档|挡|不|进|档",
         };
-//        tokenizer.token(line.toCharArray()).forEach(it->{
-        //
-//            System.out.println(String.format("%d : %s",it.offset,it.word));
-//        });
-        for (String s : lines) {
-            System.out.println(s);
-            System.out.println(tokenizer.tokenToStringList(s));
-        }
 
+        for (String s : lines) {
+            TokenizerTestHelp.test(tokenizer, s);
+        }
     }
 
 
