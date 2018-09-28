@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.mayabot.nlp.utils;
+package com.mayabot.nlp.common;
 
 import com.google.common.collect.AbstractIterator;
 

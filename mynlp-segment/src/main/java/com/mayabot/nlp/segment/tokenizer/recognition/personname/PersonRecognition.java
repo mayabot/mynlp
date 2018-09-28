@@ -128,12 +128,12 @@ public class PersonRecognition extends BaseMynlpComponent implements OptimizePro
                 switch (tag) {
                     case 'U':
                         //first abstractWord
-                        tagMapOffset[++point] = v.realWordOffset();
+                        tagMapOffset[++point] = v.offset();
                         tagMapLength[point] = v.length - 1;
                         tagchar[point] = 'K';
 
                         // second abstractWord
-                        tagMapOffset[++point] = v.realWordOffset() + v.length - 1;
+                        tagMapOffset[++point] = v.offset() + v.length - 1;
                         tagMapLength[point] = 1;
                         tagchar[point] = 'B';
 
@@ -141,7 +141,7 @@ public class PersonRecognition extends BaseMynlpComponent implements OptimizePro
                     case 'V':
                         //人名的末字和下文成词 龚 学 平等 领导, 邓 颖 超生 前
                         //first abstractWord
-                        tagMapOffset[++point] = v.realWordOffset();
+                        tagMapOffset[++point] = v.offset();
                         tagMapLength[point] = 1;
 
                         if (pathWithBE[i - 1].getTempChar() == 'B') {
@@ -151,13 +151,13 @@ public class PersonRecognition extends BaseMynlpComponent implements OptimizePro
                         }
 
                         // second abstractWord
-                        tagMapOffset[++point] = v.realWordOffset() + 1;
+                        tagMapOffset[++point] = v.offset() + 1;
                         tagMapLength[point] = v.length - 1;
                         tagchar[point] = 'L';
 
                         break;
                     default:
-                        tagMapOffset[++point] = v.realWordOffset();
+                        tagMapOffset[++point] = v.offset();
                         tagMapLength[point] = v.length;
                         tagchar[point] = v.getTempChar();
                         break;
@@ -230,7 +230,7 @@ public class PersonRecognition extends BaseMynlpComponent implements OptimizePro
 
                         ai.incrementAndGet();
                         //FIXME 如果已结之前已结存在，那么只需要添加词性和对应的词频，而不是覆盖
-                        wordnet.put(pathWithBE[begin].realWordOffset(), name.length()).
+                        wordnet.put(pathWithBE[begin].offset(), name.length()).
                                 setWordInfo(perope_word_id, people_word_tag, People_natureAttribute);
                     }
             );
@@ -265,7 +265,7 @@ public class PersonRecognition extends BaseMynlpComponent implements OptimizePro
 
         for (int i = 1; i < pathWithBE.length - 1; i++) {
             Vertex vertex = pathWithBE[i];
-            EnumFreqPair<NRTag> nrEnumFreqPair = nrDictionary.get(text, vertex.realWordOffset(), vertex.length);
+            EnumFreqPair<NRTag> nrEnumFreqPair = nrDictionary.get(text, vertex.offset(), vertex.length);
 
             if (nrEnumFreqPair == null) {
                 Nature nature = vertex.guessNature();

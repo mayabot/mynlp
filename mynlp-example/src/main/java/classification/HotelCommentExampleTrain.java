@@ -1,8 +1,9 @@
-package com.mayabot.nlp.classification;
+package classification;
 
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
 import com.mayabot.mynlp.fasttext.FastText;
+import com.mayabot.nlp.classification.FasttextClassification;
 import com.mayabot.nlp.utils.DownloadUtils;
 
 import java.io.File;
