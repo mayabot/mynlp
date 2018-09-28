@@ -1,7 +1,7 @@
 # MYNLP 中文NLP工具包
 
 ![License](https://img.shields.io/github/license/mayabot/mynlp.svg)
-[![Latest release](https://img.shields.io/github/release/mayabot/mynlp.svg)](https://github.com/mayabot/mynlp/releases/latest)
+[![Latest release](https://img.shields.io/github/release/mayabot/mynlp/all.svg)](https://github.com/mayabot/mynlp/releases/latest)
 
 
 mynlp包含：中文分词、词性标注、文本分类（情感分析）、拼音转换、简繁体转换、文本摘要等常见NLP功能。
@@ -42,9 +42,45 @@ dependencies {
 }
 ```
 
-## 如何使用
+## 文档目录
     
 [API教程、架构设计文档请在WIKI中查看。](https://github.com/mayabot/mynlp/wiki)
+* [首页](wiki/Home)
+  * [项目结构](wiki/Home#项目结构)
+  * [为什么是面向Project](wiki/Home#为什么是面向PROJECT)
+* [5分钟教程](wiki/QuickTutorial)
+  * [分词](wiki/QuickTutorial#分词)
+  * [文本分类](wiki/QuickTutorial#文本分类)
+  * [拼音](wiki/QuickTutorial#拼音)
+  * [简繁转换](wiki/QuickTutorial#简繁转换)
+  * [文本摘要](wiki/QuickTutorial#文本摘要)
+* [中文分词](wiki/segment)
+  * [开箱即用分词器](wiki/TokenizerBuilderList)
+    * [Core分词](wiki/TokenizerBuilderList#Core分词器)
+    * [CRF分词](wiki/TokenizerBuilderList#CRF分词)
+  * [索引分词](wiki/index)
+  * [MynlpAnalyzer](wiki/MynlpAnalyzer)
+  * [基于Wordnet的分词架构图](wiki/WordnetFramework)
+  * [Wordnet和wordpath](wiki/Wordnet)
+  * [分词器Builder API](wiki/WordnetTokenizerBuilder)
+  * [基础组件](wiki/Component)
+      * [CharNormalize](wiki/Component#CharNormalize)
+      * [WordnetInitializer](wiki/Component#WordnetInitializer)
+      * [WordpathProcessor](wiki/Component#WordpathProcessor)
+      * [OptimizeWordPathProcessor](wiki/Component#OptimizeWordPathProcessor)
+      * [WordTermCollector](wiki/Component#WordTermCollector)
+  * [常见案例和解决方案](wiki/Recipes)
+  * [感知机(开发中)](wiki/perceptron)
+* [文本分类](wiki/classification)
+  * [酒店评论情感分析实例](wiki/classification#酒店评论情感分析实例)
+* [词嵌入Fasttext](wiki/Fasttext)
+* [拼音转换](wiki/Pinyin)
+* [资源加载](wiki/Resouce)
+* [GUICE和系统设置](wiki/Guice)
+* [日志](wiki/Logger)
+* [mynlp-cli命令行工具(开发中)](wiki/CLI)
+* [性能对比](wiki/performance)
+* [如何贡献](wiki/HowToContribute)
 
 
 ## 声明和致谢
