@@ -44,10 +44,9 @@ dependencies {
 
 ## 文档目录
     
-[API教程、架构设计文档请在WIKI中查看。](https://github.com/mayabot/mynlp/wiki)
 * [首页](https://github.com/mayabot/mynlp/wiki/Home)
   * [项目结构](https://github.com/mayabot/mynlp/wiki/Home#项目结构)
-  * [为什么是面向Project](https://github.com/mayabot/mynlp/wiki/Home#为什么是面向PROJECT)
+  * [Mynlp项目介绍](https://github.com/mayabot/mynlp/wiki/Home#Mynlp项目介绍)
 * [5分钟教程](https://github.com/mayabot/mynlp/wiki/QuickTutorial)
   * [分词](https://github.com/mayabot/mynlp/wiki/QuickTutorial#分词)
   * [文本分类](https://github.com/mayabot/mynlp/wiki/QuickTutorial#文本分类)
