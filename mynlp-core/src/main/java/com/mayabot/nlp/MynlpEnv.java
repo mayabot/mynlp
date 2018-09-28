@@ -116,17 +116,10 @@ public class MynlpEnv {
         return dataDir;
     }
 
-    public MynlpEnv setDataDir(File dataDir) {
-        this.dataDir = dataDir;
-        return this;
-    }
 
     public File getCacheDir() {
         return cacheDir;
     }
 
-    public MynlpEnv setCacheDir(File cacheDir) {
-        this.cacheDir = cacheDir;
-        return this;
-    }
+
 }
