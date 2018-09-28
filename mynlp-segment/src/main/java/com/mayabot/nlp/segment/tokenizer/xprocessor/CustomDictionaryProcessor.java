@@ -102,4 +102,8 @@ public class CustomDictionaryProcessor extends BaseMynlpComponent implements Wor
 
         return wordPath;
     }
+
+    public CustomDictionary getDictionary() {
+        return dictionary;
+    }
 }

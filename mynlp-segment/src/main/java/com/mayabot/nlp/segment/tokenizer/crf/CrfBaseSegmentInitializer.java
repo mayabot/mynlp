@@ -47,7 +47,7 @@ public class CrfBaseSegmentInitializer extends BaseMynlpComponent implements Wor
     @Override
     public void fill(Wordnet wordnet) {
 
-        final NatureAttribute _na = NatureAttribute.create(Nature.x, 1000);
+        final NatureAttribute na = NatureAttribute.create(Nature.x, 1000);
 
         Table table = new Table();
         table.v = atomSegmentToTable(wordnet.getCharArray());
@@ -69,17 +69,17 @@ public class CrfBaseSegmentInitializer extends BaseMynlpComponent implements Wor
                     }
                     if (i == table.v.length) {
                         Vertex v = wordnet.put(begin, offset - begin);
-                        v.setWordInfo(CRF_WORD_ID, null, _na);
+                        v.setWordInfo(CRF_WORD_ID, null, na);
                         break OUTER;
                     } else {
                         Vertex v = wordnet.put(begin, offset - begin + table.v[i][1].length());
-                        v.setWordInfo(CRF_WORD_ID, null, _na);
+                        v.setWordInfo(CRF_WORD_ID, null, na);
                     }
                 }
                 break;
                 default: {
                     Vertex v = wordnet.put(offset, table.v[i][1].length());
-                    v.setWordInfo(CRF_WORD_ID, null, _na);
+                    v.setWordInfo(CRF_WORD_ID, null, na);
                 }
                 break;
             }
@@ -88,7 +88,7 @@ public class CrfBaseSegmentInitializer extends BaseMynlpComponent implements Wor
     }
 
 
-    public String[][] atomSegmentToTable(char[] sentence) {
+    private String[][] atomSegmentToTable(char[] sentence) {
         String[][] table = new String[sentence.length][3];
         int size = 0;
         final int maxLen = sentence.length - 1;
@@ -156,14 +156,7 @@ public class CrfBaseSegmentInitializer extends BaseMynlpComponent implements Wor
         return resizeArray(table, size);
     }
 
-    /**
-     * 数组减肥，原子分词可能会导致表格比原来的短
-     *
-     * @param array
-     * @param size
-     * @return
-     */
-    private static String[][] resizeArray(String[][] array, int size) {
+    private String[][] resizeArray(String[][] array, int size) {
         String[][] nArray = new String[size][];
         System.arraycopy(array, 0, nArray, 0, size);
         return nArray;

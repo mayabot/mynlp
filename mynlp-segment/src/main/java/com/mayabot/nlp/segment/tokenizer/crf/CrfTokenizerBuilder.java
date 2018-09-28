@@ -8,10 +8,6 @@ import com.mayabot.nlp.segment.tokenizer.xprocessor.*;
 
 public class CrfTokenizerBuilder extends BaseTokenizerBuilder {
 
-    boolean personRecognition = false;
-    boolean placeRecognition = false;
-    boolean organizationRecognition = false;
-
 
     @Override
     protected void setUp(WordnetTokenizerBuilder builder) {
@@ -20,10 +16,9 @@ public class CrfTokenizerBuilder extends BaseTokenizerBuilder {
         builder.addWordnetInitializer(
                 CrfBaseSegmentInitializer.class,
                 AtomSegmenterInitializer.class,
-                ConvertAbstractWordInitializer.class
+                ConvertAbstractWordInitializer.class,
+                TimeStringProcessor.class
         );
-
-        builder.addWordnetInitializer(TimeStringProcessor.class);
 
         //最优路径算法w
         builder.setBestPathComputer(ViterbiBestPathAlgorithm.class);
@@ -32,13 +27,6 @@ public class CrfTokenizerBuilder extends BaseTokenizerBuilder {
         // Pipeline处理器
         builder.addProcessor(CustomDictionaryProcessor.class);
         builder.addProcessor(CombineProcessor.class);
-
-//        List<Class<? extends OptimizeProcessor>> optimizeProcessor = Lists.newArrayList(
-//                PersonRecognition.class,
-//                PlaceRecognition.class,
-//                OrganizationRecognition.class
-//        );
-//        builder.addOptimizeProcessorClass(optimizeProcessor);
 
 
         builder.setTermCollector(new SentenceCollector());
