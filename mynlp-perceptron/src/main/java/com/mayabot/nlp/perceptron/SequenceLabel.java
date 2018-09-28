@@ -5,45 +5,39 @@ package com.mayabot.nlp.perceptron;
  *
  * @author jimichan
  */
-public class SequenceLabel<E extends Enum<E>> {
+public class SequenceLabel<T>  {
 
-    public int[] sequence;
+    public T[] sequence;
 
-    public E[] label;
+    public int[] label;
 
-    public SequenceLabel(int[] sequence, E[] label) {
+    public SequenceLabel(T[] sequence, int[] label) {
         this.sequence = sequence;
         this.label = label;
     }
 
-    public int[] getSequence() {
+    public int length(){
+        return sequence.length;
+    }
+
+    public T[] getSequence() {
         return sequence;
     }
 
-    public SequenceLabel setSequence(int[] sequence) {
+    public SequenceLabel setSequence(T[] sequence) {
         this.sequence = sequence;
         return this;
     }
 
-    public E[] getLabel() {
+    public int[] getLabel() {
         return label;
     }
 
-    public SequenceLabel setLabel(E[] label) {
+    public SequenceLabel setLabel(int[] label) {
         this.label = label;
         //label[0].ordinal()
         return this;
     }
 
-    public static void main(String[] args) {
-
-        System.out.println(TAG.B.ordinal());
-        System.out.println(TAG.M.ordinal());
-        System.out.println(TAG.E.ordinal());
-        System.out.println(TAG.S.ordinal());
-    }
-
-    enum TAG {
-        B, M, E, S
-    }
 }
+
