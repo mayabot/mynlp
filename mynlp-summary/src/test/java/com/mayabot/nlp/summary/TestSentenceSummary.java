@@ -36,5 +36,8 @@ public class TestSentenceSummary {
         List<String> result = sentenceSummary.summarySentences(document, 10);
 
         //result.forEach(System.out::println);
+
+        KeywordSummary keywordSummary = new KeywordSummary();
+        keywordSummary.keyword("text", 10);
     }
 }

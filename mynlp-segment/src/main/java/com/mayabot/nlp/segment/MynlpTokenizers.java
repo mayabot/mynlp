@@ -27,4 +27,12 @@ public class MynlpTokenizers {
         return new CoreTokenizerBuilder();
     }
 
+    public static MynlpTokenizer crfTokenizer() {
+        return new CoreTokenizerBuilder().build();
+    }
+
+    public static CoreTokenizerBuilder crfTokenizerBuilder() {
+        return new CoreTokenizerBuilder();
+    }
+
 }
