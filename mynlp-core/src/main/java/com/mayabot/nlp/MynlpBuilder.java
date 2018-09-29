@@ -84,6 +84,10 @@ public class MynlpBuilder {
                 if (System.getProperty("mynlp.data") != null) {
                     dataDir = System.getProperty("mynlp.data");
                 }
+                if (System.getProperty("mynlp.data.dir") != null) {
+                    dataDir = System.getProperty("mynlp.data.dir");
+                }
+
             }
 
             if (dataDir == null) {
