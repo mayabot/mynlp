@@ -1,6 +1,7 @@
 # MYNLP 中文NLP工具包
 
 ![License](https://img.shields.io/github/license/mayabot/mynlp.svg)
+[![Maven Central](https://img.shields.io/maven-metadata/v/http/central.maven.org/maven2/com/mayabot/mynlp/mynlp-core/maven-metadata.xml.svg)](http://mvnrepository.com/artifact/com.mayabot.mynlp)
 [![Latest release](https://img.shields.io/github/release/mayabot/mynlp/all.svg)](https://github.com/mayabot/mynlp/releases/latest)
 
 
