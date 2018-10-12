@@ -73,7 +73,6 @@ public class CombineProcessor extends BaseMynlpComponent implements WordpathProc
 
     private Pattern emailPattern = Pattern.compile("\\w+(?:\\.\\w+)*@\\w+(?:(?:\\.\\w+)+)");
 
-
     private boolean enableBookName = true;
 
     private Pattern bookNamePattern = Pattern.compile("《.+?》");
@@ -93,7 +92,7 @@ public class CombineProcessor extends BaseMynlpComponent implements WordpathProc
                     (index, vertex) -> hasNature(vertex, Nature.m));
 
             FstNode<Vertex> danwei = shuzi.to("danwei",
-                    (index, vertex) -> hasNature(vertex, Nature.q) ||
+                    (index, vertex) -> hasNature(vertex, Nature.q) || hasNature(vertex, Nature.qt) ||
                             QuantityUnit.contains(vertex.realWord().toLowerCase())
             );
 
@@ -181,13 +180,17 @@ public class CombineProcessor extends BaseMynlpComponent implements WordpathProc
     private void run(FST<Vertex> fst, ArrayList<Vertex> inputList, Wordpath wordPath) {
 
         FstMatcher<Vertex, Vertex> m = fst.newMatcher(inputList);
-
+        Wordnet wordnet = wordPath.getWordnet();
 
         while (m.find()) {
 
             int from = m.getStartObj().getRowNum();
 
             int len = m.getEndObj().getRowNum() + m.getEndObj().getLength() - from;
+
+            if (wordPath.willCutOtherWords(from, len)) {
+                continue;
+            }
 
             Vertex vertex = wordPath.combine(from, len);
 
@@ -196,4 +199,34 @@ public class CombineProcessor extends BaseMynlpComponent implements WordpathProc
         }
     }
 
+    public boolean isEnableShuLiang() {
+        return enableShuLiang;
+    }
+
+    public boolean isEnableConnectionSymbol() {
+        return enableConnectionSymbol;
+    }
+
+    public CombineProcessor setEnableConnectionSymbol(boolean enableConnectionSymbol) {
+        this.enableConnectionSymbol = enableConnectionSymbol;
+        return this;
+    }
+
+    public boolean isEnableEmail() {
+        return enableEmail;
+    }
+
+    public CombineProcessor setEnableEmail(boolean enableEmail) {
+        this.enableEmail = enableEmail;
+        return this;
+    }
+
+    public boolean isEnableBookName() {
+        return enableBookName;
+    }
+
+    public CombineProcessor setEnableBookName(boolean enableBookName) {
+        this.enableBookName = enableBookName;
+        return this;
+    }
 }

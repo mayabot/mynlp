@@ -1,7 +1,8 @@
 # MYNLP 中文NLP工具包
 
 ![License](https://img.shields.io/github/license/mayabot/mynlp.svg)
-[![Latest release](https://img.shields.io/github/release/mayabot/mynlp.svg)](https://github.com/mayabot/mynlp/releases/latest)
+[![Maven Central](https://img.shields.io/maven-metadata/v/http/central.maven.org/maven2/com/mayabot/mynlp/mynlp-core/maven-metadata.xml.svg)](http://mvnrepository.com/artifact/com.mayabot.mynlp)
+[![Latest release](https://img.shields.io/github/release/mayabot/mynlp/all.svg)](https://github.com/mayabot/mynlp/releases/latest)
 
 
 mynlp包含：中文分词、词性标注、文本分类（情感分析）、拼音转换、简繁体转换、文本摘要等常见NLP功能。
@@ -42,9 +43,48 @@ dependencies {
 }
 ```
 
-## 如何使用
+## 文档目录
     
-[API教程、架构设计文档请在WIKI中查看。](https://github.com/mayabot/mynlp/wiki)
+* [首页](https://github.com/mayabot/mynlp/wiki/Home)
+  * [项目结构](https://github.com/mayabot/mynlp/wiki/Home#项目结构)
+  * [Mynlp项目介绍](https://github.com/mayabot/mynlp/wiki/Home#Mynlp项目介绍)
+* [5分钟教程](https://github.com/mayabot/mynlp/wiki/QuickTutorial)
+  * [分词](https://github.com/mayabot/mynlp/wiki/QuickTutorial#分词)
+  * [文本分类](https://github.com/mayabot/mynlp/wiki/QuickTutorial#文本分类)
+  * [拼音](https://github.com/mayabot/mynlp/wiki/QuickTutorial#拼音)
+  * [简繁转换](https://github.com/mayabot/mynlp/wiki/QuickTutorial#简繁转换)
+  * [文本摘要](https://github.com/mayabot/mynlp/wiki/QuickTutorial#文本摘要)
+* [中文分词](https://github.com/mayabot/mynlp/wiki/segment)
+  * [开箱即用分词器](https://github.com/mayabot/mynlp/wiki/TokenizerBuilderList)
+    * [Core分词](https://github.com/mayabot/mynlp/wiki/TokenizerBuilderList#Core分词器)
+    * [CRF分词](https://github.com/mayabot/mynlp/wiki/TokenizerBuilderList#CRF分词)
+  * [索引分词](https://github.com/mayabot/mynlp/wiki/index)
+  * [MynlpAnalyzer](https://github.com/mayabot/mynlp/wiki/MynlpAnalyzer)
+  * [基于Wordnet的分词架构图](https://github.com/mayabot/mynlp/wiki/WordnetFramework)
+  * [Wordnet和wordpath](https://github.com/mayabot/mynlp/wiki/Wordnet)
+  * [分词器Builder API](https://github.com/mayabot/mynlp/wiki/WordnetTokenizerBuilder)
+  * [基础组件](https://github.com/mayabot/mynlp/wiki/Component)
+      * [CharNormalize](https://github.com/mayabot/mynlp/wiki/Component#CharNormalize)
+      * [WordnetInitializer](https://github.com/mayabot/mynlp/wiki/Component#WordnetInitializer)
+      * [WordpathProcessor](https://github.com/mayabot/mynlp/wiki/Component#WordpathProcessor)
+      * [OptimizeWordPathProcessor](https://github.com/mayabot/mynlp/wiki/Component#OptimizeWordPathProcessor)
+      * [WordTermCollector](https://github.com/mayabot/mynlp/wiki/Component#WordTermCollector)
+  * [常见案例和解决方案](https://github.com/mayabot/mynlp/wiki/Recipes)
+  * [感知机(开发中)](https://github.com/mayabot/mynlp/wiki/perceptron)
+* [文本分类](https://github.com/mayabot/mynlp/wiki/classification)
+  * [酒店评论情感分析实例](https://github.com/mayabot/mynlp/wiki/classification#酒店评论情感分析实例)
+* [词嵌入Fasttext](https://github.com/mayabot/mynlp/wiki/Fasttext)
+* [拼音转换](https://github.com/mayabot/mynlp/wiki/Pinyin)
+* [资源加载](https://github.com/mayabot/mynlp/wiki/Resouce)
+* [GUICE和系统设置](https://github.com/mayabot/mynlp/wiki/Guice)
+* [日志](https://github.com/mayabot/mynlp/wiki/Logger)
+* [mynlp-cli命令行工具(开发中)](https://github.com/mayabot/mynlp/wiki/CLI)
+* [性能对比](https://github.com/mayabot/mynlp/wiki/performance)
+* [如何贡献](https://github.com/mayabot/mynlp/wiki/HowToContribute)
+
+
+如果你对mynlp有任何疑问或建议请加入微信群一起来进行讨论，以帮助Mynlp改进。<br>
+<img src="https://cdn.mayabot.com/nlp/wiki-images/wechat.jpg" width="250">
 
 
 ## 声明和致谢

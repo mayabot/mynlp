@@ -1,8 +1,6 @@
 package com.mayabot.nlp.segment;
 
-import com.mayabot.nlp.Mynlp;
 import com.mayabot.nlp.Mynlps;
-import com.mayabot.nlp.segment.dictionary.Nature;
 import com.mayabot.nlp.segment.tokenizer.crf.CrfTokenizerBuilder;
 import org.junit.Test;
 
@@ -23,9 +21,10 @@ public class CrfSegmentTest {
             }
             data = new File(new File(data.getParent()).getParent(), "data");
         }
-
-        Mynlp mynlp = Mynlps.get();
-        mynlp.getEnv().setDataDir(data);
+        String dataPath = data.getAbsolutePath();
+        Mynlps.install(
+                builder -> builder.setDataDir(dataPath)
+        );
 
         MynlpTokenizer tokenizer = new CrfTokenizerBuilder().build();
 
@@ -35,10 +34,11 @@ public class CrfSegmentTest {
                 "\n" +
                 "座谈会上，全国政协副主席、国家发展改革委主任何立峰，国务委员、外交部部长王毅，上海市市长应勇，浙江省委书记车俊，重庆市市长唐良智，四川省省长尹力，招商局集团有限公司董事长李建红，浙江吉利控股集团有限公司董事长李书福，中国宏观经济研究院研究员史育龙先后发言。他们结合实际就推进“一带一路”建设工作介绍了情况，谈了意见和建议。");
 
+        strings.stream().forEach(System.out::print);
 
-        strings.stream().filter(it -> it.getNature() == Nature.x).filter(it -> it.word.length() > 2)
-                .forEach(x -> {
-
-                });
+//        strings.stream().filter(it -> it.getNature() == Nature.x).filter(it -> it.word.length() > 2)
+//                .forEach(x -> {
+//
+//                });
     }
 }
