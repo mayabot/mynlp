@@ -1,6 +1,7 @@
 package com.mayabot.nlp.perceptron.dataReader
 
 import com.mayabot.nlp.perceptron.SequenceLabel
+import com.mayabot.nlp.perceptron.lmpl.CharNorm
 import com.mayabot.nlp.perceptron.lmpl.listTOSequence
 import com.mayabot.nlp.perceptron.lmpl.pkuSplitter
 import java.io.File
@@ -17,7 +18,7 @@ class ConllFileReader(){
                     try {
                         if (it != "") {
                             val words = it.split("\\s+".toRegex())[3]
-                            sentence.add(words)
+                            sentence.add(CharNorm.convert(words))
                         } else {
                             list.add(listTOSequence(sentence))
                             sentence.clear()
@@ -62,6 +63,7 @@ class PkuFileReader(private val directory: String){
     }
 
     private fun dataExtractor(sentence: String, tagSet : ArrayList<String>): SequenceLabel<String> {
+//        val normedSentence = CharNorm.convert(sentence)
         val sequence = ArrayList<String>()
         val labelSet = ArrayList<Int>()
 
@@ -74,7 +76,7 @@ class PkuFileReader(private val directory: String){
                 if (word == "") continue
                 if (t.indexOf("[") != -1) word = word.substring(1)
                 if (label.contains("]")) label = label.substring(0, label.indexOf("]"))
-                sequence.add(word)
+                sequence.add(CharNorm.convert(word))
                 labelSet.add(idOf(label, tagSet))
             }catch (e: Exception){
                 t

@@ -2,27 +2,38 @@ package com.mayabot.nlp.perceptron;
 
 import com.carrotsearch.hppc.ObjectIntHashMap;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
 public class FeatureMap {
     private ObjectIntHashMap<String> featureMap = new ObjectIntHashMap<>(5000000);
 //    public Map<String, Integer> featureMap = new TreeMap<>();
-
+    private List<String> labelSet;
     private int[] tagSet;
 
-    public FeatureMap(int[] tagSet) {
-        this.tagSet = tagSet;
-//        addTransitionFeatures(tagSet);
+    public FeatureMap(List<String> labelSet) {
+        this.labelSet = labelSet;
+        tagSet = new int[labelSet.size()];
+        for (int i = 0; i < labelSet.size(); i++){
+            tagSet[i] = i;
+        }
+        addTransitionFeatures();
 
     }
 
-    private void addTransitionFeatures(int[] tagSet) {
-        String [] temp = {"B","M","E","S"};
-        for (int i = 0; i < tagSet.length; i++) {
-            idOf("BL=" + temp[i]);
+    private void addTransitionFeatures() {
+        for (int i = 0; i < tagSet.length; i++)
+        {
+            idOf("BL=" + labelSet.get(i));
         }
         idOf("BL=_BL_");
+//        String [] temp = {"B","M","E","S"};
+//        for (int i = 0; i < tagSet.length; i++) {
+//            idOf("BL=" + temp[i]);
+//        }
+//        idOf("BL=_BL_");
     }
 
     public int tagSize() {
@@ -48,6 +59,14 @@ public class FeatureMap {
 
     public void setTagSet(int[] tagSet) {
         this.tagSet = tagSet;
+    }
+
+    public List<String> getLabelSet() {
+        return labelSet;
+    }
+
+    public void setLabelSet(List<String> labelSet) {
+        this.labelSet = labelSet;
     }
 
     public int idOf(String o) {
