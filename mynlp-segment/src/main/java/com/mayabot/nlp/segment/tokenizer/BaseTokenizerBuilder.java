@@ -55,6 +55,15 @@ public abstract class BaseTokenizerBuilder extends WordnetTokenizerBuilder {
         return this;
     }
 
+    public BaseTokenizerBuilder setLowerCaseCharNormalize(boolean lowerCaseCharNormalize) {
+        this.lowerCaseCharNormalize = lowerCaseCharNormalize;
+        return this;
+    }
+
+    public BaseTokenizerBuilder setFull2halfCharNormalize(boolean full2halfCharNormalize) {
+        this.full2halfCharNormalize = full2halfCharNormalize;
+        return this;
+    }
 
     public BaseTokenizerBuilder sentenceCollector() {
         setTermCollector(SentenceCollector.class);

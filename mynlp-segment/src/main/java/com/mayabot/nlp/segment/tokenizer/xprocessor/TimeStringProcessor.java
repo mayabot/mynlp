@@ -41,10 +41,6 @@ public class TimeStringProcessor extends BaseMynlpComponent implements WordnetIn
 
     private List<Pattern> patternList = Lists.newArrayList();
 
-
-    private boolean enableTime = false;
-    private boolean enableEmail = true;
-
     final int timeWordID;
 
     final NatureAttribute natureAttribute;
@@ -55,13 +51,20 @@ public class TimeStringProcessor extends BaseMynlpComponent implements WordnetIn
         timeWordID = coreDictionary.getWordID(CoreDictionary.TAG_TIME);
         natureAttribute = NatureAttribute.create(Nature.t, 1000);
 
-        patternList.add(Pattern.compile("(?:\\d{4}-\\d{2}-\\d{2})|(?:\\d{4}年(\\d{2}月(\\d{2}日)?)?)"));
+        patternList.add(Pattern.compile("(?:\\d{4}-\\d{2}-\\d{2})|(?:\\d{1,2}月\\d{1,2}[日号])|(?:\\d{2,4}年(?:\\d{1,2}月(?:\\d{1,2}日)?)?)"));
         patternList.add(Pattern.compile("\\d+个月"));
         patternList.add(Pattern.compile("[一二三四五六七八九十]+个月"));
         patternList.add(Pattern.compile("\\d{1,2}+月\\d{1,2}号"));
         patternList.add(Pattern.compile("[一二三四五六七八九十半]个?[天周月年]份?"));
         patternList.add(Pattern.compile("\\d{2}年"));
+        patternList.add(Pattern.compile("[1-9|10|11|12|一|二|三|四|五|六|七|八|九|十|十一|十二]点[半|一刻]"));
 
+    }
+
+    public static void main(String[] args) {
+        Pattern compile = Pattern.compile("(?:\\d{4}-\\d{2}-\\d{2})|(?:\\d{1,2}月\\d{1,2}[日号])|(?:\\d{2,4}年(?:\\d{1,2}月(?:\\d{1,2}日)?)?)");
+        Matcher matcher = compile.matcher("8月27日");
+        System.out.println(matcher.find());
     }
 
     @Override
@@ -71,11 +74,9 @@ public class TimeStringProcessor extends BaseMynlpComponent implements WordnetIn
             while (matcher.find()) {
                 int start = matcher.start();
                 int end = matcher.end();
-                int len = end - start;
 
-//
                 VertexRow row = wordnet.getRow(start);
-                Vertex v = row.getOrCrete(len);
+                Vertex v = row.getOrCrete(end - start);
 
                 v.setWordInfo(timeWordID, CoreDictionary.TAG_TIME, natureAttribute);
 
@@ -83,22 +84,4 @@ public class TimeStringProcessor extends BaseMynlpComponent implements WordnetIn
         }
     }
 
-
-    public boolean isEnableTime() {
-        return enableTime;
-    }
-
-    public TimeStringProcessor setEnableTime(boolean enableTime) {
-        this.enableTime = enableTime;
-        return this;
-    }
-
-    public boolean isEnableEmail() {
-        return enableEmail;
-    }
-
-    public TimeStringProcessor setEnableEmail(boolean enableEmail) {
-        this.enableEmail = enableEmail;
-        return this;
-    }
 }
