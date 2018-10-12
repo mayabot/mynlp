@@ -3,6 +3,7 @@ package com.mayabot.nlp.perceptron;
 import org.trie4j.util.IntArray;
 
 import java.io.File;
+import java.util.List;
 
 /**
  * 感知机模型
@@ -32,5 +33,5 @@ public interface PerceptronModel<T> {
      * @param sequence
      * @return 解码后的label序列
      */
-    String decode(T[] sequence);
+    List<String> decode(T[] sequence);
 }

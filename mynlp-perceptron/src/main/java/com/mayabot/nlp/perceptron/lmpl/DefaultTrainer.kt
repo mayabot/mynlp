@@ -54,21 +54,22 @@ fun main(args: Array<String>) {
 //    val list = conllFileReader("/Users/mei_chaofeng/conll/conll-2012/v4/data/train/data/chinese/annotations")
 //    val list = pkuFileReader("/Users/mei_chaofeng/conll/conll-2012/v4/data/train/data/chinese/199801.txt")
 
-//    val list = reader.readWord()
-//    val builder = TrainerBuilder(list, DefaultWordSplitFeatureExtractor(), arrayOf(0, 1, 2, 3).toIntArray(), 3)
-//    val trainer = builder.buildDefaultModel()
-//    val wordModel = trainer.train()
-//    val resultSet = ArrayList<String>()
+    val list = reader.readWord()
+    val builder = TrainerBuilder(list, DefaultWordSplitFeatureExtractor(), listOf<String>("B", "M", "E", "S"), 5)
+    val trainer = builder.buildDefaultModel()
+    val wordModel = trainer.train()
+    val resultSet = ArrayList<String>()
 
     val tagSet = ArrayList<String>()
     val list2 = reader.readPosTag(tagSet)
-    val builder2 = TrainerBuilder(list2, DefaultPosTagFeatureExtractor(), IntArray(tagSet.size){index -> index}, 5)
+    val builder2 = TrainerBuilder(list2, DefaultPosTagFeatureExtractor(), tagSet, 5)
     val trainer2 = builder2.buildDefaultModel()
     val posModel = trainer2.train()
 
-    val test = "上海万行信息科技有限公司提供给用户全新的中文自然语言处理技术,产品和方法,我们愿望在中国的不同领域和行业的用户在使用我们的行业解决方案后,为他们创造商业价值。"
-//    val resultSplit = wordModel.decode(test.toCharArray().toTypedArray())
-//    println(resultSplit)
+//    val test = "上海万行信息科技有限公司提供给用户全新的中文自然语言处理技术,产品和方法,我们愿望在中国的不同领域和行业的用户在使用我们的行业解决方案后,为他们创造商业价值。"
+    val test = "解决方案和服务必须到位。"
+    val resultSplit = wordModel.decode(test.toCharArray().toTypedArray())
+    println(resultSplit)
 //    println(posModel.decode2(resultSplit.split("\\s+".toRegex()).toTypedArray(), tagSet))
 
 //    println(posModel.decode())
@@ -115,7 +116,7 @@ fun main(args: Array<String>) {
 
 class StructuredPerceptronTrainer<T>(dataInput: MutableIterable<SequenceLabel<T>>,
                                      private val featureExtractor: FeatureExtractor<T>,
-                                     tagSet: IntArray,
+                                     tagSet:List<String>,
                                      val maxIter: Int
 ) {
     private var dataSet: List<FeaturedSequenceLabel>
@@ -202,7 +203,7 @@ class StructuredPerceptronTrainer<T>(dataInput: MutableIterable<SequenceLabel<T>
     }
 }
 
-class TrainerBuilder<T>(private val data: MutableIterable<SequenceLabel<T>>, private val extractor: FeatureExtractor<T>, private val tagSet: IntArray, vararg maxIter: Int) {
+class TrainerBuilder<T>(private val data: MutableIterable<SequenceLabel<T>>, private val extractor: FeatureExtractor<T>, private val tagSet: List<String>, vararg maxIter: Int) {
     private var iter: Int
 
     init {
@@ -249,8 +250,8 @@ fun listTOSequence(sentence: List<String>): SequenceLabel<Char> {
             label.add(2)
         }
     }
-    val normed = CharNorm.convert(sentence.reduce { acc, s -> acc + s }).toTypedArray()
-    return SequenceLabel(normed, label.toIntArray())
+//    val normed = CharNorm.convert(sentence.reduce { acc, s -> acc + s }).toTypedArray()
+    return SequenceLabel(sequence.toTypedArray(), label.toIntArray())
 }
 
 object CharNorm {
@@ -272,7 +273,7 @@ object CharNorm {
     }
 
 
-    fun convert(input: String): CharArray {
+    fun convert(input: String): String {
         var target = input.toCharArray()
 
         for (i in 0 until target.size) {
@@ -282,7 +283,7 @@ object CharNorm {
                 target[i] = tch
             }
         }
-        return target
+        return String(target)
     }
 }
 
