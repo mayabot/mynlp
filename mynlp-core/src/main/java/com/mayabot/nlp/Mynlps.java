@@ -30,11 +30,6 @@ import java.util.function.Consumer;
  */
 public final class Mynlps {
 
-    public static void main(String[] args) {
-        Mynlps.install(builder -> {
-
-        });
-    }
 
     public static InternalLogger logger = InternalLoggerFactory.getInstance("com.mayabot.nlp.Mynlps");
 

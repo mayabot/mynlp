@@ -1,22 +1,19 @@
 package segment;
 
-import com.mayabot.nlp.segment.MynlpAnalyzer;
-import com.mayabot.nlp.segment.MynlpAnalyzers;
-import com.mayabot.nlp.segment.MynlpTokenizer;
-import com.mayabot.nlp.segment.MynlpTokenizers;
+import com.mayabot.nlp.segment.*;
 
-import java.util.List;
+import java.io.Reader;
+import java.io.StringReader;
 
 public class CoreSegment {
 
     public static void main(String[] args) {
-        MynlpTokenizer mynlpTokenizer = MynlpTokenizers.coreTokenizer();
+        MynlpTokenizer tokenizer = MynlpTokenizers.coreTokenizer();
 
-        List<String> x = mynlpTokenizer.tokenToStringList("你好 _lable_pos");
+        MynlpAnalyzer analyzer = MynlpAnalyzers.standard(tokenizer);
 
-        System.out.println(x);
-
-        MynlpAnalyzer standard = MynlpAnalyzers.standard();
+        Reader reader = new StringReader("假装这是一个大文本");
+        Iterable<WordTerm> result = analyzer.parse(reader);
 
     }
 }
