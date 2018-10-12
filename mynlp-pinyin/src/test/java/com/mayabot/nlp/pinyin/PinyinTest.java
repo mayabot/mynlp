@@ -45,6 +45,20 @@ public class PinyinTest {
 
     }
 
+    @Test
+    public void testShow() {
+
+        PinyinResult result = Pinyins.convert("招商银行推出朝朝盈理财产品");
+
+        System.out.println(result.asList());
+        System.out.println(result.asHeadList());
+        System.out.println(result.asHeadString());
+        System.out.println(result.asHeadString(""));
+        System.out.println(result.asString());
+        System.out.println(result.asString("|"));
+
+    }
+
 
     @Test
     public void test2() {
