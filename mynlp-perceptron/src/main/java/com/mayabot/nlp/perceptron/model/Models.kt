@@ -176,7 +176,7 @@ class CostumisedPerceptron<T>(
         }
     }
 
-    override fun decode(sequence: Array<T>): String {
+    override fun decode(sequence: Array<T>): List<String> {
         val tagArray = IntArray(sequence.size)
         val tt = sequence.mapIndexed { index, _ ->
             featureExtractor.extractFeature(sequence, index, featureMap)
@@ -184,16 +184,17 @@ class CostumisedPerceptron<T>(
         val temp = FeaturedSequenceLabel(tt, tagArray)
         viterbiDecode(temp, tagArray)
 
-        val result = StringBuilder()
-        result.append(sequence[0])
+//        val result = StringBuilder()
+//        result.append(sequence[0])
 
-        for (i in 1 until tagArray.size) {
-            if (tagArray[i] == 0 || tagArray[i] == 3) {
-                result.append(" ")
-            }
-            result.append(sequence[i])
-        }
-        return result.toString()
+//        for (i in 1 until tagArray.size) {
+//            if (tagArray[i] == 0 || tagArray[i] == 3) {
+//                result.append(" ")
+//            }
+//            result.append(sequence[i])
+//        }
+
+        return tagArray.map { featureMap.labelSet[it] }
     }
 
     fun decode2(sequence: Array<T>, tagSet: ArrayList<String>): String {
@@ -217,7 +218,7 @@ class CostumisedPerceptron<T>(
 
 
     private fun viterbiDecode(sentence: FeaturedSequenceLabel, guessLabel: IntArray): Double {
-        val labelSet = arrayOf(0, 1, 2, 3)
+        val labelSet = featureMap.tagSet
         val bos = 4
         val sentenceLength = sentence.size
         val labelSize = labelSet.size
