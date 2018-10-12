@@ -54,7 +54,7 @@ public class TopMaxK<T> {
 
     public ArrayList<Pair<T, Float>> result() {
         int top = min(k, size);
-        ArrayList<Pair<T, Float>> list = new ArrayList<Pair<T, Float>>(top);
+        ArrayList<Pair<T, Float>> list = new ArrayList<>(top);
         for (int i = 0; i < top; i++) {
             list.add(new Pair<>(idIndex[i], heap[i]));
         }
