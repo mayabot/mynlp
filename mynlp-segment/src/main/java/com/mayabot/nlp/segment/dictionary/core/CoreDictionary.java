@@ -15,6 +15,9 @@
  */
 package com.mayabot.nlp.segment.dictionary.core;
 
+import com.google.common.base.Charsets;
+import com.google.common.base.Joiner;
+import com.google.common.hash.Hashing;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.mayabot.nlp.MynlpEnv;
@@ -23,6 +26,7 @@ import com.mayabot.nlp.collection.dat.DoubleArrayTrie;
 import com.mayabot.nlp.collection.dat.DoubleArrayTrieBuilder;
 import com.mayabot.nlp.resources.NlpResouceExternalizable;
 import com.mayabot.nlp.resources.NlpResource;
+import com.mayabot.nlp.segment.dictionary.Nature;
 import com.mayabot.nlp.segment.dictionary.NatureAttribute;
 import com.mayabot.nlp.utils.CharSourceLineReader;
 
@@ -50,16 +54,16 @@ public class CoreDictionary extends NlpResouceExternalizable {
     /**
      * 现在总词频25146057
      */
-    public static int MAX_FREQUENCY = 2516595;
+    public static int MAX_FREQUENCY = -1;
 
 //    private InternalLogger logger = InternalLoggerFactory.getInstance(CoreDictionary.class);
 
-    public final String path = "dictionary/core/CoreNatureDictionary.txt";
+    public final String path = "dictionary/CoreDict.txt";
 
     /**
      * 词频总和
      */
-    public int TOTAL_FREQUENCY;
+    public int totalFreq;
 
     private DoubleArrayTrie<NatureAttribute> trie;
 
@@ -71,6 +75,7 @@ public class CoreDictionary extends NlpResouceExternalizable {
         //计算出预编译的量
         Begin_WORD_ID = getWordID(TAG_BIGIN);
         End_WORD_ID = getWordID(TAG_END);
+
         XX_WORD_ID = getWordID(TAG_OTHER);
         NR_WORD_ID = getWordID(TAG_PEOPLE);
         NS_WORD_ID = getWordID(TAG_PLACE);
@@ -78,9 +83,9 @@ public class CoreDictionary extends NlpResouceExternalizable {
         T_WORD_ID = getWordID(TAG_TIME);
         X_WORD_ID = getWordID(TAG_CLUSTER);
         M_WORD_ID = getWordID(TAG_NUMBER);
-        NX_WORD_ID = getWordID(TAG_PROPER);
+        NX_WORD_ID = getWordID(TAG_NX);
 
-        MAX_FREQUENCY = this.TOTAL_FREQUENCY;
+        MAX_FREQUENCY = this.totalFreq;
     }
 
     @Override
@@ -104,7 +109,7 @@ public class CoreDictionary extends NlpResouceExternalizable {
             }
         }
 
-        this.TOTAL_FREQUENCY = maxFreq;
+        this.totalFreq = maxFreq;
 
         if (map.isEmpty()) {
             throw new RuntimeException("not found core dict file ");
@@ -115,19 +120,25 @@ public class CoreDictionary extends NlpResouceExternalizable {
 
     @Override
     public String sourceVersion(MynlpEnv mynlp) {
-        return mynlp.loadResource(path).hash().substring(0, 5);
+        return Hashing.md5().newHasher().
+                putString(mynlp.loadResource(path).hash(), Charsets.UTF_8).
+                putString(NatureAttribute.version, Charsets.UTF_8)
+                //如果Nature有任何变化
+                .putString(Joiner.on(",").join(Nature.values()), Charsets.UTF_8)
+                .hash().toString()
+                .substring(0, 5);
     }
 
     @Override
     public void writeExternal(ObjectOutput out) throws IOException {
-        out.writeInt(TOTAL_FREQUENCY);
+        out.writeInt(totalFreq);
         DoubleArrayTrie.write(trie, out, NatureAttribute::write);
         out.flush();
     }
 
     @Override
     public void readExternal(ObjectInput in) throws IOException {
-        this.TOTAL_FREQUENCY = in.readInt();
+        this.totalFreq = in.readInt();
         this.trie = DoubleArrayTrie.read(in, NatureAttribute::read);
     }
 
@@ -238,9 +249,11 @@ public class CoreDictionary extends NlpResouceExternalizable {
      */
     public final static String TAG_QUANTIFIER = "未##量";
     /**
-     * 专有名词 nx
+     * nx 中文语料里面出现了英文单词。
+     * 不能叫专有名词
      */
-    public final static String TAG_PROPER = "未##专";
+    public final static String TAG_NX = "未##E";
+
     /**
      * 时间 t
      */

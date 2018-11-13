@@ -20,6 +20,16 @@ package com.mayabot.nlp.utils;
  */
 public class StringUtils {
 
+    /**
+     * 是否全是中文
+     *
+     * @param str
+     * @return
+     */
+    public static boolean isAllChinese(String str) {
+        return str.matches("[\\u4E00-\\u9FA5]+");
+    }
+
     public static boolean isWhiteSpace(char word) {
         switch (word) {
             case '\u2002':

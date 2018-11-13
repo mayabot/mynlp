@@ -61,11 +61,11 @@ public class ViterbiBestPathAlgorithm implements BestPathAlgorithm {
     public ViterbiBestPathAlgorithm(CoreBiGramTableDictionary coreBiGramTableDictionary,
                                     CoreDictionary coreDictionary) {
         this.coreBiGramTableDictionary = coreBiGramTableDictionary;
-        dTemp = (double) 1 / coreDictionary.TOTAL_FREQUENCY + 0.00001;
+        dTemp = (double) 1 / coreDictionary.totalFreq + 0.00001;
         partB = (1 - dTemp);
         PARTA_PARTB = partA * partB;
         PARTTA_Dtemp = partA * dTemp;
-        PartZ = dSmoothingPara / coreDictionary.TOTAL_FREQUENCY;
+        PartZ = dSmoothingPara / coreDictionary.totalFreq;
     }
 
 
@@ -199,7 +199,7 @@ public class ViterbiBestPathAlgorithm implements BestPathAlgorithm {
 
         int nTwoWordsFreq = coreBiGramTableDictionary.getBiFrequency(from.wordID, to.wordID);
 //        double value = -Math
-//                .log(Predefine.dSmoothingPara * frequency / (Predefine.TOTAL_FREQUENCY) +
+//                .log(Predefine.dSmoothingPara * frequency / (Predefine.totalFreq) +
 //                        partA* (partB * nTwoWordsFreq / frequency + Predefine.dTemp));
         double value = -Math
                 .log(PartZ * frequency
@@ -237,7 +237,11 @@ public class ViterbiBestPathAlgorithm implements BestPathAlgorithm {
             point = point.from;
         }
 
+        //System.out.println(wordnet.toMoreString());
+
         // 最后一个point必定指向start节点
+
+        //FIXME xxx
         Preconditions.checkState(last == wordnet.getBeginRow().first(), "非完整路径,有可能wordnet初始化的时候就路径不完整");
 
         return wordPath;

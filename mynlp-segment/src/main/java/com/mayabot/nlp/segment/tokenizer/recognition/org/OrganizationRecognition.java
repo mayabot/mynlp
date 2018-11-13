@@ -169,15 +169,17 @@ public class OrganizationRecognition extends BaseMynlpComponent implements Optim
             // 构成更长的
             Nature nature = vertex.guessNature();
 
-            if (Nature.nrf.equals(nature) && vertex.natureAttribute.getTotalFrequency() <= 1000) {
-                vertex.setTempObj(new EnumFreqPair<>(NTTag.F, 1000));
-            } else if (Nature.ni.equals(nature) ||
-                    Nature.nic.equals(nature) ||
-                    Nature.nis.equals(nature) ||
-                    Nature.nit.equals(nature)
-                    ) {
-                vertex.setTempObj(new EnumFreqPair<>(NTTag.K, 1000, NTTag.D, 1000));
-            } else if (Nature.m.equals(nature)) {
+            //TODO 由于修改了词性，这里注释掉了
+//            if (Nature.nrf.equals(nature) && vertex.natureAttribute.getTotalFrequency() <= 1000) {
+//                vertex.setTempObj(new EnumFreqPair<>(NTTag.F, 1000));
+//            } else if (Nature.ni.equals(nature) ||
+//                    Nature.nic.equals(nature) ||
+//                    Nature.nis.equals(nature) ||
+//                    Nature.nit.equals(nature)
+//                    ) {
+//                vertex.setTempObj(new EnumFreqPair<>(NTTag.K, 1000, NTTag.D, 1000));
+//            } else
+            if (Nature.m.equals(nature)) {
                 vertex.setTempObj(new EnumFreqPair<>(NTTag.M, 1000));
             } else {
                 EnumFreqPair<NTTag> nrEnumFreqPair = null;

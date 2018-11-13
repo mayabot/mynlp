@@ -144,6 +144,12 @@ public class WordnetTokenizer implements MynlpTokenizer {
             initializer.fill(wordnet);
         }
 
+
+        // 对WordNet进行补齐,避免意外的错误
+        wordnet.fillNill();
+
+//        System.out.println(wordnet.toMoreString());
+
         //选择一个路径出来(第一次不严谨的分词结果)
         Wordpath wordPath = bestPathAlgorithm.select(wordnet);
 

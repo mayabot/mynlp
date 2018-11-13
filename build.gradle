@@ -26,7 +26,7 @@ ext {
 
 def buildVersion = "2.0.x"
 //def buildVersion = "2.0.0-BETA11"
-def snapShot = true
+def snapShot = false
 
 subprojects {
     if(project.path==":plugins" ){
