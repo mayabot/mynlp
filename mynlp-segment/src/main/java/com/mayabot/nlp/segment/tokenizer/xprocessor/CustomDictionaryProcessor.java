@@ -31,7 +31,8 @@ import com.mayabot.nlp.segment.wordnet.Wordnet;
 import com.mayabot.nlp.segment.wordnet.Wordpath;
 
 /**
- * 自定义词典的合并处理器
+ * 自定义词典的合并处理器.
+ *
  * 小词合并为大词
  * 但是不去解决  AAA BBB CCC 有一个自定义词汇 ABBBC 这个时候不能去拆分，变更原有路径
  * 只能解决 A BB C 然后有自定义词 ABBC 那可以把他们联合起来

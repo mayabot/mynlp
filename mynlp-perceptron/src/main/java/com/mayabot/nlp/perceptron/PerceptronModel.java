@@ -1,7 +1,5 @@
 package com.mayabot.nlp.perceptron;
 
-import org.trie4j.util.IntArray;
-
 import java.io.File;
 import java.util.List;
 
@@ -10,7 +8,7 @@ import java.util.List;
  *
  * @author jimichan
  */
-public interface PerceptronModel<T> {
+public interface PerceptronModel {
     /**
      * 保存感知机模型实例
      *
@@ -18,20 +16,15 @@ public interface PerceptronModel<T> {
      */
     void save(File file);
 
-    /**
-     * 从文件中加载模型
-     *
-     * @param file
-     */
-    void load(File file);
+    FeatureSet featureSet();
 
+    double decode(List<int[]> featureSequence, int[] guessLabel);
 
-    /**
-     * 对序列进行解码
-     * sequence 如果出现 -1 表示元素不存在
-     *
-     * @param sequence
-     * @return 解码后的label序列
-     */
-    List<String> decode(T[] sequence);
+    default int[] decode(List<int[]> featureSequence) {
+        int[] result = new int[featureSequence.size()];
+
+        decode(featureSequence, result);
+
+        return result;
+    }
 }

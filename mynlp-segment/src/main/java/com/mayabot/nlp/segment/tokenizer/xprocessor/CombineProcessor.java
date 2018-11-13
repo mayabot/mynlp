@@ -92,7 +92,7 @@ public class CombineProcessor extends BaseMynlpComponent implements WordpathProc
                     (index, vertex) -> hasNature(vertex, Nature.m));
 
             FstNode<Vertex> danwei = shuzi.to("danwei",
-                    (index, vertex) -> hasNature(vertex, Nature.q) || hasNature(vertex, Nature.qt) ||
+                    (index, vertex) -> hasNature(vertex, Nature.q) ||
                             QuantityUnit.contains(vertex.realWord().toLowerCase())
             );
 

@@ -21,6 +21,7 @@ import com.google.common.collect.ImmutableMap;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -31,6 +32,8 @@ import java.util.Map;
  * @author jimichan
  */
 public final class NatureAttribute {
+
+    public static final String version = "v1";
 
     private ImmutableMap<Nature, Integer> map = ImmutableMap.of();
 
@@ -116,11 +119,12 @@ public final class NatureAttribute {
     public static NatureAttribute create(String... param) {
         NatureAttribute natureAttribute = new NatureAttribute();
         int natureCount = param.length / 2;
-        ImmutableMap.Builder<Nature, Integer> builder = ImmutableMap.builder();
+        Map<Nature, Integer> map = new HashMap<Nature, Integer>();
+//        ImmutableMap.Builder<Nature, Integer> builder = ImmutableMap.builder();
         for (int i = 0; i < natureCount; ++i) {
-            builder.put(Nature.valueOf(param[1 + 2 * i]), Integer.parseInt(param[2 + 2 * i]));
+            map.put(Nature.parse(param[1 + 2 * i]), Integer.parseInt(param[2 + 2 * i]));
         }
-        natureAttribute.map = builder.build();
+        natureAttribute.map = ImmutableMap.copyOf(map);
         natureAttribute.computeTotal();
         return natureAttribute;
     }
@@ -138,6 +142,7 @@ public final class NatureAttribute {
         return result;
     }
 
+    static Nature[] natures = Nature.values();
     public static NatureAttribute read(DataInput in) {
         try {
             NatureAttribute attribute = new NatureAttribute();
@@ -151,13 +156,13 @@ public final class NatureAttribute {
             if (array.length == 0) {
                 attribute.map = ImmutableMap.of();
             } else if (array.length == 2) {
-                attribute.map = ImmutableMap.of(Nature.valueOf(array[0]), Integer.valueOf(array[1]));
+                attribute.map = ImmutableMap.of(natures[array[0]], Integer.valueOf(array[1]));
             } else {
                 ImmutableMap.Builder<Nature, Integer> builder = ImmutableMap.builder();
                 for (int i = 0; i < array.length; i += 2) {
                     int ord = array[i];
                     int freq = array[i + 1];
-                    builder.put(Nature.valueOf(ord), Integer.valueOf(freq));
+                    builder.put(natures[ord], Integer.valueOf(freq));
                 }
 
                 attribute.map = builder.build();
@@ -180,14 +185,14 @@ public final class NatureAttribute {
                 out.writeUTF("[]");
             } else if (size == 1) {
                 Map.Entry<Nature, Integer> x = a.map.entrySet().iterator().next();
-                out.writeUTF(x.getKey().ord + "," + x.getValue());
+                out.writeUTF(x.getKey().ordinal() + "," + x.getValue());
             } else {
                 StringBuilder line = new StringBuilder();
                 for (Map.Entry<Nature, Integer> x : a.map.entrySet()) {
                     if (line.length() > 0) {
                         line.append(",");
                     }
-                    line.append(x.getKey().ord + "," + x.getValue());
+                    line.append(x.getKey().ordinal() + "," + x.getValue());
                 }
                 out.writeUTF(line.toString());
             }
