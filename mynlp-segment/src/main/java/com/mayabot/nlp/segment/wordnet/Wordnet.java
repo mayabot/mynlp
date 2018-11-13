@@ -16,6 +16,8 @@
 
 package com.mayabot.nlp.segment.wordnet;
 
+import com.mayabot.nlp.segment.dictionary.Nature;
+import com.mayabot.nlp.segment.dictionary.NatureAttribute;
 import com.mayabot.nlp.utils.CustomCharSequence;
 
 import java.util.BitSet;
@@ -93,6 +95,17 @@ public class Wordnet implements CharSequence {
         }
     }
 
+
+    static final NatureAttribute df = NatureAttribute.create(Nature.x, 1);
+
+    public void fillNill() {
+        for (VertexRow row : slotList) {
+            if (row.first == null) {
+                Vertex creted = row.getOrCrete(1);
+                creted.natureAttribute = df;
+            }
+        }
+    }
 
     /**
      * 寻找没有被所有路径覆盖的位置

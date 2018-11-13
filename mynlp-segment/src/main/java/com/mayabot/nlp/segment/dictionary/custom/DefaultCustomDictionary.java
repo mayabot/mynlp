@@ -63,7 +63,7 @@ public class DefaultCustomDictionary extends NlpResouceExternalizable implements
     private boolean isNormalization = false;
 
     public static Setting<String> dictPathSetting = Setting.string(
-            "custom.dictionary.path", "dictionary/custom/CustomDictionary.txt");
+            "custom.dictionary.path", "dictionary/CustomDictionary.txt");
 
     @Inject
     public DefaultCustomDictionary(MynlpEnv mynlp) throws Exception {

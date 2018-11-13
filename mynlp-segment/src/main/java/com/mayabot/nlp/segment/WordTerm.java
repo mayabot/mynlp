@@ -17,6 +17,7 @@ package com.mayabot.nlp.segment;
 
 import com.mayabot.nlp.segment.dictionary.Nature;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -25,7 +26,10 @@ import java.util.List;
  *
  * @author jimichan
  */
-public final class WordTerm {
+public final class WordTerm implements Serializable {
+
+    static final long serialVersionUID = 1L;
+
     /**
      * 词语
      */

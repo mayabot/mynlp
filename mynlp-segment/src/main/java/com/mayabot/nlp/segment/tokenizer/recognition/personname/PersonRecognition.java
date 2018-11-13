@@ -276,9 +276,12 @@ public class PersonRecognition extends BaseMynlpComponent implements OptimizePro
                     } else {
                         nrEnumFreqPair = new EnumFreqPair<>(NRTag.A, a_total_freq);
                     }
-                } else if (Nature.nnt.equals(nature)) {
-                    nrEnumFreqPair = EnumFreqPair.create(NRTag.G, NRTag.K);
-                } else {
+                }
+                // FIXME 词性精简后 没有nnt了
+//                else if (Nature.nnt.equals(nature)) {
+//                    nrEnumFreqPair = EnumFreqPair.create(NRTag.G, NRTag.K);
+//                }
+                else {
                     nrEnumFreqPair = new EnumFreqPair<>(NRTag.A, a_total_freq);
                 }
             }

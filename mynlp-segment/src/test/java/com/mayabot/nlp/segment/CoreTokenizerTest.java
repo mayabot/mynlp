@@ -28,18 +28,36 @@ public class CoreTokenizerTest {
     @Test
     public void test3() {
         List<String> lines = Lists.newArrayList();
-        lines.add("工信处|女干事|每月|经过|下属|科室|都|要|亲口|交代|24口|交换机|等|技术性|器件|的|安装|工作");
+        //lines.add("工信处|女|干事|每月|经过|下属|科室|都|要|亲口|交代|24口|交换机|等|技术性|器件|的|安装|工作");
         lines.add("计划|建立|一个|5|万|公顷|面积|的|航天站");
         lines.add("不要|把|一星半点儿|的|酒|全部|都|喝掉|嘛");
         lines.add("商品|和|服务");
-        lines.add("这个|是|你|第几套|房|了");
-        lines.add("这个|是|你|的|ipad3|么");
-        lines.add("以|每|台|约|200|元|的|价格|送到|苹果|售后|维修中心|换|新机|(|苹果|的|保修|基本|是|免费|换新|机");
+        //lines.add("这个|是|你|第几套|房|了");
+        //lines.add("这个|是|你|的|ipad3|么");
+        //lines.add("以|每|台|约|200|元|的|价格|送到|苹果|售后|维修中心|换|新机|(|苹果|的|保修|基本|是|免费|换新|机");
         lines.add("受约束|,|需要|遵守|心理学会所|定|的|道德|原则|,|所|需要|时须|说明|该|实验|与|所能|得到|的|知识|的|关系");
 
         for (String line : lines) {
             TokenizerTestHelp.test(tokenizer, line);
         }
+    }
+
+
+    @Test
+    public void test5() {
+
+        System.out.println(tokenizer.tokenToStringList("交辅警报名"));
+        System.out.println(tokenizer.tokenToStringList("第几套房"));
+        System.out.println(tokenizer.tokenToStringList("这个套房多少钱"));
+        System.out.println(tokenizer.tokenToStringList("今年初中毕业"));
+        System.out.println(tokenizer.tokenToStringList("小孩多大学跳舞"));
+        System.out.println(tokenizer.tokenToStringList("义乌市政府"));
+        System.out.println(tokenizer.tokenToStringList("外地人生孩子"));
+        System.out.println(tokenizer.tokenToStringList("被拆迁人为低收入"));
+        System.out.println(tokenizer.tokenToStringList("医保费用"));
+        System.out.println(tokenizer.tokenToStringList("青浦区沈巷中学"));
+        System.out.println(tokenizer.tokenToStringList("轿车改成燃气"));
+        System.out.println(tokenizer.tokenToStringList("工程车上路"));
     }
 
     /**
@@ -59,7 +77,7 @@ public class CoreTokenizerTest {
     public void testDate() {
         MynlpTokenizer tokenizer = MynlpTokenizers.coreTokenizer();
 
-        String line = "2017年|的|第|一个|夏天|是|2017-10-12"; // 目标 是 第几套 房
+        String line = "2017年|的|第一个|夏天|是|2017-10-12"; // 目标 是 第几套 房
 
         TokenizerTestHelp.test(tokenizer, line);
 

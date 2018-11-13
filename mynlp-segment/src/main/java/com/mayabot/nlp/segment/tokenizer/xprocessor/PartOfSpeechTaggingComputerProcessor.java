@@ -49,8 +49,8 @@ public class PartOfSpeechTaggingComputerProcessor extends BaseMynlpComponent imp
         this.transformMatrix = matrixDictionary.getTransformMatrixDictionary();
 
         secondOrderViterbi = new SecondOrderViterbi<>(
-                (pre, cur) -> transformMatrix.getTP(pre.getKey().name, cur.getKey().name) -
-                        Math.log((cur.getValue() + 1e-8) / transformMatrix.getTotalFrequency(cur.getKey().name))
+                (pre, cur) -> transformMatrix.getTP(pre.getKey().name(), cur.getKey().name()) -
+                        Math.log((cur.getValue() + 1e-8) / transformMatrix.getTotalFrequency(cur.getKey().name()))
                 ,
                 (vertex) -> vertex.natureAttribute != null ? vertex.natureAttribute.getMap() : ImmutableMap.of()
 

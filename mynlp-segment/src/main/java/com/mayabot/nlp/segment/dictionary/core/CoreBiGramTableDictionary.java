@@ -16,6 +16,7 @@
 
 package com.mayabot.nlp.segment.dictionary.core;
 
+import com.google.common.base.Splitter;
 import com.google.common.collect.TreeBasedTable;
 import com.google.common.primitives.Ints;
 import com.google.inject.Inject;
@@ -32,7 +33,7 @@ import com.mayabot.nlp.utils.DataInOutputUtils;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
-import java.util.regex.Matcher;
+import java.util.List;
 import java.util.regex.Pattern;
 
 /**
@@ -46,7 +47,7 @@ public class CoreBiGramTableDictionary extends NlpResouceExternalizable {
 
     private CSRSparseMatrix matrix;
 
-    public final String path = "dictionary/core/CoreNatureDictionary.ngram.txt";
+    public final String path = "dictionary/CoreDict.bigram.txt";
 
     protected InternalLogger logger = InternalLoggerFactory.getInstance(this.getClass());
 
@@ -65,7 +66,6 @@ public class CoreBiGramTableDictionary extends NlpResouceExternalizable {
         return mynlp.loadResource(path).hash().substring(0, 6);
     }
 
-
     private final Pattern pattern = Pattern.compile("^(.+)@(.+)\\s+(\\d+)$");
 
     @Override
@@ -75,23 +75,48 @@ public class CoreBiGramTableDictionary extends NlpResouceExternalizable {
 
         TreeBasedTable<Integer, Integer, Integer> table = TreeBasedTable.create();
 
+        Splitter splitter = Splitter.on(" ").omitEmptyStrings().trimResults();
+
+        String firstWord = null;
         try (CharSourceLineReader reader = source.openLineReader()) {
             while (reader.hasNext()) {
                 String line = reader.next();
 
-                Matcher matcher = pattern.matcher(line);
-                if (matcher.find()) {
-                    String wordA = matcher.group(1);
-                    String wordB = matcher.group(2);
-                    String num = matcher.group(3);
-                    int idA = coreDictionary.indexOf(wordA);
-                    if (idA >= 0) {
-                        int idB = coreDictionary.indexOf(wordB);
-                        if (idB >= 0) {
-                            table.put(idA, idB, Ints.tryParse(num));
+                if (line.startsWith("\t")) {
+                    int firstWh = line.indexOf(" ");
+                    String numString = line.substring(1, firstWh);
+                    int num = Ints.tryParse(numString);
+                    List<String> words = splitter.splitToList(line.substring(firstWh) + 1);
+
+                    String wordA = firstWord;
+                    for (String wordB : words) {
+                        int idA = coreDictionary.indexOf(wordA);
+                        if (idA >= 0) {
+                            int idB = coreDictionary.indexOf(wordB);
+                            if (idB >= 0) {
+                                table.put(idA, idB, num);
+                            }
                         }
                     }
+
+                } else {
+                    firstWord = line;
                 }
+//
+//
+//                Matcher matcher = pattern.matcher(line);
+//                if (matcher.find()) {
+//                    String wordA = matcher.group(1);
+//                    String wordB = matcher.group(2);
+//                    String num = matcher.group(3);
+//                    int idA = coreDictionary.indexOf(wordA);
+//                    if (idA >= 0) {
+//                        int idB = coreDictionary.indexOf(wordB);
+//                        if (idB >= 0) {
+//                            table.put(idA, idB, Ints.tryParse(num));
+//                        }
+//                    }
+//                }
             }
         }
 
