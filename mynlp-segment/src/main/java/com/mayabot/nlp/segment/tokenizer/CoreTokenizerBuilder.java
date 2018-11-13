@@ -1,6 +1,5 @@
 package com.mayabot.nlp.segment.tokenizer;
 
-import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.mayabot.nlp.collection.dat.DATMatcher;
 import com.mayabot.nlp.segment.WordnetInitializer;
@@ -8,9 +7,6 @@ import com.mayabot.nlp.segment.common.BaseMynlpComponent;
 import com.mayabot.nlp.segment.dictionary.NatureAttribute;
 import com.mayabot.nlp.segment.dictionary.core.CoreDictionary;
 import com.mayabot.nlp.segment.tokenizer.bestpath.ViterbiBestPathAlgorithm;
-import com.mayabot.nlp.segment.tokenizer.recognition.org.OrganizationRecognition;
-import com.mayabot.nlp.segment.tokenizer.recognition.personname.PersonRecognition;
-import com.mayabot.nlp.segment.tokenizer.recognition.place.PlaceRecognition;
 import com.mayabot.nlp.segment.tokenizer.xprocessor.*;
 import com.mayabot.nlp.segment.wordnet.Vertex;
 import com.mayabot.nlp.segment.wordnet.Wordnet;
@@ -66,21 +62,21 @@ public class CoreTokenizerBuilder extends BaseTokenizerBuilder {
         builder.addProcessor(CombineProcessor.class);
 
         // 命名实体识别处理器
-        builder.addOptimizeProcessorClass(Lists.newArrayList(
-                PersonRecognition.class,
-                PlaceRecognition.class,
-                OrganizationRecognition.class
-        ));
+//        builder.addOptimizeProcessorClass(Lists.newArrayList(
+//                PersonRecognition.class,
+//                PlaceRecognition.class,
+//                OrganizationRecognition.class
+//        ));
 
-        if (!personRecognition) {
-            builder.disabledComponent(PersonRecognition.class);
-        }
-        if (!placeRecognition) {
-            builder.disabledComponent(PlaceRecognition.class);
-        }
-        if (!organizationRecognition) {
-            builder.disabledComponent(OrganizationRecognition.class);
-        }
+//        if (!personRecognition) {
+//            builder.disabledComponent(PersonRecognition.class);
+//        }
+//        if (!placeRecognition) {
+//            builder.disabledComponent(PlaceRecognition.class);
+//        }
+//        if (!organizationRecognition) {
+//            builder.disabledComponent(OrganizationRecognition.class);
+//        }
 
 
     }

@@ -27,7 +27,7 @@ hs_err_pid*
 /mynlp_work/
 mynlp_work/**
 **/temp/
-/data/
+data/
 /data_dir/
 **/data
 example.data

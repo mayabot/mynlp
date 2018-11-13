@@ -64,7 +64,7 @@ public class ConvertAbstractWordInitializer extends BaseMynlpComponent implement
         }
 
         if (v.natureAttribute.size() == 1) {
-            String nature = v.natureAttribute.one().getKey().name;
+            String nature = v.natureAttribute.one().getKey().name();
             switch (nature) {
                 case "nr":
                 case "nr1":
@@ -84,6 +84,7 @@ public class ConvertAbstractWordInitializer extends BaseMynlpComponent implement
                 }
                 //case nz:
                 case "nx": {
+                    //FIXME 这里的NX不是人名
                     v.setWordID(coreDictionary.NX_WORD_ID)
                             .setAbstractWordIfEmpty(CoreDictionary.TAG_PEOPLE);
                     v.natureAttribute = coreDictionary.get(coreDictionary.NX_WORD_ID);

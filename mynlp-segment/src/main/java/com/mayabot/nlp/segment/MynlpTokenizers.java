@@ -17,6 +17,11 @@ package com.mayabot.nlp.segment;
 
 import com.mayabot.nlp.segment.tokenizer.CoreTokenizerBuilder;
 
+/**
+ * 各种版本的Tokenizer的静态工厂
+ *
+ * @author jimichan
+ */
 public class MynlpTokenizers {
 
     public static MynlpTokenizer coreTokenizer() {

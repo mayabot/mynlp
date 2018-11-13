@@ -61,7 +61,8 @@ import java.util.TreeMap;
 public class DefaultCorrectionDictionary implements CorrectionDictionary {
 
     static InternalLogger logger = InternalLoggerFactory.getInstance(DefaultCorrectionDictionary.class);
-    public final static Setting<String> correctionDict = Setting.string("correction.dict", "dictionary/correction/adjust.txt");
+
+    public final static Setting<String> correctionDict = Setting.string("correction.dict", "dictionary/correction.txt");
 
 
     private DoubleArrayTrie<AdjustWord> doubleArrayTrie;
@@ -89,23 +90,24 @@ public class DefaultCorrectionDictionary implements CorrectionDictionary {
 
         for (String url : resourceUrls) {
             NlpResource resource = mynlp.loadResource(url);
+            if (resource != null) {
 
-            try (CharSourceLineReader reader = resource.openLineReader()) {
-                while (reader.hasNext()) {
-                    String line = reader.next();
-                    AdjustWord adjustWord = AdjustWord.parse(line
-                    );
-                    map.put(adjustWord.path, adjustWord);
+                try (CharSourceLineReader reader = resource.openLineReader()) {
+                    while (reader.hasNext()) {
+                        String line = reader.next();
+                        AdjustWord adjustWord = AdjustWord.parse(line
+                        );
+                        map.put(adjustWord.path, adjustWord);
+                    }
                 }
             }
+
+            if (map.isEmpty()) {
+                return;
+            }
+
+            this.doubleArrayTrie = new DoubleArrayTrieBuilder<AdjustWord>().build(map);
         }
 
-        if (map.isEmpty()) {
-            return;
-        }
-
-        this.doubleArrayTrie = new DoubleArrayTrieBuilder<AdjustWord>().build(map);
     }
-
-
 }
