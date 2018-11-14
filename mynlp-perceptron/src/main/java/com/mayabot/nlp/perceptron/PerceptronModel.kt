@@ -26,7 +26,7 @@ class Labels(val goldFeature: IntArray, val predFeature: IntArray)
 /**
  * 感知机模型
  */
-class CostumisedPerceptron(
+class Perceptron(
         private val featureSet: FeatureSet,
         private val labelCount: Int,
         var parameter: FloatArray
@@ -196,7 +196,7 @@ class CostumisedPerceptron(
     }
 
     companion object {
-        fun load(inp: InputStream): CostumisedPerceptron {
+        fun load(inp: InputStream): Perceptron {
             val input = DataInputStream(inp)
             val ltc = input.readInt()
 
@@ -210,7 +210,7 @@ class CostumisedPerceptron(
                 parameter[i] = input.readFloat()
             }
 
-            return CostumisedPerceptron(fs, ltc, parameter)
+            return Perceptron(fs, ltc, parameter)
         }
     }
 
@@ -329,7 +329,7 @@ class PerceptronTrainer(
      * 单线程训练
      */
     private fun trainOneThread(): PerceptronModel {
-        val model = CostumisedPerceptron(
+        val model = Perceptron(
                 featureSet, labelCount
         )
         //应该是权重的总和 最后要平均？
@@ -371,7 +371,7 @@ class PerceptronTrainer(
     private fun trainParallel(threadNumber: Int): PerceptronModel {
         val size = featureSet.size() * labelCount
         val modelArray = Array(threadNumber) {
-            CostumisedPerceptron(featureSet, labelCount, FloatArray(size))
+            Perceptron(featureSet, labelCount, FloatArray(size))
         }
 
         val executor = Executors.newFixedThreadPool(threadNumber)
@@ -437,7 +437,7 @@ class PerceptronTrainer(
         executor.shutdownNow()
 
 
-        return CostumisedPerceptron(
+        return Perceptron(
                 featureSet,
                 labelCount,
                 modelArray.first().parameter
