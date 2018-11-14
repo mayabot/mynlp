@@ -1,10 +1,10 @@
 package com.mayabot.nlp.perceptron
 
-import com.google.common.collect.Iterables
-import com.google.common.collect.Lists
+import com.carrotsearch.hppc.IntArrayList
 import java.io.DataInputStream
 import java.io.DataOutputStream
-import java.io.File
+import java.io.InputStream
+import java.io.OutputStream
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.Executors
 
@@ -14,7 +14,7 @@ import java.util.concurrent.Executors
  * featureMatrix中的IntArray最后多一位是留个转移特征使用
  */
 class TrainSample(
-        val featureMatrix: List<IntArray>,
+        val featureMatrix: List<IntArrayList>,
         val label: IntArray) {
     val size = featureMatrix.size
 }
@@ -32,11 +32,18 @@ class CostumisedPerceptron(
         var parameter: FloatArray
 ) : PerceptronModel {
 
+    val featureSetSize = featureSet.size()
+    val parameterSize = parameter.size
+
     constructor(featureSet: FeatureSet, labelCount: Int) :
             this(featureSet, labelCount, FloatArray(featureSet.size() * labelCount))
 
     override fun featureSet() = featureSet
 
+    /**
+     * 单线程训练时调用.
+     * 平均感知机
+     */
     fun update(data: TrainSample, total: DoubleArray, timestamp: IntArray, current: Int) {
         val length = data.size
         val guessLabel = IntArray(length)
@@ -47,6 +54,10 @@ class CostumisedPerceptron(
         }
     }
 
+    /**
+     * 多线程训练时调用.
+     * 结构化感知机
+     */
     fun update(data: TrainSample) {
         val length = data.size
         val guessLabel = IntArray(length)
@@ -61,16 +72,17 @@ class CostumisedPerceptron(
         //序号代替向量 替代数组
         val featureVector = data.featureMatrix[i]
         //正确标签
-        val goldFeature = IntArray(featureVector.size)
+        val goldFeature = IntArray(featureVector.size())
         //预测标签
-        val predFeature = IntArray(featureVector.size)
-        for (j in 0 until featureVector.size - 1) {
+        val predFeature = IntArray(featureVector.size())
+        val last = featureVector.size() - 1
+        for (j in 0 until last) {
             //特征 -> 对应标签
             goldFeature[j] = featureVector[j] * labelCount + data.label[i]
             predFeature[j] = featureVector[j] * labelCount + guessLabel[i]
         }
-        goldFeature[featureVector.size - 1] = (if (i == 0) labelCount else data.label[i - 1]) * labelCount + data.label[i]
-        predFeature[featureVector.size - 1] = (if (i == 0) labelCount else guessLabel[i - 1]) * labelCount + guessLabel[i]
+        goldFeature[last] = (if (i == 0) labelCount else data.label[i - 1]) * labelCount + data.label[i]
+        predFeature[last] = (if (i == 0) labelCount else guessLabel[i - 1]) * labelCount + guessLabel[i]
         return Labels(goldFeature, predFeature)
     }
 
@@ -91,13 +103,6 @@ class CostumisedPerceptron(
         return true
     }
 
-    private fun record(index: Int, value: Float, total: DoubleArray, timestamp: IntArray, current: Int) {
-        val passed = current - timestamp[index]
-        total[index] += passed * parameter[index].toDouble() //权重乘以该纬度经历时间
-        parameter[index] += value
-        timestamp[index] = current
-    }
-
     private fun updateOnline(goldIndex: IntArray, predictIndex: IntArray) {
         for (i in goldIndex.indices) {
             if (goldIndex[i] == predictIndex[i])
@@ -112,6 +117,15 @@ class CostumisedPerceptron(
             }
         }
     }
+
+    private fun record(index: Int, value: Float, total: DoubleArray, timestamp: IntArray, current: Int) {
+        val passed = current - timestamp[index]
+        total[index] += passed * parameter[index].toDouble() //权重乘以该纬度经历时间
+        parameter[index] += value
+        timestamp[index] = current
+    }
+
+
 
     fun average(total: DoubleArray, timestamp: IntArray, current: Int) {
         for (i in 0 until parameter.size) {
@@ -169,24 +183,21 @@ class CostumisedPerceptron(
 //        featureMap.featureMap = mapCompressed
 //    }
 
-    override fun save(file: File) {
-        val outBuffer = DataOutputStream(file.outputStream().buffered())
-        outBuffer.use {
-            val dout = it
-            dout.writeInt(labelCount)
+    override fun save(out: OutputStream) {
+        val dout = DataOutputStream(out)
+        dout.writeInt(labelCount)
 
-            featureSet.save(dout)
+        featureSet.save(dout)
 
-            dout.writeInt(parameter.size)
-            parameter.forEach { w -> dout.writeFloat(w) }
+        dout.writeInt(parameter.size)
+        parameter.forEach { w -> dout.writeFloat(w) }
 
-            dout.flush()
-        }
+        dout.flush()
     }
 
     companion object {
-        fun load(file: File): CostumisedPerceptron {
-            val input = DataInputStream(file.inputStream().buffered())
+        fun load(inp: InputStream): CostumisedPerceptron {
+            val input = DataInputStream(inp)
             val ltc = input.readInt()
 
             val fs = FeatureSet.read(input)
@@ -206,7 +217,7 @@ class CostumisedPerceptron(
     /**
      * viterbi
      */
-    override fun decode(featureSequence: List<IntArray>, guessLabel: IntArray): Double {
+    override fun decode(featureSequence: List<IntArrayList>, guessLabel: IntArray): Double {
         val bos = labelCount
         val sentenceLength = featureSequence.size
         val labelSize = labelCount
@@ -219,7 +230,7 @@ class CostumisedPerceptron(
             val _i = i and 1//偶数得0 奇数得1
             val _i_1 = 1 - _i//偶数得1 奇数得0
             val allFeature = featureSequence[i]
-            val transitionFeatureIndex = allFeature.size - 1
+            val transitionFeatureIndex = allFeature.size() - 1
             if (0 == i) {
                 allFeature[transitionFeatureIndex] = bos
                 for (j in 0 until labelCount) {
@@ -271,19 +282,18 @@ class CostumisedPerceptron(
         return maxScore
     }
 
-    private fun score(featureVector: IntArray, currentTag: Int): Double {
+    private fun score(featureVector: IntArrayList, currentTag: Int): Double {
         var score = 0.0
-        for (index in featureVector) {
-            if (index == -1) {
-                continue
-            } else if (index < -1 || index >= featureSet.size()) {
-                throw IllegalArgumentException("在打分时传入了非法的下标")
+
+        val buffer = featureVector.buffer
+        for (i in 0 until featureVector.size()) {
+            val index = buffer[i]
+            if (index < 0 || index >= featureSetSize) {
+                // do nothing
             } else {
                 val temp = index * labelCount + currentTag
-                try {
-                    score += parameter[temp]   // 其实就是特征权重的累加
-                } catch (e: ArrayIndexOutOfBoundsException) {
-
+                if (temp >= 0 && temp < parameterSize) {
+                    score += parameter[temp]
                 }
             }
         }
@@ -295,14 +305,30 @@ class CostumisedPerceptron(
 /**
  * 训练器
  */
-class SPTrainer(
+class PerceptronTrainer(
         private val featureSet: FeatureSet,
-        private val labelCount: Int) {
+        private val labelCount: Int,
+        private val trainSource: List<TrainSample>,
+        private val evaluateScript: EvaluateRunner,
+        private val maxIter: Int) {
 
     /**
-     * 训练一轮
+     * 默认多线程训练。
+     * @param threadNumber 线程数。threadNumber=1 时平均感知机
      */
-    fun train(source: Iterable<TrainSample>, maxIter: Int): PerceptronModel {
+    @JvmOverloads
+    fun train(threadNumber: Int = Runtime.getRuntime().availableProcessors() - 1): PerceptronModel {
+        return if (threadNumber == 1) {
+            trainOneThread()
+        } else {
+            trainParallel(threadNumber)
+        }
+    }
+
+    /**
+     * 单线程训练
+     */
+    private fun trainOneThread(): PerceptronModel {
         val model = CostumisedPerceptron(
                 featureSet, labelCount
         )
@@ -312,21 +338,37 @@ class SPTrainer(
         val timestamp = IntArray(model.parameter.size)
         var current = 0//第N次更新
 
-        for (iterate in 0 until maxIter) {
+        for (k in 1..maxIter) {
             val t1 = System.currentTimeMillis()
-            println("Start train ${iterate + 1}/${maxIter} .")
-            source.forEach {
+            println("\n#ITER $k/$maxIter")
+
+            System.out.print("Process 0%")
+            var per = 0
+            trainSource.forEach {
                 current++
+
                 model.update(it, total, timestamp, current)
+
+                per++
+
+                if (per % 100 == 0) {
+                    System.out.print("\rProcess ${"%.2f".format((per * 100.0 / trainSource.size))}%")
+                }
             }
+            System.out.print("\r")
             val t2 = System.currentTimeMillis()
-            println("End train ${iterate + 1}/${maxIter} . use ${t2 - t1} ms")
+
+            // 运行评估
+            evaluateScript.run(model)
+
+            println("use ${t2 - t1} ms\n")
         }
         model.average(total, timestamp, current)
         return model
     }
 
-    fun trainParallel(source: Iterable<TrainSample>, threadNumber: Int): PerceptronModel {
+
+    private fun trainParallel(threadNumber: Int): PerceptronModel {
         val size = featureSet.size() * labelCount
         val modelArray = Array(threadNumber) {
             CostumisedPerceptron(featureSet, labelCount, FloatArray(size))
@@ -334,36 +376,71 @@ class SPTrainer(
 
         val executor = Executors.newFixedThreadPool(threadNumber)
 
-        val parts = Lists.newArrayList(Iterables.partition(source, threadNumber))
+        val parts = trainSource.chunked((trainSource.size * 1.0 / threadNumber).toInt() + 1)
 
-        var countDownLatch = CountDownLatch(threadNumber)
-        for (s in 0 until threadNumber) {
-            executor.submit {
-                try {
-                    val list = parts[s]
-                    list.forEach { d ->
-                        modelArray[s].update(d)
+        for (k in 1..maxIter) {
+            println("#ITER $k/$maxIter")
+            val t1 = System.currentTimeMillis()
+
+            var countDownLatch = CountDownLatch(threadNumber)
+            for (s in 0 until threadNumber) {
+                executor.submit {
+                    try {
+                        val list = parts[s]
+                        var count = 0
+
+                        if (s == 0) {
+                            System.out.print("Process 0%")
+                        }
+
+                        list.forEach { d ->
+                            modelArray[s].update(d)
+                            count++
+
+                            if (s == 0 && count % 100 == 0) {
+                                System.out.print("\rProcess ${"%.2f".format((count * 100.0 / list.size))}%")
+                            }
+                        }
+
+                        if (s == 0) {
+                            System.out.print("\r")
+                        }
+
+                    } finally {
+                        countDownLatch.countDown()
                     }
-                } finally {
-                    countDownLatch.countDown()
                 }
             }
+            countDownLatch.await()
+
+            //把第二个开始的模型的参数全部和第一个平均
+            val first = modelArray.first().parameter
+            for (i in 1 until modelArray.size) {
+                val the = modelArray[i].parameter
+                for (j in 0 until first.size) {
+                    first[j] += the[j]
+                }
+            }
+
+            for (j in 0 until first.size) {
+                first[j] = first[j] / modelArray.size
+            }
+
+            evaluateScript.run(modelArray.first())
+
+            val t2 = System.currentTimeMillis()
+
+            println("use ${t2 - t1} ms\n")
+
         }
-        countDownLatch.await()
+
         executor.shutdownNow()
 
-        val result = FloatArray(size) { 0f }
-        for (i in 0 until size) {
-            for (j in 0 until threadNumber) {
-                result[i] = modelArray[j].parameter[i]
-            }
-            result[i] = result[i] / threadNumber
-        }
 
         return CostumisedPerceptron(
                 featureSet,
                 labelCount,
-                result
+                modelArray.first().parameter
         )
 
     }
