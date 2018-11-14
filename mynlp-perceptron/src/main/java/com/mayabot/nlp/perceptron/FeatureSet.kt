@@ -1,6 +1,7 @@
 package com.mayabot.nlp.perceptron
 
-import org.trie4j.louds.MapTailLOUDSTrie
+import org.trie4j.MapTrie
+import org.trie4j.doublearray.MapDoubleArray
 import org.trie4j.patricia.MapPatriciaTrie
 import java.io.*
 
@@ -13,7 +14,7 @@ import java.io.*
 //}
 
 class FeatureSet(
-        private val features: MapTailLOUDSTrie<Int>
+        private val features: MapTrie<Int>
 ) {
     private val size = features.size()
 
@@ -26,18 +27,9 @@ class FeatureSet(
 
     companion object {
 
-        fun load(file: File): FeatureSet {
-            return file.inputStream().buffered().use {
-                val inData = ObjectInputStream(it)
-                val x = MapTailLOUDSTrie<Int>()
-                x.readExternal(inData)
-                FeatureSet(x)
-            }
-        }
-
         fun read(input: DataInputStream): FeatureSet {
             val data = ObjectInputStream(input)
-            val x = MapTailLOUDSTrie<Int>()
+            val x = MapDoubleArray<Int>()
             x.readExternal(data)
             return FeatureSet(x)
         }
@@ -45,16 +37,18 @@ class FeatureSet(
 
     fun save(out: DataOutputStream) {
         val dataOut = ObjectOutputStream(out)
-        features.writeExternal(dataOut)
+        when (features) {
+            is Externalizable -> {
+                features.writeExternal(dataOut)
+            }
+            else -> {
+                throw RuntimeException()
+            }
+        }
+//        features.writeExternal(dataOut)
         dataOut.flush()
     }
 
-    fun save(file: File) {
-        file.outputStream().buffered().use {
-            val dataOut = ObjectOutputStream(it)
-            features.writeExternal(dataOut)
-        }
-    }
 }
 
 
@@ -70,7 +64,8 @@ class FeatureSetBuilder {
     }
 
     fun build(): FeatureSet {
-        val trie = MapTailLOUDSTrie(map)
+        //val trie = MapDoubleArray(map)
+        val trie = MapDoubleArray<Int>(map)
         println("Tree Size ${trie.size()}")
         return FeatureSet(trie)
     }

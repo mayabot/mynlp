@@ -2,7 +2,7 @@ package com.mayabot.nlp.perceptron.solution.pos
 
 import com.carrotsearch.hppc.IntArrayList
 import com.mayabot.nlp.perceptron.*
-import com.mayabot.nlp.perceptron.solution.Word
+import com.mayabot.nlp.perceptron.solution.PkuWord
 import com.mayabot.nlp.perceptron.solution.parseToFlatWords
 import com.mayabot.nlp.utils.CharNormUtils
 import com.mayabot.nlp.utils.Characters
@@ -17,10 +17,10 @@ import kotlin.collections.HashMap
 
 
 fun main(args: Array<String>) {
-//    val model = POSPerceptronTrainer().train(File("data/pku01.txt"),2)
-//
-//    model.save(File("data/pos.bin"))
-    val model = POSPerceptron.loadModel(File("data/pos.bin"))
+    val model = POSPerceptronTrainer().train(File("data/pku.txt"), 2, 8)
+
+    model.save(File("data/pos.bin"))
+//    val model = POSPerceptron.loadModel(File("data/pos.bin"))
     val words = "余额宝 的 规模 增长 一直 呈现 不断 加速 , 的 状态".split(" ")
     val result = model.decode(words)
     println(words.zip(result))
@@ -79,7 +79,7 @@ class POSPerceptron(val model: PerceptronModel, val posLabMap: Map<String, Int>)
         }
 
         fun loadModel(input: InputStream): POSPerceptron {
-            val model = CostumisedPerceptron.load(input)
+            val model = Perceptron.load(input)
             val din = DataInputStream(input)
             val lab = din.readUTF().split(",").toTypedArray()
             val labMap = HashMap<String, Int>()
@@ -231,12 +231,7 @@ class POSPerceptron(val model: PerceptronModel, val posLabMap: Map<String, Int>)
 /**
  * 词性标注感知机的训练
  */
-class POSPerceptronTrainer(
-) {
-//
-//    init {
-//        workDir.mkdirs()
-//    }
+class POSPerceptronTrainer {
 
     lateinit var featureSet: FeatureSet
 
@@ -245,7 +240,7 @@ class POSPerceptronTrainer(
      */
     lateinit var labelMap: Map<String, Int>
 
-    fun train(dir: File, maxIter: Int): POSPerceptron {
+    fun train(dir: File, maxIter: Int, threadNumber: Int): POSPerceptron {
 
         val allFiles = if (dir.isFile) listOf(dir) else dir.walkTopDown().filter { it.isFile && !it.name.startsWith(".") }.toList()
 
@@ -280,7 +275,7 @@ class POSPerceptronTrainer(
 
         val evaluateRunner = EvaluateRunner { model ->
             val random = Random(0)
-            val bili = 0.1f
+            val bili = 0.5f
             var total = 0.0
             var right = 0.0
             var targetSampleSize = (sampleList.size * bili).toInt()
@@ -315,7 +310,7 @@ class POSPerceptronTrainer(
                 evaluateRunner,
                 maxIter)
 
-        val model = trainer.train()
+        val model = trainer.train(threadNumber)
 
         return POSPerceptron(model, labelMap)
     }
@@ -325,7 +320,7 @@ class POSPerceptronTrainer(
      * 一个用空格分隔的句子.
      *
      */
-    fun sentenceToSample(line: List<Word>): TrainSample {
+    fun sentenceToSample(line: List<PkuWord>): TrainSample {
         val words = line.map { it.word }
         val poss = line.map { labelMap[it.pos]!! }.toIntArray()
 

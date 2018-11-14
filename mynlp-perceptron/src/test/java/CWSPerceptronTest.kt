@@ -1,4 +1,4 @@
-//import com.mayabot.nlp.perceptron.CostumisedPerceptron
+//import com.mayabot.nlp.perceptron.Perceptron
 //import com.mayabot.nlp.perceptron.solution.cws.CWSPerceptron
 //import java.io.File
 //
@@ -9,7 +9,7 @@
 ////
 ////    cws.save(File("data/pcws/main.model"))
 //
-//    val cws = CWSPerceptron(CostumisedPerceptron.load(File("data/pcws/main.model")))
+//    val cws = CWSPerceptron(Perceptron.load(File("data/pcws/main.model")))
 //
 //    println("---")
 //
