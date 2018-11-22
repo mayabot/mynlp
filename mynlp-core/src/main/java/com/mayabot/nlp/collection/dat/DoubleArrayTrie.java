@@ -122,6 +122,15 @@ public class DoubleArrayTrie<T> implements Trie<T> {
         return values.size();
     }
 
+    /**
+     * 树叶子节点个数
+     *
+     * @return
+     */
+    public int size() {
+        return values.size();
+    }
+
     public int getNonzeroSize() {
         int result = 0;
         for (int i = 0; i < check.length; ++i) {
@@ -411,14 +420,6 @@ public class DoubleArrayTrie<T> implements Trie<T> {
     }
 
 
-    /**
-     * 树叶子节点个数
-     *
-     * @return
-     */
-    public int size() {
-        return values.size();
-    }
 
 //    /**
 //     * 获取check数组引用，不要修改check

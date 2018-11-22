@@ -120,6 +120,7 @@ public interface DataInOutputUtils {
 
     static <T> void writeArrayList(
             ArrayList<T> list, BiConsumer<T, DataOutput> consumer, DataOutput output) throws IOException {
+
         output.writeInt(list.size());
 
         for (T val : list) {

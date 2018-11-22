@@ -1,10 +1,11 @@
 package com.mayabot.nlp.perceptron
 
 import com.carrotsearch.hppc.IntArrayList
+import com.mayabot.nlp.collection.dat.DATArrayIndex
 import java.io.DataInputStream
 import java.io.DataOutputStream
+import java.io.File
 import java.io.InputStream
-import java.io.OutputStream
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.Executors
 
@@ -27,13 +28,14 @@ class Labels(val goldFeature: IntArray, val predFeature: IntArray)
  * 感知机模型
  */
 class Perceptron(
-        private val featureSet: FeatureSet,
+        private var featureSet: FeatureSet,
         private val labelCount: Int,
         var parameter: FloatArray
 ) : PerceptronModel {
 
-    val featureSetSize = featureSet.size()
-    val parameterSize = parameter.size
+    var featureSetSize = featureSet.size()
+    var parameterSize = parameter.size
+
 
     constructor(featureSet: FeatureSet, labelCount: Int) :
             this(featureSet, labelCount, FloatArray(featureSet.size() * labelCount))
@@ -49,7 +51,7 @@ class Perceptron(
         val guessLabel = IntArray(length)
         decode(data.featureMatrix, guessLabel)
         for (i in 0 until length) {
-            val labels = featureToLabel(data,guessLabel,i)
+            val labels = featureToLabel(data, guessLabel, i)
             updateParameter(labels.goldFeature, labels.predFeature, total, timestamp, current)
         }
     }
@@ -63,7 +65,7 @@ class Perceptron(
         val guessLabel = IntArray(length)
         decode(data.featureMatrix, guessLabel)
         for (i in 0 until length) {
-            val labels = featureToLabel(data,guessLabel,i)
+            val labels = featureToLabel(data, guessLabel, i)
             updateOnline(labels.goldFeature, labels.predFeature)
         }
     }
@@ -86,8 +88,8 @@ class Perceptron(
         return Labels(goldFeature, predFeature)
     }
 
-    private fun updateParameter(goldIndex: IntArray, predictIndex: IntArray, total: DoubleArray, timestamp: IntArray, current: Int) : Boolean{
-        if (goldIndex.contentEquals( predictIndex)) return false
+    private fun updateParameter(goldIndex: IntArray, predictIndex: IntArray, total: DoubleArray, timestamp: IntArray, current: Int): Boolean {
+        if (goldIndex.contentEquals(predictIndex)) return false
         for (i in goldIndex.indices) {
             if (goldIndex[i] == predictIndex[i])
                 continue
@@ -126,7 +128,6 @@ class Perceptron(
     }
 
 
-
     fun average(total: DoubleArray, timestamp: IntArray, current: Int) {
         for (i in 0 until parameter.size) {
             val pass = current.toFloat() - timestamp[i].toFloat()
@@ -135,82 +136,130 @@ class Perceptron(
         }
     }
 
-//    fun compress(ratio: Double, vararg threshold: Double) {
-//        if (ratio <= 0 || ratio >= 1) {
-//            throw IllegalArgumentException("压缩比必须介于 0 和 1 之间")
-//        }
-//        val k = (ratio * featureSet.size()).toInt()
-//        val heap = TopMaxK<String>(k, String::class.java)
-//        val temp = if (threshold.isEmpty()) 1e-3 else threshold[0]
-//
-//        featureMap.featureMap.forEach {
-//            var score = 0f
-//
-//            for (i in 0 until labelCount) {
-//                //
-//                try {
-//                    score += Math.abs(parameter[it.value * labelCount + i])
-//                } catch (e: IndexOutOfBoundsException) {
-//                }
-//            }
-//            if (score > temp) {
-//                if (it.value >= labelCount)
-//                    heap.push(it.key, score)
-//            }
-//        }
-//
-//        var para = ArrayList<Float>()
-//        val mapCompressed = ObjectIntHashMap<String>()
-//        //先写死看看
-//        // TODO
-//        mapCompressed.put("BL=B", 0)
-//        mapCompressed.put("BL=M", 1)
-//        mapCompressed.put("BL=E", 2)
-//        mapCompressed.put("BL=S", 3)
-//        mapCompressed.put("BL=_BL_", 4)
-//
-//        for (i in 0 until 20) {
-//            para.add(parameter[i])
-//        }
-//
-//        heap.result().forEach {
-//            mapCompressed.put(it.first, mapCompressed.size() + 1)
-//            for (i in 0 until labelCount) {
-//                para.add(parameter[featureMap.featureMap[it.first] * labelCount + i])
-//            }
-//        }
-//        parameter = para.toFloatArray()
-//        featureMap.featureMap = mapCompressed
-//    }
+    /**
+     * 不裁剪特征.修改flaot的精度
+     *
+     */
+    override fun optimizeForZip() {
+        for (i in 0 until parameter.size) {
+            parameter[i] = (parameter[i] * 100000).toInt() / 100000.0f
+        }
+    }
 
-    override fun save(out: OutputStream) {
-        val dout = DataOutputStream(out)
-        dout.writeInt(labelCount)
+    /**
+     * 模型压缩
+     * @param ratio 压缩比，如0.2，那么就是去掉0.2的特征
+     */
+    override fun compress(ratio: Double, threshold: Double) {
+        if (ratio < 0 || ratio >= 1) {
+            throw IllegalArgumentException("压缩比必须介于 0 和 1 之间")
+        }
 
-        featureSet.save(dout)
+        assert(featureSet.keys != null)
 
-        dout.writeInt(parameter.size)
-        parameter.forEach { w -> dout.writeFloat(w) }
+        val k = if (ratio == 0.0) 0 else (ratio * featureSet.size()).toInt()
 
-        dout.flush()
+        val featureList = featureSet.keys!!
+
+        fun score(id: Int): Float {
+            var s = 0f
+            for (i in id * labelCount until id * labelCount + labelCount) {
+                s += Math.abs(parameter[i])
+            }
+            return s
+        }
+
+        val filterSet = HashSet<Int>()
+        for (id in 0 until featureList.size) {
+            val s = score(id)
+            if (s < threshold) {
+                filterSet.add(id)
+            }
+        }
+
+        println("threshold filterd ${filterSet.size}")
+
+        //移除了很小的之后，还没有达到缩减的值
+        if (k > 0 && filterSet.size < k) {
+            val heap = TopMinK(k - filterSet.size)
+
+            println("let's filter top min ${k - filterSet.size}")
+
+            for (id in 0 until featureList.size) {
+                val s = score(id)
+                if (s >= threshold) {
+                    heap.push(id, s)
+                }
+            }
+
+            val topMinResultIdSet = heap.result().map { it.first }.toSet()
+
+            filterSet.addAll(topMinResultIdSet)
+        }
+
+        println("remove ${filterSet.size} feature,real compress ${String.format("%.3f", filterSet.size * 1.0f / featureList.size)}")
+
+
+        val newSize = featureList.size - filterSet.size
+        val newFeatureList = ArrayList<String>(newSize)
+        val newParameter = FloatArray(labelCount * newSize)
+
+        var cc = 0
+        featureList.forEachIndexed { index, s ->
+            if (!filterSet.contains(index)) {
+                newFeatureList += s
+                System.arraycopy(parameter, index * labelCount, newParameter, cc * labelCount, labelCount)
+                cc++
+            }
+        }
+
+        parameter = newParameter
+        this.featureSet = FeatureSet(DATArrayIndex(newFeatureList), newFeatureList)
+
+        featureSetSize = this.featureSet.size()
+        parameterSize = parameter.size
+
+        optimizeForZip()
+    }
+
+    override fun save(dir: File) {
+        dir.mkdirs()
+        File(dir, "parameter.bin").outputStream().buffered().use {
+            val dout = DataOutputStream(it)
+            dout.writeInt(labelCount)
+            dout.writeInt(parameter.size)
+            parameter.forEach { w -> dout.writeFloat(w) }
+
+            dout.flush()
+        }
+
+        featureSet.save(File(dir, "feature.dat"), File(dir, "feature.txt"))
     }
 
     companion object {
-        fun load(inp: InputStream): Perceptron {
-            val input = DataInputStream(inp)
-            val ltc = input.readInt()
 
-            val fs = FeatureSet.read(input)
+        fun load(parameterBin: InputStream, featureBin: InputStream, featureDat: Boolean): Perceptron {
 
-            val pSize = input.readInt()
+            var labelCount = 0
+            var parameter = FloatArray(0)
+            parameterBin.use { x ->
+                val input = DataInputStream(x)
+                labelCount = input.readInt()
 
-            val parameter = FloatArray(pSize)
-
-            for (i in 0 until pSize) {
-                parameter[i] = input.readFloat()
+                val pSize = input.readInt()
+                parameter = FloatArray(pSize)
+                for (i in 0 until pSize) {
+                    parameter[i] = input.readFloat()
+                }
             }
 
-            return Perceptron(fs, ltc, parameter)
+            val fs = if (featureDat) {
+                FeatureSet.read(featureBin)
+            } else {
+                FeatureSet.readFromText(featureBin)
+            }
+
+            return Perceptron(fs, labelCount, parameter)
         }
     }
 
@@ -366,7 +415,6 @@ class PerceptronTrainer(
         model.average(total, timestamp, current)
         return model
     }
-
 
     private fun trainParallel(threadNumber: Int): PerceptronModel {
         val size = featureSet.size() * labelCount

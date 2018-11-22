@@ -2,7 +2,7 @@ package com.mayabot.nlp.perceptron;
 
 import com.carrotsearch.hppc.IntArrayList;
 
-import java.io.OutputStream;
+import java.io.File;
 import java.util.List;
 
 /**
@@ -30,9 +30,9 @@ public interface PerceptronModel {
     /**
      * 保存感知机模型实例
      *
-     * @param out OutputStream
+     * @param dir File
      */
-    void save(OutputStream out);
+    void save(File dir);
 
     /**
      * 特征集合
@@ -40,6 +40,10 @@ public interface PerceptronModel {
      * @return
      */
     FeatureSet featureSet();
+
+    void compress(double ratio, double threshold);
+
+    void optimizeForZip();
 
     /**
      * IntArrayList 为一个浓缩的特征向量，最后一位是留给转移特征。

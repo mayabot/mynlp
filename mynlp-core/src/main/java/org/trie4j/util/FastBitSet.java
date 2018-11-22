@@ -19,6 +19,11 @@ import java.io.Serializable;
 import java.util.Arrays;
 
 public class FastBitSet implements Serializable, BitSet {
+
+    private int size;
+    private byte[] bytes = {};
+    private static final long serialVersionUID = -3346250300546707823L;
+
     public FastBitSet() {
     }
 
@@ -98,7 +103,4 @@ public class FastBitSet implements Serializable, BitSet {
         );
     }
 
-    private int size;
-    private byte[] bytes = {};
-    private static final long serialVersionUID = -3346250300546707823L;
 }
