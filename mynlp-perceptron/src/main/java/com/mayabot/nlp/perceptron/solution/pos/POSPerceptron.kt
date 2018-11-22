@@ -6,32 +6,17 @@ import com.mayabot.nlp.perceptron.solution.PkuWord
 import com.mayabot.nlp.perceptron.solution.parseToFlatWords
 import com.mayabot.nlp.utils.CharNormUtils
 import com.mayabot.nlp.utils.Characters
-import java.io.DataInputStream
-import java.io.DataOutputStream
 import java.io.File
-import java.io.InputStream
 import java.util.*
 import java.util.function.Consumer
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
 
-fun main(args: Array<String>) {
-    val model = POSPerceptronTrainer().train(File("data/pku.txt"), 2, 8)
-
-    model.save(File("data/pos.bin"))
-//    val model = POSPerceptron.loadModel(File("data/pos.bin"))
-    val words = "余额宝 的 规模 增长 一直 呈现 不断 加速 , 的 状态".split(" ")
-    val result = model.decode(words)
-    println(words.zip(result))
-}
-
-
 /**
  * 词性分析感知机
  */
 class POSPerceptron(val model: PerceptronModel, val posLabMap: Map<String, Int>) {
-
 
     val featureSet = model.featureSet()!!
 
@@ -40,21 +25,6 @@ class POSPerceptron(val model: PerceptronModel, val posLabMap: Map<String, Int>)
             this[u] = t
         }
     }
-
-    /**
-     * 保存词性分析感知机模型到文件
-     */
-    fun save(file: File) {
-        val out = file.outputStream().buffered()
-        out.use {
-            model.save(it)
-            val outBuffer = DataOutputStream(out)
-            outBuffer.writeUTF(posTagList.joinToString(separator = ","))
-            outBuffer.flush()
-            it.flush()
-        }
-    }
-
 
     fun decode(sentence: List<String>): List<String> {
         val featureList = ArrayList<IntArrayList>(sentence.size)
@@ -67,6 +37,21 @@ class POSPerceptron(val model: PerceptronModel, val posLabMap: Map<String, Int>)
         return result.map { posTagList[it] }
     }
 
+    /**
+     * 保存词性分析感知机模型到文件
+     */
+    fun save(dir: File) {
+        dir.mkdirs()
+
+        model.save(dir)
+
+        val out = File(dir, "label.txt").bufferedWriter()
+        out.use {
+            posTagList.forEach { label ->
+                out.write(label + "\n")
+            }
+        }
+    }
 
     companion object {
 
@@ -74,21 +59,21 @@ class POSPerceptron(val model: PerceptronModel, val posLabMap: Map<String, Int>)
 
         private const val CHAR_END = "_E_"
 
-        fun loadModel(file: File): POSPerceptron {
-            return loadModel(file.inputStream().buffered())
-        }
-
-        fun loadModel(input: InputStream): POSPerceptron {
-            val model = Perceptron.load(input)
-            val din = DataInputStream(input)
-            val lab = din.readUTF().split(",").toTypedArray()
-            val labMap = HashMap<String, Int>()
-            lab.forEachIndexed { index, s ->
-                labMap[s] = index
-            }
-
-            return POSPerceptron(model, labMap)
-        }
+//        fun loadModel(file: File): POSPerceptron {
+//            return loadModel(file.inputStream().buffered())
+//        }
+//
+//        fun loadModel(input: InputStream): POSPerceptron {
+//            val model = Perceptron.load(input)
+//            val din = DataInputStream(input)
+//            val lab = din.readUTF().split(",").toTypedArray()
+//            val labMap = HashMap<String, Int>()
+//            lab.forEachIndexed { index, s ->
+//                labMap[s] = index
+//            }
+//
+//            return POSPerceptron(model, labMap)
+//        }
 
         private inline fun addFeature(features: FeatureSet, vector: IntArrayList, feature: String) {
             val id = features.featureId(feature)
@@ -190,9 +175,7 @@ class POSPerceptron(val model: PerceptronModel, val posLabMap: Map<String, Int>)
 
             callBack.accept("${preWord}☺")
             //让同一个特征出现两次。我认为这个特征比较重要
-            val x = curWord
-            callBack.accept(x)
-            callBack.accept(x)
+            callBack.accept(curWord)
             callBack.accept("${nextWord}♂")
 
             val length = curWord.length
@@ -266,6 +249,9 @@ class POSPerceptronTrainer {
             file.useLines { lines ->
                 lines.forEach { line ->
                     val words = line.parseToFlatWords().filter { it.word.isNotEmpty() && it.pos != "" }
+                    words.forEach {
+                        it.word = CharNormUtils.convert(it.word)
+                    }
                     sampleList += sentenceToSample(words)
                 }
             }
@@ -273,7 +259,13 @@ class POSPerceptronTrainer {
 
         println("Start Train ... ")
 
+        var count = 0
         val evaluateRunner = EvaluateRunner { model ->
+            count++
+            //每隔5轮验证一次
+            if (count % 5 != 0) {
+                return@EvaluateRunner
+            }
             val random = Random(0)
             val bili = 0.5f
             var total = 0.0
@@ -340,7 +332,7 @@ class POSPerceptronTrainer {
         println("开始构建POS FeatureSet")
         val t1 = System.currentTimeMillis()
 
-        val builder = FeatureSetBuilder()
+        val builder = DATFeatureSetBuilder()
         val fit = Consumer<String> { f ->
             builder.put(f)
         }
