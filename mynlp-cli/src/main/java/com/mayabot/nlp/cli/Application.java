@@ -66,12 +66,13 @@ public class Application {
         sb.append("输入 help <CMD> 查看相关命令的使用帮助");
 
         System.out.println(sb.toString());
-
     }
 
     static Map<String, CmdRunner> commands = new HashMap<String, CmdRunner>() {
         {
             put("segment", new SegmentCmdRunner());
+            put("pos-train", new POSPerceptronTrain());
+            put("ner-train", new NerPerceptronTrain());
         }
     };
 

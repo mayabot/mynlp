@@ -1,6 +1,8 @@
-package com.mayabot.nlp.perceptron.solution
+package com.mayabot.nlp.segment.perceptron
+
 
 import com.google.common.base.Splitter
+import java.io.File
 
 
 /**
@@ -28,6 +30,11 @@ class PkuWord(var word: String, var pos: String) {
 
 fun String.parseToFlatWords(): List<PkuWord> {
     return this.parseToWords().flatMap { if (it.hasSub()) it.subWord else listOf(it) }
+}
+
+
+fun File.allFiles(): List<File> {
+    return if (this.isFile) listOf(this) else this.walkTopDown().filter { it.isFile && !it.name.startsWith(".") }.toList()
 }
 
 //陈/nr 汝烨/nr 压题/vn 照片/n ：/w [绵阳/ns 高新技术/n 产业/n 开发区/n]nt 内/f [长虹/nz 家电城/n]ns 一角/n 。/w

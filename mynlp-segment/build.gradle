@@ -13,16 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+plugins {
+    id "org.jetbrains.kotlin.jvm" version "1.3.10"
+}
 
 description = '分词'
 
+
+sourceSets {
+    main.kotlin.srcDirs = main.java.srcDirs
+    test.kotlin.srcDirs = test.java.srcDirs
+}
+
 dependencies {
     compile project(':mynlp-core')
+    compile project(':mynlp-perceptron')
+
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
 
     compile 'com.mayabot.mynlp:mynlp-resource-coredict:1.0.0'
-    //compile 'com.mayabot.mynlp:mynlp-resource-coredict-cncorpus:1.0.0'
     compile 'com.mayabot.mynlp:mynlp-resource-custom:1.0.0'
     compile 'com.mayabot.mynlp:mynlp-resource-stopword:1.0.0'
+
+    //mynlp-perceptron-resouces
+    compile 'com.mayabot.mynlp:mynlp-resource-pos:1.0.0'
+    compile 'com.mayabot.mynlp:mynlp-resource-ner:1.0.0'
 
     compileOnly group: 'org.fusesource.jansi', name: 'jansi', version: '1.16'
 

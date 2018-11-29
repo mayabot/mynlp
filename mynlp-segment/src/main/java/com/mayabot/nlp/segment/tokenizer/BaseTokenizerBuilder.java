@@ -32,7 +32,7 @@ public abstract class BaseTokenizerBuilder extends WordnetTokenizerBuilder {
     /**
      * 是否开启词性分析
      */
-    private boolean pos = false;
+    private boolean pos = true;
 
     /**
      * 是否开启分词纠错
