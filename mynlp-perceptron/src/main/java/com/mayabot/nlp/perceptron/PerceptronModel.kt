@@ -26,9 +26,9 @@ class Labels(val goldFeature: IntArray, val predFeature: IntArray)
 /**
  * 感知机模型
  */
-class PerceptronModel(
+open class PerceptronModel(
         private var featureSet: FeatureSet,
-        private val labelCount: Int,
+        protected val labelCount: Int,
         var parameter: FloatArray
 ) : Perceptron {
 
@@ -230,6 +230,39 @@ class PerceptronModel(
 
         fun load(parameterBin: InputStream, featureBin: InputStream, featureDat: Boolean): PerceptronModel {
 
+            return if (featureDat) {
+                load(parameterBin, featureBin, null)
+            } else {
+                load(parameterBin, null, featureBin)
+            }
+        }
+
+        fun load(parameterFile: File, featureBin: File?, featureText: File?): PerceptronModel {
+            return load(parameterFile.inputStream().buffered(),
+                    featureBin?.inputStream()?.buffered(),
+                    featureText?.inputStream()?.buffered()
+            )
+        }
+
+        fun load(dir: File): PerceptronModel {
+            fun loadIfExit(fname: String): File? {
+                val f = File(dir, fname)
+                return if (f.exists()) {
+                    f
+                } else {
+                    null
+                }
+            }
+
+            return load(
+                    File(dir, "parameter.bin"),
+                    loadIfExit("feature.dat"),
+                    loadIfExit("feature.txt")
+            )
+        }
+
+        fun load(parameterBin: InputStream, featureBin: InputStream?, featureText: InputStream?): PerceptronModel {
+
             var labelCount = 0
             var parameter = FloatArray(0)
             parameterBin.use { x ->
@@ -243,10 +276,18 @@ class PerceptronModel(
                 }
             }
 
-            val fs = if (featureDat) {
-                FeatureSet.read(featureBin)
+            val fs = if (featureBin != null) {
+                if (featureText != null) {
+                    FeatureSet.read(featureBin, featureText)
+                } else {
+                    FeatureSet.read(featureBin)
+                }
             } else {
-                FeatureSet.readFromText(featureBin)
+                if (featureText != null) {
+                    FeatureSet.read(featureText)
+                } else {
+                    throw RuntimeException()
+                }
             }
 
             return PerceptronModel(fs, labelCount, parameter)
@@ -284,6 +325,7 @@ class PerceptronModel(
 
         for (i in 1 until sentenceLength) {
             val allFeature = featureSequence[i]
+            val allFeatureBuffer = allFeature.buffer
             val transitionFeatureIndex = allFeature.size() - 1
             val base = i * labelSize
             for (curLabel in 0 until labelCount) {
@@ -292,7 +334,7 @@ class PerceptronModel(
 
                 for (preLabel in 0 until labelCount) {
 
-                    allFeature[transitionFeatureIndex] = preLabel
+                    allFeatureBuffer[transitionFeatureIndex] = preLabel
                     val score = score(allFeature, curLabel)
 
                     val curScore = scoreMLast[preLabel] + score
@@ -322,7 +364,6 @@ class PerceptronModel(
             }
         }
 
-        //引入K变量避免乘法
         var k = (sentenceLength - 1) * labelCount
         for (i in sentenceLength - 1 downTo 0) {
             guessLabel[i] = maxIndex
@@ -332,99 +373,6 @@ class PerceptronModel(
 
         return maxScore
     }
-
-// /**
-//     * viterbi
-//     */
-//    override fun decode(featureSequence: List<IntArrayList>, guessLabel: IntArray): Double {
-//        val bos = labelCount
-//        val sentenceLength = featureSequence.size
-//        val labelSize = labelCount
-//
-//        // val preMatrix = Array(sentenceLength) { IntArray(labelSize) }
-//        val preMatrix = IntArray(sentenceLength * labelSize)
-//
-//
-//        val scoreMatrix = Array(2) { DoubleArray(labelSize) }
-////        var scoreM0 = DoubleArray(labelSize)
-////        var scoreM1 = DoubleArray(labelSize)
-//
-//        //first
-//        val firstFeature = featureSequence[0]
-//        firstFeature[firstFeature.size() -1] = bos
-//
-//        for(j in 0 until labelCount){
-//            preMatrix[j] = j
-//            val score = score(firstFeature, j)
-//
-////            scoreM0[j] = score
-//            scoreMatrix[0][j] = score
-//        }
-//
-//
-//        for (i in 1 until sentenceLength) {
-//            val allFeature = featureSequence[i]
-//            val transitionFeatureIndex = allFeature.size() - 1
-//            val _i = i and 1//偶数得0 奇数得1
-//            val _i_1 = 1 - _i//偶数得1 奇数得0
-//            val base = i*labelSize
-//            for (curLabel in 0 until labelCount) {
-//
-//                var maxScore = MaxScore
-//
-//                for (preLabel in 0 until labelCount) {
-//
-//                    allFeature[transitionFeatureIndex] = preLabel
-//                    val score = score(allFeature, curLabel)
-//
-////                    val curScore = scoreM0[preLabel] + score
-//                    val curScore = scoreMatrix[_i_1][preLabel] + score
-//
-//
-//                    if (maxScore < curScore) {
-//                        maxScore = curScore
-//                        preMatrix[base+curLabel] = preLabel
-////                        scoreM1[curLabel] = maxScore
-//                        scoreMatrix[_i][curLabel] =  maxScore
-//                    }
-//                }
-//            }
-//
-////            val temp = scoreM0
-////            scoreM0 = scoreM1
-////            scoreM1 = temp
-//        }
-//
-////        var maxIndex = 0
-////        var maxScore = scoreM0[0]
-////
-////        for (index in 1 until labelCount) {
-////            val x = scoreM0[index]
-////            if (maxScore < x) {
-////                maxIndex = index
-////                maxScore = x
-////            }
-////        }
-//
-//        val sele = scoreMatrix[(sentenceLength - 1) and 1] //偶数得0 奇数得1
-//        var maxIndex = 0
-//        var maxScore = sele[0]
-//
-//        for (index in 1 until labelCount) {
-//            if (maxScore < sele[index]) {
-//                maxIndex = index
-//                maxScore = sele[index]
-//            }
-//        }
-//
-//        for (i in sentenceLength - 1 downTo 0) {
-//            guessLabel[i] = maxIndex
-//            maxIndex = preMatrix[i*labelSize+maxIndex]
-//        }
-//
-//        return maxScore
-//    }
-//
 
 
     private fun score(featureVector: IntArrayList, currentTag: Int): Double {
@@ -448,12 +396,24 @@ class PerceptronModel(
 /**
  * 通用感知机训练器
  */
-class PerceptronTrainer(
+open class PerceptronTrainer(
         private val featureSet: FeatureSet,
         private val labelCount: Int,
         private val trainSource: List<TrainSample>,
         private val evaluateScript: EvaluateRunner,
         private val maxIter: Int) {
+
+    open fun buildPerceptronModel(featureSet: FeatureSet, labelCount: Int): PerceptronModel {
+        return PerceptronModel(
+                featureSet, labelCount
+        )
+    }
+
+    open fun buildPerceptronModel(featureSet: FeatureSet, labelCount: Int, parameter: FloatArray): PerceptronModel {
+        return PerceptronModel(
+                featureSet, labelCount, parameter
+        )
+    }
 
     /**
      * 默认多线程训练。
@@ -472,7 +432,7 @@ class PerceptronTrainer(
      * 单线程训练
      */
     private fun trainOneThread(): Perceptron {
-        val model = PerceptronModel(
+        val model = buildPerceptronModel(
                 featureSet, labelCount
         )
         //应该是权重的总和 最后要平均？
@@ -511,9 +471,9 @@ class PerceptronTrainer(
     }
 
     private fun trainParallel(threadNumber: Int): Perceptron {
-        val size = featureSet.size() * labelCount
+        // val size = featureSet.size() * labelCount
         val modelArray = Array(threadNumber) {
-            PerceptronModel(featureSet, labelCount, FloatArray(size))
+            buildPerceptronModel(featureSet, labelCount)
         }
 
         val executor = Executors.newFixedThreadPool(threadNumber)
@@ -579,7 +539,7 @@ class PerceptronTrainer(
         executor.shutdownNow()
 
 
-        return PerceptronModel(
+        return buildPerceptronModel(
                 featureSet,
                 labelCount,
                 modelArray.first().parameter
@@ -589,6 +549,189 @@ class PerceptronTrainer(
 }
 
 
+class PerceptronModelForPos(featureSet: FeatureSet, labelCount: Int, parameter: FloatArray)
+    : PerceptronModel(featureSet, labelCount, parameter) {
+
+    companion object {
+
+        fun load(parameterBin: InputStream, featureBin: InputStream, featureDat: Boolean): PerceptronModelForPos {
+
+            return if (featureDat) {
+                load(parameterBin, featureBin, null)
+            } else {
+                load(parameterBin, null, featureBin)
+            }
+        }
+
+        fun load(parameterFile: File, featureBin: File?, featureText: File?): PerceptronModelForPos {
+            return load(parameterFile.inputStream().buffered(),
+                    featureBin?.inputStream()?.buffered(),
+                    featureText?.inputStream()?.buffered()
+            )
+        }
+
+        fun load(dir: File): PerceptronModel {
+            fun loadIfExit(fname: String): File? {
+                val f = File(dir, fname)
+                return if (f.exists()) {
+                    f
+                } else {
+                    null
+                }
+            }
+
+            return load(
+                    File(dir, "parameter.bin"),
+                    loadIfExit("feature.dat"),
+                    loadIfExit("feature.txt")
+            )
+        }
+
+        fun load(parameterBin: InputStream, featureBin: InputStream?, featureText: InputStream?): PerceptronModelForPos {
+
+            var labelCount = 0
+            var parameter = FloatArray(0)
+            parameterBin.use { x ->
+                val input = DataInputStream(x)
+                labelCount = input.readInt()
+
+                val pSize = input.readInt()
+                parameter = FloatArray(pSize)
+                for (i in 0 until pSize) {
+                    parameter[i] = input.readFloat()
+                }
+            }
+
+            val fs = if (featureBin != null) {
+                if (featureText != null) {
+                    FeatureSet.read(featureBin, featureText)
+                } else {
+                    FeatureSet.read(featureBin)
+                }
+            } else {
+                if (featureText != null) {
+                    FeatureSet.read(featureText)
+                } else {
+                    throw RuntimeException()
+                }
+            }
+
+            return PerceptronModelForPos(fs, labelCount, parameter)
+        }
+    }
+
+    constructor(featureSet: FeatureSet, labelCount: Int) :
+            this(featureSet, labelCount, FloatArray(featureSet.size() * labelCount))
+
+    override fun decode(featureSequence: List<IntArrayList>, guessLabel: IntArray): Double {
+        val bos = labelCount
+        val sentenceLength = featureSequence.size
+        val labelSize = labelCount
+
+        val preMatrix = IntArray(sentenceLength * labelSize)
+
+//        val scoreMatrix = Array(2) { DoubleArray(labelSize) }
+        //上一回的状态
+        var scoreMLast = DoubleArray(labelSize)
+        var scoreMNow = DoubleArray(labelSize)
+
+        //first
+        val firstFeature = featureSequence[0]
+        firstFeature[firstFeature.size() - 1] = bos
+
+        for (j in 0 until labelCount) {
+            preMatrix[j] = j
+            val score = score(firstFeature, j)
+            scoreMLast[j] = score
+        }
+
+
+        for (i in 1 until sentenceLength) {
+            val allFeature = featureSequence[i]
+            val transitionFeatureIndex = allFeature.size() - 1
+            val base = i * labelSize
+
+
+            for (curLabel in 0 until labelCount) {
+
+                var maxScore = MaxScore
+
+                for (preLabel in 0 until labelCount) {
+
+                    allFeature[transitionFeatureIndex] = preLabel
+
+                    val score = score(allFeature, curLabel)
+
+                    val curScore = scoreMLast[preLabel] + score
+
+                    if (maxScore < curScore) {
+                        maxScore = curScore
+                        preMatrix[base + curLabel] = preLabel
+                        scoreMNow[curLabel] = maxScore
+                    }
+                }
+            }
+
+            val temp = scoreMLast
+            scoreMLast = scoreMNow
+            scoreMNow = temp
+        }
+
+        //此时scoreM0 肯定是最后一个
+        var maxIndex = 0
+        var maxScore = scoreMLast[0]
+
+        for (index in 1 until labelCount) {
+            val x = scoreMLast[index]
+            if (maxScore < x) {
+                maxIndex = index
+                maxScore = x
+            }
+        }
+
+        var k = (sentenceLength - 1) * labelCount
+        for (i in sentenceLength - 1 downTo 0) {
+            guessLabel[i] = maxIndex
+            maxIndex = preMatrix[k + maxIndex]
+            k -= labelCount
+        }
+
+        return maxScore
+    }
+
+
+    private fun score(featureVector: IntArrayList, currentTag: Int): Double {
+        var score = 0.0
+
+        val buffer = featureVector.buffer
+        for (i in 0 until featureVector.size()) {
+            val index = buffer[i]
+            if (index < 0 || index >= featureSetSize) {
+                // do nothing
+            } else {
+                score += parameter[index * labelCount + currentTag]
+            }
+        }
+        return score
+    }
+}
+
+
+class PerceptronTrainerForPos(featureSet: FeatureSet, labelCount: Int, trainSource: List<TrainSample>, evaluateScript: EvaluateRunner, maxIter: Int)
+    : PerceptronTrainer(featureSet, labelCount, trainSource, evaluateScript, maxIter) {
+    override fun buildPerceptronModel(featureSet: FeatureSet, labelCount: Int): PerceptronModel {
+        return PerceptronModelForPos(
+                featureSet, labelCount
+        )
+    }
+
+    override fun buildPerceptronModel(featureSet: FeatureSet, labelCount: Int, parameter: FloatArray): PerceptronModel {
+        return PerceptronModelForPos(
+                featureSet, labelCount, parameter
+        )
+    }
+
+}
 /**
  * Top K 最小值。
  */

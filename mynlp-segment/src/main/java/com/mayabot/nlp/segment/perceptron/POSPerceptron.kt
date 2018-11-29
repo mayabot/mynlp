@@ -18,7 +18,7 @@ import kotlin.collections.ArrayList
 /**
  * 词性分析感知机
  */
-class POSPerceptron(val model: Perceptron, val labelList: Array<String>) {
+class POSPerceptron(val model: PerceptronModelForPos, val labelList: Array<String>) {
 
     private val featureSet = model.featureSet()
 
@@ -102,7 +102,7 @@ class POSPerceptron(val model: Perceptron, val labelList: Array<String>) {
          */
         @JvmStatic
         fun load(parameterBin: InputStream, featureBin: InputStream, labelText: InputStream): POSPerceptron {
-            val model = PerceptronModel.load(parameterBin, featureBin, true)
+            val model = PerceptronModelForPos.load(parameterBin, featureBin, true)
             val labelList = labelText.use { it.bufferedReader().readLines() }
             return POSPerceptron(model, labelList.toTypedArray())
         }
@@ -293,7 +293,7 @@ class POSPerceptronTrainer {
 
         println("Start Train ... ")
 
-        val trainer = PerceptronTrainer(
+        val trainer = PerceptronTrainerForPos(
                 featureSet,
                 labelMap.size,
                 sampleList,
@@ -306,7 +306,7 @@ class POSPerceptronTrainer {
 
         POSEvaluateRunner(0, sampleList).run(model)
 
-        return POSPerceptron(model, labelMap.keys.sorted().toTypedArray())
+        return POSPerceptron(model as PerceptronModelForPos, labelMap.keys.sorted().toTypedArray())
     }
 
 

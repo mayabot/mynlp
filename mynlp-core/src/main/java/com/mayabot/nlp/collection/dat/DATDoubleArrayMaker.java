@@ -1,5 +1,8 @@
 package com.mayabot.nlp.collection.dat;
 
+import com.mayabot.nlp.logging.InternalLogger;
+import com.mayabot.nlp.logging.InternalLoggerFactory;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.BitSet;
@@ -9,6 +12,8 @@ import java.util.List;
  * 给定一个已经排序的StringList，构造DAT所需要的双数组
  */
 public class DATDoubleArrayMaker {
+
+    static InternalLogger logger = InternalLoggerFactory.getInstance(DATDoubleArrayMaker.class);
 
     static final int default_capacity = 1024 * 1024; // 4M
     static final int leastAddSize = 1024 * 1024; // 4M
@@ -35,7 +40,7 @@ public class DATDoubleArrayMaker {
     private int nextCheckPos;
     private int error_;
 
-    private boolean verbose = true;
+//    private boolean verbose = true;
 
 
     public DATDoubleArrayMaker(List<String> key) {
@@ -82,13 +87,14 @@ public class DATDoubleArrayMaker {
         List<Node> siblings = new ArrayList<Node>();
         fetch(root_node, siblings);
         long t1 = System.currentTimeMillis();
-        if (verbose) System.out.print("DAT build Process 0%");
+        //if (verbose) System.out.print("DAT build Process 0%");
         insert(siblings);
         long t2 = System.currentTimeMillis();
-        if (verbose) {
-            System.out.print("\rDAT build Process 100% use time " + (t2 - t1) + "ms");
-            System.out.println();
-        }
+//        if (verbose) {
+//            System.out.print("\rDAT build Process 100% use time " + (t2 - t1) + "ms");
+//            System.out.println();
+//        }
+        logger.info("DAT double array build use time " + (t2 - t1) + " ms");
         used = null;
         data = null;
 
@@ -188,10 +194,8 @@ public class DATDoubleArrayMaker {
                 base[begin + theSib.code] = (-theSib.left - 1);
                 progress++;
 
-                if (verbose) {
-                    if (progress % 4000 == 0) {
-                        System.out.print("\rDouble Array Process " + String.format("%.2f", progress * 100.0f / dataSize) + "%");
-                    }
+                if (progress > 400000 && progress % 200000 == 0) {
+                    logger.info("Dat building " + String.format("%.2f", progress * 100.0f / dataSize) + "%");
                 }
             } else {
                 int h = insert(new_siblings); // dfs
