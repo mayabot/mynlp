@@ -1,13 +1,13 @@
-package com.mayabot.nlp.perceptron.solution.cws
+package com.mayabot.nlp.segment.perceptron
 
 import com.carrotsearch.hppc.IntArrayList
 import com.google.common.base.Splitter
 import com.mayabot.nlp.perceptron.*
-import com.mayabot.nlp.perceptron.solution.cws.CWSPerceptron.Companion.B
-import com.mayabot.nlp.perceptron.solution.cws.CWSPerceptron.Companion.E
-import com.mayabot.nlp.perceptron.solution.cws.CWSPerceptron.Companion.M
-import com.mayabot.nlp.perceptron.solution.cws.CWSPerceptron.Companion.S
-import com.mayabot.nlp.perceptron.solution.cws.CWSPerceptron.Companion.extractFeature
+import com.mayabot.nlp.segment.perceptron.CWSPerceptron.Companion.B
+import com.mayabot.nlp.segment.perceptron.CWSPerceptron.Companion.E
+import com.mayabot.nlp.segment.perceptron.CWSPerceptron.Companion.M
+import com.mayabot.nlp.segment.perceptron.CWSPerceptron.Companion.S
+import com.mayabot.nlp.segment.perceptron.CWSPerceptron.Companion.extractFeature
 import com.mayabot.nlp.utils.CharNormUtils
 import java.io.File
 import java.io.InputStream
@@ -16,7 +16,7 @@ import java.util.function.Consumer
 /**
  * 用B M E S进行分词的感知机模型
  */
-class CWSPerceptron(val model: PerceptronModel) {
+class CWSPerceptron(val model: Perceptron) {
 
     /**
      * 保存分词模型
@@ -76,11 +76,13 @@ class CWSPerceptron(val model: PerceptronModel) {
 
         private const val CHAR_END = '\u0002'
 
+        @JvmStatic
         fun load(parameterBin: InputStream, featureBin: InputStream): CWSPerceptron {
-            val model = Perceptron.load(parameterBin, featureBin, true)
+            val model = PerceptronModel.load(parameterBin, featureBin, true)
             return CWSPerceptron(model)
         }
 
+        @JvmStatic
         fun load(dir: File): CWSPerceptron {
             return load(File(dir, "parameter.bin").inputStream().buffered(),
                     File(dir, "feature.dat").inputStream().buffered())
@@ -95,8 +97,8 @@ class CWSPerceptron(val model: PerceptronModel) {
             val nextChar = if (position < size - 1) sentence[position + 1] else CHAR_END
             val next2Char = if (position < size - 2) sentence[position + 2] else CHAR_END
 
-            addFeature(features, vector, "${pre2Char}1")
-            addFeature(features, vector, "$curChar")
+            addFeature(features, vector, "${preChar}1")
+            addFeature(features, vector, "${curChar}2")
             addFeature(features, vector, "${nextChar}3")
 
             addFeature(features, vector, pre2Char + "/" + preChar + "4")
@@ -128,8 +130,8 @@ class CWSPerceptron(val model: PerceptronModel) {
             val nextChar = if (position < size - 1) sentence[position + 1] else CHAR_END
             val next2Char = if (position < size - 2) sentence[position + 2] else CHAR_END
 
-            callBack.accept(pre2Char + "1")
-            callBack.accept(curChar + "")
+            callBack.accept(preChar + "1")
+            callBack.accept(curChar + "2")
             callBack.accept(nextChar + "3")
 
             callBack.accept(pre2Char + "/" + preChar + "4")
@@ -264,7 +266,7 @@ class CWSPerceptronTrainer(val workDir: File = File("data/pcws")) {
     fun prepareFeatureSet(files: List<File>) {
         println("开始构建FeatureSet")
         val t1 = System.currentTimeMillis()
-        val builder = DATFeatureSetBuilder()
+        val builder = DATFeatureSetBuilder(4)
         val fit = Consumer<String> { f ->
             builder.put(f)
         }

@@ -84,6 +84,18 @@ public final class WordTerm implements Serializable {
         return nature;
     }
 
+    public String getNatureString() {
+        if (nature == null) {
+            return "";
+        } else {
+            return nature.name();
+        }
+    }
+
+    public void setNature(Nature nature) {
+        this.nature = nature;
+    }
+
     public int getOffset() {
         return offset;
     }

@@ -244,6 +244,10 @@ public class Vertex {
         return result;
     }
 
+    public void setGuessNature(Nature nature) {
+        guessNature = nature;
+    }
+
     public void setNatureAttribute(NatureAttribute attribute) {
         this.natureAttribute = attribute;
     }

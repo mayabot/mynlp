@@ -43,6 +43,7 @@ import java.io.DataOutput;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.TreeSet;
 
 import static com.mayabot.nlp.utils.DataInOutputUtils.readIntArray;
@@ -58,17 +59,25 @@ public class DATArrayIndex {
 
     public static void main(String[] args) {
         TreeSet<String> tr = Sets.newTreeSet();
-        tr.add("a");
-        tr.add("b");
+
+        Random random = new Random(0);
+
+
+        for (int i = 0; i < 1000; i++) {
+            String s = random.nextInt() + "";
+            tr.add(s);
+        }
 
         ArrayList<String> list = Lists.newArrayList(tr);
 
 
         DATArrayIndex index = new DATArrayIndex(list);
 
-        System.out.println(index.indexOf("a"));
-        System.out.println(index.indexOf("b"));
-        System.out.println(index.indexOf("c"));
+        random = new Random(0);
+        for (int i = 0; i < 1000; i++) {
+            String s = random.nextInt() + "";
+            System.out.println(index.indexOf(s));
+        }
     }
 
     public int[] check;

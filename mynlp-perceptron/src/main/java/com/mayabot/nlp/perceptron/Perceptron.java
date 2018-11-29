@@ -22,11 +22,9 @@ import java.util.List;
  * //// 最后一列留给转移特征
  * result.add(0)
  *
- *
- *
  * @author jimichan
  */
-public interface PerceptronModel {
+public interface Perceptron {
     /**
      * 保存感知机模型实例
      *
@@ -42,8 +40,6 @@ public interface PerceptronModel {
     FeatureSet featureSet();
 
     void compress(double ratio, double threshold);
-
-    void optimizeForZip();
 
     /**
      * IntArrayList 为一个浓缩的特征向量，最后一位是留给转移特征。
@@ -61,6 +57,10 @@ public interface PerceptronModel {
      */
     default int[] decode(List<IntArrayList> featureSequence) {
         int[] result = new int[featureSequence.size()];
+
+        if (result.length == 0) {
+            return result;
+        }
 
         decode(featureSequence, result);
 

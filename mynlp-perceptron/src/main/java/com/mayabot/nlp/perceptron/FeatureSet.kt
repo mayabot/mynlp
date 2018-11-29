@@ -7,7 +7,8 @@ import java.io.File
 import java.io.InputStream
 
 /**
- * 特征集。主要功能是查询feature对应的Id
+ * 特征集。主要功能是查询feature对应的Id.
+ *
  */
 class FeatureSet(
         private val dat: DATArrayIndex,
@@ -50,6 +51,7 @@ class FeatureSet(
         /**
          * 只读取DAT文件
          */
+        @JvmStatic
         fun read(datInput: InputStream): FeatureSet {
             return datInput.use {
                 val datArray = DATArrayIndex(DataInputStream(it))
@@ -57,6 +59,7 @@ class FeatureSet(
             }
         }
 
+        @JvmStatic
         fun read(datInput: InputStream, textInput: InputStream): FeatureSet {
             return datInput.use {
                 val datArray = DATArrayIndex(DataInputStream(it))
@@ -67,6 +70,7 @@ class FeatureSet(
             }
         }
 
+        @JvmStatic
         fun readFromText(textInput: InputStream): FeatureSet {
             return textInput.use {
                 val reader = textInput.bufferedReader()
@@ -83,19 +87,25 @@ class FeatureSet(
 /**
  * DAT的特征集合构建器
  */
-class DATFeatureSetBuilder {
+class DATFeatureSetBuilder(labelCount: Int) {
 
     val keys = HashSet<String>()
 
+
+    init {
+        // Hanlp需要从 0=< <= labelCount 上站位 占用labelCount+1个位置
+        // 我们要保证这个排在前面
+        for (i in 0..labelCount) {
+            keys.add("\u0000\u0001BL=$i")
+        }
+
+    }
     fun put(feature: String) {
         keys.add(feature)
     }
 
     fun build(): FeatureSet {
-        val t1 = System.currentTimeMillis()
         val list = keys.sorted()
-        val t2 = System.currentTimeMillis()
-        println("DATFeatureSetBuilder build list use ${t2 - t1}ms")
         return FeatureSet(DATArrayIndex(list), list)
     }
 }

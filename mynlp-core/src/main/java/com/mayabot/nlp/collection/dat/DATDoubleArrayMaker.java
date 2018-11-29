@@ -81,12 +81,13 @@ public class DATDoubleArrayMaker {
 
         List<Node> siblings = new ArrayList<Node>();
         fetch(root_node, siblings);
-
-        if (verbose) System.out.print("Process 0%");
+        long t1 = System.currentTimeMillis();
+        if (verbose) System.out.print("DAT build Process 0%");
         insert(siblings);
+        long t2 = System.currentTimeMillis();
         if (verbose) {
-            System.out.print("Process 100%");
-            System.out.print("\r\n");
+            System.out.print("\rDAT build Process 100% use time " + (t2 - t1) + "ms");
+            System.out.println();
         }
         used = null;
         data = null;
@@ -96,8 +97,9 @@ public class DATDoubleArrayMaker {
                 System.out.println(i);
             }
         }
-        base = Arrays.copyOfRange(base, 0, size + 1024 * 512);
-        check = Arrays.copyOfRange(check, 0, size + 1024 * 512);
+
+        base = Arrays.copyOfRange(base, 0, size + 65536);
+        check = Arrays.copyOfRange(check, 0, size + 65536);
     }
 
     /**
