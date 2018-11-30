@@ -260,7 +260,7 @@ object POSPerceptronFeature {
         return vector
     }
 
-    private inline fun addFeature(features: FeatureSet, vector: IntArrayList, feature: String) {
+    private fun addFeature(features: FeatureSet, vector: IntArrayList, feature: String) {
         val id = features.featureId(feature)
         if (id >= 0) {
             vector.add(id)

@@ -24,7 +24,7 @@ object CWSPerceptronTest {
                 50, 2)
 
         println("compress")
-        cws.compress(0.2, 1e-3)
+//        cws.compress(0.2, 1e-3)
 
         println("After compress ...")
         CWSEvaluate.evaluate(evaluateFile.readLines(), cws)
