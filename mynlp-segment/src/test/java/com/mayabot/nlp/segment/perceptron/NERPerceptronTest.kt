@@ -11,7 +11,7 @@ object NERPerceptronTest {
     @JvmStatic
     fun main(args: Array<String>) {
         train()
-        test()
+//        test()
     }
 
     fun train() {
@@ -22,10 +22,10 @@ object NERPerceptronTest {
 
         val model = trainer.train(
                 trainFile, evaluateFile,
-                25, 1)
+                5, 2)
 
 
-        model.save(File("data/ner/model"))
+        // model.save(File("data/ner/model"))
     }
 
     fun test() {

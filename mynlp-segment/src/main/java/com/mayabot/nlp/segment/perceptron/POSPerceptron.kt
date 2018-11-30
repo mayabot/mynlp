@@ -22,6 +22,8 @@ class POSPerceptron(val model: Perceptron, val labelList: Array<String>) {
 
     private val featureSet = model.featureSet()
 
+    val parameter = (model as PerceptronModel).parameter
+
     val natureList = labelList.map { Nature.parse(it) }.toTypedArray()
 
     fun decodeToPos(sentence: List<String>): List<String> {
@@ -63,6 +65,38 @@ class POSPerceptron(val model: Perceptron, val labelList: Array<String>) {
         val result = model.decode(featureList)
 
         return result.map { natureList[it] }
+    }
+
+    /**
+     * 特殊情况，只是查询一个词的词性
+     */
+    fun decode(word: String): Nature {
+        val labelSize = labelList.size
+        val vector = POSPerceptronFeature.extractFeatureVector(listOf(word), 1, 0, featureSet)
+        val vectorBuffer = vector.buffer
+        var maxIndex = 0
+        var maxScore = Double.MIN_VALUE
+
+        val offset = IntArray(vector.size() - 1)
+        for (j in 0 until vector.size() - 1) {
+            val index = vectorBuffer[j]
+            offset[j] = index * labelSize
+        }
+
+        for (label in 0 until labelSize) {
+            var score = 0.0
+
+            for (j in 0 until vector.size() - 1) {
+                score += parameter[offset[j] + label]
+            }
+
+            if (score > maxScore) {
+                maxIndex = label
+                maxScore = score
+            }
+        }
+
+        return natureList[maxIndex]
     }
 
 
@@ -313,7 +347,7 @@ class POSPerceptronTrainer {
     /**
      * 从文件中加载TrainSample
      */
-    public fun loadSamples(files: List<File>): List<TrainSample> {
+    fun loadSamples(files: List<File>): List<TrainSample> {
 
         /**
          * 把一个句子，变化为TrainSample
@@ -428,20 +462,7 @@ class POSPerceptronTrainer {
 
 class POSEvaluateRunner(val sampleList: List<TrainSample>) : EvaluateRunner {
 
-//    var count = 0
-
     override fun run(model: Perceptron) {
-//        count++
-
-//        if (loop == 0) {
-//            count = 5
-//            loop = 5
-//        }
-
-//        //每隔5轮验证一次
-//        if (count % loop != 0) {
-//            return
-//        }
 
         val random = Random(0)
         val bili = 0.8f
@@ -467,9 +488,8 @@ class POSEvaluateRunner(val sampleList: List<TrainSample>) : EvaluateRunner {
                 }
             }
         }
-        System.out.print("\r")
 
-        System.out.println("P = ${"%.3f".format((right / total))}")
+        System.out.println("\nP = ${"%.3f".format((right / total))}")
     }
 
 }

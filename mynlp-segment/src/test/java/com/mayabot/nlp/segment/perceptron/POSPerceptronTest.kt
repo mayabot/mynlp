@@ -6,6 +6,8 @@ fun main(args: Array<String>) {
     val model = POSPerceptronTrainer().train(File("data/pku/199801.txt"), 5, 1)
     model.save(File("data/pos/model"))
 
+    println(model.decode("陈汝烨"))
+
 //    val model = POSPerceptron.load(File("data/pos"))
 //    val words = "陈汝烨 余额宝 的 规模 增长 一直 呈现 不断 加速 , 的 状态".split(" ")
 //
