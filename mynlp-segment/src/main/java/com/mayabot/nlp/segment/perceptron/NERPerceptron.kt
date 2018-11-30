@@ -149,9 +149,6 @@ object NERPerceptronFeature {
         addFeature(features, vector, "$nextPos${next2Pos}I")
 
 
-        //最后一列保留给特征向量使用
-        vector.add(0)
-
         return vector
     }
 
@@ -276,7 +273,7 @@ class NERPerceptronTrainer(val targetPos: Set<String>) {
                     val ner = NERPerceptron(model, labelList)
                     NEREvaluateUtils.evaluateNER(ner, evaluateList, targetPos)
                 },
-                maxIter)
+                maxIter, false)
 
         val model = trainer.train(threadNumber)
 

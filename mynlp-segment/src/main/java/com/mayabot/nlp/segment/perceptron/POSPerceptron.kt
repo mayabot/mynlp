@@ -18,7 +18,7 @@ import kotlin.collections.ArrayList
 /**
  * 词性分析感知机
  */
-class POSPerceptron(val model: PerceptronModelForPos, val labelList: Array<String>) {
+class POSPerceptron(val model: Perceptron, val labelList: Array<String>) {
 
     private val featureSet = model.featureSet()
 
@@ -102,7 +102,7 @@ class POSPerceptron(val model: PerceptronModelForPos, val labelList: Array<Strin
          */
         @JvmStatic
         fun load(parameterBin: InputStream, featureBin: InputStream, labelText: InputStream): POSPerceptron {
-            val model = PerceptronModelForPos.load(parameterBin, featureBin, true)
+            val model = PerceptronModel.load(parameterBin, featureBin, true)
             val labelList = labelText.use { it.bufferedReader().readLines() }
             return POSPerceptron(model, labelList.toTypedArray())
         }
@@ -253,8 +253,8 @@ object POSPerceptronFeature {
                 }
             }
         }
-
-        //最后一列保留给特征向量使用
+//
+//        //最后一列保留给特征向量使用
         vector.add(0)
 
         return vector
@@ -293,20 +293,20 @@ class POSPerceptronTrainer {
 
         println("Start Train ... ")
 
-        val trainer = PerceptronTrainerForPos(
+        val trainer = PerceptronTrainer(
                 featureSet,
                 labelMap.size,
                 sampleList,
-                POSEvaluateRunner(5, sampleList),
-                maxIter)
+                POSEvaluateRunner(sampleList),
+                maxIter, true)
 
         val model = trainer.train(threadNumber)
 
         println("--------------------")
 
-        POSEvaluateRunner(0, sampleList).run(model)
+        POSEvaluateRunner(sampleList).run(model)
 
-        return POSPerceptron(model as PerceptronModelForPos, labelMap.keys.sorted().toTypedArray())
+        return POSPerceptron(model, labelMap.keys.sorted().toTypedArray())
     }
 
 
@@ -426,25 +426,25 @@ class POSPerceptronTrainer {
 }
 
 
-class POSEvaluateRunner(var loop: Int, val sampleList: List<TrainSample>) : EvaluateRunner {
+class POSEvaluateRunner(val sampleList: List<TrainSample>) : EvaluateRunner {
 
-    var count = 0
+//    var count = 0
 
     override fun run(model: Perceptron) {
-        count++
+//        count++
 
-        if (loop == 0) {
-            count = 5
-            loop = 5
-        }
+//        if (loop == 0) {
+//            count = 5
+//            loop = 5
+//        }
 
-        //每隔5轮验证一次
-        if (count % loop != 0) {
-            return
-        }
+//        //每隔5轮验证一次
+//        if (count % loop != 0) {
+//            return
+//        }
 
         val random = Random(0)
-        val bili = 0.5f
+        val bili = 0.8f
         var total = 0.0
         var right = 0.0
         var targetSampleSize = (sampleList.size * bili).toInt()
@@ -461,7 +461,7 @@ class POSEvaluateRunner(var loop: Int, val sampleList: List<TrainSample>) : Eval
                         right++
                     }
                 }
-                if (count % 200 == 0) {
+                if (count % 800 == 0) {
                     System.out.print("\rEvaluating ${"%.2f".format(count * 100.0 / targetSampleSize)}%")
 
                 }
