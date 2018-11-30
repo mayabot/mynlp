@@ -32,6 +32,7 @@ public interface Perceptron {
      */
     void save(File dir);
 
+
     /**
      * 特征集合
      *
