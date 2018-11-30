@@ -32,6 +32,9 @@ open class PerceptronModel(
         var parameter: FloatArray
 ) : Perceptron {
 
+
+    var decodeQuickModel = false
+
     var featureSetSize = featureSet.size()
     var parameterSize = parameter.size
 
@@ -170,7 +173,7 @@ open class PerceptronModel(
 
         //移除了很小的之后，还没有达到缩减的值
         if (k > 0 && filterSet.size < k) {
-            val heap = TopMinK(k - filterSet.size)
+            val heap = TopIntMinK(k - filterSet.size)
 
             println("let's filter top min ${k - filterSet.size}")
 
@@ -314,43 +317,93 @@ open class PerceptronModel(
 
         //first
         val firstFeature = featureSequence[0]
-        firstFeature[firstFeature.size() - 1] = bos
 
         for (j in 0 until labelCount) {
             preMatrix[j] = j
-            val score = score(firstFeature, j)
+            val score = scoreBase(firstFeature, j) + parameter[bos * labelSize + j]
             scoreMLast[j] = score
         }
 
+        if (decodeQuickModel) {
+            val top = TopIntMaxK(4)
+            for (i in 1 until sentenceLength) {
 
-        for (i in 1 until sentenceLength) {
-            val allFeature = featureSequence[i]
-            val allFeatureBuffer = allFeature.buffer
-            val transitionFeatureIndex = allFeature.size() - 1
-            val base = i * labelSize
-            for (curLabel in 0 until labelCount) {
+                val allFeature = featureSequence[i]
+                val base = i * labelSize
 
-                var maxScore = MaxScore
 
-                for (preLabel in 0 until labelCount) {
+                for (curLabel in 0 until labelCount) {
+                    val baseScore = scoreBase(allFeature, curLabel)
+                    top.push(curLabel, baseScore)
+                }
 
-                    allFeatureBuffer[transitionFeatureIndex] = preLabel
-                    val score = score(allFeature, curLabel)
+                //找出最大的TOP4
+                val topThree = top.resort()
+                top.clear()
 
-                    val curScore = scoreMLast[preLabel] + score
+                for (e in topThree) {
+                    var maxScore = MaxScore
 
-                    if (maxScore < curScore) {
-                        maxScore = curScore
-                        preMatrix[base + curLabel] = preLabel
-                        scoreMNow[curLabel] = maxScore
+                    val curLabel = e.first
+                    val baseScore = e.second
+
+                    for (preLabel in 0 until labelCount) {
+
+                        val score = baseScore + parameter[preLabel * labelSize + curLabel]
+
+                        val curScore = scoreMLast[preLabel] + score
+
+                        if (curScore > maxScore) {
+                            maxScore = curScore
+                            preMatrix[base + curLabel] = preLabel
+                            scoreMNow[curLabel] = maxScore
+                        }
                     }
                 }
+
+                //switch
+                val temp = scoreMLast
+                scoreMLast = scoreMNow
+                scoreMNow = temp
             }
 
-            val temp = scoreMLast
-            scoreMLast = scoreMNow
-            scoreMNow = temp
+        } else {
+            for (i in 1 until sentenceLength) {
+
+                val allFeature = featureSequence[i]
+                val base = i * labelSize
+
+                for (curLabel in 0 until labelCount) {
+
+                    var maxScore = MaxScore
+
+                    //因为score(allFeature, curLabel) 中除了最后特征位置不一样，其他位置的得分都是重复的
+                    val baseScore = scoreBase(allFeature, curLabel)
+
+                    for (preLabel in 0 until labelCount) {
+
+//                    allFeature[transitionFeatureIndex] = preLabel
+//                    val score = score(allFeature, curLabel)
+                        val score = baseScore + parameter[preLabel * labelSize + curLabel]
+
+                        val curScore = scoreMLast[preLabel] + score
+
+                        if (curScore > maxScore) {
+                            maxScore = curScore
+                            preMatrix[base + curLabel] = preLabel
+                            scoreMNow[curLabel] = maxScore
+                        }
+                    }
+                }
+
+                //switch
+                val temp = scoreMLast
+                scoreMLast = scoreMNow
+                scoreMNow = temp
+            }
+
         }
+
 
         //此时scoreM0 肯定是最后一个
         var maxIndex = 0
@@ -374,12 +427,11 @@ open class PerceptronModel(
         return maxScore
     }
 
-
-    private fun score(featureVector: IntArrayList, currentTag: Int): Double {
+    private fun scoreBase(featureVector: IntArrayList, currentTag: Int): Double {
         var score = 0.0
 
         val buffer = featureVector.buffer
-        for (i in 0 until featureVector.size()) {
+        for (i in 0 until featureVector.size() - 1) {
             val index = buffer[i]
             if (index < 0 || index >= featureSetSize) {
                 // do nothing
@@ -395,24 +447,31 @@ open class PerceptronModel(
 
 /**
  * 通用感知机训练器
+ * @param featureSet 特征集合
+ * @param labelCount 标签的数量
+ * @param trainSource 训练样例列表
+ * @param evaluateScript 评估运行器
+ * @param maxIter 迭代轮数
+ * @param decodeQuickModel_ 是否启用快速解码(词性标注时启用)
  */
-open class PerceptronTrainer(
+class PerceptronTrainer(
         private val featureSet: FeatureSet,
         private val labelCount: Int,
         private val trainSource: List<TrainSample>,
         private val evaluateScript: EvaluateRunner,
-        private val maxIter: Int) {
+        private val maxIter: Int,
+        private val decodeQuickModel_: Boolean) {
 
-    open fun buildPerceptronModel(featureSet: FeatureSet, labelCount: Int): PerceptronModel {
+    private fun buildPerceptronModel(featureSet: FeatureSet, labelCount: Int): PerceptronModel {
         return PerceptronModel(
                 featureSet, labelCount
-        )
+        ).apply { this.decodeQuickModel = decodeQuickModel_ }
     }
 
-    open fun buildPerceptronModel(featureSet: FeatureSet, labelCount: Int, parameter: FloatArray): PerceptronModel {
+    private fun buildPerceptronModel(featureSet: FeatureSet, labelCount: Int, parameter: FloatArray): PerceptronModel {
         return PerceptronModel(
                 featureSet, labelCount, parameter
-        )
+        ).apply { this.decodeQuickModel = decodeQuickModel_ }
     }
 
     /**
@@ -466,6 +525,7 @@ open class PerceptronTrainer(
 
             println("use ${t2 - t1} ms\n")
         }
+        //
         model.average(total, timestamp, current)
         return model
     }
@@ -499,7 +559,7 @@ open class PerceptronTrainer(
                             modelArray[s].update(d)
                             count++
 
-                            if (s == 0 && count % 100 == 0) {
+                            if (s == 0 && count % 2000 == 0) {
                                 System.out.print("\rProcess ${"%.2f".format((count * 100.0 / list.size))}%")
                             }
                         }
@@ -548,194 +608,331 @@ open class PerceptronTrainer(
     }
 }
 
+//
+//class PerceptronModelForPos(featureSet: FeatureSet, labelCount: Int, parameter: FloatArray)
+//    : PerceptronModel(featureSet, labelCount, parameter) {
+//
+//    companion object {
+//
+//        fun load(parameterBin: InputStream, featureBin: InputStream, featureDat: Boolean): PerceptronModelForPos {
+//
+//            return if (featureDat) {
+//                load(parameterBin, featureBin, null)
+//            } else {
+//                load(parameterBin, null, featureBin)
+//            }
+//        }
+//
+//        fun load(parameterFile: File, featureBin: File?, featureText: File?): PerceptronModelForPos {
+//            return load(parameterFile.inputStream().buffered(),
+//                    featureBin?.inputStream()?.buffered(),
+//                    featureText?.inputStream()?.buffered()
+//            )
+//        }
+//
+//        fun load(dir: File): PerceptronModel {
+//            fun loadIfExit(fname: String): File? {
+//                val f = File(dir, fname)
+//                return if (f.exists()) {
+//                    f
+//                } else {
+//                    null
+//                }
+//            }
+//
+//            return load(
+//                    File(dir, "parameter.bin"),
+//                    loadIfExit("feature.dat"),
+//                    loadIfExit("feature.txt")
+//            )
+//        }
+//
+//        fun load(parameterBin: InputStream, featureBin: InputStream?, featureText: InputStream?): PerceptronModelForPos {
+//
+//            var labelCount = 0
+//            var parameter = FloatArray(0)
+//            parameterBin.use { x ->
+//                val input = DataInputStream(x)
+//                labelCount = input.readInt()
+//
+//                val pSize = input.readInt()
+//                parameter = FloatArray(pSize)
+//                for (i in 0 until pSize) {
+//                    parameter[i] = input.readFloat()
+//                }
+//            }
+//
+//            val fs = if (featureBin != null) {
+//                if (featureText != null) {
+//                    FeatureSet.read(featureBin, featureText)
+//                } else {
+//                    FeatureSet.read(featureBin)
+//                }
+//            } else {
+//                if (featureText != null) {
+//                    FeatureSet.read(featureText)
+//                } else {
+//                    throw RuntimeException()
+//                }
+//            }
+//
+//            return PerceptronModelForPos(fs, labelCount, parameter)
+//        }
+//    }
+//
+//    constructor(featureSet: FeatureSet, labelCount: Int) :
+//            this(featureSet, labelCount, FloatArray(featureSet.size() * labelCount))
+//
+//    override fun decode(featureSequence: List<IntArrayList>, guessLabel: IntArray): Double {
+//        val bos = labelCount
+//        val sentenceLength = featureSequence.size
+//        val labelSize = labelCount
+//
+//        val preMatrix = IntArray(sentenceLength * labelSize)
+//
+////        val scoreMatrix = Array(2) { DoubleArray(labelSize) }
+//        //上一回的状态
+//        var scoreMLast = DoubleArray(labelSize)
+//        var scoreMNow = DoubleArray(labelSize)
+//
+//        //first
+//        val firstFeature = featureSequence[0]
+//        firstFeature[firstFeature.size() - 1] = bos
+//
+//        for (j in 0 until labelCount) {
+//            preMatrix[j] = j
+//            val score = score(firstFeature, j)
+//            scoreMLast[j] = score
+//        }
+//
+//
+//        for (i in 1 until sentenceLength) {
+//            val allFeature = featureSequence[i]
+////            val transitionFeatureIndex = allFeature.size() - 1
+//            val base = i * labelSize
+//
+//
+//            // i 对应的这个特征，我想选取最有可能的top4，参与计算
+//
+//            val baseScoreArray = DoubleArray(labelCount)
+//            for (curLabel in 0 until labelCount) {
+//                val baseScore = scoreBase(allFeature,curLabel)
+//                baseScoreArray[curLabel] = baseScore
+//            }
+//
+//            val sorted = baseScoreArray.zip(0 until labelCount ).sortedByDescending { it.first }
+//            //找出最大的TOP3
+//            val topThree = intArrayOf(sorted[0].second,sorted[1].second,sorted[2].second)
+//
+//            for (curLabel in topThree) {
+//
+//                var maxScore = MaxScore
+//
+//                //因为score(allFeature, curLabel) 中除了最后特征位置不一样，其他位置的得分都是重复的
+//                val baseScore = baseScoreArray[curLabel]
+//
+//                for (preLabel in 0 until labelCount) {
+//
+//                    // allFeature[transitionFeatureIndex] = preLabel
+//
+////                    val score = score(allFeature, curLabel)
+//                    val score = baseScore + parameter[preLabel*labelSize+curLabel]
+//
+//                    val curScore = scoreMLast[preLabel] + score
+//
+//                    if (maxScore < curScore) {
+//                        maxScore = curScore
+//                        preMatrix[base + curLabel] = preLabel
+//                        scoreMNow[curLabel] = maxScore
+//                    }
+//                }
+//            }
+//
+//            val temp = scoreMLast
+//            scoreMLast = scoreMNow
+//            scoreMNow = temp
+//        }
+//
+//        //此时scoreM0 肯定是最后一个
+//        var maxIndex = 0
+//        var maxScore = scoreMLast[0]
+//
+//        for (index in 1 until labelCount) {
+//            val x = scoreMLast[index]
+//            if (maxScore < x) {
+//                maxIndex = index
+//                maxScore = x
+//            }
+//        }
+//
+//        var k = (sentenceLength - 1) * labelCount
+//        for (i in sentenceLength - 1 downTo 0) {
+//            guessLabel[i] = maxIndex
+//            maxIndex = preMatrix[k + maxIndex]
+//            k -= labelCount
+//        }
+//
+//        return maxScore
+//    }
+//
+//
+//    private fun score(featureVector: IntArrayList, currentTag: Int): Double {
+//        var score = 0.0
+//
+//        val buffer = featureVector.buffer
+//        for (i in 0 until featureVector.size()) {
+//            val index = buffer[i]
+//            if (index < 0 || index >= featureSetSize) {
+//                // do nothing
+//            } else {
+//                score += parameter[index * labelCount + currentTag]
+//            }
+//        }
+//        return score
+//    }
+//
+//    private fun findTop(list:DoubleArray) : IntArray{
+//        val top = IntArray(3)
+//
+//
+//
+//        return top
+//    }
+//
+//    private fun scoreBase(featureVector: IntArrayList, currentTag: Int): Double {
+//        var score = 0.0
+//
+//        val buffer = featureVector.buffer
+//        for (i in 0 until featureVector.size()-1) {
+//            val index = buffer[i]
+//            if (index < 0 || index >= featureSetSize) {
+//                // do nothing
+//            } else {
+//                score += parameter[index * labelCount + currentTag]
+//            }
+//        }
+//        return score
+//    }
+//}
+//
+//
+//class PerceptronTrainerForPos(featureSet: FeatureSet, labelCount: Int, trainSource: List<TrainSample>, evaluateScript: EvaluateRunner, maxIter: Int)
+//    : PerceptronTrainer(featureSet, labelCount, trainSource, evaluateScript, maxIter) {
+//    override fun buildPerceptronModel(featureSet: FeatureSet, labelCount: Int): PerceptronModel {
+//        return PerceptronModelForPos(
+//                featureSet, labelCount
+//        )
+//    }
+//
+//    override fun buildPerceptronModel(featureSet: FeatureSet, labelCount: Int, parameter: FloatArray): PerceptronModel {
+//        return PerceptronModelForPos(
+//                featureSet, labelCount, parameter
+//        )
+//    }
+//
+//}
 
-class PerceptronModelForPos(featureSet: FeatureSet, labelCount: Int, parameter: FloatArray)
-    : PerceptronModel(featureSet, labelCount, parameter) {
 
-    companion object {
+/**
+ * 求最大Top K
+ * 内部是小顶堆
+ */
+class TopIntMaxK(val k: Int) {
 
-        fun load(parameterBin: InputStream, featureBin: InputStream, featureDat: Boolean): PerceptronModelForPos {
+    val heap = DoubleArray(k)
+    val idIndex = IntArray(k) { -1 }
 
-            return if (featureDat) {
-                load(parameterBin, featureBin, null)
+    var size = 0
+
+    fun clear() {
+        size = 0
+        heap.fill(0.0)
+        idIndex.fill(-1)
+    }
+
+    fun push(id: Int, score: Double) {
+        if (size < k) {
+            heap[size] = score
+            idIndex[size] = id
+            size++
+
+            if (size == k) {
+                buildMinHeap()
+            }
+        } else {
+            // 如果这个数据大于最下值，那么有资格进入
+            if (score > heap[0]) {
+                heap[0] = score
+                idIndex[0] = id
+
+                mintopify(0)
+            }
+        }
+    }
+
+    fun resort(): java.util.ArrayList<Pair<Int, Double>> {
+        val top = Math.min(k, size)
+        val list = java.util.ArrayList<Pair<Int, Double>>(top)
+
+        heap.forEachIndexed { index, fl ->
+            if (size < k && index < size) {
+                list += idIndex[index] to fl
             } else {
-                load(parameterBin, null, featureBin)
+                list += idIndex[index] to fl
             }
+
         }
+        list.sortByDescending { it.second }
+        return list
+    }
 
-        fun load(parameterFile: File, featureBin: File?, featureText: File?): PerceptronModelForPos {
-            return load(parameterFile.inputStream().buffered(),
-                    featureBin?.inputStream()?.buffered(),
-                    featureText?.inputStream()?.buffered()
-            )
-        }
-
-        fun load(dir: File): PerceptronModel {
-            fun loadIfExit(fname: String): File? {
-                val f = File(dir, fname)
-                return if (f.exists()) {
-                    f
-                } else {
-                    null
-                }
-            }
-
-            return load(
-                    File(dir, "parameter.bin"),
-                    loadIfExit("feature.dat"),
-                    loadIfExit("feature.txt")
-            )
-        }
-
-        fun load(parameterBin: InputStream, featureBin: InputStream?, featureText: InputStream?): PerceptronModelForPos {
-
-            var labelCount = 0
-            var parameter = FloatArray(0)
-            parameterBin.use { x ->
-                val input = DataInputStream(x)
-                labelCount = input.readInt()
-
-                val pSize = input.readInt()
-                parameter = FloatArray(pSize)
-                for (i in 0 until pSize) {
-                    parameter[i] = input.readFloat()
-                }
-            }
-
-            val fs = if (featureBin != null) {
-                if (featureText != null) {
-                    FeatureSet.read(featureBin, featureText)
-                } else {
-                    FeatureSet.read(featureBin)
-                }
-            } else {
-                if (featureText != null) {
-                    FeatureSet.read(featureText)
-                } else {
-                    throw RuntimeException()
-                }
-            }
-
-            return PerceptronModelForPos(fs, labelCount, parameter)
+    private fun buildMinHeap() {
+        for (i in k / 2 - 1 downTo 0) {
+            mintopify(i)// 依次向上将当前子树最大堆化
         }
     }
 
-    constructor(featureSet: FeatureSet, labelCount: Int) :
-            this(featureSet, labelCount, FloatArray(featureSet.size() * labelCount))
+    /**
+     * 让heap数组符合堆特性
+     * @param i
+     */
+    private fun mintopify(i: Int) {
+        val l = 2 * i + 1
+        val r = 2 * i + 2
+        var min: Int
 
-    override fun decode(featureSequence: List<IntArrayList>, guessLabel: IntArray): Double {
-        val bos = labelCount
-        val sentenceLength = featureSequence.size
-        val labelSize = labelCount
+        if (l < k && heap[l] < heap[i])
+            min = l
+        else
+            min = i
 
-        val preMatrix = IntArray(sentenceLength * labelSize)
+        if (r < k && heap[r] < heap[min])
+            min = r
 
-//        val scoreMatrix = Array(2) { DoubleArray(labelSize) }
-        //上一回的状态
-        var scoreMLast = DoubleArray(labelSize)
-        var scoreMNow = DoubleArray(labelSize)
-
-        //first
-        val firstFeature = featureSequence[0]
-        firstFeature[firstFeature.size() - 1] = bos
-
-        for (j in 0 until labelCount) {
-            preMatrix[j] = j
-            val score = score(firstFeature, j)
-            scoreMLast[j] = score
+        if (min == i || min >= k) {
+            // 如果largest等于i说明i是最大元素
+            // largest超出heap范围说明不存在比i节点大的子女
+            return
         }
 
-
-        for (i in 1 until sentenceLength) {
-            val allFeature = featureSequence[i]
-            val transitionFeatureIndex = allFeature.size() - 1
-            val base = i * labelSize
-
-
-            for (curLabel in 0 until labelCount) {
-
-                var maxScore = MaxScore
-
-                for (preLabel in 0 until labelCount) {
-
-                    allFeature[transitionFeatureIndex] = preLabel
-
-                    val score = score(allFeature, curLabel)
-
-                    val curScore = scoreMLast[preLabel] + score
-
-                    if (maxScore < curScore) {
-                        maxScore = curScore
-                        preMatrix[base + curLabel] = preLabel
-                        scoreMNow[curLabel] = maxScore
-                    }
-                }
-            }
-
-            val temp = scoreMLast
-            scoreMLast = scoreMNow
-            scoreMNow = temp
-        }
-
-        //此时scoreM0 肯定是最后一个
-        var maxIndex = 0
-        var maxScore = scoreMLast[0]
-
-        for (index in 1 until labelCount) {
-            val x = scoreMLast[index]
-            if (maxScore < x) {
-                maxIndex = index
-                maxScore = x
-            }
-        }
-
-        var k = (sentenceLength - 1) * labelCount
-        for (i in sentenceLength - 1 downTo 0) {
-            guessLabel[i] = maxIndex
-            maxIndex = preMatrix[k + maxIndex]
-            k -= labelCount
-        }
-
-        return maxScore
+        swap(i, min)
+        mintopify(min)
     }
 
+    private fun swap(i: Int, j: Int) {
+        val tmp = heap[i]
+        heap[i] = heap[j]
+        heap[j] = tmp
 
-    private fun score(featureVector: IntArrayList, currentTag: Int): Double {
-        var score = 0.0
-
-        val buffer = featureVector.buffer
-        for (i in 0 until featureVector.size()) {
-            val index = buffer[i]
-            if (index < 0 || index >= featureSetSize) {
-                // do nothing
-            } else {
-                score += parameter[index * labelCount + currentTag]
-            }
-        }
-        return score
+        val tmp2 = idIndex[i]
+        idIndex[i] = idIndex[j]
+        idIndex[j] = tmp2
     }
-}
-
-
-class PerceptronTrainerForPos(featureSet: FeatureSet, labelCount: Int, trainSource: List<TrainSample>, evaluateScript: EvaluateRunner, maxIter: Int)
-    : PerceptronTrainer(featureSet, labelCount, trainSource, evaluateScript, maxIter) {
-    override fun buildPerceptronModel(featureSet: FeatureSet, labelCount: Int): PerceptronModel {
-        return PerceptronModelForPos(
-                featureSet, labelCount
-        )
-    }
-
-    override fun buildPerceptronModel(featureSet: FeatureSet, labelCount: Int, parameter: FloatArray): PerceptronModel {
-        return PerceptronModelForPos(
-                featureSet, labelCount, parameter
-        )
-    }
-
 }
 /**
  * Top K 最小值。
  */
-class TopMinK(val k: Int) {
+class TopIntMinK(val k: Int) {
 
     val heap = FloatArray(k)
     val idIndex = IntArray(k) { -1 }

@@ -106,9 +106,6 @@ class CWSPerceptron(val model: Perceptron) {
             addFeature(features, vector, curChar + "/" + nextChar + "6")
             addFeature(features, vector, nextChar + "/" + next2Char + "7")
 
-            //最后一列保留给特征向量使用
-            vector.add(0)
-
             return vector
         }
 
@@ -202,11 +199,9 @@ class CWSPerceptronTrainer(val workDir: File = File("data/pcws")) {
 
         val trainer = PerceptronTrainer(featureSet, CWSPerceptron.tagList.size, sampleList, EvaluateRunner { it ->
             CWSEvaluate.evaluate(evaluateSample, CWSPerceptron(it))
-        }, maxIter)
+        }, maxIter, false)
 
-        val model = CWSPerceptron(trainer.train(threadNumber))
-
-        return model
+        return CWSPerceptron(trainer.train(threadNumber))
 
     }
 

@@ -21,7 +21,7 @@ object CWSPerceptronTest {
         val cws = trainer.train(
                 trainFile,
                 evaluateFile,
-                50, 1)
+                50, 2)
 
         println("compress")
         cws.compress(0.2, 1e-3)
@@ -40,9 +40,9 @@ object CWSPerceptronTest {
 
         //cws.save(File("data/pcws/model-hanlp-compress"))
 //
-//        val tester = File("data/corpus.segment/backoff2005/msr_training.txt").readLines()
-//
-//        CWSEvaluate.evaluate(tester, cws)
+        val tester = File("data/corpus.segment/backoff2005/msr_training.txt").readLines()
+
+        CWSEvaluate.evaluate(tester, cws)
 //        println("---")
 
         val text = "" +
