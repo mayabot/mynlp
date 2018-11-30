@@ -148,7 +148,7 @@ object NERPerceptronFeature {
         addFeature(features, vector, "$curPos${nextPos}H")
         addFeature(features, vector, "$nextPos${next2Pos}I")
 
-
+        vector.add(0)
         return vector
     }
 
@@ -210,7 +210,7 @@ object NERPerceptronFeature {
 
     }
 
-    private inline fun addFeature(features: FeatureSet, vector: IntArrayList, feature: String) {
+    inline fun addFeature(features: FeatureSet, vector: IntArrayList, feature: String) {
         val id = features.featureId(feature)
         if (id >= 0) {
             vector.add(id)

@@ -106,11 +106,12 @@ class CWSPerceptron(val model: Perceptron) {
             addFeature(features, vector, curChar + "/" + nextChar + "6")
             addFeature(features, vector, nextChar + "/" + next2Char + "7")
 
+            vector.add(0)
             return vector
         }
 
 
-        private inline fun addFeature(features: FeatureSet, vector: IntArrayList, feature: String) {
+        inline fun addFeature(features: FeatureSet, vector: IntArrayList, feature: String) {
             val id = features.featureId(feature)
             if (id >= 0) {
                 vector.add(id)

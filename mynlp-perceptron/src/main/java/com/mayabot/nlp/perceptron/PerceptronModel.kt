@@ -33,6 +33,7 @@ open class PerceptronModel(
 ) : Perceptron {
 
 
+    private val MaxScore = Integer.MIN_VALUE.toDouble()
     var decodeQuickModel = false
 
     var featureSetSize = featureSet.size()
@@ -109,12 +110,14 @@ open class PerceptronModel(
 
     private fun updateOnline(goldIndex: IntArray, predictIndex: IntArray) {
         for (i in goldIndex.indices) {
-            if (goldIndex[i] == predictIndex[i])
+
+            val xii = predictIndex[i]
+            if (goldIndex[i] == xii)
                 continue
             else {
                 parameter[goldIndex[i]]++
-                if (predictIndex[i] >= 0 && predictIndex[i] < parameter.size)
-                    parameter[predictIndex[i]]--
+                if (xii >= 0 && xii < parameter.size)
+                    parameter[xii]--
                 else {
                     throw IllegalArgumentException("更新参数时传入了非法的下标")
                 }
@@ -298,8 +301,6 @@ open class PerceptronModel(
     }
 
 
-    val MaxScore = Integer.MIN_VALUE.toDouble()
-
     /**
      * viterbi
      */
@@ -428,6 +429,7 @@ open class PerceptronModel(
     }
 
     private fun scoreBase(featureVector: IntArrayList, currentTag: Int): Double {
+
         var score = 0.0
 
         val buffer = featureVector.buffer
@@ -439,6 +441,7 @@ open class PerceptronModel(
                 score += parameter[index * labelCount + currentTag]
             }
         }
+
         return score
     }
 
