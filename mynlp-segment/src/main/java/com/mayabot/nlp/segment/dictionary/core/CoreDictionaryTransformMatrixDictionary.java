@@ -34,7 +34,6 @@ public class CoreDictionaryTransformMatrixDictionary {
 
     private TransformMatrix transformMatrixDictionary;
 
-
     public final String path = "dictionary/CoreDict.tr.txt";
 
     protected InternalLogger logger = InternalLoggerFactory.getInstance(this.getClass());

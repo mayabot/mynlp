@@ -111,7 +111,7 @@ class CWSPerceptron(val model: Perceptron) {
         }
 
 
-        inline fun addFeature(features: FeatureSet, vector: IntArrayList, feature: String) {
+        private fun addFeature(features: FeatureSet, vector: IntArrayList, feature: String) {
             val id = features.featureId(feature)
             if (id >= 0) {
                 vector.add(id)
@@ -200,7 +200,7 @@ class CWSPerceptronTrainer(val workDir: File = File("data/pcws")) {
 
         val trainer = PerceptronTrainer(featureSet, CWSPerceptron.tagList.size, sampleList, EvaluateRunner { it ->
             CWSEvaluate.evaluate(evaluateSample, CWSPerceptron(it))
-        }, maxIter, false)
+        }, maxIter, false, 7)
 
         return CWSPerceptron(trainer.train(threadNumber))
 
@@ -320,6 +320,8 @@ object CWSEvaluate {
 
         System.out.print("Evaluating 0%")
 
+        val t1 = System.currentTimeMillis()
+
         var count = 0
         for (line in evaluateSample) {
             val wordArray = splitter.splitToList(CharNormUtils.convert(line))
@@ -359,9 +361,8 @@ object CWSEvaluate {
 
             count++
 
-            if (count % 200 == 0) {
+            if (count % 2000 == 0) {
                 System.out.print("\rEvaluating ${"%.2f".format(count * 100.0 / evaluateSample.size)}%")
-
             }
 
         }
@@ -380,7 +381,10 @@ object CWSEvaluate {
 
         System.out.print("\r")
 
+        val t2 = System.currentTimeMillis()
+
         System.out.println("正确率(P) %.2f , 召回率(R) %.2f , F1 %.2f".format(result[0], result[1], result[2]))
+        println("Evaluate use time ${t2 - t1} ms")
 
         return result
     }

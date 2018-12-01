@@ -332,7 +332,9 @@ class POSPerceptronTrainer {
                 labelMap.size,
                 sampleList,
                 POSEvaluateRunner(sampleList),
-                maxIter, true)
+                maxIter, true, 10)
+
+        trainer
 
         val model = trainer.train(threadNumber)
 
