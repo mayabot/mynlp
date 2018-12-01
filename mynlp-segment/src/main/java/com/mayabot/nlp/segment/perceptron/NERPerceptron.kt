@@ -92,13 +92,17 @@ object NERPerceptronFeature {
     fun extractFeatureVector(sentence: List<WordTerm>, position: Int, features: FeatureSet): IntArrayList {
 
         val size = sentence.size
-
+        var pre3Word = B
         var pre2Word = B
         var pre2Pos = B
         if (position >= 2) {
             val x = sentence[position - 2]
             pre2Word = x.word
             pre2Pos = x.natureString
+
+            if (position > 2) {
+                pre3Word = sentence[position - 3].word
+            }
         }
 
         var preWord = B
@@ -131,6 +135,7 @@ object NERPerceptronFeature {
 
         val vector = IntArrayList(15)
 
+
         addFeature(features, vector, "${pre2Word}1")
         addFeature(features, vector, "${preWord}2")
         addFeature(features, vector, "${curWord}3")
@@ -148,6 +153,8 @@ object NERPerceptronFeature {
         addFeature(features, vector, "$curPos${nextPos}H")
         addFeature(features, vector, "$nextPos${next2Pos}I")
 
+        addFeature(features, vector, "${pre3Word}J")
+
         vector.add(0)
         return vector
     }
@@ -156,11 +163,16 @@ object NERPerceptronFeature {
         val size = sentence.size
 
         var pre2Word = B
+        var pre3Word = B
         var pre2Pos = B
         if (position >= 2) {
             val x = sentence[position - 2]
             pre2Word = x.word
             pre2Pos = x.pos
+
+            if (position > 2) {
+                pre3Word = sentence[position - 3].word
+            }
         }
 
         var preWord = B
@@ -207,10 +219,11 @@ object NERPerceptronFeature {
         callBack.accept("$prePos${curPos}G")
         callBack.accept("$curPos${nextPos}H")
         callBack.accept("$nextPos${next2Pos}I")
+        callBack.accept("${pre3Word}J")
 
     }
 
-    inline fun addFeature(features: FeatureSet, vector: IntArrayList, feature: String) {
+    private fun addFeature(features: FeatureSet, vector: IntArrayList, feature: String) {
         val id = features.featureId(feature)
         if (id >= 0) {
             vector.add(id)
@@ -273,7 +286,7 @@ class NERPerceptronTrainer(val targetPos: Set<String>) {
                     val ner = NERPerceptron(model, labelList)
                     NEREvaluateUtils.evaluateNER(ner, evaluateList, targetPos)
                 },
-                maxIter, false)
+                maxIter, false, 14)
 
         val model = trainer.train(threadNumber)
 

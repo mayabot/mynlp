@@ -21,14 +21,14 @@ object CWSPerceptronTest {
         val cws = trainer.train(
                 trainFile,
                 evaluateFile,
-                50, 2)
+                50, 1)
 
         println("compress")
 //        cws.compress(0.2, 1e-3)
 
         println("After compress ...")
         CWSEvaluate.evaluate(evaluateFile.readLines(), cws)
-        //正确率(P) 96.64 , 召回率(R) 96.32 , F1 96.48
+        //单线程 正确率(P) 96.64 , 召回率(R) 96.32 , F1 96.48
     }
 
     fun test() {

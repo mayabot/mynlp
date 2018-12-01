@@ -3,7 +3,7 @@ package com.mayabot.nlp.segment.perceptron
 import java.io.File
 
 fun main(args: Array<String>) {
-    val model = POSPerceptronTrainer().train(File("data/pku/199801.txt"), 5, 1)
+    val model = POSPerceptronTrainer().train(File("data/pku/199801.txt"), 10, 1)
     model.save(File("data/pos/model"))
 
     println(model.decode("陈汝烨"))

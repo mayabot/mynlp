@@ -306,11 +306,13 @@ open class PerceptronModel(
     }
 
 
+    val transBaseIndex = (0 until labelCount).map { it * labelCount }.toTypedArray()
+
     /**
      * viterbi
      */
     override fun decode(featureSequence: List<IntArrayList>, guessLabel: IntArray): Double {
-        val bos = labelCount
+
         val sentenceLength = featureSequence.size
         val labelSize = labelCount
 
@@ -324,44 +326,39 @@ open class PerceptronModel(
         //first
         val firstFeature = featureSequence[0]
 
+        val bos = labelCount
+        val bosBase = bos * labelSize
         for (j in 0 until labelCount) {
             preMatrix[j] = j
-            val score = scoreBase(firstFeature, j) + parameter[bos * labelSize + j]
+            val score = scoreBase(firstFeature, j) + parameter[bosBase + j]
             scoreMLast[j] = score
         }
 
 
-
         if (decodeQuickModel) {
-            val top = TopIntMaxK(4)
+            val top = TopIntMaxK(3)
             val bufferIndex = IntArray(maxFeatureSize)
             for (i in 1 until sentenceLength) {
 
                 val allFeature = featureSequence[i]
                 val base = i * labelSize
 
-
-//                for (curLabel in 0 until labelCount) {
-//                    val baseScore = scoreBase(allFeature, curLabel)
-//                    top.push(curLabel, baseScore)
-//                }
-                scoreMaxLab(allFeature, top, bufferIndex)
-
                 //找出最大的TOP4
-                val topThree = top.resort()
                 top.clear()
+                scoreMaxLab(allFeature, top, bufferIndex)
+//                val topThree = top.resort()
 
-                for (e in topThree) {
+                //这里根本无需排序，只要最大的都在里面就好了
+                val valueIndex = top.heap
+
+                for (k in 0 until top.topCount()) {
+                    val curLabel = top.idIndex[k]
                     var maxScore = MaxScore
 
-                    val curLabel = e.first
-                    val baseScore = e.second
-
+                    //测试证明内层通过top不划算
                     for (preLabel in 0 until labelCount) {
 
-                        val score = baseScore + parameter[preLabel * labelSize + curLabel]
-
-                        val curScore = scoreMLast[preLabel] + score
+                        val curScore = scoreMLast[preLabel] + valueIndex[k] + parameter[transBaseIndex[preLabel] + curLabel]
 
                         if (curScore > maxScore) {
                             maxScore = curScore
@@ -387,16 +384,11 @@ open class PerceptronModel(
 
                     var maxScore = MaxScore
 
-                    //因为score(allFeature, curLabel) 中除了最后特征位置不一样，其他位置的得分都是重复的
                     val baseScore = scoreBase(allFeature, curLabel)
 
                     for (preLabel in 0 until labelCount) {
 
-//                    allFeature[transitionFeatureIndex] = preLabel
-//                    val score = score(allFeature, curLabel)
-                        val score = baseScore + parameter[preLabel * labelSize + curLabel]
-
-                        val curScore = scoreMLast[preLabel] + score
+                        val curScore = scoreMLast[preLabel] + baseScore + parameter[transBaseIndex[preLabel] + curLabel]
 
                         if (curScore > maxScore) {
                             maxScore = curScore
@@ -444,11 +436,7 @@ open class PerceptronModel(
         val buffer = featureVector.buffer
         for (i in 0 until featureVector.size() - 1) {
             val index = buffer[i]
-            if (index < 0 || index >= featureSetSize) {
-                // do nothing
-            } else {
-                score += parameter[index * labelCount + currentTag]
-            }
+            score += parameter[index * labelCount + currentTag]
         }
 
         return score
@@ -489,18 +477,25 @@ class PerceptronTrainer(
         private val trainSource: List<TrainSample>,
         private val evaluateScript: EvaluateRunner,
         private val maxIter: Int,
-        private val decodeQuickModel_: Boolean) {
+        private val decodeQuickModel_: Boolean,
+        var maxFeatureSize_: Int) {
 
     private fun buildPerceptronModel(featureSet: FeatureSet, labelCount: Int): PerceptronModel {
         return PerceptronModel(
                 featureSet, labelCount
-        ).apply { this.decodeQuickModel = decodeQuickModel_ }
+        ).apply {
+            this.decodeQuickModel = decodeQuickModel_
+            this.maxFeatureSize = maxFeatureSize_
+        }
     }
 
     private fun buildPerceptronModel(featureSet: FeatureSet, labelCount: Int, parameter: FloatArray): PerceptronModel {
         return PerceptronModel(
                 featureSet, labelCount, parameter
-        ).apply { this.decodeQuickModel = decodeQuickModel_ }
+        ).apply {
+            this.decodeQuickModel = decodeQuickModel_
+            this.maxFeatureSize = maxFeatureSize_
+        }
     }
 
     /**
@@ -542,17 +537,18 @@ class PerceptronTrainer(
 
                 per++
 
-                if (per % 100 == 0) {
+                if (per % 5000 == 0) {
                     System.out.print("\rProcess ${"%.2f".format((per * 100.0 / trainSource.size))}%")
                 }
             }
             System.out.print("\r")
             val t2 = System.currentTimeMillis()
 
+            println("train use ${t2 - t1} ms\n")
             // 运行评估
             evaluateScript.run(model)
 
-            println("use ${t2 - t1} ms\n")
+
         }
         //
         model.average(total, timestamp, current)
@@ -588,7 +584,7 @@ class PerceptronTrainer(
                             modelArray[s].update(d)
                             count++
 
-                            if (s == 0 && count % 2000 == 0) {
+                            if (s == 0 && count % 5000 == 0) {
                                 System.out.print("\rProcess ${"%.2f".format((count * 100.0 / list.size))}%")
                             }
                         }
@@ -617,11 +613,12 @@ class PerceptronTrainer(
                 first[j] = first[j] / modelArray.size
             }
 
-            evaluateScript.run(modelArray.first())
 
             val t2 = System.currentTimeMillis()
 
             println("use ${t2 - t1} ms\n")
+            evaluateScript.run(modelArray.first())
+
 
         }
 
@@ -674,18 +671,18 @@ class TopIntMaxK(val k: Int) {
         }
     }
 
-    fun resort(): java.util.ArrayList<Pair<Int, Double>> {
+    fun topCount() = Math.min(k, size)
+
+    fun resort(): List<Pair<Int, Double>> {
         val top = Math.min(k, size)
         val list = java.util.ArrayList<Pair<Int, Double>>(top)
 
-        heap.forEachIndexed { index, fl ->
-            if (size < k && index < size) {
-                list += idIndex[index] to fl
-            } else {
-                list += idIndex[index] to fl
-            }
 
+        for (i in top - 1 downTo 0) {
+            list += idIndex[i] to heap[i]
         }
+
+
         list.sortByDescending { it.second }
         return list
     }
