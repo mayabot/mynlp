@@ -60,16 +60,6 @@ public class PerceptronNerService {
     }
 
     /**
-     * WordTerm里面准备word和nature
-     *
-     * @param sentence
-     * @return
-     */
-    public List<String> decode(List<WordTerm> sentence) {
-        return perceptron.decode(sentence);
-    }
-
-    /**
      * 要求WordTerm已经词性填充完成
      *
      * @param list
@@ -80,15 +70,14 @@ public class PerceptronNerService {
             posService.posFromTerm(list);
         }
 
-        List<String> decode = perceptron.decode(list);
+        perceptron.decode(list);
 
         List<WordTerm> result = new ArrayList<>(list.size());
         List<WordTerm> temp = null;
 
-        int i = 0;
         String nerPOS = null;
-        for (String label : decode) {
-            WordTerm word = list.get(i++);
+        for (WordTerm word : list) {
+            String label = word.getCustomFlag();
 
             if ("O".equals(label) || "S".equals(label)) {
                 if (temp != null) {

@@ -8,8 +8,8 @@ object CWSPerceptronTest {
 
     @JvmStatic
     fun main(args: Array<String>) {
-        train()
-//        test()
+//        train()
+        test()
     }
 
     fun train() {
@@ -32,17 +32,17 @@ object CWSPerceptronTest {
     }
 
     fun test() {
-        val model = PerceptronModel.load(File("data/pcws/model-hanlp"))
+        val model = PerceptronModel.load(File("data/pcws/model-hanlp-compress"))
 
         //model.compress(0.1,0.01)
 
         val cws = CWSPerceptron(model)
 
         //cws.save(File("data/pcws/model-hanlp-compress"))
+////
+//        val tester = File("data/corpus.segment/backoff2005/msr_training.txt").readLines()
 //
-        val tester = File("data/corpus.segment/backoff2005/msr_training.txt").readLines()
-
-        CWSEvaluate.evaluate(tester, cws)
+//        CWSEvaluate.evaluate(tester, cws)
 //        println("---")
 
         val text = "" +
@@ -57,6 +57,7 @@ object CWSPerceptronTest {
                 "心肌细胞是心脏泵血的动力来源，心肌细胞出问题可能会导致严重疾病甚至死亡。因此，如果能让心脏中长出新的心肌细胞，替换掉有问题的细胞，以此修复心脏，无疑是医学上的一大突破。\n" +
                 "安韦萨就在心肌上动起了“心机”。2001年，他还在纽约医学院工作时，在英国学术刊物《自然》上发表一篇论文，说可以用来自骨髓的c-kit干细胞使心肌再生。随后，他又于2003年在美国《细胞》杂志发文说不需要骨髓干细胞，使用成熟的心脏干细胞就能修复心肌。有研究人员曾对他的这两项研究成果提出质疑。\n" +
                 "我要购买一个双层芝士汉堡\n" +
+                "我要购买一个双层牛肉汉堡\n" +
                 "这是你买的第几套房子，这就是总统套房了，芝士汉堡是什么味道\n" +
                 "小孩多大学跳舞\n" +
                 "外地人生孩子\n" +
@@ -64,6 +65,13 @@ object CWSPerceptronTest {
         ""
 
 //        val text = "心肌细胞是心脏泵血的动力来源"
+
+        cws.learn("拆迁人 为")
+        cws.learn("外地人 生 孩子")
+        cws.learn("外地人 生 孩子")
+        cws.learn("外地人 生 孩子")
+        cws.learn("小孩 多大 学 跳舞")
+        cws.learn("小孩 多大 学 跳舞")
 
         text.lines().forEach {
             println(it + " \n" + cws.decodeToWordList(it).joinToString(separator = " / "))

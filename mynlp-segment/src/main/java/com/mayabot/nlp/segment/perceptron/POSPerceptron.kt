@@ -10,10 +10,8 @@ import com.mayabot.nlp.utils.CharNormUtils
 import com.mayabot.nlp.utils.Characters
 import java.io.File
 import java.io.InputStream
-import java.util.*
 import java.util.function.Consumer
 import java.util.function.Function
-import kotlin.collections.ArrayList
 
 /**
  * 词性分析感知机
@@ -137,6 +135,7 @@ class POSPerceptron(val model: Perceptron, val labelList: Array<String>) {
         @JvmStatic
         fun load(parameterBin: InputStream, featureBin: InputStream, labelText: InputStream): POSPerceptron {
             val model = PerceptronModel.load(parameterBin, featureBin, true)
+            model.decodeQuickModel = true
             val labelList = labelText.use { it.bufferedReader().readLines() }
             return POSPerceptron(model, labelList.toTypedArray())
         }
@@ -287,6 +286,8 @@ object POSPerceptronFeature {
                 }
             }
         }
+
+
 //
 //        //最后一列保留给特征向量使用
         vector.add(0)
@@ -296,6 +297,9 @@ object POSPerceptronFeature {
 
     private fun addFeature(features: FeatureSet, vector: IntArrayList, feature: String) {
         val id = features.featureId(feature)
+        if (id == 228008) {
+            println()
+        }
         if (id >= 0) {
             vector.add(id)
         }
@@ -313,11 +317,27 @@ class POSPerceptronTrainer {
     /**
      * 保存 词性->词性ID
      */
-    lateinit var labelMap: Map<String, Int>
+    val labelMap: Map<String, Int>
 
-    fun train(dir: File, maxIter: Int, threadNumber: Int): POSPerceptron {
+    init {
+        val list = Nature.values().filter {
+            it != Nature.newWord
+                    && it != Nature.begin
+                    && it != Nature.end
+        }.map { it.name }.sorted()
+        val map = HashMap<String, Int>(Nature.values().size * 3)
 
-        val allFiles = if (dir.isFile) listOf(dir) else dir.walkTopDown().filter { it.isFile && !it.name.startsWith(".") }.toList()
+        list.zip(0 until list.size).forEach { x ->
+            map.put(x.first, x.second)
+        }
+
+        labelMap = map
+    }
+
+
+    fun train(trainFile: File, evaluate: File, maxIter: Int, threadNumber: Int): POSPerceptron {
+
+        val allFiles = trainFile.allFiles()
 
         prepareFeatureSet(allFiles)
 
@@ -325,22 +345,32 @@ class POSPerceptronTrainer {
 
         val sampleList = loadSamples(allFiles)
 
+        val evaluateSampleList = if (evaluate == trainFile) {
+            sampleList
+        } else {
+            loadSamples(evaluate.allFiles())
+        }
+
         println("Start Train ... ")
 
         val trainer = PerceptronTrainer(
                 featureSet,
                 labelMap.size,
                 sampleList,
-                POSEvaluateRunner(sampleList),
-                maxIter, true, 10)
+                POSEvaluateRunner(evaluateSampleList),
+                maxIter, true)
 
         trainer
 
         val model = trainer.train(threadNumber)
 
+        // model.compress(0.1,0.001)
+
         println("--------------------")
 
-        POSEvaluateRunner(sampleList).run(model)
+        POSEvaluateRunner(evaluateSampleList).run(model)
+
+
 
         return POSPerceptron(model, labelMap.keys.sorted().toTypedArray())
     }
@@ -416,23 +446,7 @@ class POSPerceptronTrainer {
         println("开始构建POS FeatureSet")
         val t1 = System.currentTimeMillis()
 
-
-        val posSet = HashSet<String>(500)
-        corposFiles.forEach { file ->
-            println(file.absolutePath)
-            file.useLines { lines ->
-                lines.forEach { line ->
-                    val flatWords = line.parseToFlatWords()
-                    flatWords.forEach {
-                        if (it.pos != "" && !posSet.contains(it.pos)) {
-                            posSet.add(it.pos)
-                        }
-                    }
-                }
-            }
-        }
-
-        val builder = DATFeatureSetBuilder(posSet.size)
+        val builder = DATFeatureSetBuilder(labelMap.size)
         val fit = Consumer<String> { f ->
             builder.put(f)
         }
@@ -454,8 +468,6 @@ class POSPerceptronTrainer {
 
         this.featureSet = builder.build()
 
-        this.labelMap = posSet.sorted().zip(0 until posSet.size).toMap()
-
         println("FeatureSet构建完成,用时${System.currentTimeMillis() - t1}ms")
     }
 
@@ -466,17 +478,14 @@ class POSEvaluateRunner(val sampleList: List<TrainSample>) : EvaluateRunner {
 
     override fun run(model: Perceptron) {
 
-        val random = Random(0)
-        val bili = 0.8f
         var total = 0.0
         var right = 0.0
-        var targetSampleSize = (sampleList.size * bili).toInt()
-        var count = 0
-        System.out.print("Evaluating 0%")
+//        var targetSampleSize = sampleList.size
+//        var count = 0
+//        System.out.print("Evaluating 0%")
         sampleList.forEach { sample ->
             // 抽样10%进行验证
-            if (random.nextDouble() < bili) {
-                count++
+//                count++
                 total += sample.label.size
                 val result = model.decode(sample.featureMatrix)
                 for (x in 0 until result.size) {
@@ -484,14 +493,13 @@ class POSEvaluateRunner(val sampleList: List<TrainSample>) : EvaluateRunner {
                         right++
                     }
                 }
-                if (count % 800 == 0) {
-                    System.out.print("\rEvaluating ${"%.2f".format(count * 100.0 / targetSampleSize)}%")
-
-                }
-            }
+//                if (count % 2000 == 0) {
+//                    System.out.print("\rEvaluating ${"%.2f".format(count * 100.0 / targetSampleSize)}%")
+//
+//                }
         }
 
-        System.out.println("\nP = ${"%.3f".format((right / total))}")
+        System.out.println("P = ${"%.3f".format((right / total))}\n")
     }
 
 }

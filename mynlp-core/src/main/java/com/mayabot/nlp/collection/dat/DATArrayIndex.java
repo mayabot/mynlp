@@ -101,6 +101,20 @@ public class DATArrayIndex {
         size = sortedKeys.size();
         check = datDoubleArrayMaker.getCheck();
         base = datDoubleArrayMaker.getBase();
+
+        int i = 0;
+        for (String key : sortedKeys) {
+            if (key.equals("白化病♂")) {
+                System.out.println();
+            }
+            if (i == 228008) {
+                System.out.println();
+            }
+            if (indexOf(key) != i) {
+                System.out.println();
+            }
+            i++;
+        }
     }
 
 //    public DATArrayIndex(int[] check, int[] base, int size) {

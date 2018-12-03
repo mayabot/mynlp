@@ -40,6 +40,12 @@ public interface Perceptron {
      */
     FeatureSet featureSet();
 
+
+    void makeSureParameter(int featureId);
+
+
+    void update(TrainSample data);
+
     void compress(double ratio, double threshold);
 
     /**
@@ -48,7 +54,7 @@ public interface Perceptron {
      * @param featureSequence
      * @return
      */
-    double decode(List<IntArrayList> featureSequence, int[] guessLabel);
+    void decode(List<IntArrayList> featureSequence, int[] guessLabel);
 
     /**
      * IntArrayList 稀疏特征向量的简短表示，最后一位是留给转移特征。

@@ -15,18 +15,42 @@ class FeatureSet(
         var keys: List<String>?
 ) {
 
+    //预留的多一点，就不会有hash冲突
+    var extMap = HashMap<String, Int>(1000)
+
+    var nextId = dat.size()
+
+    // 要搞两种模式，一个是训练的时候，就不动了一个是工作模式
+
     /**
      * 返回一个特征对应的ID
      * @return -1表示特征不存在
      */
-    fun featureId(feature: String) = dat.indexOf(feature)
+    fun featureId(feature: String): Int {
+        val id = dat.indexOf(feature)
+
+        if (id >= 0) {
+            return id
+        }
+
+        return extMap[feature] ?: -1
+
+    }
+
+    fun newExtId(feature: String): Int {
+        if (dat.indexOf(feature) < 0) {
+            extMap[feature] = nextId++
+            return extMap[feature]!!
+        }
+        return -1
+    }
 
 
     /**
      * 特征大小
      * @return 特征集合的大小
      */
-    fun size() = dat.size()
+    fun size() = dat.size() + extMap.size
 
     /**
      * 保存到文件
