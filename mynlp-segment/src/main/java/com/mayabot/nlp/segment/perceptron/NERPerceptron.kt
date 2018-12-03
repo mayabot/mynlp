@@ -20,7 +20,10 @@ class NERPerceptron(val model: Perceptron, private val labels: List<String>) {
     private val featureSet = model.featureSet()
 
 
-    fun decode(sentence: List<WordTerm>): List<String> {
+    /**
+     * 解码结果保存在WordTerm的customFlag字段里面
+     */
+    fun decode(sentence: List<WordTerm>) {
         val featureList = ArrayList<IntArrayList>(sentence.size)
         for (i in 0 until sentence.size) {
             featureList += NERPerceptronFeature.extractFeatureVector(sentence, i, featureSet)
@@ -28,8 +31,11 @@ class NERPerceptron(val model: Perceptron, private val labels: List<String>) {
 
         val result = model.decode(featureList)
 
-        return result.map { labels[it] }
+        for (i in 0 until sentence.size) {
+            sentence[i].customFlag = labels[result[i]]
+        }
     }
+
 
     /**
      * 保存NER感知机模型到File dir
@@ -286,7 +292,7 @@ class NERPerceptronTrainer(val targetPos: Set<String>) {
                     val ner = NERPerceptron(model, labelList)
                     NEREvaluateUtils.evaluateNER(ner, evaluateList, targetPos)
                 },
-                maxIter, false, 14)
+                maxIter, false)
 
         val model = trainer.train(threadNumber)
 
@@ -463,7 +469,9 @@ object NEREvaluateUtils {
 
             val sentenceWordTerm = convert(sentence, targetPos)
 
-            val pred = combineNER(recognizer.decode(sentenceWordTerm))
+            recognizer.decode(sentenceWordTerm)
+            val nerResult = sentenceWordTerm.map { it.customFlag }
+            val pred = combineNER(nerResult)
             val gold = combineNER(sentenceWordTerm.map { it.customFlag }.toList())
             for (p in pred) {
                 val type = p.split("\t".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[2]
