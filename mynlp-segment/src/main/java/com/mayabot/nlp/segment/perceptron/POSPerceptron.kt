@@ -297,9 +297,7 @@ object POSPerceptronFeature {
 
     private fun addFeature(features: FeatureSet, vector: IntArrayList, feature: String) {
         val id = features.featureId(feature)
-        if (id == 228008) {
-            println()
-        }
+
         if (id >= 0) {
             vector.add(id)
         }
@@ -328,7 +326,7 @@ class POSPerceptronTrainer {
         val map = HashMap<String, Int>(Nature.values().size * 3)
 
         list.zip(0 until list.size).forEach { x ->
-            map.put(x.first, x.second)
+            map[x.first] = x.second
         }
 
         labelMap = map
@@ -359,8 +357,6 @@ class POSPerceptronTrainer {
                 sampleList,
                 POSEvaluateRunner(evaluateSampleList),
                 maxIter, true)
-
-        trainer
 
         val model = trainer.train(threadNumber)
 
@@ -474,7 +470,10 @@ class POSPerceptronTrainer {
 }
 
 
-class POSEvaluateRunner(val sampleList: List<TrainSample>) : EvaluateRunner {
+/**
+ * 词性评估
+ */
+class POSEvaluateRunner(private val sampleList: List<TrainSample>) : EvaluateRunner {
 
     override fun run(model: Perceptron) {
 

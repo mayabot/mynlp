@@ -4,7 +4,6 @@ import com.mayabot.nlp.Mynlps;
 import com.mayabot.nlp.segment.tokenizer.bestpath.LongpathBestPathAlgorithm;
 import com.mayabot.nlp.segment.tokenizer.collector.SentenceCollector;
 import com.mayabot.nlp.segment.tokenizer.xprocessor.AtomSegmenterInitializer;
-import com.mayabot.nlp.segment.tokenizer.xprocessor.ConvertAbstractWordInitializer;
 import com.mayabot.nlp.segment.tokenizer.xprocessor.CustomDictionaryProcessor;
 
 /**
@@ -21,8 +20,8 @@ public class SimpleDictTokenizerBuilder extends BaseTokenizerBuilder {
         //wordnet初始化填充
         builder.addWordnetInitializer(
                 Mynlps.getInstance(CoreTokenizerBuilder.CoreDictionaryInitializer.class),
-                Mynlps.getInstance(AtomSegmenterInitializer.class),
-                Mynlps.getInstance(ConvertAbstractWordInitializer.class)
+                Mynlps.getInstance(AtomSegmenterInitializer.class)
+//                Mynlps.getInstance(ConvertAbstractWordInitializer.class)
         );
 
         builder.setBestPathComputer(LongpathBestPathAlgorithm.class);

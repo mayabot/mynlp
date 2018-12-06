@@ -15,11 +15,8 @@
  */
 package com.mayabot.nlp.segment.dictionary.custom;
 
-import com.mayabot.nlp.collection.dat.DoubleArrayTrie;
-import com.mayabot.nlp.collection.dat.DoubleArrayTrieBuilder;
+import com.mayabot.nlp.collection.dat.DoubleArrayTrieMap;
 import com.mayabot.nlp.segment.dictionary.CustomDictionary;
-import com.mayabot.nlp.segment.dictionary.Nature;
-import com.mayabot.nlp.segment.dictionary.NatureAttribute;
 
 import java.util.TreeMap;
 
@@ -30,11 +27,11 @@ import java.util.TreeMap;
  */
 public class MemCustomDictionary implements CustomDictionary {
 
-    private TreeMap<String, NatureAttribute> dict;
+    private TreeMap<String, Integer> dict;
 
-    private DoubleArrayTrie<NatureAttribute> trie;
+    private DoubleArrayTrieMap<Integer> trie;
 
-    public MemCustomDictionary(TreeMap<String, NatureAttribute> dict) {
+    public MemCustomDictionary(TreeMap<String, Integer> dict) {
         this.dict = dict;
         rebuild();
     }
@@ -49,11 +46,11 @@ public class MemCustomDictionary implements CustomDictionary {
             trie = null;
             return;
         }
-        trie = new DoubleArrayTrieBuilder().build(dict);
+        trie = new DoubleArrayTrieMap(dict);
     }
 
-    public void addWord(String word, Nature nature) {
-        dict.put(word, NatureAttribute.create(nature, 1000));
+    public void addWord(String word) {
+        dict.put(word, 1000);
     }
 
     public void removeWord(String word) {
@@ -61,7 +58,7 @@ public class MemCustomDictionary implements CustomDictionary {
     }
 
     @Override
-    public DoubleArrayTrie<NatureAttribute> getTrie() {
+    public DoubleArrayTrieMap<Integer> getTrie() {
         return trie;
     }
 

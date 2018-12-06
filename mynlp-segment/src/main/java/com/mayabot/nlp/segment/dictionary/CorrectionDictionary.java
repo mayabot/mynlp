@@ -20,7 +20,7 @@ import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import com.google.common.primitives.Ints;
 import com.google.inject.ImplementedBy;
-import com.mayabot.nlp.collection.dat.DoubleArrayTrie;
+import com.mayabot.nlp.collection.dat.DoubleArrayTrieMap;
 import com.mayabot.nlp.segment.dictionary.correction.DefaultCorrectionDictionary;
 
 import java.util.List;
@@ -33,7 +33,7 @@ import java.util.List;
 @ImplementedBy(DefaultCorrectionDictionary.class)
 public interface CorrectionDictionary {
 
-    DoubleArrayTrie<AdjustWord> getTrie();
+    DoubleArrayTrieMap<AdjustWord> getTrie();
 
     class AdjustWord {
         public String path;

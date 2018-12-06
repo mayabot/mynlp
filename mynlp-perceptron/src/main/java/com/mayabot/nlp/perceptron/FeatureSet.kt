@@ -1,6 +1,6 @@
 package com.mayabot.nlp.perceptron
 
-import com.mayabot.nlp.collection.dat.DATArrayIndex
+import com.mayabot.nlp.collection.dat.DoubleArrayTrie
 import java.io.DataInputStream
 import java.io.DataOutputStream
 import java.io.File
@@ -11,7 +11,7 @@ import java.io.InputStream
  *
  */
 class FeatureSet(
-        private val dat: DATArrayIndex,
+        private val dat: DoubleArrayTrie,
         var keys: List<String>?
 ) {
 
@@ -78,7 +78,7 @@ class FeatureSet(
         @JvmStatic
         fun read(datInput: InputStream): FeatureSet {
             return datInput.use {
-                val datArray = DATArrayIndex(DataInputStream(it))
+                val datArray = DoubleArrayTrie(DataInputStream(it))
                 FeatureSet(datArray, null)
             }
         }
@@ -86,7 +86,7 @@ class FeatureSet(
         @JvmStatic
         fun read(datInput: InputStream, textInput: InputStream): FeatureSet {
             return datInput.use {
-                val datArray = DATArrayIndex(DataInputStream(it))
+                val datArray = DoubleArrayTrie(DataInputStream(it))
                 val lines = textInput.use { x ->
                     x.bufferedReader().readLines()
                 }
@@ -100,7 +100,7 @@ class FeatureSet(
                 val reader = textInput.bufferedReader()
                 val list = reader.readLines()
 
-                val datArray = DATArrayIndex(list)
+                val datArray = DoubleArrayTrie(list)
                 FeatureSet(datArray, list)
             }
         }
@@ -130,7 +130,7 @@ class DATFeatureSetBuilder(labelCount: Int) {
 
     fun build(): FeatureSet {
         val list = keys.sorted()
-        return FeatureSet(DATArrayIndex(list), list)
+        return FeatureSet(DoubleArrayTrie(list), list)
     }
 }
 

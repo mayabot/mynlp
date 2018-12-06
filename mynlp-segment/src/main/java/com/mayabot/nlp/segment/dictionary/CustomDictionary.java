@@ -16,7 +16,7 @@
 package com.mayabot.nlp.segment.dictionary;
 
 import com.google.inject.ImplementedBy;
-import com.mayabot.nlp.collection.dat.DoubleArrayTrie;
+import com.mayabot.nlp.collection.dat.DoubleArrayTrieMap;
 import com.mayabot.nlp.segment.dictionary.custom.DefaultCustomDictionary;
 
 /**
@@ -27,6 +27,6 @@ import com.mayabot.nlp.segment.dictionary.custom.DefaultCustomDictionary;
 @ImplementedBy(DefaultCustomDictionary.class)
 public interface CustomDictionary {
 
-    DoubleArrayTrie<NatureAttribute> getTrie();
+    DoubleArrayTrieMap<Integer> getTrie();
 
 }

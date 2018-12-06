@@ -53,7 +53,7 @@ public class PosPerceptronProcessor extends BaseMynlpComponent implements Wordpa
         List<Nature> posList = perceptronPosService.posFromVertex(vertices);
 
         for (int i = 0; i < vertices.size(); i++) {
-            vertices.get(i).setGuessNature(posList.get(i));
+            vertices.get(i).nature = (posList.get(i));
         }
 
         return wordPath;

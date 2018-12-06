@@ -15,7 +15,7 @@
  */
 
 /**
- * DoubleArrayTrie: Java implementation of Darts (Double-ARray Trie System)
+ * DoubleArrayTrieMap: Java implementation of Darts (Double-ARray Trie System)
  * <p/>
  * <p>
  * Copyright(C) 2001-2007 Taku Kudo &lt;taku@chasen.org&gt;<br />
@@ -39,7 +39,7 @@ package com.mayabot.nlp.collection.dat;
  * <p>
  * DAT的匹配器是一个多匹配器，把各种可能都计算出来
  */
-public class DATMatcher<V> {
+public class DATMatcher {
 
     /**
      * key的起点(在原始文本中)
@@ -53,10 +53,7 @@ public class DATMatcher<V> {
      * key的字典序坐标
      */
     private int index;
-    /**
-     * key对应的value
-     */
-    private V value;
+
     /**
      * 传入的字符数组
      */
@@ -74,7 +71,7 @@ public class DATMatcher<V> {
      */
     private int arrayLength;
 
-    private DoubleArrayTrie<V> dat;
+    private DoubleArrayTrie dat;
 
     /**
      * 构造一个双数组搜索工具
@@ -82,11 +79,12 @@ public class DATMatcher<V> {
      * @param offset 搜索的起始位置
      * @param text   搜索的目标字符数组
      */
-    DATMatcher(DoubleArrayTrie<V> dat, String text, int offset) {
+    DATMatcher(DoubleArrayTrie dat, String text, int offset) {
         this(dat, text.toCharArray(), offset);
     }
 
-    DATMatcher(DoubleArrayTrie<V> dat, char[] charArray, int offset) {
+
+    DATMatcher(DoubleArrayTrie dat, char[] charArray, int offset) {
         this.charArray = charArray;
         this.dat = dat;
         i = offset;
@@ -145,7 +143,6 @@ public class DATMatcher<V> {
             {
                 length = i - begin + 1;
                 index = -n - 1;
-                value = dat.values.get(index);
                 last = b;
                 ++i;
                 return true;
@@ -171,9 +168,6 @@ public class DATMatcher<V> {
 //		this.length = length;
 //	}
 
-    public V getValue() {
-        return value;
-    }
 
 //	public void setValue(V value) {
 //		this.value = value;

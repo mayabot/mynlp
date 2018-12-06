@@ -34,8 +34,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.mayabot.nlp.MynlpEnv;
 import com.mayabot.nlp.Setting;
-import com.mayabot.nlp.collection.dat.DoubleArrayTrie;
-import com.mayabot.nlp.collection.dat.DoubleArrayTrieBuilder;
+import com.mayabot.nlp.collection.dat.DoubleArrayTrieMap;
 import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
 import com.mayabot.nlp.resources.NlpResource;
@@ -65,11 +64,11 @@ public class DefaultCorrectionDictionary implements CorrectionDictionary {
     public final static Setting<String> correctionDict = Setting.string("correction.dict", "dictionary/correction.txt");
 
 
-    private DoubleArrayTrie<AdjustWord> doubleArrayTrie;
+    private DoubleArrayTrieMap<AdjustWord> doubleArrayTrie;
 
 
     @Override
-    public DoubleArrayTrie<AdjustWord> getTrie() {
+    public DoubleArrayTrieMap<AdjustWord> getTrie() {
         return doubleArrayTrie;
     }
 
@@ -106,7 +105,7 @@ public class DefaultCorrectionDictionary implements CorrectionDictionary {
                 return;
             }
 
-            this.doubleArrayTrie = new DoubleArrayTrieBuilder<AdjustWord>().build(map);
+            this.doubleArrayTrie = new DoubleArrayTrieMap<>(map);
         }
 
     }

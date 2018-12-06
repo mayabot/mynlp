@@ -17,12 +17,12 @@ package com.mayabot.nlp.segment.dictionary;
 
 import com.google.common.base.Splitter;
 import com.mayabot.nlp.MynlpEnv;
-import com.mayabot.nlp.collection.dat.DoubleArrayTrie;
-import com.mayabot.nlp.collection.dat.DoubleArrayTrieBuilder;
+import com.mayabot.nlp.collection.dat.DoubleArrayTrieMap;
 import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
 import com.mayabot.nlp.resources.NlpResouceExternalizable;
 import com.mayabot.nlp.resources.NlpResource;
+import com.mayabot.nlp.segment.dictionary.core.CoreDictionaryAbsWords;
 import com.mayabot.nlp.utils.CharSourceLineReader;
 
 import java.io.*;
@@ -32,6 +32,8 @@ import java.util.regex.Pattern;
 
 /**
  * 通用的词典，对应固定格式的词典，但是标签可以泛型化
+ * <p>
+ * 由于抽象词变化了，加载原来的语料需要对应关系转换.
  *
  * @author hankcs
  * @author jimichan
@@ -41,7 +43,7 @@ public abstract class CommonDictionary<V> extends NlpResouceExternalizable {
     protected InternalLogger logger = InternalLoggerFactory.getInstance(this.getClass());
 
 
-    private DoubleArrayTrie<V> trie;
+    private DoubleArrayTrieMap<V> trie;
 
     public CommonDictionary(MynlpEnv mynlp) throws Exception {
         this.restore(mynlp);
@@ -61,10 +63,45 @@ public abstract class CommonDictionary<V> extends NlpResouceExternalizable {
 
     @Override
     public String sourceVersion(MynlpEnv mynlp) {
-        return mynlp.loadResource(dicFilePath()).hash().substring(0, 7);
+        return mynlp.loadResource(dicFilePath()).hash().substring(0, 8);
     }
 
     private final Splitter splitter = Splitter.on(Pattern.compile("\\s"));
+
+
+    /**
+     * hanlp里面的label会和mynlp中的不一样。暂时统一在这里处理。
+     *
+     * @param label
+     * @return
+     */
+    private String labelMap(String label) {
+        switch (label) {
+            case "始##始":
+                return CoreDictionaryAbsWords.BIGIN_TAG;
+            case "末##末":
+                return CoreDictionaryAbsWords.TAG_END;
+            case "未##团":
+                return CoreDictionaryAbsWords.TAG_GROUP;
+            case "未##数":
+                return CoreDictionaryAbsWords.TAG_NUMBER;
+            case "未##地":
+                return CoreDictionaryAbsWords.TAG_PLACE;
+            case "未##量":
+                return CoreDictionaryAbsWords.TAG_QUANTIFIER;
+            case "未##专":
+                return CoreDictionaryAbsWords.TAG_NX;
+            case "未##时":
+                return CoreDictionaryAbsWords.TAG_TIME;
+            case "未##串":
+                return CoreDictionaryAbsWords.TAG_CLUSTER;
+            case "未##人":
+                return CoreDictionaryAbsWords.TAG_PEOPLE;
+            default:
+                return label;
+        }
+    }
+
 
     @Override
     public void loadFromSource(MynlpEnv mynlp) throws Exception {
@@ -80,25 +117,25 @@ public abstract class CommonDictionary<V> extends NlpResouceExternalizable {
                 if (!params.isEmpty()) {
                     List<String> attrs = params.subList(1, params.size());
                     V attribute = parseLine(attrs);
-                    map.put(params.get(0), attribute);
+                    map.put(labelMap(params.get(0)), attribute);
                 }
             }
         }
 
         filtermap(map);
 
-        DoubleArrayTrieBuilder<V> builder = new DoubleArrayTrieBuilder<>();
-        this.trie = builder.build(map);
+        this.trie = new DoubleArrayTrieMap<>(map);
     }
 
     @Override
     public void writeExternal(ObjectOutput out) throws IOException {
-        DoubleArrayTrie.write(trie, out, this::writeItem);
+        trie.save(out, this::writeItem);
     }
 
     @Override
     public void readExternal(ObjectInput in) throws IOException {
-        this.trie = DoubleArrayTrie.read(in, this::readItem);
+        this.trie = new DoubleArrayTrieMap<>(in, this::readItem);
+
     }
 
     /**

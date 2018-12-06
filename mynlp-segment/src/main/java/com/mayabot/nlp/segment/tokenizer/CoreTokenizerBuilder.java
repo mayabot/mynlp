@@ -1,13 +1,15 @@
 package com.mayabot.nlp.segment.tokenizer;
 
 import com.google.inject.Inject;
-import com.mayabot.nlp.collection.dat.DATMatcher;
+import com.mayabot.nlp.collection.dat.DoubleArrayTrieStringIntMap;
 import com.mayabot.nlp.segment.WordnetInitializer;
 import com.mayabot.nlp.segment.common.BaseMynlpComponent;
-import com.mayabot.nlp.segment.dictionary.NatureAttribute;
 import com.mayabot.nlp.segment.dictionary.core.CoreDictionary;
 import com.mayabot.nlp.segment.tokenizer.bestpath.ViterbiBestPathAlgorithm;
-import com.mayabot.nlp.segment.tokenizer.xprocessor.*;
+import com.mayabot.nlp.segment.tokenizer.xprocessor.AtomSegmenterInitializer;
+import com.mayabot.nlp.segment.tokenizer.xprocessor.CombineProcessor;
+import com.mayabot.nlp.segment.tokenizer.xprocessor.CustomDictionaryProcessor;
+import com.mayabot.nlp.segment.tokenizer.xprocessor.TimeStringProcessor;
 import com.mayabot.nlp.segment.wordnet.Vertex;
 import com.mayabot.nlp.segment.wordnet.Wordnet;
 
@@ -49,7 +51,7 @@ public class CoreTokenizerBuilder extends BaseTokenizerBuilder {
         //wordnet初始化填充
         builder.addWordnetInitializer(CoreDictionaryInitializer.class);
         builder.addWordnetInitializer(AtomSegmenterInitializer.class);
-        builder.addWordnetInitializer(ConvertAbstractWordInitializer.class);
+//        builder.addWordnetInitializer(ConvertAbstractWordInitializer.class);
 
         builder.addWordnetInitializer(TimeStringProcessor.class);
 
@@ -131,15 +133,14 @@ public class CoreTokenizerBuilder extends BaseTokenizerBuilder {
             char[] text = wordnet.getCharArray();
 
             // 核心词典查询
-            DATMatcher<NatureAttribute> searcher = coreDictionary.match(text, 0);
+            DoubleArrayTrieStringIntMap.DATMapMatcherInt searcher = coreDictionary.match(text, 0);
 
             while (searcher.next()) {
                 int offset = searcher.getBegin();
                 int length = searcher.getLength();
                 int wordId = searcher.getIndex();
 
-                //没有等效词
-                Vertex v = new Vertex(length).setWordInfo(wordId, searcher.getValue());
+                Vertex v = new Vertex(length, wordId, searcher.getValue());
 
                 wordnet.put(offset, v);
             }

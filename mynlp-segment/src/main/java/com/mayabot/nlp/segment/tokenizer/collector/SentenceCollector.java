@@ -24,7 +24,7 @@ public class SentenceCollector implements WordTermCollector {
 
         while (vertexIterator.hasNext()) {
             Vertex vertex = vertexIterator.next();
-            WordTerm term = new WordTerm(vertex.realWord(), vertex.guessNature(), vertex.getRowNum());
+            WordTerm term = new WordTerm(vertex.realWord(), vertex.nature, vertex.getRowNum());
 
             if (StringUtils.isWhiteSpace(term.word)) {
                 continue;

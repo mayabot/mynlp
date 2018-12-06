@@ -170,8 +170,8 @@ object CWSPerceptronSample {
         var max: Int = 0
         for (i in 0 until sentence.size) {
             CWSPerceptronFeature.extractFeature(sentence, sentence.size, i, Consumer { feature ->
-                var id = featureSet.featureId(feature)
-                if (id < 0) {
+                var fid = featureSet.featureId(feature)
+                if (fid < 0) {
                     val id = featureSet.newExtId(feature)
                     if (id > max) {
                         max = id

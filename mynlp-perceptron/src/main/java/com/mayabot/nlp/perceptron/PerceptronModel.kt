@@ -1,7 +1,7 @@
 package com.mayabot.nlp.perceptron
 
 import com.carrotsearch.hppc.IntArrayList
-import com.mayabot.nlp.collection.dat.DATArrayIndex
+import com.mayabot.nlp.collection.dat.DoubleArrayTrie
 import java.io.DataInputStream
 import java.io.DataOutputStream
 import java.io.File
@@ -217,7 +217,7 @@ open class PerceptronModel(
         }
 
         parameter = newParameter
-        this.featureSet = FeatureSet(DATArrayIndex(newFeatureList), newFeatureList)
+        this.featureSet = FeatureSet(DoubleArrayTrie(newFeatureList), newFeatureList)
 
 //        featureSetSize = this.featureSet.size()
 //        parameterSize = parameter.size

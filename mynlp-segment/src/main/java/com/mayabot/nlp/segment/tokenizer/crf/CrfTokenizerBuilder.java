@@ -4,7 +4,10 @@ import com.mayabot.nlp.segment.tokenizer.BaseTokenizerBuilder;
 import com.mayabot.nlp.segment.tokenizer.WordnetTokenizerBuilder;
 import com.mayabot.nlp.segment.tokenizer.bestpath.ViterbiBestPathAlgorithm;
 import com.mayabot.nlp.segment.tokenizer.collector.SentenceCollector;
-import com.mayabot.nlp.segment.tokenizer.xprocessor.*;
+import com.mayabot.nlp.segment.tokenizer.xprocessor.AtomSegmenterInitializer;
+import com.mayabot.nlp.segment.tokenizer.xprocessor.CombineProcessor;
+import com.mayabot.nlp.segment.tokenizer.xprocessor.CustomDictionaryProcessor;
+import com.mayabot.nlp.segment.tokenizer.xprocessor.TimeStringProcessor;
 
 public class CrfTokenizerBuilder extends BaseTokenizerBuilder {
 
@@ -16,7 +19,6 @@ public class CrfTokenizerBuilder extends BaseTokenizerBuilder {
         builder.addWordnetInitializer(
                 CrfBaseSegmentInitializer.class,
                 AtomSegmenterInitializer.class,
-                ConvertAbstractWordInitializer.class,
                 TimeStringProcessor.class
         );
 

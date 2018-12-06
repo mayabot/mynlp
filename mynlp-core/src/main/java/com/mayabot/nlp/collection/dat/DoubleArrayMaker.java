@@ -11,9 +11,9 @@ import java.util.List;
 /**
  * 给定一个已经排序的StringList，构造DAT所需要的双数组
  */
-public class DATDoubleArrayMaker {
+public class DoubleArrayMaker {
 
-    static InternalLogger logger = InternalLoggerFactory.getInstance(DATDoubleArrayMaker.class);
+    static InternalLogger logger = InternalLoggerFactory.getInstance(DoubleArrayMaker.class);
 
     static final int default_capacity = 1024 * 1024; // 4M
     static final int leastAddSize = 1024 * 1024; // 4M
@@ -43,11 +43,11 @@ public class DATDoubleArrayMaker {
 //    private boolean verbose = true;
 
 
-    public DATDoubleArrayMaker(List<String> key) {
+    public DoubleArrayMaker(List<String> key) {
         this(key, default_capacity);
     }
 
-    public DATDoubleArrayMaker(List<String> key, int initCapacity) {
+    public DoubleArrayMaker(List<String> key, int initCapacity) {
         array_capacity = initCapacity;
         check = new int[initCapacity];
         base = new int[initCapacity];

@@ -80,6 +80,7 @@ public class OrganizationDictionary {
             }
 
             AhoCoraickDoubleArrayTrieBuilder<String> acdaBuilder = new AhoCoraickDoubleArrayTrieBuilder<>();
+
             this.trie = acdaBuilder.build(map);
         }
 
