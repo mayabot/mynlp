@@ -18,8 +18,8 @@ package com.mayabot.nlp.segment.tokenizer.xprocessor;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.mayabot.nlp.collection.dat.DATMatcher;
-import com.mayabot.nlp.collection.dat.DoubleArrayTrie;
+import com.mayabot.nlp.collection.dat.DATMapMatcher;
+import com.mayabot.nlp.collection.dat.DoubleArrayTrieMap;
 import com.mayabot.nlp.segment.WordpathProcessor;
 import com.mayabot.nlp.segment.common.BaseMynlpComponent;
 import com.mayabot.nlp.segment.dictionary.CorrectionDictionary;
@@ -54,13 +54,13 @@ public class CorrectionProcessor extends BaseMynlpComponent implements WordpathP
     @Override
     public Wordpath process(Wordpath wordPath) {
 
-        DoubleArrayTrie<AdjustWord> dat = dictionary.getTrie();
+        DoubleArrayTrieMap<AdjustWord> dat = dictionary.getTrie();
 
         if (dat == null) {
             return wordPath;
         }
 
-        DATMatcher<AdjustWord> datSearch
+        DATMapMatcher<AdjustWord> datSearch
                 = dat.match(wordPath.getWordnet().getCharArray(), 0);
 
 

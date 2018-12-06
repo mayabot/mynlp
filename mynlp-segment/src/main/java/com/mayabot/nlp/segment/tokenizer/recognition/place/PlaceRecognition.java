@@ -24,7 +24,6 @@ import com.mayabot.nlp.segment.OptimizeProcessor;
 import com.mayabot.nlp.segment.common.BaseMynlpComponent;
 import com.mayabot.nlp.segment.common.VertexTagCharSequenceTempChar;
 import com.mayabot.nlp.segment.dictionary.Nature;
-import com.mayabot.nlp.segment.dictionary.NatureAttribute;
 import com.mayabot.nlp.segment.dictionary.core.CoreDictionary;
 import com.mayabot.nlp.segment.tokenizer.recognition.place.ns.NSDictionary;
 import com.mayabot.nlp.segment.tokenizer.recognition.place.ns.PlaceDictionary;
@@ -48,9 +47,9 @@ public class PlaceRecognition extends BaseMynlpComponent implements OptimizeProc
     final long a_total_freq;
     final EnumFreqPair<NSTag> defaultEnumFreqPair;
 
-    final int place_word_id;
-    final String place_word_tag;
-    final NatureAttribute place_natureAttribute;
+//    final int place_word_id;
+//    final String place_word_tag;
+//    final int place_natureAttribute;
 
 
     public static PlaceRecognition build(Injector injector) {
@@ -64,11 +63,11 @@ public class PlaceRecognition extends BaseMynlpComponent implements OptimizeProc
 
         a_total_freq = placeDictionary.getTransformMatrixDictionary().getTotalFrequency(Z);
         defaultEnumFreqPair = new EnumFreqPair(Z, a_total_freq);
-
-        place_word_id = coreDictionary.getWordID(CoreDictionary.TAG_PLACE);
-        place_word_tag = CoreDictionary.TAG_PLACE;
-        place_natureAttribute =
-                coreDictionary.get(place_word_id);
+//
+//        place_word_id = coreDictionary.getWordID(CoreDictionary.TAG_PLACE);
+//        place_word_tag = CoreDictionary.TAG_PLACE;
+//        place_natureAttribute =
+//                coreDictionary.get(place_word_id);
     }
 
     @Override
@@ -125,7 +124,9 @@ public class PlaceRecognition extends BaseMynlpComponent implements OptimizeProc
                     ai.incrementAndGet();
                     //FIXME 如果已结之前已结存在，那么只需要添加词性和对应的词频，而不是覆盖
                     wordnet.put(pathWithBE[begin].offset(), name.length()).
-                            setWordInfo(place_word_id, place_word_tag, place_natureAttribute);
+                            setAbsWordNatureAndFreq(Nature.ns);
+//                            setWordInfo(place_word_id, place_word_tag,Nature.ns
+//                                    , place_natureAttribute);
                 }
         );
 
@@ -158,7 +159,7 @@ public class PlaceRecognition extends BaseMynlpComponent implements OptimizeProc
         for (int i = 0; i < pathWithBE.length; i++) {
             Vertex vertex = pathWithBE[i];
 
-            if (Nature.ns.equals(vertex.guessNature()) && vertex.natureAttribute.getTotalFrequency() <= 1000) {
+            if (Nature.ns.equals(vertex.nature) && vertex.freq <= 1000) {
                 if (vertex.length < 3) {
                     // 二字地名，认为其可以再接一个后缀或前缀
                     vertex.setTempObj(new EnumFreqPair<>(H, G));
@@ -171,8 +172,8 @@ public class PlaceRecognition extends BaseMynlpComponent implements OptimizeProc
 
             EnumFreqPair<NSTag> nrEnumFreqPair = null;
 
-            if (vertex.abstractWord != null) {
-                nrEnumFreqPair = nrDictionary.get(vertex.abstractWord);
+            if (vertex.isAbsWord()) {
+                nrEnumFreqPair = nrDictionary.get(vertex.absWordLabel());
             } else {
                 nrEnumFreqPair = nrDictionary.get(text, vertex.offset(), vertex.length);
             }

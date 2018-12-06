@@ -15,7 +15,7 @@
  */
 
 /**
- * DoubleArrayTrie: Java implementation of Darts (Double-ARray Trie System)
+ * DoubleArrayTrieMap: Java implementation of Darts (Double-ARray Trie System)
  * <p/>
  * <p>
  * Copyright(C) 2001-2007 Taku Kudo &lt;taku@chasen.org&gt;<br />
@@ -35,92 +35,67 @@
  */
 package com.mayabot.nlp.collection.dat;
 
-import com.mayabot.nlp.collection.Trie;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 
-import java.io.*;
-import java.nio.ByteBuffer;
+import java.io.DataInput;
+import java.io.DataOutput;
+import java.io.IOException;
 import java.util.*;
-import java.util.function.BiConsumer;
-import java.util.function.Function;
 
-import static com.mayabot.nlp.utils.DataInOutputUtils.*;
+import static com.mayabot.nlp.utils.DataInOutputUtils.readIntArray;
+import static com.mayabot.nlp.utils.DataInOutputUtils.writeIntArray;
 
 /**
  * 双数组Trie树。
- * 字典树，
- * 用数字存放values。也就是每个项目都是有个整数id。
+ * 每个key对应其数值的下标（这个特性可以用来做List String 的索引）
  */
-public class DoubleArrayTrie<T> implements Trie<T> {
+public class DoubleArrayTrie {
 
-
-    public static <T> void write(
-            DoubleArrayTrie<T> dat, DataOutput out, BiConsumer<T, DataOutput> biConsumer
-    ) throws IOException {
-        writeIntArray(dat.check, out);
-        writeIntArray(dat.base, out);
-        writeArrayList(dat.values, biConsumer, out);
-    }
-
-    public static <T> DoubleArrayTrie<T> read(
-            DataInput in, Function<DataInput, T> supplier) throws IOException {
-        int[] check = readIntArray(in);
-        int[] base = readIntArray(in);
-        ArrayList<T> values = readArrayList(in, supplier);
-        //noinspection unchecked
-        return new DoubleArrayTrie(values, check, base);
-    }
-
-    public static <T> DoubleArrayTrie<T> read(
-            ByteBuffer buffer, Function<DataInput, T> supplier) throws IOException {
-        int[] check = readIntArray(buffer);
-        int[] base = readIntArray(buffer);
-
-        byte [] data = new byte[buffer.remaining()];
-        buffer.get(data);
-
-        ArrayList<T> values = readArrayList(new DataInputStream(new ByteArrayInputStream(data)), supplier);
-
-        //noinspection unchecked
-        return new DoubleArrayTrie(values, check, base);
-    }
-
-
-    ArrayList<T> values;
     public int[] check;
     public int[] base;
+    private int size;
 
-    protected DoubleArrayTrie(ArrayList<T> values, int[] check, int[] base) {
-        super();
-        this.values = values;
-        this.check = check;
-        this.base = base;
+    public DoubleArrayTrie(DataInput in) throws IOException {
+        size = in.readInt();
+        base = readIntArray(in);
+        check = readIntArray(in);
     }
 
-    /**
-     * DAT的搜索器
-     *
-     * @param text   带计算的文本
-     * @param offset 文本中的偏移量
-     * @return
-     */
-    public DATMatcher<T> match(String text, int offset) {
-        return new DATMatcher<T>(this, text, offset);
+    public DoubleArrayTrie(TreeSet<String> set) {
+        this(Lists.newArrayList(set));
     }
 
-    /**
-     * DAT的搜索器
-     *
-     * @param text   带计算的文本
-     * @param offset 文本中的偏移量
-     * @return
-     */
-    public DATMatcher<T> match(char[] text, int offset) {
-        return new DATMatcher<T>(this, text, offset);
+    public DoubleArrayTrie(List<String> sortedKeys) {
+        DoubleArrayMaker datDoubleArrayMaker = new DoubleArrayMaker(sortedKeys);
+        datDoubleArrayMaker.build();
+
+        size = sortedKeys.size();
+        check = datDoubleArrayMaker.getCheck();
+        base = datDoubleArrayMaker.getBase();
+
+        int i = 0;
+        for (String key : sortedKeys) {
+            if (indexOf(key) != i) {
+                System.out.println();
+            }
+            i++;
+        }
     }
 
-    public int getSize() {
-        return values.size();
+//    public DoubleArrayTrie(int[] check, int[] base, int size) {
+//        super();
+//        this.check = check;
+//        this.base = base;
+//        this.size = 0;
+//    }
+
+    public void write(DataOutput out) throws IOException {
+        out.writeInt(size);
+        writeIntArray(base, out);
+        writeIntArray(check, out);
     }
+
 
     /**
      * 树叶子节点个数
@@ -128,17 +103,23 @@ public class DoubleArrayTrie<T> implements Trie<T> {
      * @return
      */
     public int size() {
-        return values.size();
+        return size;
     }
 
-    public int getNonzeroSize() {
-        int result = 0;
-        for (int i = 0; i < check.length; ++i) {
-            if (check[i] != 0) {
-                ++result;
-            }
-        }
-        return result;
+    public DATMatcher matcher(String text, int offset) {
+        return new DATMatcher(this, text, offset);
+    }
+
+    public DATMatcher matcher(char[] text, int offset) {
+        return new DATMatcher(this, text, offset);
+    }
+
+    public DATMatcher matcher(String text) {
+        return new DATMatcher(this, text, 0);
+    }
+
+    public DATMatcher matcher(char[] text) {
+        return new DATMatcher(this, text, 0);
     }
 
     /**
@@ -178,6 +159,7 @@ public class DoubleArrayTrie<T> implements Trie<T> {
         if (b == check[p] && n < 0) {
             result = -n - 1;
         }
+
         return result;
     }
 
@@ -234,50 +216,139 @@ public class DoubleArrayTrie<T> implements Trie<T> {
         return result;
     }
 
+    public boolean containsKey(String key) {
+        return indexOf(key) >= 0;
+    }
+
 
     /**
-     * 精确查询
+     * 沿着路径转移状态
      *
-     * @param key 键
-     * @return 值
+     * @param path
+     * @return
      */
-    @Override
-    public T get(CharSequence key) {
-        int index = indexOf(key);
-        if (index >= 0) {
-            return getValueAt(index);
-        }
-
-        return null;
+    private int transition(String path) {
+        return transition(path.toCharArray());
     }
 
-    public T get(CharSequence key, int offset, int length) {
-        int index = indexOf(key, offset, length, 0);
-        if (index >= 0) {
-            return getValueAt(index);
+    /**
+     * 沿着节点转移状态
+     *
+     * @param path
+     * @return
+     */
+    private int transition(char[] path) {
+        int b = base[0];
+        int p;
+
+        for (int i = 0; i < path.length; ++i) {
+            p = b + (int) (path[i]) + 1;
+            if (b == check[p]) {
+                b = base[p];
+            } else {
+                return -1;
+            }
         }
 
-        return null;
+        p = b;
+        return p;
     }
 
-    @Override
-    public T get(char[] key) {
-        int index = indexOf(key, 0, key.length, 0);
-        if (index >= 0) {
-            return getValueAt(index);
+
+    /**
+     * 转移状态
+     *
+     * @param c
+     * @param from
+     * @return
+     */
+    private int transition(char c, int from) {
+        int b = from;
+        int p;
+
+        p = b + (int) (c) + 1;
+        if (b == check[p]) {
+            b = base[p];
+        } else {
+            return -1;
         }
 
-        return null;
+        return b;
     }
 
-    @Override
-    public T get(char[] key, int offset, int len) {
+    /**
+     * 沿着路径转移状态
+     *
+     * @param path 路径
+     * @param from 起点（根起点为base[0]=1）
+     * @return 转移后的状态（双数组下标）
+     */
+    private int transition(String path, int from) {
+        int b = from;
+        int p;
 
-        int index = indexOf(key, offset, len, 0);
-        if (index >= 0) {
-            return getValueAt(index);
+        for (int i = 0; i < path.length(); ++i) {
+            p = b + (int) (path.charAt(i)) + 1;
+            if (b == check[p]) {
+                b = base[p];
+            } else {
+                return -1;
+            }
         }
-        return null;
+
+        p = b;
+        return p;
+    }
+
+
+    /**
+     * 检查状态是否对应输出
+     *
+     * @param state 双数组下标
+     * @return 对应的值，-1表示不输出
+     */
+    public int output(int state) {
+        if (state < 0) {
+            return -1;
+        }
+        int n = base[state];
+        if (state == check[state] && n < 0) {
+            return -n - 1;
+        }
+        return -1;
+    }
+
+    /**
+     * 转移状态
+     *
+     * @param current
+     * @param c
+     * @return
+     */
+    protected int transition(int current, char c) {
+        int b = base[current];
+        int p;
+
+        p = b + c + 1;
+        if (b == check[p]) {
+            b = base[p];
+        } else {
+            return -1;
+        }
+
+        p = b;
+        return p;
+    }
+
+
+    public int getNonzeroSize() {
+        int result = 0;
+        for (int i = 0; i < check.length; ++i) {
+            if (check[i] != 0) {
+                ++result;
+            }
+        }
+        return result;
     }
 
     public List<Integer> commonPrefixSearch(String key) {
@@ -313,7 +384,7 @@ public class DoubleArrayTrie<T> implements Trie<T> {
             p = b + (int) (key.charAt(i)) + 1; // 状态转移 p = base[char[i-1]] +
             // char[i] + 1
             if (b == check[p]) // base[char[i-1]] == check[base[char[i-1]] +
-                // char[i] + 1]
+            // char[i] + 1]
             {
                 b = base[p];
             } else {
@@ -359,7 +430,7 @@ public class DoubleArrayTrie<T> implements Trie<T> {
             p = b + (int) (key[i]) + 1; // 状态转移 p = base[char[i-1]] +
             // char[i] + 1
             if (b == check[p]) // base[char[i-1]] == check[base[char[i-1]] +
-                // char[i] + 1]
+            // char[i] + 1]
             {
                 b = base[p];
             } else {
@@ -376,7 +447,6 @@ public class DoubleArrayTrie<T> implements Trie<T> {
         return result;
     }
 
-
     /**
      * 优化的前缀查询，可以复用字符数组
      *
@@ -384,9 +454,9 @@ public class DoubleArrayTrie<T> implements Trie<T> {
      * @param begin
      * @return
      */
-    public LinkedList<Map.Entry<String, T>> commonPrefixSearchWithValue(char[] keyChars, int begin) {
+    public LinkedList<Map.Entry<String, Integer>> commonPrefixSearchWithValue(char[] keyChars, int begin) {
         int len = keyChars.length;
-        LinkedList<Map.Entry<String, T>> result = new LinkedList<Map.Entry<String, T>>();
+        LinkedList<Map.Entry<String, Integer>> result = new LinkedList<>();
         int b = base[0];
         int n;
         int p;
@@ -396,7 +466,7 @@ public class DoubleArrayTrie<T> implements Trie<T> {
             n = base[p];
             if (b == check[p] && n < 0)         // base[p] == check[p] && base[p] < 0 查到一个词
             {
-                result.add(new AbstractMap.SimpleEntry<String, T>(new String(keyChars, begin, i - begin), values.get(-n - 1)));
+                result.add(new AbstractMap.SimpleEntry<>(new String(keyChars, begin, i - begin), -n - 1));
             }
 
             p = b + (int) (keyChars[i]) + 1;    // 状态转移 p = base[char[i-1]] + char[i] + 1
@@ -413,204 +483,36 @@ public class DoubleArrayTrie<T> implements Trie<T> {
         n = base[p];
 
         if (b == check[p] && n < 0) {
-            result.add(new AbstractMap.SimpleEntry<String, T>(new String(keyChars, begin, len - begin), values.get(-n - 1)));
+            result.add(new AbstractMap.SimpleEntry<String, Integer>(new String(keyChars, begin, len - begin), -n - 1));
         }
 
         return result;
     }
 
 
+    public static void main(String[] args) {
+        TreeSet<String> tr = Sets.newTreeSet();
 
-//    /**
-//     * 获取check数组引用，不要修改check
-//     *
-//     * @return
-//     */
-//    public int[] getCheck() {
-//        return check;
-//    }
-
-    /**
-     * 获取base数组引用，不要修改base
-     *
-     * @return
-     */
-    private int[] getBase() {
-        return base;
-    }
-
-    /**
-     * 获取index对应的值
-     *
-     * @param index
-     * @return
-     */
-    public T getValueAt(int index) {
-        return values.get(index);
-    }
+        Random random = new Random(0);
 
 
-//    public ImmutableList<T> getValueArray(T[] a) {
-//        return ImmutableList.copyOf(this.values);
-//        // int size = values.size();
-//        // if (a.length < size)
-//        // a = (T[]) java.lang.reflect.Array.newInstance(a.getClass()
-//        // .getComponentType(), size);
-//        // System.arraycopy(values, 0, a, 0, size);
-//        // return a;
-//    }
-
-
-    @Override
-    public boolean containsKey(String key) {
-        return indexOf(key) >= 0;
-    }
-
-    /**
-     * 沿着路径转移状态
-     *
-     * @param path
-     * @return
-     */
-    protected int transition(String path) {
-        return transition(path.toCharArray());
-    }
-
-    /**
-     * 沿着节点转移状态
-     *
-     * @param path
-     * @return
-     */
-    protected int transition(char[] path) {
-        int b = base[0];
-        int p;
-
-        for (int i = 0; i < path.length; ++i) {
-            p = b + (int) (path[i]) + 1;
-            if (b == check[p]) {
-                b = base[p];
-            } else {
-                return -1;
-            }
+        for (int i = 0; i < 1000; i++) {
+            String s = random.nextInt() + "";
+            tr.add(s);
         }
 
-        p = b;
-        return p;
-    }
+        ArrayList<String> list = Lists.newArrayList(tr);
 
 
-    /**
-     * 转移状态
-     *
-     * @param c
-     * @param from
-     * @return
-     */
-    public int transition(char c, int from) {
-        int b = from;
-        int p;
+        DoubleArrayTrie index = new DoubleArrayTrie(list);
 
-        p = b + (int) (c) + 1;
-        if (b == check[p]) {
-            b = base[p];
-        } else {
-            return -1;
+        random = new Random(0);
+        for (int i = 0; i < 1000; i++) {
+            String s = random.nextInt() + "";
+            System.out.println(index.indexOf(s));
         }
-
-        return b;
     }
-
-    /**
-     * 沿着路径转移状态
-     *
-     * @param path 路径
-     * @param from 起点（根起点为base[0]=1）
-     * @return 转移后的状态（双数组下标）
-     */
-    public int transition(String path, int from) {
-        int b = from;
-        int p;
-
-        for (int i = 0; i < path.length(); ++i) {
-            p = b + (int) (path.charAt(i)) + 1;
-            if (b == check[p]) {
-                b = base[p];
-            } else {
-                return -1;
-            }
-        }
-
-        p = b;
-        return p;
-    }
-
-
-    /**
-     * 检查状态是否对应输出
-     *
-     * @param state 双数组下标
-     * @return 对应的值，null表示不输出
-     */
-    public T output(int state) {
-        if (state < 0) {
-            return null;
-        }
-        int n = base[state];
-        if (state == check[state] && n < 0) {
-            return values.get(-n - 1);
-        }
-        return null;
-    }
-
-    /**
-     * 转移状态
-     *
-     * @param current
-     * @param c
-     * @return
-     */
-    protected int transition(int current, char c) {
-        int b = base[current];
-        int p;
-
-        p = b + c + 1;
-        if (b == check[p]) {
-            b = base[p];
-        } else {
-            return -1;
-        }
-
-        p = b;
-        return p;
-    }
-
-    /**
-     * 更新某个键对应的值
-     *
-     * @param key   键
-     * @param value 值
-     * @return 是否成功（失败的原因是没有这个键）
-     */
-    public boolean set(String key, T value) {
-        int index = indexOf(key);
-        if (index >= 0) {
-            values.set(index, value);
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * 从值数组中提取下标为index的值<br>
-     * 注意为了效率，此处不进行参数校验
-     *
-     * @param index 下标
-     * @return 值
-     */
-    public T get(int index) {
-        return values.get(index);
-    }
-
 
 }
+
+

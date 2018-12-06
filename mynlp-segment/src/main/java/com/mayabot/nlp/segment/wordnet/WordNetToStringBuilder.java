@@ -91,13 +91,13 @@ class WordNetToStringBuilder {
                         // 原始词
                         line.append(text, i, v.length);
 
-                        if (v.abstractWord != null) {
+                        if (v.isAbsWord()) {
                             // 等效词
-                            line.append("[").append(v.abstractWord).append("]");
+                            line.append("[").append(v.absWordLabel()).append("]");
                         }
 
-                        if (showAttr && v.natureAttribute != null) {
-                            line.append(" ").append(v.natureAttribute);
+                        if (showAttr && v.nature != null) {
+                            line.append(" ").append(v.nature);
                         }
 
                         if (v.weight != 0) {

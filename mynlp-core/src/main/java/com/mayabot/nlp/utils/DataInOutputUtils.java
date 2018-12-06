@@ -118,6 +118,7 @@ public interface DataInOutputUtils {
         return result;
     }
 
+
     static <T> void writeArrayList(
             ArrayList<T> list, BiConsumer<T, DataOutput> consumer, DataOutput output) throws IOException {
 
@@ -127,5 +128,6 @@ public interface DataInOutputUtils {
             consumer.accept(val, output);
         }
     }
+
 
 }

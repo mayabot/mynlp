@@ -1,10 +1,9 @@
 package com.mayabot.nlp.segment.tokenizer.xprocessor;
 
-import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import com.mayabot.nlp.segment.WordpathProcessor;
 import com.mayabot.nlp.segment.common.BaseMynlpComponent;
-import com.mayabot.nlp.segment.dictionary.NatureAttribute;
-import com.mayabot.nlp.segment.dictionary.core.CoreDictionary;
+import com.mayabot.nlp.segment.dictionary.Nature;
 import com.mayabot.nlp.segment.wordnet.Vertex;
 import com.mayabot.nlp.segment.wordnet.Wordnet;
 import com.mayabot.nlp.segment.wordnet.Wordpath;
@@ -16,30 +15,9 @@ import com.mayabot.nlp.utils.CharSet;
  *
  * @author jimichan jimichan@gmail.com
  */
+@Singleton
 public class RepairWordnetProcessor extends BaseMynlpComponent implements WordpathProcessor {
 
-    private CoreDictionary coreDictionary;
-
-    /**
-     * 字符串
-     */
-    private NatureAttribute xAttribute;
-
-    /**
-     * 字符串
-     */
-    private NatureAttribute numAttribute;
-
-    int numWordId;
-
-    @Inject
-    public RepairWordnetProcessor(CoreDictionary coreDictionary) {
-        this.coreDictionary = coreDictionary;
-        xAttribute = coreDictionary.get(coreDictionary.X_WORD_ID);
-
-        numWordId = coreDictionary.getWordID(CoreDictionary.TAG_NUMBER);
-        numAttribute = coreDictionary.get(numWordId);
-    }
 
     @Override
     public Wordpath process(Wordpath wordPath) {
@@ -54,9 +32,9 @@ public class RepairWordnetProcessor extends BaseMynlpComponent implements Wordpa
                 vertex = wordnet.put(from, len);
 
                 if (isNum(charArray, from, len)) {
-                    vertex.setWordInfo(numWordId, numAttribute);
+                    vertex.setAbsWordNatureAndFreq(Nature.m);
                 } else {
-                    vertex.setWordInfo(coreDictionary.X_WORD_ID, xAttribute);
+                    vertex.setAbsWordNatureAndFreq(Nature.x);
                 }
 
             }

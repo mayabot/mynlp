@@ -185,7 +185,7 @@ public class ViterbiBestPathAlgorithm implements BestPathAlgorithm {
 
 
     private double calculateWeight(Vertex from, Vertex to) {
-        int frequency = from.natureAttribute.getTotalFrequency();
+        int frequency = from.freq;
         if (frequency == 0) {
             // 防止发生除零错误
             frequency = 1;

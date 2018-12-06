@@ -1,9 +1,8 @@
 package com.mayabot.nlp.segment.tokenizer.collector;
 
 import com.google.common.collect.Lists;
-import com.mayabot.nlp.collection.dat.DATMatcher;
-import com.mayabot.nlp.collection.dat.DoubleArrayTrie;
-import com.mayabot.nlp.collection.dat.DoubleArrayTrieBuilder;
+import com.mayabot.nlp.collection.dat.DATMapMatcher;
+import com.mayabot.nlp.collection.dat.DoubleArrayTrieMap;
 import com.mayabot.nlp.segment.WordTerm;
 import com.mayabot.nlp.segment.WordTermCollector;
 import com.mayabot.nlp.segment.wordnet.Vertex;
@@ -48,7 +47,7 @@ public class SentenceIndexWordCollector implements WordTermCollector {
     /**
      * 排除指定的字词。如 副市长 的子词 市长，不希望被提取出来
      */
-    private DoubleArrayTrie<String[]> excludeDict;
+    private DoubleArrayTrieMap<String[]> excludeDict;
 
     /**
      * 可以控制长词是否被分解
@@ -60,7 +59,7 @@ public class SentenceIndexWordCollector implements WordTermCollector {
     /**
      * 字词的词典
      */
-    private DoubleArrayTrie[] dictList;
+    private DoubleArrayTrieMap[] dictList;
 
 
     @Override
@@ -70,9 +69,9 @@ public class SentenceIndexWordCollector implements WordTermCollector {
 
         //如果词图里面没有细分词的话。
         if (dictList != null) {
-            for (DoubleArrayTrie dict : dictList) {
+            for (DoubleArrayTrieMap dict : dictList) {
                 // 核心词典查询
-                DATMatcher searcher = dict.match(text, 0);
+                DATMapMatcher searcher = dict.match(text, 0);
 
                 while (searcher.next()) {
 
@@ -94,7 +93,7 @@ public class SentenceIndexWordCollector implements WordTermCollector {
         while (vertexIterator.hasNext()) {
             Vertex vertex = vertexIterator.next();
 
-            WordTerm term = new WordTerm(vertex.realWord(), vertex.guessNature(), vertex.getRowNum());
+            WordTerm term = new WordTerm(vertex.realWord(), vertex.nature, vertex.getRowNum());
 
             if (StringUtils.isWhiteSpace(term.word)) {
                 continue;
@@ -146,7 +145,7 @@ public class SentenceIndexWordCollector implements WordTermCollector {
                                 }
                             }
 
-                            WordTerm smallterm = new WordTerm(small.realWord(), small.guessNature(), small.getRowNum());
+                            WordTerm smallterm = new WordTerm(small.realWord(), small.nature, small.getRowNum());
 
                             if (folded) {
                                 subwords.add(smallterm);
@@ -179,13 +178,13 @@ public class SentenceIndexWordCollector implements WordTermCollector {
         return folded;
     }
 
-    public SentenceIndexWordCollector setExcludeDict(DoubleArrayTrie<String[]> excludeDict) {
+    public SentenceIndexWordCollector setExcludeDict(DoubleArrayTrieMap<String[]> excludeDict) {
         this.excludeDict = excludeDict;
         return this;
     }
 
     public SentenceIndexWordCollector setExcludeDict(TreeMap<String, String[]> excludeDict) {
-        this.excludeDict = new DoubleArrayTrieBuilder<String[]>().build(excludeDict);
+        this.excludeDict = new DoubleArrayTrieMap<>(excludeDict);
         return this;
     }
 
@@ -207,17 +206,17 @@ public class SentenceIndexWordCollector implements WordTermCollector {
         return this;
     }
 
-    public DoubleArrayTrie[] getDictList() {
+    public DoubleArrayTrieMap[] getDictList() {
         return dictList;
     }
 
-    public SentenceIndexWordCollector setDictList(DoubleArrayTrie[] dictList) {
+    public SentenceIndexWordCollector setDictList(DoubleArrayTrieMap[] dictList) {
         this.dictList = dictList;
         return this;
     }
 
-    public SentenceIndexWordCollector setDictList(List<DoubleArrayTrie> dictList) {
-        this.dictList = dictList.toArray(new DoubleArrayTrie[0]);
+    public SentenceIndexWordCollector setDictList(List<DoubleArrayTrieMap> dictList) {
+        this.dictList = dictList.toArray(new DoubleArrayTrieMap[0]);
         return this;
     }
 }

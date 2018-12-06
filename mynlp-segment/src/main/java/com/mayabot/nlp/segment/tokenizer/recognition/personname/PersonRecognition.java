@@ -23,14 +23,10 @@ import com.mayabot.nlp.segment.OptimizeProcessor;
 import com.mayabot.nlp.segment.common.BaseMynlpComponent;
 import com.mayabot.nlp.segment.common.VertexTagCharSequenceTempChar;
 import com.mayabot.nlp.segment.dictionary.Nature;
-import com.mayabot.nlp.segment.dictionary.NatureAttribute;
-import com.mayabot.nlp.segment.dictionary.core.CoreDictionary;
 import com.mayabot.nlp.segment.tokenizer.recognition.personname.nr.NRDictionary;
 import com.mayabot.nlp.segment.tokenizer.recognition.personname.nr.PersonDictionary;
 import com.mayabot.nlp.segment.wordnet.Vertex;
 import com.mayabot.nlp.segment.wordnet.Wordnet;
-
-import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.mayabot.nlp.segment.tokenizer.recognition.personname.NRTag.A;
 
@@ -49,23 +45,23 @@ public class PersonRecognition extends BaseMynlpComponent implements OptimizePro
 
     final long a_total_freq;
     final EnumFreqPair<NRTag> defaultEnumFreqPair;
-
-    final int perope_word_id;
-    final String people_word_tag;
-    final NatureAttribute People_natureAttribute;
+//
+//    final int perope_word_id;
+//    final String people_word_tag;
+//    final NatureAttribute People_natureAttribute;
 
 
     @Inject
-    public PersonRecognition(PersonDictionary personDictionary, CoreDictionary coreDictionary) {
+    public PersonRecognition(PersonDictionary personDictionary) {
         this.personDictionary = personDictionary;
 
         a_total_freq = personDictionary.getTransformMatrixDictionary().getTotalFrequency(NRTag.A);
         defaultEnumFreqPair = new EnumFreqPair(NRTag.A, a_total_freq);
-
-        perope_word_id = coreDictionary.getWordID(CoreDictionary.TAG_PEOPLE);
-        people_word_tag = CoreDictionary.TAG_PEOPLE;
-        People_natureAttribute =
-                coreDictionary.get(perope_word_id);
+//
+//        perope_word_id = coreDictionary.getWordID(CoreDictionary.TAG_PEOPLE);
+//        people_word_tag = CoreDictionary.TAG_PEOPLE;
+//        People_natureAttribute =
+//                coreDictionary.get(perope_word_id);
 
     }
 
@@ -173,7 +169,7 @@ public class PersonRecognition extends BaseMynlpComponent implements OptimizePro
 //		System.out.println(new VertexTagCharSequence(pathWithBE, PersionNameKey.tag));
 //
 
-        AtomicInteger ai = new AtomicInteger();
+        IntCount ai = new IntCount();
 
         if (fenlieAddNodeCount > 0) {
             final int[] _tagMapOffset = tagMapOffset;
@@ -204,7 +200,8 @@ public class PersonRecognition extends BaseMynlpComponent implements OptimizePro
                         ai.incrementAndGet();
                         //FIXME 如果已结之前已结存在，那么只需要添加词性和对应的词频，而不是覆盖
                         wordnet.put(_tagMapOffset[begin], name.length()).
-                                setWordInfo(perope_word_id, people_word_tag, People_natureAttribute);
+                                setAbsWordNatureAndFreq(Nature.nr);
+//                                setWordInfo(perope_word_id, people_word_tag, People_natureAttribute);
                     }
             );
         } else {
@@ -231,7 +228,8 @@ public class PersonRecognition extends BaseMynlpComponent implements OptimizePro
                         ai.incrementAndGet();
                         //FIXME 如果已结之前已结存在，那么只需要添加词性和对应的词频，而不是覆盖
                         wordnet.put(pathWithBE[begin].offset(), name.length()).
-                                setWordInfo(perope_word_id, people_word_tag, People_natureAttribute);
+                                setAbsWordNatureAndFreq(Nature.nr);
+//                                setWordInfo(perope_word_id, people_word_tag, People_natureAttribute);
                     }
             );
         }
@@ -242,7 +240,15 @@ public class PersonRecognition extends BaseMynlpComponent implements OptimizePro
             v.clearTemp();
         }
 
-        return ai.intValue() > 0;
+        return ai.count > 0;
+    }
+
+    static class IntCount {
+        int count = 0;
+
+        void incrementAndGet() {
+            count++;
+        }
     }
 
 
@@ -268,10 +274,10 @@ public class PersonRecognition extends BaseMynlpComponent implements OptimizePro
             EnumFreqPair<NRTag> nrEnumFreqPair = nrDictionary.get(text, vertex.offset(), vertex.length);
 
             if (nrEnumFreqPair == null) {
-                Nature nature = vertex.guessNature();
+                Nature nature = vertex.nature;
                 if (Nature.nr.equals(nature)) {
                     // 有些双名实际上可以构成更长的三名
-                    if (vertex.natureAttribute.getTotalFrequency() <= 1000 && vertex.length == 2) {
+                    if (vertex.freq <= 1000 && vertex.length == 2) {
                         nrEnumFreqPair = EnumFreqPair.create(NRTag.X, NRTag.G);
                     } else {
                         nrEnumFreqPair = new EnumFreqPair<>(NRTag.A, a_total_freq);

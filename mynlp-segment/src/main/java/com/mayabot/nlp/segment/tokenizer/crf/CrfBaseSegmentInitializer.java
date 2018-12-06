@@ -20,8 +20,6 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.mayabot.nlp.segment.WordnetInitializer;
 import com.mayabot.nlp.segment.common.BaseMynlpComponent;
-import com.mayabot.nlp.segment.dictionary.Nature;
-import com.mayabot.nlp.segment.dictionary.NatureAttribute;
 import com.mayabot.nlp.segment.wordnet.Vertex;
 import com.mayabot.nlp.segment.wordnet.Wordnet;
 import com.mayabot.nlp.utils.CharacterHelper;
@@ -47,8 +45,6 @@ public class CrfBaseSegmentInitializer extends BaseMynlpComponent implements Wor
     @Override
     public void fill(Wordnet wordnet) {
 
-        final NatureAttribute na = NatureAttribute.create(Nature.x, 1000);
-
         Table table = new Table();
         table.v = atomSegmentToTable(wordnet.getCharArray());
         crfModel.tag(table);
@@ -69,17 +65,14 @@ public class CrfBaseSegmentInitializer extends BaseMynlpComponent implements Wor
                     }
                     if (i == table.v.length) {
                         Vertex v = wordnet.put(begin, offset - begin);
-                        v.setWordInfo(CRF_WORD_ID, null, na);
                         break OUTER;
                     } else {
                         Vertex v = wordnet.put(begin, offset - begin + table.v[i][1].length());
-                        v.setWordInfo(CRF_WORD_ID, null, na);
                     }
                 }
                 break;
                 default: {
                     Vertex v = wordnet.put(offset, table.v[i][1].length());
-                    v.setWordInfo(CRF_WORD_ID, null, na);
                 }
                 break;
             }

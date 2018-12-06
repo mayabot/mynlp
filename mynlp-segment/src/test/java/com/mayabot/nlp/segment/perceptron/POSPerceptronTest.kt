@@ -27,7 +27,7 @@ fun main(args: Array<String>) {
 
 //    val lines = File("data/pos/model/feature.txt").readLines()
 //
-//    var index = DATArrayIndex(lines)
+//    var index = DoubleArrayTrie(lines)
 //
 //
 //    println(index.indexOf("望京☺"))

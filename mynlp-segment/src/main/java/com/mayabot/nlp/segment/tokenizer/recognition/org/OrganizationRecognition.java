@@ -25,8 +25,6 @@ import com.mayabot.nlp.segment.OptimizeProcessor;
 import com.mayabot.nlp.segment.common.BaseMynlpComponent;
 import com.mayabot.nlp.segment.common.VertexTagCharSequenceTempChar;
 import com.mayabot.nlp.segment.dictionary.Nature;
-import com.mayabot.nlp.segment.dictionary.NatureAttribute;
-import com.mayabot.nlp.segment.dictionary.core.CoreDictionary;
 import com.mayabot.nlp.segment.tokenizer.recognition.org.nt.NTDictionary;
 import com.mayabot.nlp.segment.tokenizer.recognition.org.nt.OrganizationDictionary;
 import com.mayabot.nlp.segment.wordnet.Vertex;
@@ -58,23 +56,23 @@ public class OrganizationRecognition extends BaseMynlpComponent implements Optim
     final long a_total_freq;
     final EnumFreqPair<NTTag> defaultEnumFreqPair;
 
-    final int word_id;
-    final String word_tag;
-    final NatureAttribute natureAttribute;
+//    final int word_id;
+//    final String word_tag;
+//    final NatureAttribute natureAttribute;
 
     private SecondOrderViterbi<NTTag, Vertex> viterbi;
 
 
     @Inject
-    public OrganizationRecognition(OrganizationDictionary placeDictionary, CoreDictionary coreDictionary) {
+    public OrganizationRecognition(OrganizationDictionary placeDictionary) {
         this.dictionary = placeDictionary;
 
         a_total_freq = placeDictionary.getTransformMatrixDictionary().getTotalFrequency(NTTag.Z);
         defaultEnumFreqPair = new EnumFreqPair(Z, a_total_freq);
 
-        word_id = coreDictionary.getWordID(CoreDictionary.TAG_GROUP);
-        word_tag = CoreDictionary.TAG_GROUP;
-        natureAttribute = coreDictionary.get(word_id);
+//        word_id = coreDictionary.getWordID(CoreDictionary.TAG_GROUP);
+//        word_tag = CoreDictionary.TAG_GROUP;
+//        natureAttribute = coreDictionary.get(word_id);
 
         EnumTransformMatrix<NTTag> trans = placeDictionary.getTransformMatrixDictionary();
         viterbi = new SecondOrderViterbi<>(
@@ -128,7 +126,8 @@ public class OrganizationRecognition extends BaseMynlpComponent implements Optim
 //					if(word.realWord().equals("信息阿里巴巴股份有限公司")){
 //						System.out.println("");
 //					}
-                    word.setWordInfo(word_id, word_tag, natureAttribute);
+                    word.setAbsWordNatureAndFreq(Nature.nt);
+//                    word.setWordInfo(word_id, word_tag, natureAttribute);
                 }
         );
 
@@ -167,7 +166,7 @@ public class OrganizationRecognition extends BaseMynlpComponent implements Optim
             Vertex vertex = pathWithBE[i];
 
             // 构成更长的
-            Nature nature = vertex.guessNature();
+            Nature nature = vertex.nature;
 
             //TODO 由于修改了词性，这里注释掉了
 //            if (Nature.nrf.equals(nature) && vertex.natureAttribute.getTotalFrequency() <= 1000) {
@@ -184,8 +183,9 @@ public class OrganizationRecognition extends BaseMynlpComponent implements Optim
             } else {
                 EnumFreqPair<NTTag> nrEnumFreqPair = null;
 
-                if (vertex.abstractWord != null) {
-                    nrEnumFreqPair = ntDictionary.get(vertex.abstractWord);
+                String label = vertex.absWordLabel();
+                if (label != null) {
+                    nrEnumFreqPair = ntDictionary.get(label);
                 } else {
                     nrEnumFreqPair = ntDictionary.get(text, vertex.offset(), vertex.length);
                 }

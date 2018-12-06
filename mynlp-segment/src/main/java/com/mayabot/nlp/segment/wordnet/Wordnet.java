@@ -16,8 +16,6 @@
 
 package com.mayabot.nlp.segment.wordnet;
 
-import com.mayabot.nlp.segment.dictionary.Nature;
-import com.mayabot.nlp.segment.dictionary.NatureAttribute;
 import com.mayabot.nlp.utils.CustomCharSequence;
 
 import java.util.BitSet;
@@ -96,13 +94,14 @@ public class Wordnet implements CharSequence {
     }
 
 
-    static final NatureAttribute df = NatureAttribute.create(Nature.x, 1);
+//    static final NatureAttribute df = NatureAttribute.create(Nature.x, 1);
 
     public void fillNill() {
         for (VertexRow row : slotList) {
             if (row.first == null) {
                 Vertex creted = row.getOrCrete(1);
-                creted.natureAttribute = df;
+                //creted.natureAttribute = df;
+                creted.freq = 1;
             }
         }
     }

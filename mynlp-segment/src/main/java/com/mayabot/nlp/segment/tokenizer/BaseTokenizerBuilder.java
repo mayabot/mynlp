@@ -6,7 +6,6 @@ import com.mayabot.nlp.segment.tokenizer.collector.SentenceIndexWordCollector;
 import com.mayabot.nlp.segment.tokenizer.normalize.Full2halfCharNormalize;
 import com.mayabot.nlp.segment.tokenizer.normalize.LowerCaseCharNormalize;
 import com.mayabot.nlp.segment.tokenizer.xprocessor.CorrectionProcessor;
-import com.mayabot.nlp.segment.tokenizer.xprocessor.PartOfSpeechTaggingComputerProcessor;
 
 /**
  * @author jimichan
@@ -94,9 +93,9 @@ public abstract class BaseTokenizerBuilder extends WordnetTokenizerBuilder {
             addProcessor(CorrectionProcessor.class);
         }
 
-        if (pos) {
-            addProcessor(PartOfSpeechTaggingComputerProcessor.class);
-        }
+//        if (pos) {
+//            addProcessor(PartOfSpeechTaggingComputerProcessor.class);
+//        }
 
         return super.build();
     }
