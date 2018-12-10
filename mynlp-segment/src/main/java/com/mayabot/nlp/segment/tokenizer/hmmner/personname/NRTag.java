@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.mayabot.nlp.segment.tokenizer.recognition.personname;
+package com.mayabot.nlp.segment.tokenizer.hmmner.personname;
 
 /**
  * 人名标签

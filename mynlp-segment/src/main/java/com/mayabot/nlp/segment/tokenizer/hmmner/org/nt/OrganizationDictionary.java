@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.mayabot.nlp.segment.tokenizer.recognition.org.nt;
+package com.mayabot.nlp.segment.tokenizer.hmmner.org.nt;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -25,7 +25,7 @@ import com.mayabot.nlp.common.matrix.EnumTransformMatrix;
 import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
 import com.mayabot.nlp.resources.NlpResource;
-import com.mayabot.nlp.segment.tokenizer.recognition.org.NTTag;
+import com.mayabot.nlp.segment.tokenizer.hmmner.org.NTTag;
 
 import java.io.IOException;
 import java.util.TreeMap;

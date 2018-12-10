@@ -14,25 +14,25 @@
  * limitations under the License.
  */
 
-package com.mayabot.nlp.segment.tokenizer.recognition.place;
+package com.mayabot.nlp.segment.tokenizer.hmmner.place;
 
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.mayabot.nlp.algorithm.Viterbi;
 import com.mayabot.nlp.common.EnumFreqPair;
+import com.mayabot.nlp.segment.Nature;
 import com.mayabot.nlp.segment.OptimizeProcessor;
 import com.mayabot.nlp.segment.common.BaseMynlpComponent;
 import com.mayabot.nlp.segment.common.VertexTagCharSequenceTempChar;
-import com.mayabot.nlp.segment.dictionary.Nature;
 import com.mayabot.nlp.segment.dictionary.core.CoreDictionary;
-import com.mayabot.nlp.segment.tokenizer.recognition.place.ns.NSDictionary;
-import com.mayabot.nlp.segment.tokenizer.recognition.place.ns.PlaceDictionary;
+import com.mayabot.nlp.segment.tokenizer.hmmner.place.ns.NSDictionary;
+import com.mayabot.nlp.segment.tokenizer.hmmner.place.ns.PlaceDictionary;
 import com.mayabot.nlp.segment.wordnet.Vertex;
 import com.mayabot.nlp.segment.wordnet.Wordnet;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static com.mayabot.nlp.segment.tokenizer.recognition.place.NSTag.*;
+import static com.mayabot.nlp.segment.tokenizer.hmmner.place.NSTag.*;
 
 /**
  * HMM-Viterbi 地名名识别处理器
@@ -64,8 +64,8 @@ public class PlaceRecognition extends BaseMynlpComponent implements OptimizeProc
         a_total_freq = placeDictionary.getTransformMatrixDictionary().getTotalFrequency(Z);
         defaultEnumFreqPair = new EnumFreqPair(Z, a_total_freq);
 //
-//        place_word_id = coreDictionary.getWordID(CoreDictionary.TAG_PLACE);
-//        place_word_tag = CoreDictionary.TAG_PLACE;
+//        place_word_id = coreDictionary.getWordID(CoreDictionary.NS_TAG);
+//        place_word_tag = CoreDictionary.NS_TAG;
 //        place_natureAttribute =
 //                coreDictionary.get(place_word_id);
     }

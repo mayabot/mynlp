@@ -18,9 +18,9 @@ package com.mayabot.nlp.segment.tokenizer.xprocessor;
 
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
+import com.mayabot.nlp.segment.Nature;
 import com.mayabot.nlp.segment.WordnetInitializer;
 import com.mayabot.nlp.segment.common.BaseMynlpComponent;
-import com.mayabot.nlp.segment.dictionary.Nature;
 import com.mayabot.nlp.segment.dictionary.core.CoreDictionary;
 import com.mayabot.nlp.segment.wordnet.Vertex;
 import com.mayabot.nlp.segment.wordnet.VertexRow;
@@ -50,7 +50,6 @@ public class TimeStringProcessor extends BaseMynlpComponent implements WordnetIn
         patternList.add(Pattern.compile("[一二三四五六七八九十半]个?[天周月年]份?"));
         patternList.add(Pattern.compile("\\d{2}年"));
         patternList.add(Pattern.compile("[1-9|10|11|12|一|二|三|四|五|六|七|八|九|十|十一|十二]点[半|一刻]"));
-
     }
 
 

@@ -26,6 +26,7 @@ import com.mayabot.nlp.utils.CharacterHelper;
 
 /**
  * CRF基础的分词器
+ *
  * @author jimichan
  */
 @Singleton

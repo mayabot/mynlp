@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package com.mayabot.nlp.segment.tokenizer.recognition.place.ns;
+package com.mayabot.nlp.segment.tokenizer.hmmner.place.ns;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.mayabot.nlp.MynlpEnv;
 import com.mayabot.nlp.common.EnumFreqPair;
 import com.mayabot.nlp.segment.dictionary.CommonDictionary;
-import com.mayabot.nlp.segment.tokenizer.recognition.place.NSTag;
+import com.mayabot.nlp.segment.tokenizer.hmmner.place.NSTag;
 
 import java.io.DataInput;
 import java.io.DataOutput;

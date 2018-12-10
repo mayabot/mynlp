@@ -29,10 +29,10 @@ import java.util.function.Consumer;
  * 所以一个固定的算法的切分,只需要一个实例。
  * 通过MynlpTokenizerBuilder来创建MynlpTokenizer对象。
  *
+ * @author jimichan
  * @see WordnetTokenizer
  * @see MynlpTokenizerBuilder
  * @see WordnetTokenizerBuilder
- * @author jimichan
  */
 public interface MynlpTokenizer {
 
@@ -40,9 +40,8 @@ public interface MynlpTokenizer {
      * 对text进行分词，结构保存在List<WordTerm>,
      * token不会对target清空，只会add。
      *
-     * @param text 分词的文本
+     * @param text     分词的文本
      * @param consumer 对WordTerm对象消费者
-     * @return
      */
     void token(char[] text, Consumer<WordTerm> consumer);
 
@@ -50,18 +49,19 @@ public interface MynlpTokenizer {
     /**
      * 对text是String字符串的一个便捷包装.
      *
-     * @param text
-     * @param target
+     * @param text     分词文本
+     * @param consumer token消费者
      */
-    default void token(String text, Consumer<WordTerm> target) {
-        token(text.toCharArray(), target);
+    default void token(String text, Consumer<WordTerm> consumer) {
+        token(text.toCharArray(), consumer);
     }
 
 
     /**
      * 便捷方法。不适用于超大文本
-     * @param text
-     * @return
+     *
+     * @param text 分词文本
+     * @return 词的List
      */
     default List<String> tokenToStringList(String text) {
         if (text == null || text.isEmpty()) {
@@ -77,8 +77,8 @@ public interface MynlpTokenizer {
     /**
      * 便捷方法。不适用于超大文本
      *
-     * @param text
-     * @return
+     * @param text 分词文本
+     * @return 词的WordTerm List
      */
     default List<WordTerm> tokenToTermList(String text) {
         if (text == null || text.isEmpty()) {
@@ -86,7 +86,8 @@ public interface MynlpTokenizer {
         }
         List<WordTerm> target = Lists.newArrayListWithExpectedSize(text.length() / 2);
 
-        token(text.toCharArray(), x -> target.add(x));
+        token(text.toCharArray(), target::add);
+
         return target;
     }
 

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.mayabot.nlp.segment.tokenizer.recognition.personname.nr;
+package com.mayabot.nlp.segment.tokenizer.hmmner.place.ns;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -25,41 +25,43 @@ import com.mayabot.nlp.common.matrix.EnumTransformMatrix;
 import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
 import com.mayabot.nlp.resources.NlpResource;
-import com.mayabot.nlp.segment.tokenizer.recognition.personname.NRTag;
+import com.mayabot.nlp.segment.tokenizer.hmmner.place.NSTag;
+import com.mayabot.nlp.segment.wordnet.Wordpath;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.TreeMap;
 
 /**
- * 人名识别用的词典，实际上是对两个词典的包装
+ * 地名识别用的词典，实际上是对两个词典的包装
  *
  * @author hankcs
  */
 @Singleton
-public class PersonDictionary {
+public class PlaceDictionary {
 
-    final static String tsfile = "person" + File.separator + "nr.tr.txt";
+    InternalLogger logger = InternalLoggerFactory.getInstance(Wordpath.class);
 
-
-    protected InternalLogger logger = InternalLoggerFactory.getInstance(this.getClass());
 
     /**
      * 转移矩阵词典
      */
-    private EnumTransformMatrix<NRTag> transformMatrixDictionary;
+    private EnumTransformMatrix<NSTag> transformMatrixDictionary;
+
+
+    /**
+     * 人名词典
+     */
+    private NSDictionary dictionary;
 
     /**
      * AC算法用到的Trie树
      */
-    private AhoCorasickDoubleArrayTrie<NRPattern> trie;
+    private AhoCorasickDoubleArrayTrie<NSPattern> trie;
 
-    final Setting<String> orgTrDict = Setting.string("org.dict.tr", "dictionary/person/nr.tr.txt");
-
+    final Setting<String> orgTrDict = Setting.string("org.dict.tr", "dictionary/place/ns.tr.txt");
 
     @Inject
-
-    public PersonDictionary(NRDictionary dictionary, MynlpEnv mynlp) throws IOException {
+    public PlaceDictionary(NSDictionary dictionary, MynlpEnv mynlp) throws IOException {
         this.dictionary = dictionary;
 
         long start = System.currentTimeMillis();
@@ -71,64 +73,41 @@ public class PersonDictionary {
 
         // AC tree
         {
-            TreeMap<String, NRPattern> map = new TreeMap<>();
-            for (NRPattern pattern : NRPattern.values()) {
+            TreeMap<String, NSPattern> map = new TreeMap<>();
+            for (NSPattern pattern : NSPattern.values()) {
                 map.put(pattern.toString(), pattern);
             }
 
-            AhoCoraickDoubleArrayTrieBuilder<NRPattern> acdaBuilder = new AhoCoraickDoubleArrayTrieBuilder<>();
+            AhoCoraickDoubleArrayTrieBuilder<NSPattern> acdaBuilder = new AhoCoraickDoubleArrayTrieBuilder<>();
             this.trie = acdaBuilder.build(map);
         }
-
 
         logger.info("PlaceDictionary 加载成功，耗时" + (System.currentTimeMillis() - start) + "ms");
     }
 
 
     /**
-     * 人名识别模式串
+     * 地名识别模式串
      *
      * @author hankcs
      */
-    public enum NRPattern {
-        BBCD,
-        BBE,
-        BBZ,
-        BCD,
-        BEE,
-        BE,
-        BC,
-        BEC,
-        BG,
-        DG,
-        EG,
-        BXD,
-        BZ,
-        //    CD,
-        EE,
-        FE,
-        FC,
-        FB,
-        FG,
-        Y,
-        XD,
-//    GD,
+    public enum NSPattern {
+        CH,
+        CDH,
+        CDEH,
+        GH
     }
 
-    public EnumTransformMatrix<NRTag> getTransformMatrixDictionary() {
+    public EnumTransformMatrix<NSTag> getTransformMatrixDictionary() {
         return transformMatrixDictionary;
     }
 
-    public AhoCorasickDoubleArrayTrie<NRPattern> getTrie() {
+    public AhoCorasickDoubleArrayTrie<NSPattern> getTrie() {
         return trie;
     }
 
-    /**
-     * 人名词典
-     */
-    private NRDictionary dictionary;
 
-    public NRDictionary getDictionary() {
+    public NSDictionary getDictionary() {
         return dictionary;
     }
 }

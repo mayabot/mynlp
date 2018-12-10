@@ -36,7 +36,7 @@ public interface Perceptron {
     /**
      * 特征集合
      *
-     * @return
+     * @return 特征集合
      */
     FeatureSet featureSet();
 

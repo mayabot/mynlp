@@ -18,6 +18,7 @@ package com.mayabot.nlp.segment.wordnet;
 
 /**
  * 选择最佳路径。viterbi 维特比 viterbi算法 dijkstra算法 NShort算法 最笨的前向最大路径算法
+ *
  * @author jimichan
  */
 public interface BestPathAlgorithm {

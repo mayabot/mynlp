@@ -24,7 +24,8 @@ import com.mayabot.nlp.MynlpEnv;
 import com.mayabot.nlp.collection.dat.DoubleArrayTrieStringIntMap;
 import com.mayabot.nlp.resources.NlpResouceExternalizable;
 import com.mayabot.nlp.resources.NlpResource;
-import com.mayabot.nlp.segment.dictionary.Nature;
+import com.mayabot.nlp.segment.Nature;
+import com.mayabot.nlp.segment.dictionary.DictionaryAbsWords;
 import com.mayabot.nlp.utils.CharSourceLineReader;
 
 import java.io.IOException;
@@ -90,7 +91,6 @@ public class CoreDictionary extends NlpResouceExternalizable {
                 String[] param = line.split("\\s");
 
                 Integer count = Integer.valueOf(param[1]);
-//              NatureAttribute attribute = NatureAttribute.create(param);
                 map.put(param[0], Integer.valueOf(count));
                 maxFreq += count;
             }
@@ -99,7 +99,7 @@ public class CoreDictionary extends NlpResouceExternalizable {
         this.totalFreq = maxFreq;
 
         //补齐，确保ID顺序正确
-        for (String label : CoreDictionaryAbsWords.allLabel()) {
+        for (String label : DictionaryAbsWords.allLabel()) {
             if (!map.containsKey(label)) {
                 map.put(label, 1);
             }

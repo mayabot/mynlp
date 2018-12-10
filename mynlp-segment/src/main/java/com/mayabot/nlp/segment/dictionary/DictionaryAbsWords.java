@@ -1,7 +1,7 @@
-package com.mayabot.nlp.segment.dictionary.core;
+package com.mayabot.nlp.segment.dictionary;
 
 import com.google.common.collect.Lists;
-import com.mayabot.nlp.segment.dictionary.Nature;
+import com.mayabot.nlp.segment.Nature;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,21 +13,8 @@ import java.util.List;
  * 比如词性 m对应的等效词必定能快速查询，一个wordId是不是等效词也能快速判断。
  * 这些全部是Static的，程序没有依赖关系
  */
-public class CoreDictionaryAbsWords {
+public class DictionaryAbsWords {
 
-//
-//    //计算出预编译的量
-//    Begin_WORD_ID = getWordID(BIGIN_TAG);
-//    End_WORD_ID = getWordID(TAG_END);
-//
-//    XX_WORD_ID = getWordID(TAG_OTHER);
-//    NR_WORD_ID = getWordID(TAG_PEOPLE);
-//    NS_WORD_ID = getWordID(TAG_PLACE);
-//    NT_WORD_ID = getWordID(TAG_GROUP);
-//    T_WORD_ID = getWordID(TAG_TIME);
-//    X_WORD_ID = getWordID(TAG_CLUSTER);
-//    M_WORD_ID = getWordID(TAG_NUMBER);
-//    NX_WORD_ID = getWordID(TAG_NX);
 
     public static final int MaxId = 9;
 
@@ -88,15 +75,15 @@ public class CoreDictionaryAbsWords {
     public static List<String> allLabel() {
         ArrayList<String> list = Lists.newArrayList(
                 BIGIN_TAG,
-                TAG_END,
-                TAG_QUANTIFIER,
-                TAG_NX,
-                TAG_TIME,
-                TAG_CLUSTER,
-                TAG_GROUP,
-                TAG_PLACE,
-                TAG_PEOPLE,
-                TAG_NUMBER
+                END_TAG,
+                MQ_TAG,
+                NX_TAG,
+                TIME_TAG,
+                X_TAG,
+                NT_TAG,
+                NS_TAG,
+                NR_TAG,
+                M_NUMBER
         );
         return list;
     }
@@ -109,48 +96,48 @@ public class CoreDictionaryAbsWords {
     /**
      * 结束 end
      */
-    public final static String TAG_END = "\u00011End";
+    public final static String END_TAG = "\u00011End";
 
     /**
      * 数量词 mq （现在觉得应该和数词同等处理，比如一个人和一人都是合理的）
      */
-    public final static String TAG_QUANTIFIER = "\u00012MQ";
+    public final static String MQ_TAG = "\u00012MQ";
 
     /**
      * nx 中文语料里面出现了英文单词。
      * 不能叫专有名词
      */
-    public final static String TAG_NX = "\u00013NX";
+    public final static String NX_TAG = "\u00013NX";
 
     /**
      * 时间 t
      */
-    public final static String TAG_TIME = "\u00014Time";
+    public final static String TIME_TAG = "\u00014Time";
 
     /**
      * 字符串 x
      */
-    public final static String TAG_CLUSTER = "\u00015String";
+    public final static String X_TAG = "\u00015String";
 
     /**
      * 团体名词 组织机构 nt
      */
-    public final static String TAG_GROUP = "\u00016NT团体";
+    public final static String NT_TAG = "\u00016NT团体";
 
     /**
      * 地址 ns
      */
-    public final static String TAG_PLACE = "\u00017NS地名";
+    public final static String NS_TAG = "\u00017NS地名";
     /**
      * 人名 nr
      */
-    public final static String TAG_PEOPLE = "\u00018NR人名";
+    public final static String NR_TAG = "\u00018NR人名";
 
 
     /**
      * 数词 m
      */
-    public final static String TAG_NUMBER = "\u00019Num";
+    public final static String M_NUMBER = "\u00019Num";
 
 //    /**
 //     * 其它 XX

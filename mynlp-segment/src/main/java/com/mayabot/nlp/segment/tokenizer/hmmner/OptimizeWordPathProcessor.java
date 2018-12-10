@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.mayabot.nlp.segment.tokenizer.recognition;
+package com.mayabot.nlp.segment.tokenizer.hmmner;
 
 import com.google.common.collect.ImmutableList;
 import com.google.inject.Inject;

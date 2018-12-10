@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.mayabot.nlp.segment.tokenizer.recognition.org;
+package com.mayabot.nlp.segment.tokenizer.hmmner.org;
 
 /**
  * 参考HanLP https://github.com/hankcs/HanLP 中的实现

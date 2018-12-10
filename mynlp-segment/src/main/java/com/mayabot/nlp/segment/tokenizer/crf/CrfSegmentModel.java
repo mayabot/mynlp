@@ -128,7 +128,7 @@ public final class CrfSegmentModel extends CrfModel {
             logger.warn("CRF 文本读取有残留，可能会出问题！");
         }
 
-        logger.info("开始构建trie树 featureFunctionMap.size = " +featureFunctionMap.size());
+        logger.info("开始构建trie树 featureFunctionMap.size = " + featureFunctionMap.size());
 
         //这里采用MapTailLOUDSTrie 构建速度快。查询速度稍微慢。
         //TODO 以后提供两张二进制格式。一种是DoubleArray的，内存大，速度快。一种是LOUDSTrie，高压缩比，性能稍微慢。

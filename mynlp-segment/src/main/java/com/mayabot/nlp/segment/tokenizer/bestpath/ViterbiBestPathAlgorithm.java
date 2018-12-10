@@ -31,7 +31,7 @@ import com.mayabot.nlp.segment.wordnet.*;
 @Singleton
 public class ViterbiBestPathAlgorithm implements BestPathAlgorithm {
 
-    private CoreBiGramTableDictionary coreBiGramTableDictionary;
+    protected CoreBiGramTableDictionary coreBiGramTableDictionary;
 
 
     /**
@@ -50,11 +50,11 @@ public class ViterbiBestPathAlgorithm implements BestPathAlgorithm {
      * @param to
      * @return
      */
-    final double partA = (1 - dSmoothingPara);
-    final double partB;
-    final double PARTA_PARTB;
-    final double PARTTA_Dtemp;
-    final double PartZ;
+    protected final double partA = (1 - dSmoothingPara);
+    protected final double partB;
+    protected final double PARTA_PARTB;
+    protected final double PARTTA_Dtemp;
+    protected final double PartZ;
 
 
     @Inject
@@ -83,59 +83,6 @@ public class ViterbiBestPathAlgorithm implements BestPathAlgorithm {
         //从第二个字符节点开始，一直到最后一个字符
         final int charSize = wordnet.getCharSizeLength();
 
-        final boolean optimizeNet = wordnet.isOptimizeNet();
-
-        if (optimizeNet) {
-            // AB C D => A BCD
-            // AB CD => ABC D
-            // A B CD => ABC D
-            // AB C DE => A BCD E
-            // TODO 没有覆盖 AB C DE => A BCD E 这个情况
-            // TODO  AB CD => A BC D
-            for (int i = 0; i < charSize; i++) {
-
-                final VertexRow row = wordnet.row(i);
-
-                for (Vertex node = row.first(); node != null; node = node.next()) {
-
-                    final VertexRow toRow = wordnet.row(i + node.length);
-                    boolean hasOptimizeNode = false;
-                    boolean hasOptimizeNewNode = false;
-
-                    for (Vertex n = toRow.first(); n != null; n = n.getNext()) {
-                        if (n.isOptimize()) {
-                            hasOptimizeNode = true;
-                        }
-                        if (n.isOptimizeNewNode()) {
-                            hasOptimizeNewNode = true;
-                        }
-                    }
-
-                    if (node.isOptimize()) {
-                        if (node.isOptimizeNewNode()) {
-                            //龚学 平等  => 龚学平 等
-                            //如果被跳转后，不是优化网络节点
-                            if (!hasOptimizeNode) {
-                                for (Vertex n = toRow.first(); n != null; n = n.getNext()) {
-                                    if (!n.isOptimize()) {
-                                        n.setOptimize(true);
-                                        n.setOptimizeNewNode(true);
-                                    }
-                                }
-                            }
-                        }
-
-                    } else {
-                        // 有关 天 陪 => 有 关天培
-                        // 当前不是优化节点。但是去调整到有优化新节点的
-                        if (hasOptimizeNewNode) {
-                            node.setOptimize(true);
-                            node.setOptimizeNewNode(true);
-                        }
-                    }
-                }
-            }
-        }
 
         // 第一行的From肯定来自Start节点
 
@@ -154,7 +101,7 @@ public class ViterbiBestPathAlgorithm implements BestPathAlgorithm {
 
             for (Vertex node = row.first(); node != null; node = node.next()) {
 
-                if (node.from == null || (optimizeNet && !node.isOptimize())) {
+                if (node.from == null) {
                     continue;
                 }
 
@@ -173,7 +120,7 @@ public class ViterbiBestPathAlgorithm implements BestPathAlgorithm {
     }
 
 
-    private void updateFrom(Wordnet wordnet, Vertex the, Vertex from) {
+    protected void updateFrom(Wordnet wordnet, Vertex the, Vertex from) {
 
         //是权重越小越好 距离越短
         double weight = from.weight + calculateWeight(from, the);
@@ -184,7 +131,7 @@ public class ViterbiBestPathAlgorithm implements BestPathAlgorithm {
     }
 
 
-    private double calculateWeight(Vertex from, Vertex to) {
+    protected double calculateWeight(Vertex from, Vertex to) {
         int frequency = from.freq;
         if (frequency == 0) {
             // 防止发生除零错误
@@ -223,7 +170,7 @@ public class ViterbiBestPathAlgorithm implements BestPathAlgorithm {
      * @param wordnet
      * @return
      */
-    private Wordpath buildPath(Wordnet wordnet) {
+    protected Wordpath buildPath(Wordnet wordnet) {
         //从后到前，获得完整的路径
         Wordpath wordPath = new Wordpath(wordnet);
 
@@ -241,7 +188,6 @@ public class ViterbiBestPathAlgorithm implements BestPathAlgorithm {
 
         // 最后一个point必定指向start节点
 
-        //FIXME xxx
         Preconditions.checkState(last == wordnet.getBeginRow().first(), "非完整路径,有可能wordnet初始化的时候就路径不完整");
 
         return wordPath;

@@ -9,8 +9,8 @@ import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
 import com.mayabot.nlp.perceptron.FeatureSet;
 import com.mayabot.nlp.resources.NlpResource;
+import com.mayabot.nlp.segment.Nature;
 import com.mayabot.nlp.segment.WordTerm;
-import com.mayabot.nlp.segment.dictionary.Nature;
 import com.mayabot.nlp.segment.wordnet.Vertex;
 
 import java.io.BufferedInputStream;

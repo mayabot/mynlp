@@ -14,7 +14,7 @@ import com.mayabot.nlp.segment.wordnet.Vertex;
 import com.mayabot.nlp.segment.wordnet.Wordnet;
 
 /**
- * 基于CoreDict和viterbi的分词器.
+ * 基于HMM-BiGram的分词器.
  *
  * @author jimichan
  */
@@ -85,6 +85,7 @@ public class CoreTokenizerBuilder extends BaseTokenizerBuilder {
 
     /**
      * 是否启用人名识别
+     *
      * @param personRecognition
      * @return Self
      */
@@ -95,6 +96,7 @@ public class CoreTokenizerBuilder extends BaseTokenizerBuilder {
 
     /**
      * 是否启用地名识别
+     *
      * @param placeRecognition
      * @return Self
      */
@@ -105,6 +107,7 @@ public class CoreTokenizerBuilder extends BaseTokenizerBuilder {
 
     /**
      * 是否启用机构名名识别
+     *
      * @param organizationRecognition
      * @return Self
      */

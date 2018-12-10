@@ -28,6 +28,7 @@ import java.util.List;
 /**
  * 分词纠错词典结构.
  * 对外提供一个DoubleArrayTrie
+ *
  * @author jimichan
  */
 @ImplementedBy(DefaultCorrectionDictionary.class)
