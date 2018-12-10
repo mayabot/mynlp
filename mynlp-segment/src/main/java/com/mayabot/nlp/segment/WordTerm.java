@@ -15,8 +15,6 @@
  */
 package com.mayabot.nlp.segment;
 
-import com.mayabot.nlp.segment.dictionary.Nature;
-
 import java.io.Serializable;
 import java.util.List;
 
@@ -52,8 +50,13 @@ public final class WordTerm implements Serializable {
 
     private String customFlag;
 
+
+    public WordTerm(String word) {
+        this.word = word;
+    }
+
     /**
-     * 构造一个单词
+     * 构造一个词
      *
      * @param word   词语
      * @param nature 词性
@@ -76,9 +79,6 @@ public final class WordTerm implements Serializable {
         this.offset = offset;
     }
 
-    public WordTerm(String word) {
-        this.word = word;
-    }
 
     public Nature getNature() {
         return nature;
@@ -143,10 +143,10 @@ public final class WordTerm implements Serializable {
             sb.append(word).append("/").append(nature);
         }
 
-
         if (subword != null) {
             sb.append(subword);
         }
+
         return sb.toString();
     }
 

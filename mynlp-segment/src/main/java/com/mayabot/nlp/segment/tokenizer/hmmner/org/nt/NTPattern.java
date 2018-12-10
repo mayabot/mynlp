@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.mayabot.nlp.segment.tokenizer.recognition.org.nt;
+package com.mayabot.nlp.segment.tokenizer.hmmner.org.nt;
 
 /**
  * 组织名称识别模式串

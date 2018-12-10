@@ -31,7 +31,7 @@ import com.mayabot.nlp.segment.wordnet.Wordpath;
 
 /**
  * 自定义词典的合并处理器.
- *
+ * <p>
  * 小词合并为大词
  * 但是不去解决  AAA BBB CCC 有一个自定义词汇 ABBBC 这个时候不能去拆分，变更原有路径
  * 只能解决 A BB C 然后有自定义词 ABBC 那可以把他们联合起来
@@ -91,7 +91,7 @@ public class CustomDictionaryProcessor extends BaseMynlpComponent implements Wor
                         Vertex v = wordPath.combine(offset, length);
 
                         //没有等效果词
-                        //v.setWordInfo(coreDictionary.X_WORD_ID, CoreDictionary.TAG_CLUSTER, attr);
+                        //v.setWordInfo(coreDictionary.X_WORD_ID, CoreDictionary.X_TAG, attr);
                     } else {
                         //FIXME 要不要覆盖attr.
                         //也就是自定义词典里面包含了重复的词汇

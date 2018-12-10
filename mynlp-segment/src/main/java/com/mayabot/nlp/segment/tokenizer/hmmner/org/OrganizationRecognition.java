@@ -14,23 +14,23 @@
  * limitations under the License.
  */
 
-package com.mayabot.nlp.segment.tokenizer.recognition.org;
+package com.mayabot.nlp.segment.tokenizer.hmmner.org;
 
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.mayabot.nlp.algorithm.SecondOrderViterbi;
 import com.mayabot.nlp.common.EnumFreqPair;
 import com.mayabot.nlp.common.matrix.EnumTransformMatrix;
+import com.mayabot.nlp.segment.Nature;
 import com.mayabot.nlp.segment.OptimizeProcessor;
 import com.mayabot.nlp.segment.common.BaseMynlpComponent;
 import com.mayabot.nlp.segment.common.VertexTagCharSequenceTempChar;
-import com.mayabot.nlp.segment.dictionary.Nature;
-import com.mayabot.nlp.segment.tokenizer.recognition.org.nt.NTDictionary;
-import com.mayabot.nlp.segment.tokenizer.recognition.org.nt.OrganizationDictionary;
+import com.mayabot.nlp.segment.tokenizer.hmmner.org.nt.NTDictionary;
+import com.mayabot.nlp.segment.tokenizer.hmmner.org.nt.OrganizationDictionary;
 import com.mayabot.nlp.segment.wordnet.Vertex;
 import com.mayabot.nlp.segment.wordnet.Wordnet;
 
-import static com.mayabot.nlp.segment.tokenizer.recognition.org.NTTag.Z;
+import static com.mayabot.nlp.segment.tokenizer.hmmner.org.NTTag.Z;
 
 /**
  * HMM-Viterbi 组织机构名识别处理器
@@ -70,8 +70,8 @@ public class OrganizationRecognition extends BaseMynlpComponent implements Optim
         a_total_freq = placeDictionary.getTransformMatrixDictionary().getTotalFrequency(NTTag.Z);
         defaultEnumFreqPair = new EnumFreqPair(Z, a_total_freq);
 
-//        word_id = coreDictionary.getWordID(CoreDictionary.TAG_GROUP);
-//        word_tag = CoreDictionary.TAG_GROUP;
+//        word_id = coreDictionary.getWordID(CoreDictionary.NT_TAG);
+//        word_tag = CoreDictionary.NT_TAG;
 //        natureAttribute = coreDictionary.get(word_id);
 
         EnumTransformMatrix<NTTag> trans = placeDictionary.getTransformMatrixDictionary();

@@ -22,9 +22,9 @@ import com.google.inject.Inject;
 import com.mayabot.nlp.fst.FST;
 import com.mayabot.nlp.fst.FstMatcher;
 import com.mayabot.nlp.fst.FstNode;
+import com.mayabot.nlp.segment.Nature;
 import com.mayabot.nlp.segment.WordpathProcessor;
 import com.mayabot.nlp.segment.common.BaseMynlpComponent;
-import com.mayabot.nlp.segment.dictionary.Nature;
 import com.mayabot.nlp.segment.dictionary.core.CoreDictionary;
 import com.mayabot.nlp.segment.wordnet.Vertex;
 import com.mayabot.nlp.segment.wordnet.Wordnet;
@@ -82,7 +82,7 @@ public class CombineProcessor extends BaseMynlpComponent implements WordpathProc
      */
     @Inject
     public CombineProcessor(CoreDictionary coreDictionary) {
-//        x_cluster_wordid = coreDictionary.getWordID(CoreDictionary.TAG_CLUSTER);
+//        x_cluster_wordid = coreDictionary.getWordID(CoreDictionary.X_TAG);
         this.setOrder(ORDER_MIDDLE + 10);
         shuLiang = make(fst -> {
             FstNode<Vertex> shuzi = fst.start().to("shuzi",
@@ -145,7 +145,7 @@ public class CombineProcessor extends BaseMynlpComponent implements WordpathProc
 //                }
 
                 Vertex vertex = wordPath.combine(start, end - start);
-//                vertex.setWordInfo(wordID, CoreDictionary.TAG_CLUSTER, NatureAttribute.create1000(Nature.n));
+//                vertex.setWordInfo(wordID, CoreDictionary.X_TAG, NatureAttribute.create1000(Nature.n));
 
             }
         }

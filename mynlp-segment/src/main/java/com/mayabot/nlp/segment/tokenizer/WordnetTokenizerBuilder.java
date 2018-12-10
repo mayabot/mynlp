@@ -23,9 +23,8 @@ import com.mayabot.nlp.Mynlps;
 import com.mayabot.nlp.segment.*;
 import com.mayabot.nlp.segment.common.VertexHelper;
 import com.mayabot.nlp.segment.tokenizer.collector.SentenceCollector;
-import com.mayabot.nlp.segment.tokenizer.normalize.Full2halfCharNormalize;
-import com.mayabot.nlp.segment.tokenizer.normalize.LowerCaseCharNormalize;
-import com.mayabot.nlp.segment.tokenizer.recognition.OptimizeWordPathProcessor;
+import com.mayabot.nlp.segment.tokenizer.hmmner.OptimizeWordPathProcessor;
+import com.mayabot.nlp.segment.tokenizer.normalize.DefaultCharNormalize;
 import com.mayabot.nlp.segment.wordnet.BestPathAlgorithm;
 
 import java.util.ArrayList;
@@ -54,8 +53,7 @@ public class WordnetTokenizerBuilder implements MynlpTokenizerBuilder {
      * 字符处理器,默认就有最小化和全角半角化
      */
     private List<CharNormalize> charNormalizes = Lists.newArrayList(
-            LowerCaseCharNormalize.instance,
-            Full2halfCharNormalize.instace
+            DefaultCharNormalize.instace
     );
 
     /**
@@ -147,14 +145,14 @@ public class WordnetTokenizerBuilder implements MynlpTokenizerBuilder {
                     pair.consumer.accept(it);
                 }
 
-                if (it instanceof OptimizeWordPathProcessor) {
-                    OptimizeWordPathProcessor op = (OptimizeWordPathProcessor) it;
-                    op.getOptimizeProcessorList().forEach(pp -> {
-                        if (pair.clazz.equals(pp.getClass()) || pair.clazz.isAssignableFrom(pp.getClass())) {
-                            pair.consumer.accept(pp);
-                        }
-                    });
-                }
+//                if (it instanceof OptimizeWordPathProcessor) {
+//                    OptimizeWordPathProcessor op = (OptimizeWordPathProcessor) it;
+//                    op.getOptimizeProcessorList().forEach(pp -> {
+//                        if (pair.clazz.equals(pp.getClass()) || pair.clazz.isAssignableFrom(pp.getClass())) {
+//                            pair.consumer.accept(pp);
+//                        }
+//                    });
+//                }
             });
         });
 
@@ -176,6 +174,7 @@ public class WordnetTokenizerBuilder implements MynlpTokenizerBuilder {
 
     /**
      * 关闭组件
+     *
      * @param clazz
      * @return
      */
@@ -186,6 +185,7 @@ public class WordnetTokenizerBuilder implements MynlpTokenizerBuilder {
 
     /**
      * 启用组件
+     *
      * @param clazz
      * @return
      */
@@ -253,8 +253,8 @@ public class WordnetTokenizerBuilder implements MynlpTokenizerBuilder {
     /**
      * 增加一个WordpathProcessor组件或者WordnetInitializer组件。或者同时实现了这两个接口.
      *
-     * @param component
-     * @return
+     * @param component MynlpComponent
+     * @return self
      */
     public WordnetTokenizerBuilder addComponent(MynlpComponent component) {
         boolean access = false;

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.mayabot.nlp.segment.dictionary;
+package com.mayabot.nlp.segment;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -312,6 +312,7 @@ public enum Nature {
 
     /**
      * 是否名词
+     *
      * @return
      */
     public boolean isN() {

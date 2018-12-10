@@ -28,8 +28,8 @@ import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
 import com.mayabot.nlp.resources.NlpResouceExternalizable;
 import com.mayabot.nlp.resources.NlpResource;
+import com.mayabot.nlp.segment.Nature;
 import com.mayabot.nlp.segment.dictionary.CustomDictionary;
-import com.mayabot.nlp.segment.dictionary.Nature;
 import com.mayabot.nlp.utils.CharSourceLineReader;
 
 import java.io.*;

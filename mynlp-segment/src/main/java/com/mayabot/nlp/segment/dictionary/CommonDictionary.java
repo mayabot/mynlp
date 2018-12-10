@@ -22,7 +22,6 @@ import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
 import com.mayabot.nlp.resources.NlpResouceExternalizable;
 import com.mayabot.nlp.resources.NlpResource;
-import com.mayabot.nlp.segment.dictionary.core.CoreDictionaryAbsWords;
 import com.mayabot.nlp.utils.CharSourceLineReader;
 
 import java.io.*;
@@ -35,7 +34,6 @@ import java.util.regex.Pattern;
  * <p>
  * 由于抽象词变化了，加载原来的语料需要对应关系转换.
  *
- * @author hankcs
  * @author jimichan
  */
 public abstract class CommonDictionary<V> extends NlpResouceExternalizable {
@@ -78,25 +76,25 @@ public abstract class CommonDictionary<V> extends NlpResouceExternalizable {
     private String labelMap(String label) {
         switch (label) {
             case "始##始":
-                return CoreDictionaryAbsWords.BIGIN_TAG;
+                return DictionaryAbsWords.BIGIN_TAG;
             case "末##末":
-                return CoreDictionaryAbsWords.TAG_END;
+                return DictionaryAbsWords.END_TAG;
             case "未##团":
-                return CoreDictionaryAbsWords.TAG_GROUP;
+                return DictionaryAbsWords.NT_TAG;
             case "未##数":
-                return CoreDictionaryAbsWords.TAG_NUMBER;
+                return DictionaryAbsWords.M_NUMBER;
             case "未##地":
-                return CoreDictionaryAbsWords.TAG_PLACE;
+                return DictionaryAbsWords.NS_TAG;
             case "未##量":
-                return CoreDictionaryAbsWords.TAG_QUANTIFIER;
+                return DictionaryAbsWords.MQ_TAG;
             case "未##专":
-                return CoreDictionaryAbsWords.TAG_NX;
+                return DictionaryAbsWords.NX_TAG;
             case "未##时":
-                return CoreDictionaryAbsWords.TAG_TIME;
+                return DictionaryAbsWords.TIME_TAG;
             case "未##串":
-                return CoreDictionaryAbsWords.TAG_CLUSTER;
+                return DictionaryAbsWords.X_TAG;
             case "未##人":
-                return CoreDictionaryAbsWords.TAG_PEOPLE;
+                return DictionaryAbsWords.NR_TAG;
             default:
                 return label;
         }

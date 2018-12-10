@@ -16,8 +16,8 @@
 
 package com.mayabot.nlp.segment.wordnet;
 
-import com.mayabot.nlp.segment.dictionary.Nature;
-import com.mayabot.nlp.segment.dictionary.core.CoreDictionaryAbsWords;
+import com.mayabot.nlp.segment.Nature;
+import com.mayabot.nlp.segment.dictionary.DictionaryAbsWords;
 
 /**
  * WordNode中的一个节点。顶点 它同时实现了LinkedList中节点的功能指针
@@ -112,8 +112,8 @@ public class Vertex {
      * @return
      */
     public Vertex setAbsWordNatureAndFreq(Nature nature, int freq) {
-        this.wordID = CoreDictionaryAbsWords.nature2id(nature);
-        if (wordID >= 0 && wordID <= CoreDictionaryAbsWords.MaxId) {
+        this.wordID = DictionaryAbsWords.nature2id(nature);
+        if (wordID >= 0 && wordID <= DictionaryAbsWords.MaxId) {
             this.nature = nature;
             this.freq = freq;
         }
@@ -131,7 +131,7 @@ public class Vertex {
      * @return
      */
     public boolean isAbsWord() {
-        return wordID <= CoreDictionaryAbsWords.MaxId;
+        return wordID <= DictionaryAbsWords.MaxId;
     }
 
     /**
@@ -141,7 +141,7 @@ public class Vertex {
      */
     public String absWordLabel() {
         if (isAbsWord()) {
-            return CoreDictionaryAbsWords.id2label(wordID);
+            return DictionaryAbsWords.id2label(wordID);
         } else {
             return null;
         }

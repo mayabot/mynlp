@@ -2,8 +2,8 @@ package com.mayabot.nlp.perceptron.solution.ner
 
 import com.carrotsearch.hppc.IntArrayList
 import com.mayabot.nlp.perceptron.*
+import com.mayabot.nlp.segment.Nature
 import com.mayabot.nlp.segment.WordTerm
-import com.mayabot.nlp.segment.dictionary.Nature
 import com.mayabot.nlp.segment.perceptron.PkuWord
 import com.mayabot.nlp.segment.perceptron.allFiles
 import com.mayabot.nlp.segment.perceptron.parseToFlatWords

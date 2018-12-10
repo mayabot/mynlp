@@ -31,6 +31,7 @@ import java.io.IOException;
 /**
  * 加载Crf++的text文本模型。只有在缓存的时候采用自由格式。
  * 这样用户可以直接使用自己训练的CRF模型文件
+ *
  * @author jimichan
  */
 @Singleton

@@ -31,6 +31,7 @@ import java.util.TreeMap;
  * File版本CustomDictionary
  * 不管什么格式 壁式网球 nz 1
  * 只取第一段，后面的忽略
+ *
  * @author jimichan
  */
 public class FileCustomDictionary implements CustomDictionary {

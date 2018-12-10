@@ -17,6 +17,7 @@ package com.mayabot.nlp.segment;
 
 /**
  * MynlpTokenizer构建器接口
+ *
  * @author jimichan
  */
 public interface MynlpTokenizerBuilder {
@@ -24,7 +25,7 @@ public interface MynlpTokenizerBuilder {
     /**
      * 构建一个MynlpTokenizer
      *
-     * @return
+     * @return MynlpTokenizer实例
      */
     MynlpTokenizer build();
 

@@ -13,52 +13,56 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-package com.mayabot.nlp.segment.tokenizer.recognition.org.nt;
+package com.mayabot.nlp.segment.tokenizer.hmmner.personname.nr;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.mayabot.nlp.MynlpEnv;
 import com.mayabot.nlp.common.EnumFreqPair;
 import com.mayabot.nlp.segment.dictionary.CommonDictionary;
-import com.mayabot.nlp.segment.tokenizer.recognition.org.NTTag;
+import com.mayabot.nlp.segment.tokenizer.hmmner.personname.NRTag;
 
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.util.List;
 
 /**
+ * 一个好用的人名词典
+ *
+ * @author hankcs
  * @author jimichan
  */
 @Singleton
-public class NTDictionary extends CommonDictionary<EnumFreqPair<NTTag>> {
+public class NRDictionary extends CommonDictionary<EnumFreqPair<NRTag>> {
 
     @Inject
-    public NTDictionary(MynlpEnv mynlp) throws Exception {
+    public NRDictionary(MynlpEnv mynlp) throws Exception {
         super(mynlp);
     }
 
     @Override
-    public EnumFreqPair<NTTag> parseLine(List<String> pars) {
-        return EnumFreqPair.create(pars, NTTag::valueOf);
+    public EnumFreqPair<NRTag> parseLine(List<String> pars) {
+        return EnumFreqPair.create(pars, NRTag::valueOf);
     }
 
     @Override
     public String dicFilePath() {
-        return "dictionary/organization/nt.txt";
+        return "dictionary/person/nr.txt";
     }
 
     @Override
-    protected void writeItem(EnumFreqPair<NTTag> a, DataOutput out) {
+    protected void writeItem(EnumFreqPair<NRTag> a, DataOutput out) {
         a.writeItem(out);
     }
 
-    @Override
-    protected EnumFreqPair<NTTag> readItem(DataInput in) {
-        EnumFreqPair<NTTag> pair = new EnumFreqPair<>();
 
-        pair.readItem(in, NTTag::valueOf);
+    @Override
+    protected EnumFreqPair<NRTag> readItem(DataInput in) {
+        EnumFreqPair<NRTag> pair = new EnumFreqPair<>();
+
+        pair.readItem(in, NRTag::valueOf);
 
         return pair;
     }
+
 }

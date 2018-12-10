@@ -19,10 +19,10 @@ import java.util.function.Predicate;
 
 /**
  * 对长词进行切分字词操作,结果保存在WordTerm的subword里面
- *
+ * <p>
  * 从词图中寻找字词切分方法。
  * 如果设定多个DAT词典，那么在这里进行wordnet填充（适用于CRF、感知机分词等非词典分词方式）
- *
+ * <p>
  * folded来控制是否平铺或者折叠.
  *
  * @author jimichan

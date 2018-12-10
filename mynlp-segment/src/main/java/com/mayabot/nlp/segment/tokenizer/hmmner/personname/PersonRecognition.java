@@ -14,21 +14,21 @@
  * limitations under the License.
  */
 
-package com.mayabot.nlp.segment.tokenizer.recognition.personname;
+package com.mayabot.nlp.segment.tokenizer.hmmner.personname;
 
 import com.google.inject.Inject;
 import com.mayabot.nlp.algorithm.Viterbi;
 import com.mayabot.nlp.common.EnumFreqPair;
+import com.mayabot.nlp.segment.Nature;
 import com.mayabot.nlp.segment.OptimizeProcessor;
 import com.mayabot.nlp.segment.common.BaseMynlpComponent;
 import com.mayabot.nlp.segment.common.VertexTagCharSequenceTempChar;
-import com.mayabot.nlp.segment.dictionary.Nature;
-import com.mayabot.nlp.segment.tokenizer.recognition.personname.nr.NRDictionary;
-import com.mayabot.nlp.segment.tokenizer.recognition.personname.nr.PersonDictionary;
+import com.mayabot.nlp.segment.tokenizer.hmmner.personname.nr.NRDictionary;
+import com.mayabot.nlp.segment.tokenizer.hmmner.personname.nr.PersonDictionary;
 import com.mayabot.nlp.segment.wordnet.Vertex;
 import com.mayabot.nlp.segment.wordnet.Wordnet;
 
-import static com.mayabot.nlp.segment.tokenizer.recognition.personname.NRTag.A;
+import static com.mayabot.nlp.segment.tokenizer.hmmner.personname.NRTag.A;
 
 /**
  * HMM-Viterbi 中文人名识别处理器
@@ -58,8 +58,8 @@ public class PersonRecognition extends BaseMynlpComponent implements OptimizePro
         a_total_freq = personDictionary.getTransformMatrixDictionary().getTotalFrequency(NRTag.A);
         defaultEnumFreqPair = new EnumFreqPair(NRTag.A, a_total_freq);
 //
-//        perope_word_id = coreDictionary.getWordID(CoreDictionary.TAG_PEOPLE);
-//        people_word_tag = CoreDictionary.TAG_PEOPLE;
+//        perope_word_id = coreDictionary.getWordID(CoreDictionary.NR_TAG);
+//        people_word_tag = CoreDictionary.NR_TAG;
 //        People_natureAttribute =
 //                coreDictionary.get(perope_word_id);
 

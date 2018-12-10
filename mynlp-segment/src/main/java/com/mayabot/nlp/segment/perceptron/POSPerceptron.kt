@@ -2,7 +2,7 @@ package com.mayabot.nlp.segment.perceptron
 
 import com.carrotsearch.hppc.IntArrayList
 import com.mayabot.nlp.perceptron.*
-import com.mayabot.nlp.segment.dictionary.Nature
+import com.mayabot.nlp.segment.Nature
 import com.mayabot.nlp.segment.perceptron.POSPerceptronFeature.extractFeature
 import com.mayabot.nlp.segment.perceptron.POSPerceptronFeature.extractFeatureVector
 import com.mayabot.nlp.segment.perceptron.POSPerceptronFeature.extractFeatureVector2
@@ -485,13 +485,13 @@ class POSEvaluateRunner(private val sampleList: List<TrainSample>) : EvaluateRun
         sampleList.forEach { sample ->
             // 抽样10%进行验证
 //                count++
-                total += sample.label.size
-                val result = model.decode(sample.featureMatrix)
-                for (x in 0 until result.size) {
-                    if (sample.label[x] == result[x]) {
-                        right++
-                    }
+            total += sample.label.size
+            val result = model.decode(sample.featureMatrix)
+            for (x in 0 until result.size) {
+                if (sample.label[x] == result[x]) {
+                    right++
                 }
+            }
 //                if (count % 2000 == 0) {
 //                    System.out.print("\rEvaluating ${"%.2f".format(count * 100.0 / targetSampleSize)}%")
 //

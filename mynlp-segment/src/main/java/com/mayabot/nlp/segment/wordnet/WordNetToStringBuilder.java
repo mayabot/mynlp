@@ -28,7 +28,7 @@ import java.util.BitSet;
 class WordNetToStringBuilder {
 
     private Wordnet wordnet;
-    private boolean showAttr = true;
+    private boolean showAttr;
 
     WordNetToStringBuilder(Wordnet wordnet, boolean showAttr) {
         this.wordnet = wordnet;

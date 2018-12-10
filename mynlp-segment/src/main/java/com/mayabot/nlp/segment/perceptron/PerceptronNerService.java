@@ -10,8 +10,8 @@ import com.mayabot.nlp.logging.InternalLoggerFactory;
 import com.mayabot.nlp.perceptron.FeatureSet;
 import com.mayabot.nlp.perceptron.solution.ner.NERPerceptron;
 import com.mayabot.nlp.resources.NlpResource;
+import com.mayabot.nlp.segment.Nature;
 import com.mayabot.nlp.segment.WordTerm;
-import com.mayabot.nlp.segment.dictionary.Nature;
 
 import java.io.BufferedInputStream;
 import java.io.File;

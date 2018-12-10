@@ -16,7 +16,7 @@
 
 package com.mayabot.nlp.segment.common;
 
-import com.mayabot.nlp.segment.dictionary.Nature;
+import com.mayabot.nlp.segment.Nature;
 import com.mayabot.nlp.segment.wordnet.Vertex;
 
 /**
