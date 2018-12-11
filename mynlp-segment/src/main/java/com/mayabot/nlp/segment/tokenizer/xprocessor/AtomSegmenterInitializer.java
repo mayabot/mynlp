@@ -24,7 +24,7 @@ import com.mayabot.nlp.fst.FstMatcher;
 import com.mayabot.nlp.fst.FstNode;
 import com.mayabot.nlp.segment.Nature;
 import com.mayabot.nlp.segment.WordnetInitializer;
-import com.mayabot.nlp.segment.common.BaseMynlpComponent;
+import com.mayabot.nlp.segment.common.BaseSegmentComponent;
 import com.mayabot.nlp.segment.wordnet.Vertex;
 import com.mayabot.nlp.segment.wordnet.VertexRow;
 import com.mayabot.nlp.segment.wordnet.Wordnet;
@@ -40,7 +40,7 @@ import com.mayabot.nlp.utils.Characters;
  * @author jimichan
  */
 @Singleton
-public class AtomSegmenterInitializer extends BaseMynlpComponent implements WordnetInitializer {
+public class AtomSegmenterInitializer extends BaseSegmentComponent implements WordnetInitializer {
 
     //原子分词: 连续空的，相同的type作为整体
 
@@ -175,13 +175,13 @@ public class AtomSegmenterInitializer extends BaseMynlpComponent implements Word
                     }
                     wordnet.put(from, len).
                             setAbsWordNatureAndFreq(Nature.m);
-                    //setWordInfo(numWordId, CoreDictionary.M_NUMBER, Nature.m, 100000);
+                    //setWordInfo(numWordId, CoreDictionary.M_TAG, Nature.m, 100000);
                     if (foundNotEmpty) {
                         for (int i = from; i < from + len; i++) {
                             if (wordnet.getRow(i).isEmpty()) {
                                 wordnet.put(i, 1).
                                         setAbsWordNatureAndFreq(Nature.m);
-//                                        setWordInfo(numWordId, CoreDictionary.M_NUMBER, Nature.m, 100000);
+//                                        setWordInfo(numWordId, CoreDictionary.M_TAG, Nature.m, 100000);
                             }
                         }
                     }

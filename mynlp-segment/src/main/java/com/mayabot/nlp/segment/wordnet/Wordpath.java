@@ -134,7 +134,7 @@ public class Wordpath {
      * @param vertex
      */
     public void combine(Vertex vertex) {
-        this.connect(vertex.getRowNum(), vertex.getLength());
+        this.connect(vertex.getRowNum(), vertex.length());
     }
 
 

@@ -24,23 +24,26 @@ import com.mayabot.nlp.segment.wordnet.Vertex;
  *
  * @author jimichan
  */
-public class VertexHelper {
+public abstract class VertexHelper {
 
-    public static final int total = 25146057 / 10;
+    private static final int total = 25146057 / 10;
 
     /**
      * 生成线程安全的起始节点
      * begin
      *
-     * @return
+     * @return Begin Vertex
      */
-    public static final Vertex newBegin() {
+    public static Vertex newBegin() {
         Vertex v = new Vertex(1);
         v.setAbsWordNatureAndFreq(Nature.newWord, total);
         return v;
     }
 
-    public static final Vertex newEnd() {
+    /**
+     * @return End Vertex
+     */
+    public static Vertex newEnd() {
         Vertex v = new Vertex(0);
         v.setAbsWordNatureAndFreq(Nature.end, total);
         return v;

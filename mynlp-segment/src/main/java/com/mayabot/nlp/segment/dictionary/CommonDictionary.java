@@ -82,7 +82,7 @@ public abstract class CommonDictionary<V> extends NlpResouceExternalizable {
             case "未##团":
                 return DictionaryAbsWords.NT_TAG;
             case "未##数":
-                return DictionaryAbsWords.M_NUMBER;
+                return DictionaryAbsWords.M_TAG;
             case "未##地":
                 return DictionaryAbsWords.NS_TAG;
             case "未##量":

@@ -1,6 +1,7 @@
 package com.mayabot.nlp.segment.tokenizer;
 
 import com.mayabot.nlp.Mynlps;
+import com.mayabot.nlp.segment.PipelineTokenizerBuilder;
 import com.mayabot.nlp.segment.tokenizer.bestpath.LongpathBestPathAlgorithm;
 import com.mayabot.nlp.segment.tokenizer.collector.SentenceCollector;
 import com.mayabot.nlp.segment.tokenizer.xprocessor.AtomSegmenterInitializer;
@@ -14,7 +15,7 @@ import com.mayabot.nlp.segment.tokenizer.xprocessor.CustomDictionaryProcessor;
 public class SimpleDictTokenizerBuilder extends BaseTokenizerBuilder {
 
     @Override
-    protected void setUp(WordnetTokenizerBuilder builder) {
+    protected void setUp(PipelineTokenizerBuilder builder) {
         setCorrection(false);
 
         //wordnet初始化填充

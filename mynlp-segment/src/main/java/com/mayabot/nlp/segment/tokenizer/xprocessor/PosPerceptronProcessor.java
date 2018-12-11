@@ -21,7 +21,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.mayabot.nlp.segment.Nature;
 import com.mayabot.nlp.segment.WordpathProcessor;
-import com.mayabot.nlp.segment.common.BaseMynlpComponent;
+import com.mayabot.nlp.segment.common.BaseSegmentComponent;
 import com.mayabot.nlp.segment.perceptron.PerceptronPosService;
 import com.mayabot.nlp.segment.wordnet.Vertex;
 import com.mayabot.nlp.segment.wordnet.Wordpath;
@@ -35,7 +35,7 @@ import java.util.List;
  * @author jimichan
  */
 @Singleton
-public class PosPerceptronProcessor extends BaseMynlpComponent implements WordpathProcessor {
+public class PosPerceptronProcessor extends BaseSegmentComponent implements WordpathProcessor {
 
     private final PerceptronPosService perceptronPosService;
 

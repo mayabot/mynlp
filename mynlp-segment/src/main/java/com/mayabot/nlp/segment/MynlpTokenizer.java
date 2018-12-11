@@ -17,8 +17,6 @@
 package com.mayabot.nlp.segment;
 
 import com.google.common.collect.Lists;
-import com.mayabot.nlp.segment.tokenizer.WordnetTokenizer;
-import com.mayabot.nlp.segment.tokenizer.WordnetTokenizerBuilder;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -30,9 +28,9 @@ import java.util.function.Consumer;
  * 通过MynlpTokenizerBuilder来创建MynlpTokenizer对象。
  *
  * @author jimichan
- * @see WordnetTokenizer
+ * @see PipelineTokenizer
  * @see MynlpTokenizerBuilder
- * @see WordnetTokenizerBuilder
+ * @see PipelineTokenizerBuilder
  */
 public interface MynlpTokenizer {
 

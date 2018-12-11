@@ -22,7 +22,7 @@ import com.google.common.hash.Hashing;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.mayabot.nlp.MynlpEnv;
-import com.mayabot.nlp.Setting;
+import com.mayabot.nlp.SettingItem;
 import com.mayabot.nlp.collection.dat.DoubleArrayTrieMap;
 import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
@@ -58,7 +58,7 @@ public class DefaultCustomDictionary extends NlpResouceExternalizable implements
 
     private boolean isNormalization = false;
 
-    public static Setting<String> dictPathSetting = Setting.string(
+    public static SettingItem<String> dictPathSetting = SettingItem.string(
             "custom.dictionary.path", "dictionary/CustomDictionary.txt");
 
     @Inject

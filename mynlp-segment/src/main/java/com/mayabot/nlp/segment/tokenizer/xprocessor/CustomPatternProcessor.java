@@ -18,7 +18,7 @@ package com.mayabot.nlp.segment.tokenizer.xprocessor;
 
 import com.mayabot.nlp.segment.Nature;
 import com.mayabot.nlp.segment.WordpathProcessor;
-import com.mayabot.nlp.segment.common.BaseMynlpComponent;
+import com.mayabot.nlp.segment.common.BaseSegmentComponent;
 import com.mayabot.nlp.segment.wordnet.Vertex;
 import com.mayabot.nlp.segment.wordnet.Wordnet;
 import com.mayabot.nlp.segment.wordnet.Wordpath;
@@ -32,7 +32,7 @@ import java.util.regex.Pattern;
  *
  * @author jimichan
  */
-public class CustomPatternProcessor extends BaseMynlpComponent implements WordpathProcessor {
+public class CustomPatternProcessor extends BaseSegmentComponent implements WordpathProcessor {
 
     private Pattern pattern;
 

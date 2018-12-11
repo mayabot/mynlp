@@ -23,7 +23,7 @@ import com.mayabot.nlp.segment.wordnet.Wordpath;
  *
  * @author jimichan
  */
-public interface WordpathProcessor extends MynlpComponent {
+public interface WordpathProcessor extends SegmentComponent {
 
     /**
      * 对传入的Wordpath进行处理，然后返回一个旧的或者新的对象

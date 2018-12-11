@@ -3,7 +3,7 @@ package com.mayabot.nlp.segment.tokenizer.xprocessor;
 import com.google.inject.Singleton;
 import com.mayabot.nlp.segment.Nature;
 import com.mayabot.nlp.segment.WordpathProcessor;
-import com.mayabot.nlp.segment.common.BaseMynlpComponent;
+import com.mayabot.nlp.segment.common.BaseSegmentComponent;
 import com.mayabot.nlp.segment.wordnet.Vertex;
 import com.mayabot.nlp.segment.wordnet.Wordnet;
 import com.mayabot.nlp.segment.wordnet.Wordpath;
@@ -16,8 +16,7 @@ import com.mayabot.nlp.utils.CharSet;
  * @author jimichan jimichan@gmail.com
  */
 @Singleton
-public class RepairWordnetProcessor extends BaseMynlpComponent implements WordpathProcessor {
-
+public class RepairWordnetProcessor extends BaseSegmentComponent implements WordpathProcessor {
 
     @Override
     public Wordpath process(Wordpath wordPath) {

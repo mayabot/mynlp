@@ -1,6 +1,7 @@
 package com.mayabot.nlp.segment.tokenizer;
 
 import com.mayabot.nlp.segment.MynlpTokenizer;
+import com.mayabot.nlp.segment.PipelineTokenizerBuilder;
 import com.mayabot.nlp.segment.tokenizer.collector.SentenceCollector;
 import com.mayabot.nlp.segment.tokenizer.collector.SentenceIndexWordCollector;
 import com.mayabot.nlp.segment.tokenizer.xprocessor.CorrectionProcessor;
@@ -8,14 +9,14 @@ import com.mayabot.nlp.segment.tokenizer.xprocessor.CorrectionProcessor;
 /**
  * @author jimichan
  */
-public abstract class BaseTokenizerBuilder extends WordnetTokenizerBuilder {
+public abstract class BaseTokenizerBuilder extends PipelineTokenizerBuilder {
 
     /**
      * 子类去设置builder
      *
      * @param builder
      */
-    protected abstract void setUp(WordnetTokenizerBuilder builder);
+    protected abstract void setUp(PipelineTokenizerBuilder builder);
 
     /**
      * 是否开启分词纠错

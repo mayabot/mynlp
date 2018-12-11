@@ -24,7 +24,7 @@ import com.mayabot.nlp.segment.wordnet.Wordnet;
  *
  * @author jimichan
  */
-public interface WordnetInitializer extends MynlpComponent {
+public interface WordnetInitializer extends SegmentComponent {
 
     /**
      * 初始化

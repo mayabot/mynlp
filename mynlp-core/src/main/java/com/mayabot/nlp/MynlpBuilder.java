@@ -217,7 +217,7 @@ public class MynlpBuilder {
         return this;
     }
 
-    public MynlpBuilder set(Setting key, String value) {
+    public MynlpBuilder set(SettingItem key, String value) {
         getSettings().put(key, value);
         return this;
     }

@@ -33,7 +33,7 @@ package com.mayabot.nlp.segment.dictionary.correction;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.mayabot.nlp.MynlpEnv;
-import com.mayabot.nlp.Setting;
+import com.mayabot.nlp.SettingItem;
 import com.mayabot.nlp.collection.dat.DoubleArrayTrieMap;
 import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
@@ -61,7 +61,7 @@ public class DefaultCorrectionDictionary implements CorrectionDictionary {
 
     static InternalLogger logger = InternalLoggerFactory.getInstance(DefaultCorrectionDictionary.class);
 
-    public final static Setting<String> correctionDict = Setting.string("correction.dict", "dictionary/correction.txt");
+    public final static SettingItem<String> correctionDict = SettingItem.string("correction.dict", "dictionary/correction.txt");
 
 
     private DoubleArrayTrieMap<AdjustWord> doubleArrayTrie;
