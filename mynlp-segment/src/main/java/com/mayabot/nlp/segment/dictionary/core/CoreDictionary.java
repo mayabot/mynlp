@@ -91,7 +91,7 @@ public class CoreDictionary extends NlpResouceExternalizable {
                 String[] param = line.split("\\s");
 
                 Integer count = Integer.valueOf(param[1]);
-                map.put(param[0], Integer.valueOf(count));
+                map.put(param[0], count);
                 maxFreq += count;
             }
         }

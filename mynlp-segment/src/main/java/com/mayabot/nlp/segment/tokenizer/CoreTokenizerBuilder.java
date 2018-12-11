@@ -2,8 +2,9 @@ package com.mayabot.nlp.segment.tokenizer;
 
 import com.google.inject.Inject;
 import com.mayabot.nlp.collection.dat.DoubleArrayTrieStringIntMap;
+import com.mayabot.nlp.segment.PipelineTokenizerBuilder;
 import com.mayabot.nlp.segment.WordnetInitializer;
-import com.mayabot.nlp.segment.common.BaseMynlpComponent;
+import com.mayabot.nlp.segment.common.BaseSegmentComponent;
 import com.mayabot.nlp.segment.dictionary.core.CoreDictionary;
 import com.mayabot.nlp.segment.tokenizer.bestpath.ViterbiBestPathAlgorithm;
 import com.mayabot.nlp.segment.tokenizer.xprocessor.AtomSegmenterInitializer;
@@ -46,7 +47,7 @@ public class CoreTokenizerBuilder extends BaseTokenizerBuilder {
      * @param builder
      */
     @Override
-    protected void setUp(WordnetTokenizerBuilder builder) {
+    protected void setUp(PipelineTokenizerBuilder builder) {
 
         //wordnet初始化填充
         builder.addWordnetInitializer(CoreDictionaryInitializer.class);
@@ -121,7 +122,7 @@ public class CoreTokenizerBuilder extends BaseTokenizerBuilder {
      *
      * @author jimichan
      */
-    public static class CoreDictionaryInitializer extends BaseMynlpComponent implements WordnetInitializer {
+    public static class CoreDictionaryInitializer extends BaseSegmentComponent implements WordnetInitializer {
 
         private CoreDictionary coreDictionary;
 

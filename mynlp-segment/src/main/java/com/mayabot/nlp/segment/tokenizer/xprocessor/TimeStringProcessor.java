@@ -17,11 +17,9 @@
 package com.mayabot.nlp.segment.tokenizer.xprocessor;
 
 import com.google.common.collect.Lists;
-import com.google.inject.Inject;
 import com.mayabot.nlp.segment.Nature;
 import com.mayabot.nlp.segment.WordnetInitializer;
-import com.mayabot.nlp.segment.common.BaseMynlpComponent;
-import com.mayabot.nlp.segment.dictionary.core.CoreDictionary;
+import com.mayabot.nlp.segment.common.BaseSegmentComponent;
 import com.mayabot.nlp.segment.wordnet.Vertex;
 import com.mayabot.nlp.segment.wordnet.VertexRow;
 import com.mayabot.nlp.segment.wordnet.Wordnet;
@@ -35,13 +33,13 @@ import java.util.regex.Pattern;
  *
  * @author jimichan
  */
-public class TimeStringProcessor extends BaseMynlpComponent implements WordnetInitializer {
+public class TimeStringProcessor extends BaseSegmentComponent implements WordnetInitializer {
 
 
     private List<Pattern> patternList = Lists.newArrayList();
 
-    @Inject
-    public TimeStringProcessor(CoreDictionary coreDictionary) {
+
+    public TimeStringProcessor() {
 
         patternList.add(Pattern.compile("(?:\\d{4}-\\d{2}-\\d{2})|(?:\\d{1,2}月\\d{1,2}[日号])|(?:\\d{2,4}年(?:\\d{1,2}月(?:\\d{1,2}日)?)?)"));
         patternList.add(Pattern.compile("\\d+个月"));

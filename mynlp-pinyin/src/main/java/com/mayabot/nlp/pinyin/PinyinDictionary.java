@@ -19,7 +19,7 @@ package com.mayabot.nlp.pinyin;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.mayabot.nlp.MynlpEnv;
-import com.mayabot.nlp.Setting;
+import com.mayabot.nlp.SettingItem;
 import com.mayabot.nlp.pinyin.model.Pinyin;
 import com.mayabot.nlp.resources.NlpResource;
 import com.mayabot.nlp.utils.CharSourceLineReader;
@@ -28,7 +28,7 @@ import javax.inject.Singleton;
 import java.util.List;
 import java.util.TreeMap;
 
-import static com.mayabot.nlp.Setting.string;
+import static com.mayabot.nlp.SettingItem.string;
 
 /**
  * 拼音的词典
@@ -39,10 +39,10 @@ import static com.mayabot.nlp.Setting.string;
 public class PinyinDictionary extends BasePinyinDictionary {
 
 
-    public final static Setting<String> pinyinSetting =
+    public final static SettingItem<String> pinyinSetting =
             string("pinyin.dict", "dictionary/pinyin.txt");
 
-    public final static Setting<String> pinyinExtDicSetting =
+    public final static SettingItem<String> pinyinExtDicSetting =
             string("pinyin.ext.dict", null);
 
     private final MynlpEnv mynlp;

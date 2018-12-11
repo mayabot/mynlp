@@ -3,7 +3,6 @@ package com.mayabot.nlp.segment.dictionary;
 import com.google.common.collect.Lists;
 import com.mayabot.nlp.segment.Nature;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -15,9 +14,7 @@ import java.util.List;
  */
 public class DictionaryAbsWords {
 
-
     public static final int MaxId = 9;
-
 
     public static final int BIGIN_ID = 0;
     public static final int END_ID = 1;
@@ -28,7 +25,7 @@ public class DictionaryAbsWords {
     public static final int NT_ID = 6;
     public static final int NS_ID = 7;
     public static final int NR_ID = 8;
-    public static final int NUM_ID = 9;
+    public static final int M_ID = 9;
 
     public static void main(String[] args) {
         System.out.println(allLabel());
@@ -38,13 +35,30 @@ public class DictionaryAbsWords {
     /**
      * 词性和AbsWordId的对应关系
      *
-     * @return
+     * @return abs word id
      */
-    public final static int nature2id(Nature nature) {
+    public static int nature2id(Nature nature) {
         switch (nature) {
             case begin:
                 return BIGIN_ID;
-
+            case end:
+                return END_ID;
+            case mq:
+                return MQ_ID;
+            case nx:
+                return NX_ID;
+            case t:
+                return TIME_ID;
+            case x:
+                return X_ID;
+            case nt:
+                return NT_ID;
+            case ns:
+                return NS_ID;
+            case nr:
+                return NR_ID;
+            case m:
+                return M_ID;
             default:
                 return -1;
         }
@@ -53,14 +67,31 @@ public class DictionaryAbsWords {
     /**
      * 抽象词，对应的Label
      *
-     * @param id
-     * @return
+     * @param id abs word id
+     * @return abs label
      */
-    public final static String id2label(int id) {
+    public static String id2label(int id) {
         switch (id) {
             case BIGIN_ID:
                 return BIGIN_TAG;
-
+            case END_ID:
+                return END_TAG;
+            case MQ_ID:
+                return MQ_TAG;
+            case NX_ID:
+                return NX_TAG;
+            case TIME_ID:
+                return TIME_TAG;
+            case X_ID:
+                return X_TAG;
+            case NT_ID:
+                return NT_TAG;
+            case NS_ID:
+                return NS_TAG;
+            case NR_ID:
+                return NR_TAG;
+            case M_ID:
+                return M_TAG;
             default:
                 return null;
         }
@@ -70,10 +101,10 @@ public class DictionaryAbsWords {
     /**
      * 构建词典的时候一定把这些放进去
      *
-     * @return
+     * @return all label list
      */
     public static List<String> allLabel() {
-        ArrayList<String> list = Lists.newArrayList(
+        return Lists.newArrayList(
                 BIGIN_TAG,
                 END_TAG,
                 MQ_TAG,
@@ -83,9 +114,8 @@ public class DictionaryAbsWords {
                 NT_TAG,
                 NS_TAG,
                 NR_TAG,
-                M_NUMBER
+                M_TAG
         );
-        return list;
     }
 
     /**
@@ -137,7 +167,7 @@ public class DictionaryAbsWords {
     /**
      * 数词 m
      */
-    public final static String M_NUMBER = "\u00019Num";
+    public final static String M_TAG = "\u00019Num";
 
 //    /**
 //     * 其它 XX

@@ -1,7 +1,7 @@
 package com.mayabot.nlp.segment;
 
 import com.mayabot.nlp.Mynlps;
-import com.mayabot.nlp.segment.tokenizer.crf.CrfTokenizerBuilder;
+import com.mayabot.nlp.segment.crf.CrfTokenizerBuilder;
 import org.junit.Test;
 
 import java.io.File;

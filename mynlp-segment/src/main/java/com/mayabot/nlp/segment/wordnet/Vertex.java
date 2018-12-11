@@ -44,21 +44,19 @@ public class Vertex {
 
     ////////////////////////////////////////////
 
-//    /**
-//     * 节点对应的等效词(抽象词)（如未##数）
-//     * Hanlp 中这个对应的字段是word，有些时候，当没有等效词的时候，这就是实际的词
-//     */
-//    public String abstractWord;
-
     /**
      * 核心词典的ID,主要是针对核心词典的ID 或者词ID id之间有ngram统计关系
      */
     public int wordID = -1;
 
-    //词性
+    /**
+     * 词性
+     */
     public Nature nature;
 
-    //二元模型分词时，需要从里面放入词频
+    /**
+     * 二元模型分词时，需要从里面放入词频
+     */
     public int freq = 0;
 
 
@@ -82,13 +80,9 @@ public class Vertex {
      */
     public Vertex(Vertex node) {
         this.length = node.length;
-//        this.abstractWord = node.abstractWord;
         this.wordID = node.wordID;
     }
 
-//    public static boolean hasNature(Vertex vertex, Nature nature) {
-//        return vertex != null && vertex.natureAttribute != null && vertex.natureAttribute.hasNature(nature);
-//    }
 
     /**
      * copy to new object , in abstractWord length wordinfo
@@ -99,10 +93,9 @@ public class Vertex {
         return new Vertex(this);
     }
 
-    public char theChar() {
-        return this.vertexRow.theChar();
-    }
-
+//    public char theChar() {
+//        return this.vertexRow.theChar();
+//    }
 
     /**
      * 设定抽象词词性和对应的频率.
@@ -150,16 +143,7 @@ public class Vertex {
     public boolean isNature(Nature nature) {
         return this.nature != null && nature == this.nature;
     }
-//    /**
-//     * @param wordID
-//     * @return
-//     */
-//    public Vertex setWordInfo(int wordID,Nature nature,int freq) {
-//        this.wordID = wordID;
-//        this.freq = freq;
-//        this.nature = nature;
-//        return this;
-//    }
+
 
     /**
      * 接续行.接续是End就返回null
@@ -191,6 +175,7 @@ public class Vertex {
      */
     private String realWord;
 
+
     public String realWord() {
         if (vertexRow.rowNum == -1) {
             return "";
@@ -204,7 +189,6 @@ public class Vertex {
     public int offset() {
         return vertexRow.rowNum;
     }
-
 
     // hash 和 eq 只认 length
 
@@ -233,15 +217,11 @@ public class Vertex {
 
     @Override
     public String toString() {
-        return "WordNode [length=" + length + "]";
+        return "Vertex [length=" + length + "]";
     }
 
     public Vertex next() {
         return next;
-    }
-
-    public int getLength() {
-        return length;
     }
 
     public int length() {
@@ -254,23 +234,6 @@ public class Vertex {
 
     public int getRowNum() {
         return vertexRow.rowNum;
-    }
-
-//    public Vertex setAbstractWord(String abstractWord) {
-//        this.abstractWord = abstractWord;
-//        return this;
-//    }
-//
-//    public Vertex setAbstractWordIfEmpty(String abstractWord) {
-//        if (this.abstractWord == null) {
-//            this.abstractWord = abstractWord;
-//        }
-//        return this;
-//    }
-
-    public Vertex setWordID(int wordID) {
-        this.wordID = wordID;
-        return this;
     }
 
     public Vertex getNext() {
@@ -354,11 +317,4 @@ public class Vertex {
         this.tempChar = tempChar;
     }
 
-    public int getFreq() {
-        return freq;
-    }
-
-    public void setFreq(int freq) {
-        this.freq = freq;
-    }
 }

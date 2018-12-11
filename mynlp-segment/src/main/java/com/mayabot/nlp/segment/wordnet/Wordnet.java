@@ -168,8 +168,8 @@ public class Wordnet implements CharSequence {
     /**
      * 如果对应行不存在，那么会自动创建
      *
-     * @param sindex
-     * @return
+     * @param sindex index
+     * @return VertexRow
      */
     public final VertexRow getRow(int sindex) {
         return indexAt(sindex);

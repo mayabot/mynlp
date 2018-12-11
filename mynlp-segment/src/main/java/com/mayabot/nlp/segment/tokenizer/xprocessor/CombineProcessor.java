@@ -24,7 +24,7 @@ import com.mayabot.nlp.fst.FstMatcher;
 import com.mayabot.nlp.fst.FstNode;
 import com.mayabot.nlp.segment.Nature;
 import com.mayabot.nlp.segment.WordpathProcessor;
-import com.mayabot.nlp.segment.common.BaseMynlpComponent;
+import com.mayabot.nlp.segment.common.BaseSegmentComponent;
 import com.mayabot.nlp.segment.dictionary.core.CoreDictionary;
 import com.mayabot.nlp.segment.wordnet.Vertex;
 import com.mayabot.nlp.segment.wordnet.Wordnet;
@@ -46,7 +46,7 @@ import java.util.regex.Pattern;
  *
  * @author jimichan
  */
-public class CombineProcessor extends BaseMynlpComponent implements WordpathProcessor {
+public class CombineProcessor extends BaseSegmentComponent implements WordpathProcessor {
 //
 //    private final int x_cluster_wordid;
 //    private final NatureAttribute x_cluster_nature = NatureAttribute.create(Nature.x, 100000);
@@ -183,7 +183,7 @@ public class CombineProcessor extends BaseMynlpComponent implements WordpathProc
 
             int from = m.getStartObj().getRowNum();
 
-            int len = m.getEndObj().getRowNum() + m.getEndObj().getLength() - from;
+            int len = m.getEndObj().getRowNum() + m.getEndObj().length() - from;
 
             if (wordPath.willCutOtherWords(from, len)) {
                 continue;

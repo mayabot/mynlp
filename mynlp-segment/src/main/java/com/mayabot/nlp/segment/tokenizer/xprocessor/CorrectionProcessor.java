@@ -21,7 +21,7 @@ import com.google.inject.Singleton;
 import com.mayabot.nlp.collection.dat.DATMapMatcher;
 import com.mayabot.nlp.collection.dat.DoubleArrayTrieMap;
 import com.mayabot.nlp.segment.WordpathProcessor;
-import com.mayabot.nlp.segment.common.BaseMynlpComponent;
+import com.mayabot.nlp.segment.common.BaseSegmentComponent;
 import com.mayabot.nlp.segment.dictionary.CorrectionDictionary;
 import com.mayabot.nlp.segment.dictionary.CorrectionDictionary.AdjustWord;
 import com.mayabot.nlp.segment.wordnet.Wordpath;
@@ -39,7 +39,7 @@ import com.mayabot.nlp.segment.wordnet.Wordpath;
  * @author jimichan
  */
 @Singleton
-public class CorrectionProcessor extends BaseMynlpComponent implements WordpathProcessor {
+public class CorrectionProcessor extends BaseSegmentComponent implements WordpathProcessor {
 
     private final CorrectionDictionary dictionary;
 

@@ -22,7 +22,7 @@ import com.mayabot.nlp.Mynlps;
 import com.mayabot.nlp.collection.dat.DATMapMatcher;
 import com.mayabot.nlp.collection.dat.DoubleArrayTrieMap;
 import com.mayabot.nlp.segment.WordpathProcessor;
-import com.mayabot.nlp.segment.common.BaseMynlpComponent;
+import com.mayabot.nlp.segment.common.BaseSegmentComponent;
 import com.mayabot.nlp.segment.dictionary.CustomDictionary;
 import com.mayabot.nlp.segment.dictionary.core.CoreDictionary;
 import com.mayabot.nlp.segment.wordnet.Vertex;
@@ -39,7 +39,7 @@ import com.mayabot.nlp.segment.wordnet.Wordpath;
  *
  * @author jimichan
  */
-public class CustomDictionaryProcessor extends BaseMynlpComponent implements WordpathProcessor {
+public class CustomDictionaryProcessor extends BaseSegmentComponent implements WordpathProcessor {
 
     private CustomDictionary dictionary;
 
@@ -50,7 +50,6 @@ public class CustomDictionaryProcessor extends BaseMynlpComponent implements Wor
         this.dictionary = dictionary;
         this.coreDictionary = coreDictionary;
         this.setOrder(ORDER_MIDDLE - 10);
-
     }
 
     public CustomDictionaryProcessor(CustomDictionary dictionary) {
