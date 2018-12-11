@@ -45,6 +45,7 @@ example.data
 
 **/hash
 
+data.work/
 **/model/dependency
 **/model/segment
 /temp/

@@ -27,7 +27,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.nio.charset.Charset;
-import java.util.zip.ZipInputStream;
 
 /**
  * @author jimichan
@@ -38,48 +37,26 @@ public class URLNlpResource implements NlpResource {
 
     private final URL url;
     private final Charset charset;
-    private boolean zip;
 
     public URLNlpResource(URL url, Charset charset) {
         this.url = url;
         this.charset = charset;
-        zip = url.toString().endsWith(".zip");
     }
 
     @Override
     public InputStream openInputStream() throws IOException {
         ByteSource byteSource = Resources.asByteSource(url);
-
-        if (zip) {
-            byteSource = unzipSource(byteSource);
-        }
-
         return byteSource.openBufferedStream();
-
     }
 
     @Override
     public CharSourceLineReader openLineReader() {
         ByteSource byteSource = Resources.asByteSource(url);
 
-        if (zip) {
-            byteSource = unzipSource(byteSource);
-        }
 
         CharSource charSource = byteSource.asCharSource(charset);
 
         return new CharSourceLineReader(charSource);
-    }
-
-    private ByteSource unzipSource(ByteSource byteSource) {
-        return new ByteSource() {
-            @Override
-            public InputStream openStream() throws IOException {
-                ZipInputStream zipInputStream = new ZipInputStream(byteSource.openBufferedStream());
-                zipInputStream.getNextEntry();//一个zip里面就一个文件
-                return zipInputStream;
-            }
-        };
     }
 
     @Override

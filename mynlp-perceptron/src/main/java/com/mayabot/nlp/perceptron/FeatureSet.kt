@@ -38,11 +38,12 @@ class FeatureSet(
     }
 
     fun newExtId(feature: String): Int {
-        if (dat.indexOf(feature) < 0) {
+        if (dat.indexOf(feature) < 0 && !extMap.containsKey(feature)) {
             extMap[feature] = nextId++
             return extMap[feature]!!
         }
-        return -1
+
+        return featureId(feature)
     }
 
 
