@@ -43,24 +43,32 @@ public interface Perceptron {
 
     void makeSureParameter(int featureId);
 
-
+    /**
+     * 在线学习,更新
+     *
+     * @param data 样例
+     */
     void update(TrainSample data);
 
+    /**
+     * 压缩
+     * @param ratio 压缩比，0.1表示压缩去掉10%的特征
+     * @param threshold 特征最小得分
+     */
     void compress(double ratio, double threshold);
 
     /**
-     * IntArrayList 为一个浓缩的特征向量，最后一位是留给转移特征。
+     * 解码
      *
-     * @param featureSequence
-     * @return
+     * @param featureSequence FeatureSequence 为一个浓缩的特征向量，最后一位是留给转移特征。
      */
     void decode(List<IntArrayList> featureSequence, int[] guessLabel);
 
     /**
-     * IntArrayList 稀疏特征向量的简短表示，最后一位是留给转移特征。
+     * 解码
      *
-     * @param featureSequence
-     * @return
+     * @param featureSequence FeatureSequence 稀疏特征向量的简短表示，最后一位是留给转移特征。
+     * @return label对应的ID数组
      */
     default int[] decode(List<IntArrayList> featureSequence) {
         int[] result = new int[featureSequence.size()];

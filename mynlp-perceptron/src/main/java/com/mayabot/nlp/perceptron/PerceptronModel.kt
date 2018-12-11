@@ -11,7 +11,6 @@ import java.util.concurrent.CountDownLatch
 import java.util.concurrent.Executors
 import kotlin.math.max
 
-
 /**
  * 感知机训练的样本
  * featureMatrix中的IntArray最后多一位是留个转移特征使用
@@ -23,7 +22,6 @@ class TrainSample(
 }
 
 class Labels(val goldFeature: IntArray, val predFeature: IntArray)
-
 
 /**
  * 感知机模型
@@ -610,102 +608,6 @@ class PerceptronTrainer(
     }
 }
 
-/**
- * 求最大Top K
- * 内部是小顶堆
- */
-class TopIntMaxK(val k: Int) {
-
-    val heap = DoubleArray(k)
-    val idIndex = IntArray(k) { -1 }
-
-    var size = 0
-
-    fun clear() {
-        size = 0
-        heap.fill(0.0)
-        idIndex.fill(-1)
-    }
-
-    fun push(id: Int, score: Double) {
-        if (size < k) {
-            heap[size] = score
-            idIndex[size] = id
-            size++
-
-            if (size == k) {
-                buildMinHeap()
-            }
-        } else {
-            // 如果这个数据大于最下值，那么有资格进入
-            if (score > heap[0]) {
-                heap[0] = score
-                idIndex[0] = id
-
-                mintopify(0)
-            }
-        }
-    }
-
-    fun topCount() = Math.min(k, size)
-
-    fun resort(): List<Pair<Int, Double>> {
-        val top = Math.min(k, size)
-        val list = java.util.ArrayList<Pair<Int, Double>>(top)
-
-
-        for (i in top - 1 downTo 0) {
-            list += idIndex[i] to heap[i]
-        }
-
-
-        list.sortByDescending { it.second }
-        return list
-    }
-
-    private fun buildMinHeap() {
-        for (i in k / 2 - 1 downTo 0) {
-            mintopify(i)// 依次向上将当前子树最大堆化
-        }
-    }
-
-    /**
-     * 让heap数组符合堆特性
-     * @param i
-     */
-    private fun mintopify(i: Int) {
-        val l = 2 * i + 1
-        val r = 2 * i + 2
-        var min: Int
-
-        if (l < k && heap[l] < heap[i])
-            min = l
-        else
-            min = i
-
-        if (r < k && heap[r] < heap[min])
-            min = r
-
-        if (min == i || min >= k) {
-            // 如果largest等于i说明i是最大元素
-            // largest超出heap范围说明不存在比i节点大的子女
-            return
-        }
-
-        swap(i, min)
-        mintopify(min)
-    }
-
-    private fun swap(i: Int, j: Int) {
-        val tmp = heap[i]
-        heap[i] = heap[j]
-        heap[j] = tmp
-
-        val tmp2 = idIndex[i]
-        idIndex[i] = idIndex[j]
-        idIndex[j] = tmp2
-    }
-}
 
 /**
  * Top K 最小值。
@@ -788,3 +690,101 @@ class TopIntMinK(val k: Int) {
         idIndex[j] = tmp2
     }
 }
+
+
+///**
+// * 求最大Top K
+// * 内部是小顶堆
+// */
+//class TopIntMaxK(val k: Int) {
+//
+//    val heap = DoubleArray(k)
+//    val idIndex = IntArray(k) { -1 }
+//
+//    var size = 0
+//
+//    fun clear() {
+//        size = 0
+//        heap.fill(0.0)
+//        idIndex.fill(-1)
+//    }
+//
+//    fun push(id: Int, score: Double) {
+//        if (size < k) {
+//            heap[size] = score
+//            idIndex[size] = id
+//            size++
+//
+//            if (size == k) {
+//                buildMinHeap()
+//            }
+//        } else {
+//            // 如果这个数据大于最下值，那么有资格进入
+//            if (score > heap[0]) {
+//                heap[0] = score
+//                idIndex[0] = id
+//
+//                mintopify(0)
+//            }
+//        }
+//    }
+//
+//    fun topCount() = Math.min(k, size)
+//
+//    fun resort(): List<Pair<Int, Double>> {
+//        val top = Math.min(k, size)
+//        val list = java.util.ArrayList<Pair<Int, Double>>(top)
+//
+//
+//        for (i in top - 1 downTo 0) {
+//            list += idIndex[i] to heap[i]
+//        }
+//
+//
+//        list.sortByDescending { it.second }
+//        return list
+//    }
+//
+//    private fun buildMinHeap() {
+//        for (i in k / 2 - 1 downTo 0) {
+//            mintopify(i)// 依次向上将当前子树最大堆化
+//        }
+//    }
+//
+//    /**
+//     * 让heap数组符合堆特性
+//     * @param i
+//     */
+//    private fun mintopify(i: Int) {
+//        val l = 2 * i + 1
+//        val r = 2 * i + 2
+//        var min: Int
+//
+//        if (l < k && heap[l] < heap[i])
+//            min = l
+//        else
+//            min = i
+//
+//        if (r < k && heap[r] < heap[min])
+//            min = r
+//
+//        if (min == i || min >= k) {
+//            // 如果largest等于i说明i是最大元素
+//            // largest超出heap范围说明不存在比i节点大的子女
+//            return
+//        }
+//
+//        swap(i, min)
+//        mintopify(min)
+//    }
+//
+//    private fun swap(i: Int, j: Int) {
+//        val tmp = heap[i]
+//        heap[i] = heap[j]
+//        heap[j] = tmp
+//
+//        val tmp2 = idIndex[i]
+//        idIndex[i] = idIndex[j]
+//        idIndex[j] = tmp2
+//    }
+//}

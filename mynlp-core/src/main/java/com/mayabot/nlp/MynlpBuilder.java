@@ -15,7 +15,6 @@
  */
 package com.mayabot.nlp;
 
-import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -38,8 +37,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -61,13 +58,11 @@ public class MynlpBuilder {
      */
     private String cacheDir;
 
-    private ArrayList<NlpResourceFactory> resourceFactoryList =
-            Lists.newArrayList();
+    private ArrayList<NlpResourceFactory> resourceFactoryList = Lists.newArrayList();
 
-    private Settings settings;
+    private Settings settings = Settings.defaultSystemSettings();
 
     private Map<Class, Object> injectInstance = Maps.newHashMap();
-
 
     Mynlp build() throws RuntimeException {
         try {
@@ -77,13 +72,10 @@ public class MynlpBuilder {
                 /**
                  * 在全局配置文件中 data.dir 可以指定dir目录，默认是当前工作目录下面的data
                  */
-                dataDir = Settings.defaultSystemSettings().get("data.dir", "data");
-
+                dataDir = settings.get("data.dir", "data");
 
                 //通过JVM系统属性配置 -Dmynlp.data=/path/data
-                if (System.getProperty("mynlp.data") != null) {
-                    dataDir = System.getProperty("mynlp.data");
-                }
+
                 if (System.getProperty("mynlp.data.dir") != null) {
                     dataDir = System.getProperty("mynlp.data.dir");
                 }
@@ -94,33 +86,29 @@ public class MynlpBuilder {
                 dataDir = "data";
             }
 
-
             File dataDirFile = new File(dataDir);
             logger.info("Mynlp data dir is " + dataDirFile.getAbsolutePath());
+            Files.createParentDirs(dataDirFile);
+            dataDirFile.mkdir();
 
+            if (settings.get("cache.dir") != null) {
+                cacheDir = settings.get("cache.dir");
+            }
 
             File cacheDirFile;
             if (cacheDir == null) {
-                cacheDirFile = ensureDir(new File(System.getProperty("java.io.tmpdir"), "mynlp"));
+                cacheDirFile = ensureDir(new File(dataDirFile, "cache"));
             } else {
                 cacheDirFile = ensureDir(new File(cacheDir));
             }
 
-            cleanCacheFile(cacheDirFile);
-
             logger.info("Mynlp cache dir is {}", cacheDirFile.getAbsolutePath());
 
-            //
             resourceFactoryList.add(new FileNlpResourceFactory(dataDirFile));
             resourceFactoryList.add(new ClasspathNlpResourceFactory(Mynlps.class.getClassLoader()));
 
             ImmutableList.copyOf(resourceFactoryList);
 
-            if (settings == null) {
-                this.settings = Settings.defaultSystemSettings();
-            } else {
-                this.settings = Settings.merge(Settings.defaultSystemSettings(), settings);
-            }
 
             MynlpEnv env = new MynlpEnv(dataDirFile, cacheDirFile, resourceFactoryList, settings);
 
@@ -206,9 +194,6 @@ public class MynlpBuilder {
     }
 
     public Settings getSettings() {
-        if (settings == null) {
-            settings = Settings.createEmpty();
-        }
         return settings;
     }
 
@@ -243,47 +228,47 @@ public class MynlpBuilder {
         return file;
     }
 
-
-    /**
-     * 启动的时候检查缓存文件
-     * <p>
-     * CoreDictionary_d65f2.bin
-     *
-     * @param cacheDirFile
-     */
-    private void cleanCacheFile(File cacheDirFile) {
-        File[] files = cacheDirFile.listFiles((dir, name) -> name.endsWith(".bin"));
-
-        Pattern pattern = Pattern.compile("^(.*?)_(.*?)\\.bin$");
-
-        HashMultimap<String, File> xx = HashMultimap.create();
-        for (int i = 0; i < files.length; i++) {
-            File file = files[i];
-
-            Matcher matcher = pattern.matcher(file.getName());
-
-            if (matcher.find()) {
-                String name = matcher.group(1);
-                String version = matcher.group(2);
-                xx.put(name, file);
-            }
-        }
-
-        //简单处理，只有存在版本冲突，就删除之
-        List<File> delete = Lists.newArrayList();
-        for (String name : xx.keys()) {
-            if (xx.get(name).size() > 1) {
-                delete.addAll(xx.get(name));
-            }
-        }
-
-        for (int i = 0; i < delete.size(); i++) {
-            try {
-                java.nio.file.Files.delete(delete.get(i).toPath());
-            } catch (IOException e) {
-                //e.printStackTrace();
-            }
-        }
-
-    }
+//
+//    /**
+//     * 启动的时候检查缓存文件
+//     * <p>
+//     * CoreDictionary_d65f2.bin
+//     *
+//     * @param cacheDirFile
+//     */
+//    private void cleanCacheFile(File cacheDirFile) {
+//        File[] files = cacheDirFile.listFiles((dir, name) -> name.endsWith(".bin"));
+//
+//        Pattern pattern = Pattern.compile("^(.*?)_(.*?)\\.bin$");
+//
+//        HashMultimap<String, File> xx = HashMultimap.create();
+//        for (int i = 0; i < files.length; i++) {
+//            File file = files[i];
+//
+//            Matcher matcher = pattern.matcher(file.getName());
+//
+//            if (matcher.find()) {
+//                String name = matcher.group(1);
+//                String version = matcher.group(2);
+//                xx.put(name, file);
+//            }
+//        }
+//
+//        //简单处理，只有存在版本冲突，就删除之
+//        List<File> delete = Lists.newArrayList();
+//        for (String name : xx.keys()) {
+//            if (xx.get(name).size() > 1) {
+//                delete.addAll(xx.get(name));
+//            }
+//        }
+//
+//        for (int i = 0; i < delete.size(); i++) {
+//            try {
+//                java.nio.file.Files.delete(delete.get(i).toPath());
+//            } catch (IOException e) {
+//                //e.printStackTrace();
+//            }
+//        }
+//
+//    }
 }
