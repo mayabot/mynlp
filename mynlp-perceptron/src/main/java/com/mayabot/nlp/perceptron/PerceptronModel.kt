@@ -305,7 +305,7 @@ open class PerceptronModel(
     }
 
 
-    private val transBaseIndex = (0 until labelCount).map { it * labelCount }.toTypedArray()
+    //private val transBaseIndex = (0 until labelCount).map { it * labelCount }.toTypedArray()
 
     private fun decodeQuick(featureSequence: List<IntArrayList>, guessLabel: IntArray) {
 
@@ -371,7 +371,6 @@ open class PerceptronModel(
         }
 
 
-
         for (i in 1 until sentenceLength) {
 
             val allFeature = featureSequence[i]
@@ -385,7 +384,8 @@ open class PerceptronModel(
 
                 for (preLabel in 0 until labelCount) {
 
-                    val curScore = scoreMLast[preLabel] + baseScore + parameter[transBaseIndex[preLabel] + curLabel]
+//                    val curScore = scoreMLast[preLabel] + baseScore + parameter[transBaseIndex[preLabel] + curLabel]
+                    val curScore = scoreMLast[preLabel] + baseScore + parameter[preLabel * labelSize + curLabel]
 
                     if (curScore > maxScore) {
                         maxScore = curScore

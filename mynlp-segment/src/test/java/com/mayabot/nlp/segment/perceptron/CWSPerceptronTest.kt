@@ -8,20 +8,20 @@ object CWSPerceptronTest {
 
     @JvmStatic
     fun main(args: Array<String>) {
-//        train()
+        //train()
         test()
     }
 
     fun train() {
         val trainer = CWSPerceptronTrainer()
 
-        val trainFile = File("data/corpus.segment/backoff2005/msr_training.txt")
-        val evaluateFile = File("data/corpus.segment/backoff2005/msr_test_gold.txt")
+        val trainFile = File("data.work/corpus.segment/backoff2005/msr_training.txt")
+        val evaluateFile = File("data.work/corpus.segment/backoff2005/msr_test_gold.txt")
 
         val cws = trainer.train(
                 trainFile,
                 evaluateFile,
-                50, 1)
+                5, 1)
 
         println("compress")
 //        cws.compress(0.2, 1e-3)
@@ -32,7 +32,7 @@ object CWSPerceptronTest {
     }
 
     fun test() {
-        val model = PerceptronModel.load(File("data/pcws/model-hanlp-compress"))
+        val model = PerceptronModel.load(File("data.work/pcws/model-hanlp-compress"))
 
         //model.compress(0.1,0.01)
 
