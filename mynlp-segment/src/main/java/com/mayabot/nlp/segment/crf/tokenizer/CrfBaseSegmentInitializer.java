@@ -20,12 +20,8 @@
 //import com.google.inject.Singleton;
 //import com.mayabot.nlp.segment.WordnetInitializer;
 //import com.mayabot.nlp.segment.common.BaseSegmentComponent;
-//import com.mayabot.nlp.segment.crf.CrfModelFile;
-//import com.mayabot.nlp.segment.crf.CrfSegmentModel;
-//import com.mayabot.nlp.segment.crf.Table;
 //import com.mayabot.nlp.segment.wordnet.Vertex;
 //import com.mayabot.nlp.segment.wordnet.Wordnet;
-//import com.mayabot.nlp.utils.CharacterHelper;
 //
 ///**
 // * CRF基础的分词器
@@ -34,8 +30,6 @@
 // */
 //@Singleton
 //public class CrfBaseSegmentInitializer extends BaseSegmentComponent implements WordnetInitializer {
-//
-//    public static final int CRF_WORD_ID = -2;
 //
 //
 //    private final CrfSegmentModel crfModel;
@@ -84,74 +78,6 @@
 //
 //    }
 //
-//
-//    private String[][] atomSegmentToTable(char[] sentence) {
-//        String[][] table = new String[sentence.length][3];
-//        int size = 0;
-//        final int maxLen = sentence.length - 1;
-//        final StringBuilder sbAtom = new StringBuilder();
-//        out:
-//        for (int i = 0; i < sentence.length; i++) {
-//            if (sentence[i] >= '0' && sentence[i] <= '9') {
-//                sbAtom.append(sentence[i]);
-//                if (i == maxLen) {
-//                    table[size][0] = "M";
-//                    table[size][1] = sbAtom.toString();
-//                    ++size;
-//                    sbAtom.setLength(0);
-//                    break;
-//                }
-//                char c = sentence[++i];
-//                while (c == '.' || c == '%' || (c >= '0' && c <= '9')) {
-//                    sbAtom.append(sentence[i]);
-//                    if (i == maxLen) {
-//                        table[size][0] = "M";
-//                        table[size][1] = sbAtom.toString();
-//                        ++size;
-//                        sbAtom.setLength(0);
-//                        break out;
-//                    }
-//                    c = sentence[++i];
-//                }
-//                table[size][0] = "M";
-//                table[size][1] = sbAtom.toString();
-//                ++size;
-//                sbAtom.setLength(0);
-//                --i;
-//            } else if (CharacterHelper.isEnglishLetter(sentence[i]) || sentence[i] == ' ') {
-//                sbAtom.append(sentence[i]);
-//                if (i == maxLen) {
-//                    table[size][0] = "W";
-//                    table[size][1] = sbAtom.toString();
-//                    ++size;
-//                    sbAtom.setLength(0);
-//                    break;
-//                }
-//                char c = sentence[++i];
-//                while (CharacterHelper.isEnglishLetter(c) || c == ' ') {
-//                    sbAtom.append(sentence[i]);
-//                    if (i == maxLen) {
-//                        table[size][0] = "W";
-//                        table[size][1] = sbAtom.toString();
-//                        ++size;
-//                        sbAtom.setLength(0);
-//                        break out;
-//                    }
-//                    c = sentence[++i];
-//                }
-//                table[size][0] = "W";
-//                table[size][1] = sbAtom.toString();
-//                ++size;
-//                sbAtom.setLength(0);
-//                --i;
-//            } else {
-//                table[size][0] = table[size][1] = String.valueOf(sentence[i]);
-//                ++size;
-//            }
-//        }
-//
-//        return resizeArray(table, size);
-//    }
 //
 //    private String[][] resizeArray(String[][] array, int size) {
 //        String[][] nArray = new String[size][];

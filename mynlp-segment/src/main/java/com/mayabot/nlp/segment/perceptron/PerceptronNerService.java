@@ -60,17 +60,23 @@ public class PerceptronNerService {
     }
 
     /**
-     * 要求WordTerm已经词性填充完成
-     *
+     * 返回双层嵌套结构的句子列表
      * @param list
+     * @return
      */
-    public List<WordTerm> ner(List<WordTerm> list, boolean pos) {
+    public static List<WordTerm> toNerComposite(List<WordTerm> list) {
 
-        if (pos) {
-            posService.posFromTerm(list);
+        boolean findLab = false;
+        for (WordTerm x : list) {
+            if (x.getCustomFlag() != null) {
+                findLab = true;
+                break;
+            }
+        }
+        if (!findLab) {
+            return list;
         }
 
-        perceptron.decode(list);
 
         List<WordTerm> result = new ArrayList<>(list.size());
         List<WordTerm> temp = null;
@@ -121,6 +127,22 @@ public class PerceptronNerService {
         }
 
         return result;
+    }
+
+    /**
+     * 要求WordTerm已经词性填充完成
+     *
+     * @param list
+     */
+    public List<WordTerm> ner(List<WordTerm> list, boolean pos) {
+
+        if (pos) {
+            posService.posFromTerm(list);
+        }
+
+        perceptron.decode(list);
+
+        return toNerComposite(list);
     }
 
     /**
