@@ -22,21 +22,17 @@ import com.google.common.hash.Hashing;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.mayabot.nlp.MynlpEnv;
-import com.mayabot.nlp.Setting;
-import com.mayabot.nlp.collection.dat.DoubleArrayTrie;
-import com.mayabot.nlp.collection.dat.DoubleArrayTrieBuilder;
+import com.mayabot.nlp.SettingItem;
+import com.mayabot.nlp.collection.dat.DoubleArrayTrieMap;
 import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
 import com.mayabot.nlp.resources.NlpResouceExternalizable;
 import com.mayabot.nlp.resources.NlpResource;
+import com.mayabot.nlp.segment.Nature;
 import com.mayabot.nlp.segment.dictionary.CustomDictionary;
-import com.mayabot.nlp.segment.dictionary.Nature;
-import com.mayabot.nlp.segment.dictionary.NatureAttribute;
 import com.mayabot.nlp.utils.CharSourceLineReader;
 
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
+import java.io.*;
 import java.util.List;
 import java.util.TreeMap;
 import java.util.TreeSet;
@@ -56,13 +52,13 @@ public class DefaultCustomDictionary extends NlpResouceExternalizable implements
 
     private final MynlpEnv mynlp;
 
-    private DoubleArrayTrie<NatureAttribute> dat;
+    private DoubleArrayTrieMap<Integer> dat;
 
     private List<String> resourceUrls;
 
     private boolean isNormalization = false;
 
-    public static Setting<String> dictPathSetting = Setting.string(
+    public static SettingItem<String> dictPathSetting = SettingItem.string(
             "custom.dictionary.path", "dictionary/CustomDictionary.txt");
 
     @Inject
@@ -116,7 +112,7 @@ public class DefaultCustomDictionary extends NlpResouceExternalizable implements
      */
     @Override
     public void loadFromSource(MynlpEnv mynlp) throws Exception {
-        TreeMap<String, NatureAttribute> map = new TreeMap<>();
+        TreeMap<String, Integer> map = new TreeMap<>();
 
         Nature defaultNature = Nature.n;
         for (String url : resourceUrls) {
@@ -132,16 +128,16 @@ public class DefaultCustomDictionary extends NlpResouceExternalizable implements
                     if (isNormalization) {
                         params[0] = normalizationString(params[0]);
                     }
-                    int natureCount = (params.length - 1) / 2;
+//                    int natureCount = (params.length - 1) / 2;
+//
+//                    NatureAttribute attribute;
+//                    if (natureCount == 0) {
+//                        attribute = NatureAttribute.create1000(defaultNature);
+//                    } else {
+//                        attribute = NatureAttribute.create(params);
+//                    }
 
-                    NatureAttribute attribute;
-                    if (natureCount == 0) {
-                        attribute = NatureAttribute.create1000(defaultNature);
-                    } else {
-                        attribute = NatureAttribute.create(params);
-                    }
-
-                    map.put(params[0], attribute);
+                    map.put(params[0], 1000);
                 }
             }
         }
@@ -151,7 +147,7 @@ public class DefaultCustomDictionary extends NlpResouceExternalizable implements
             return;
         }
 
-        dat = new DoubleArrayTrieBuilder<NatureAttribute>().build(map);
+        dat = new DoubleArrayTrieMap<Integer>(map);
     }
 
     /**
@@ -170,7 +166,22 @@ public class DefaultCustomDictionary extends NlpResouceExternalizable implements
      */
     @Override
     public void writeExternal(ObjectOutput out) throws IOException {
-        DoubleArrayTrie.write(dat, out, NatureAttribute::write);
+        this.dat.save(out, DefaultCustomDictionary::writeInt);
+    }
+
+    static void writeInt(Integer integer, DataOutput out) {
+        try {
+            out.writeInt(integer);
+        } catch (IOException e) {
+        }
+    }
+
+    static Integer readInt(DataInput out) {
+        try {
+            return out.readInt();
+        } catch (IOException e) {
+        }
+        return -1;
     }
 
     /**
@@ -186,8 +197,12 @@ public class DefaultCustomDictionary extends NlpResouceExternalizable implements
      *                                restored cannot be found.
      */
     @Override
-    public void readExternal(ObjectInput in) throws IOException {
-        this.dat = DoubleArrayTrie.read(in, NatureAttribute::read);
+    public void readExternal(ObjectInput in) {
+        try {
+            this.dat = new DoubleArrayTrieMap<Integer>(in, DefaultCustomDictionary::readInt);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private String normalizationString(String text) {
@@ -195,7 +210,7 @@ public class DefaultCustomDictionary extends NlpResouceExternalizable implements
     }
 
     @Override
-    public DoubleArrayTrie<NatureAttribute> getTrie() {
+    public DoubleArrayTrieMap<Integer> getTrie() {
         return dat;
     }
 }

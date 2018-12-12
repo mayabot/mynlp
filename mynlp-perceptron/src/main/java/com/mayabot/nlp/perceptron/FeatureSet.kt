@@ -1,6 +1,6 @@
 package com.mayabot.nlp.perceptron
 
-import com.mayabot.nlp.collection.dat.DATArrayIndex
+import com.mayabot.nlp.collection.dat.DoubleArrayTrie
 import java.io.DataInputStream
 import java.io.DataOutputStream
 import java.io.File
@@ -11,22 +11,63 @@ import java.io.InputStream
  *
  */
 class FeatureSet(
-        private val dat: DATArrayIndex,
+        private val dat: DoubleArrayTrie,
         var keys: List<String>?
 ) {
+
+    //预留的多一点，就不会有hash冲突
+    var extMap = HashMap<String, Int>(1000)
+
+    var nextId = dat.size()
+
+    // 要搞两种模式，一个是训练的时候，就不动了一个是工作模式
 
     /**
      * 返回一个特征对应的ID
      * @return -1表示特征不存在
      */
-    fun featureId(feature: String) = dat.indexOf(feature)
+    fun featureId(feature: String): Int {
+        val id = dat.indexOf(feature)
+
+        if (id >= 0) {
+            return id
+        }
+
+        return if (extMap.isNotEmpty()) {
+            extMap[feature] ?: -1
+        } else {
+            id
+        }
+    }
+
+    fun featureId(feature: StringBuilder): Int {
+        val id = dat.indexOf(feature)
+
+        if (id >= 0) {
+            return id
+        }
+        return if (extMap.isNotEmpty()) {
+            extMap[feature.toString()] ?: -1
+        } else {
+            id
+        }
+    }
+
+    fun newExtId(feature: String): Int {
+        if (dat.indexOf(feature) < 0 && !extMap.containsKey(feature)) {
+            extMap[feature] = nextId++
+            return extMap[feature]!!
+        }
+
+        return featureId(feature)
+    }
 
 
     /**
      * 特征大小
      * @return 特征集合的大小
      */
-    fun size() = dat.size()
+    fun size() = dat.size() + extMap.size
 
     /**
      * 保存到文件
@@ -54,7 +95,7 @@ class FeatureSet(
         @JvmStatic
         fun read(datInput: InputStream): FeatureSet {
             return datInput.use {
-                val datArray = DATArrayIndex(DataInputStream(it))
+                val datArray = DoubleArrayTrie(DataInputStream(it))
                 FeatureSet(datArray, null)
             }
         }
@@ -62,7 +103,7 @@ class FeatureSet(
         @JvmStatic
         fun read(datInput: InputStream, textInput: InputStream): FeatureSet {
             return datInput.use {
-                val datArray = DATArrayIndex(DataInputStream(it))
+                val datArray = DoubleArrayTrie(DataInputStream(it))
                 val lines = textInput.use { x ->
                     x.bufferedReader().readLines()
                 }
@@ -76,7 +117,7 @@ class FeatureSet(
                 val reader = textInput.bufferedReader()
                 val list = reader.readLines()
 
-                val datArray = DATArrayIndex(list)
+                val datArray = DoubleArrayTrie(list)
                 FeatureSet(datArray, list)
             }
         }
@@ -98,15 +139,15 @@ class DATFeatureSetBuilder(labelCount: Int) {
         for (i in 0..labelCount) {
             keys.add("\u0000\u0001BL=$i")
         }
-
     }
+
     fun put(feature: String) {
         keys.add(feature)
     }
 
     fun build(): FeatureSet {
         val list = keys.sorted()
-        return FeatureSet(DATArrayIndex(list), list)
+        return FeatureSet(DoubleArrayTrie(list), list)
     }
 }
 

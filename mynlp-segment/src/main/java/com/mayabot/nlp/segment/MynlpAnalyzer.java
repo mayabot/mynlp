@@ -24,14 +24,13 @@ import java.util.List;
 import java.util.stream.Stream;
 
 /**
- *
  * MynlpAnalyzer主要面向Reader进行分词，里面包含了WordTerm序列的处理逻辑，可以进行停用词、标点符号的过滤。
  * 是无状态的，可多线程调用。
  * 具体参考StandardMynlpAnalyzer。用户自定义实现该接口需从BaseMynlpAnalyzer继承。
  *
+ * @author jimichan jimichan@gmail.com
  * @see com.mayabot.nlp.segment.analyzer.BaseMynlpAnalyzer
  * @see com.mayabot.nlp.segment.analyzer.StandardMynlpAnalyzer
- * @author jimichan jimichan@gmail.com
  */
 public interface MynlpAnalyzer {
 

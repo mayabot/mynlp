@@ -97,7 +97,7 @@ class POSPerceptronTrain : CmdRunner {
         println("Iter $iter")
         println("threadNum $threadNumber")
 
-        val model = POSPerceptronTrainer().train(file, iter, threadNumber)
+        val model = POSPerceptronTrainer().train(file, file, iter, threadNumber)
         model.save(outFile)
     }
 

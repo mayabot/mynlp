@@ -1,3 +1,18 @@
+/*
+ * Copyright 2018 mayabot.com authors. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.mayabot.nlp.segment.perceptron
 
 import com.carrotsearch.hppc.IntArrayList
@@ -7,7 +22,9 @@ import com.mayabot.nlp.segment.perceptron.CWSPerceptron.Companion.B
 import com.mayabot.nlp.segment.perceptron.CWSPerceptron.Companion.E
 import com.mayabot.nlp.segment.perceptron.CWSPerceptron.Companion.M
 import com.mayabot.nlp.segment.perceptron.CWSPerceptron.Companion.S
-import com.mayabot.nlp.segment.perceptron.CWSPerceptron.Companion.extractFeature
+import com.mayabot.nlp.segment.perceptron.CWSPerceptron.Companion.tagList
+import com.mayabot.nlp.segment.perceptron.CWSPerceptronSample.forOnlineLearn
+import com.mayabot.nlp.segment.perceptron.CWSPerceptronSample.sentenceToSample
 import com.mayabot.nlp.utils.CharNormUtils
 import java.io.File
 import java.io.InputStream
@@ -28,6 +45,18 @@ class CWSPerceptron(val model: Perceptron) {
 
     fun compress(ratio: Double, threshold: Double) {
         model.compress(ratio, threshold)
+    }
+
+    /**
+     * 在线学习一个句子
+     * 句子 词用空格分开
+     */
+    fun learn(sentence: String) {
+
+        val id = forOnlineLearn(sentence, model.featureSet())
+        model.makeSureParameter(id)
+        val sample = sentenceToSample(sentence, model.featureSet())
+        model.update(sample)
     }
 
     fun decodeToWordList(sentence: String): List<String> {
@@ -55,9 +84,11 @@ class CWSPerceptron(val model: Perceptron) {
             CharNormUtils.convert(sentence)
         }
 
+        val buffer = StringBuilder()
+
         val featureList = ArrayList<IntArrayList>(sentence.size)
         for (i in 0 until sentence.size) {
-            featureList += extractFeatureVector(sentence, sentence.size, i, model.featureSet())
+            featureList += CWSPerceptronFeature.extractFeatureVector(sentence, sentence.size, i, model.featureSet(), buffer)
         }
         return model.decode(featureList)
     }
@@ -72,9 +103,6 @@ class CWSPerceptron(val model: Perceptron) {
         @JvmStatic
         val tagList = listOf("B", "M", "E", "S")
 
-        private const val CHAR_BEGIN = '\u0001'
-
-        private const val CHAR_END = '\u0002'
 
         @JvmStatic
         fun load(parameterBin: InputStream, featureBin: InputStream): CWSPerceptron {
@@ -88,135 +116,105 @@ class CWSPerceptron(val model: Perceptron) {
                     File(dir, "feature.dat").inputStream().buffered())
         }
 
-        fun extractFeatureVector(sentence: CharArray, size: Int, position: Int, features: FeatureSet): IntArrayList {
-            val vector = IntArrayList(8)
-
-            val pre2Char = if (position >= 2) sentence[position - 2] else CHAR_BEGIN
-            val preChar = if (position >= 1) sentence[position - 1] else CHAR_BEGIN
-            val curChar = sentence[position]
-            val nextChar = if (position < size - 1) sentence[position + 1] else CHAR_END
-            val next2Char = if (position < size - 2) sentence[position + 2] else CHAR_END
-
-            addFeature(features, vector, "${preChar}1")
-            addFeature(features, vector, "${curChar}2")
-            addFeature(features, vector, "${nextChar}3")
-
-            addFeature(features, vector, pre2Char + "/" + preChar + "4")
-            addFeature(features, vector, preChar + "/" + curChar + "5")
-            addFeature(features, vector, curChar + "/" + nextChar + "6")
-            addFeature(features, vector, nextChar + "/" + next2Char + "7")
-
-            //最后一列保留给特征向量使用
-            vector.add(0)
-
-            return vector
-        }
-
-
-        private inline fun addFeature(features: FeatureSet, vector: IntArrayList, feature: String) {
-            val id = features.featureId(feature)
-            if (id >= 0) {
-                vector.add(id)
-            }
-        }
-
-        /**
-         * 在制作特征大集合的时候使用
-         */
-        fun extractFeature(sentence: CharArray, size: Int, position: Int, callBack: Consumer<String>) {
-            val pre2Char = if (position >= 2) sentence[position - 2] else CHAR_BEGIN
-            val preChar = if (position >= 1) sentence[position - 1] else CHAR_BEGIN
-            val curChar = sentence[position]
-            val nextChar = if (position < size - 1) sentence[position + 1] else CHAR_END
-            val next2Char = if (position < size - 2) sentence[position + 2] else CHAR_END
-
-            callBack.accept(preChar + "1")
-            callBack.accept(curChar + "2")
-            callBack.accept(nextChar + "3")
-
-            callBack.accept(pre2Char + "/" + preChar + "4")
-            callBack.accept(preChar + "/" + curChar + "5")
-            callBack.accept(curChar + "/" + nextChar + "6")
-            callBack.accept(nextChar + "/" + next2Char + "7")
-        }
     }
 }
 
+object CWSPerceptronFeature {
 
-/**
- * 分词感知机的训练
- */
-class CWSPerceptronTrainer(val workDir: File = File("data/pcws")) {
+    private const val CHAR_BEGIN = '\u0001'
 
-    lateinit var featureSet: FeatureSet
+    private const val CHAR_END = '\u0002'
 
-    init {
-        workDir.mkdirs()
+    fun extractFeatureVector(sentence: CharArray, size: Int, position: Int, features: FeatureSet, buffer: StringBuilder): IntArrayList {
+        val vector = IntArrayList(8)
+
+        buffer.clear()
+
+
+        val pre2Char = if (position >= 2) sentence[position - 2] else CHAR_BEGIN
+        val preChar = if (position >= 1) sentence[position - 1] else CHAR_BEGIN
+        val curChar = sentence[position]
+        val nextChar = if (position < size - 1) sentence[position + 1] else CHAR_END
+        val next2Char = if (position < size - 2) sentence[position + 2] else CHAR_END
+
+        addFeature(features, vector, buffer, preChar, '1')
+        addFeature(features, vector, buffer, curChar, '2')
+        addFeature(features, vector, buffer, nextChar, '3')
+
+        addFeature(features, vector, buffer, pre2Char, '/', preChar, '4')
+        addFeature(features, vector, buffer, preChar, '/', curChar, '5')
+        addFeature(features, vector, buffer, curChar, '/', nextChar, '6')
+        addFeature(features, vector, buffer, nextChar, '/', next2Char, '7')
+
+        vector.add(0)
+        return vector
     }
 
-    fun train(trainFileDir: File, evaluateFile: File, maxIter: Int, threadNumber: Int): CWSPerceptron {
-
-        val allFiles = if (trainFileDir.isFile) listOf(trainFileDir) else trainFileDir.walkTopDown().filter { it.isFile && !it.name.startsWith(".") }.toList()
-
-
-        val featureSetFile = File(workDir, "feature.dat")
-        if (featureSetFile.exists()) {
-            featureSet = FeatureSet.read(featureSetFile.inputStream().buffered(),
-                    File(workDir, "feature.txt").inputStream().buffered()
-            )
-        } else {
-            prepareFeatureSet(allFiles)
-            featureSet.save(File(workDir, "feature.dat"), File(workDir, "feature.txt"))
+    private fun addFeature(features: FeatureSet, vector: IntArrayList, stringBuilder: StringBuilder, vararg parts: Any) {
+        for (x in parts) {
+            stringBuilder.append(x)
         }
+        val id = features.featureId(stringBuilder)
 
-        println("FeatureSet Size ${featureSet.size()}")
-
-        //统计有多少样本
-        var sampleSize = 0
-
-        allFiles.forEach { file ->
-            file.useLines { it.forEach { if (it.isNotBlank()) sampleSize++ } }
+        stringBuilder.clear()
+        if (id >= 0) {
+            vector.add(id)
         }
+    }
 
-        println("Sample Size $sampleSize")
+    /**
+     * 在制作特征大集合的时候使用
+     */
+    fun extractFeature(sentence: CharArray, size: Int, position: Int, callBack: Consumer<String>) {
+        val pre2Char = if (position >= 2) sentence[position - 2] else CHAR_BEGIN
+        val preChar = if (position >= 1) sentence[position - 1] else CHAR_BEGIN
+        val curChar = sentence[position]
+        val nextChar = if (position < size - 1) sentence[position + 1] else CHAR_END
+        val next2Char = if (position < size - 2) sentence[position + 2] else CHAR_END
 
-        //预先分配好空间
-        val sampleList = ArrayList<TrainSample>(sampleSize + 10)
+        callBack.accept(preChar + "1")
+        callBack.accept(curChar + "2")
+        callBack.accept(nextChar + "3")
 
-        // 解析语料库为数字化TrainSample
-        allFiles.forEach { file ->
-            file.useLines { lines ->
-                lines.forEach { line ->
-                    if (line.isNotBlank()) {
-                        sampleList += sentenceToSample(line.trim())
+        callBack.accept(pre2Char + "/" + preChar + "4")
+        callBack.accept(preChar + "/" + curChar + "5")
+        callBack.accept(curChar + "/" + nextChar + "6")
+        callBack.accept(nextChar + "/" + next2Char + "7")
+    }
+}
+
+object CWSPerceptronSample {
+
+    fun forOnlineLearn(ineInput: String, featureSet: FeatureSet): Int {
+        val sentence = ineInput.replace(" ", "").toCharArray()
+
+        CharNormUtils.convert(sentence)
+
+        var max: Int = 0
+        for (i in 0 until sentence.size) {
+            CWSPerceptronFeature.extractFeature(sentence, sentence.size, i, Consumer { feature ->
+                var fid = featureSet.featureId(feature)
+                if (fid < 0) {
+                    val id = featureSet.newExtId(feature)
+                    if (id > max) {
+                        max = id
                     }
                 }
-            }
+            })
         }
 
-        //验证集合
-        val evaluateSample = (if (evaluateFile.isFile) listOf(evaluateFile) else evaluateFile.walkTopDown().filter { it.isFile && !it.name.startsWith(".") }.toList())
-                .flatMap { it.readLines() }.map { CharNormUtils.convert(it) }
-
-        println("Start train ...")
-
-        val trainer = PerceptronTrainer(featureSet, CWSPerceptron.tagList.size, sampleList, EvaluateRunner { it ->
-            CWSEvaluate.evaluate(evaluateSample, CWSPerceptron(it))
-        }, maxIter)
-
-        val model = CWSPerceptron(trainer.train(threadNumber))
-
-        return model
+        return max
 
     }
-
 
     /**
      * 把一个句子，变化为TrainSample
      * 一个用空格分隔的句子.
-     *
      */
-    private fun sentenceToSample(lineInput: String): TrainSample {
+    fun sentenceToSample(lineInput: String, featureSet: FeatureSet): TrainSample {
+
+        val buffer = StringBuilder()
+
         val line = CharNormUtils.convert(lineInput)
         val juzi = CharArray(line.length)
         val split = BooleanArray(line.length)
@@ -235,7 +233,7 @@ class CWSPerceptronTrainer(val workDir: File = File("data/pcws")) {
 
         var from = 0
         for (i in 0 until len) {
-            val vec = CWSPerceptron.extractFeatureVector(juzi, len, i, featureSet)
+            val vec = CWSPerceptronFeature.extractFeatureVector(juzi, len, i, featureSet, buffer)
             list.add(vec)
 
             if (split[i]) {
@@ -257,6 +255,80 @@ class CWSPerceptronTrainer(val workDir: File = File("data/pcws")) {
             }
         }
         return TrainSample(list, tagList)
+    }
+}
+
+/**
+ * 分词感知机的训练
+ */
+class CWSPerceptronTrainer {
+
+    lateinit var featureSet: FeatureSet
+
+//    init {
+//        workDir.mkdirs()
+//    }
+
+    fun train(trainFileDir: File, evaluateFile: File, maxIter: Int, threadNumber: Int): CWSPerceptron {
+
+        val allFiles = if (trainFileDir.isFile) listOf(trainFileDir) else trainFileDir.walkTopDown().filter { it.isFile && !it.name.startsWith(".") }.toList()
+
+
+//        val featureSetFile = File(workDir, "feature.dat")
+//        if (featureSetFile.exists()) {
+//            featureSet = FeatureSet.read(
+//                    featureSetFile.inputStream().buffered(),
+//                    File(workDir, "feature.txt").inputStream().buffered()
+//            )
+//        } else {
+        prepareFeatureSet(allFiles)
+//            featureSet.save(File(workDir, "feature.dat"), File(workDir, "feature.txt"))
+//        }
+
+        println("FeatureSet Size ${featureSet.size()}")
+
+        val sampleList = loadSamples(allFiles)
+
+        //验证集合
+        val evaluateSample = (if (evaluateFile.isFile) listOf(evaluateFile) else evaluateFile.walkTopDown().filter { it.isFile && !it.name.startsWith(".") }.toList())
+                .flatMap { it.readLines() }.map { CharNormUtils.convert(it) }
+
+        println("Start train ...")
+
+        val trainer = PerceptronTrainer(featureSet, tagList.size, sampleList,
+                EvaluateRunner { it ->
+                    CWSEvaluate.evaluate(evaluateSample, CWSPerceptron(it))
+                }, maxIter, false)
+
+        return CWSPerceptron(trainer.train(threadNumber))
+
+    }
+
+    private fun loadSamples(allFiles: List<File>): List<TrainSample> {
+        //统计有多少样本
+        var sampleSize = 0
+
+        allFiles.forEach { file ->
+            file.useLines { it.forEach { if (it.isNotBlank()) sampleSize++ } }
+        }
+
+        println("Sample Size $sampleSize")
+
+        //预先分配好空间
+        val sampleList = ArrayList<TrainSample>(sampleSize)
+
+        // 解析语料库为数字化TrainSample
+        allFiles.forEach { file ->
+            file.useLines { lines ->
+                lines.forEach { line ->
+                    if (line.isNotBlank()) {
+                        sampleList += CWSPerceptronSample.sentenceToSample(line.trim(), featureSet)
+                    }
+                }
+            }
+        }
+
+        return sampleList
     }
 
     /**
@@ -286,7 +358,7 @@ class CWSPerceptronTrainer(val workDir: File = File("data/pcws")) {
 
 
                 for (i in 0 until len) {
-                    extractFeature(out, len, i, fit)
+                    CWSPerceptronFeature.extractFeature(out, len, i, fit)
                 }
             }
         }
@@ -306,7 +378,6 @@ class CWSPerceptronTrainer(val workDir: File = File("data/pcws")) {
 
 }
 
-
 object CWSEvaluate {
 
     /**
@@ -323,6 +394,8 @@ object CWSEvaluate {
         val splitter = Splitter.on(" ").omitEmptyStrings().trimResults()
 
         System.out.print("Evaluating 0%")
+
+        val t1 = System.currentTimeMillis()
 
         var count = 0
         for (line in evaluateSample) {
@@ -363,9 +436,8 @@ object CWSEvaluate {
 
             count++
 
-            if (count % 200 == 0) {
+            if (count % 2000 == 0) {
                 System.out.print("\rEvaluating ${"%.2f".format(count * 100.0 / evaluateSample.size)}%")
-
             }
 
         }
@@ -384,7 +456,10 @@ object CWSEvaluate {
 
         System.out.print("\r")
 
+        val t2 = System.currentTimeMillis()
+
         System.out.println("正确率(P) %.2f , 召回率(R) %.2f , F1 %.2f".format(result[0], result[1], result[2]))
+        println("Evaluate use time ${t2 - t1} ms")
 
         return result
     }

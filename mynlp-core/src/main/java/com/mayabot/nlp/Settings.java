@@ -56,12 +56,12 @@ public class Settings {
         this.settings = Maps.newHashMap(settings.settings);
     }
 
-    public <T> T get(Setting<T> setting) {
+    public <T> T get(SettingItem<T> setting) {
         String value = get(setting.getKey(), setting.getDefaultValue());
         return setting.getParse().apply(value);
     }
 
-    public Settings put(Setting setting, String value) {
+    public Settings put(SettingItem setting, String value) {
         settings.put(setting.getKey(), value);
         return this;
     }
@@ -71,7 +71,7 @@ public class Settings {
         return this;
     }
 
-    public Settings put(String prefix, Setting setting, String value) {
+    public Settings put(String prefix, SettingItem setting, String value) {
         settings.put(prefix + "." + setting.getKey(), value);
         return this;
     }
@@ -129,7 +129,7 @@ public class Settings {
         return settings.getOrDefault(setting, defaultValue);
     }
 
-    public List<String> getAsList(Setting<String> setting) {
+    public List<String> getAsList(SettingItem<String> setting) {
         return getAsList(setting.getKey(), setting.getDefaultValue());
     }
 

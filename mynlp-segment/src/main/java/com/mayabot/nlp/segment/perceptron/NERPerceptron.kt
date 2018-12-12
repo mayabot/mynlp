@@ -2,8 +2,8 @@ package com.mayabot.nlp.perceptron.solution.ner
 
 import com.carrotsearch.hppc.IntArrayList
 import com.mayabot.nlp.perceptron.*
+import com.mayabot.nlp.segment.Nature
 import com.mayabot.nlp.segment.WordTerm
-import com.mayabot.nlp.segment.dictionary.Nature
 import com.mayabot.nlp.segment.perceptron.PkuWord
 import com.mayabot.nlp.segment.perceptron.allFiles
 import com.mayabot.nlp.segment.perceptron.parseToFlatWords
@@ -20,16 +20,23 @@ class NERPerceptron(val model: Perceptron, private val labels: List<String>) {
     private val featureSet = model.featureSet()
 
 
-    fun decode(sentence: List<WordTerm>): List<String> {
+    /**
+     * 解码结果保存在WordTerm的customFlag字段里面
+     */
+    fun decode(sentence: List<WordTerm>) {
+        val buffer = java.lang.StringBuilder()
         val featureList = ArrayList<IntArrayList>(sentence.size)
         for (i in 0 until sentence.size) {
-            featureList += NERPerceptronFeature.extractFeatureVector(sentence, i, featureSet)
+            featureList += NERPerceptronFeature.extractFeatureVector(sentence, i, featureSet, buffer)
         }
 
         val result = model.decode(featureList)
 
-        return result.map { labels[it] }
+        for (i in 0 until sentence.size) {
+            sentence[i].customFlag = labels[result[i]]
+        }
     }
+
 
     /**
      * 保存NER感知机模型到File dir
@@ -89,16 +96,22 @@ object NERPerceptronFeature {
 
     private const val E = "_E_"
 
-    fun extractFeatureVector(sentence: List<WordTerm>, position: Int, features: FeatureSet): IntArrayList {
+    fun extractFeatureVector(sentence: List<WordTerm>, position: Int, features: FeatureSet, buffer: java.lang.StringBuilder): IntArrayList {
+
+        buffer.clear()
 
         val size = sentence.size
-
+        var pre3Word = B
         var pre2Word = B
         var pre2Pos = B
         if (position >= 2) {
             val x = sentence[position - 2]
             pre2Word = x.word
             pre2Pos = x.natureString
+
+            if (position > 2) {
+                pre3Word = sentence[position - 3].word
+            }
         }
 
         var preWord = B
@@ -131,27 +144,27 @@ object NERPerceptronFeature {
 
         val vector = IntArrayList(15)
 
-        addFeature(features, vector, "${pre2Word}1")
-        addFeature(features, vector, "${preWord}2")
-        addFeature(features, vector, "${curWord}3")
-        addFeature(features, vector, "${nextWord}4")
-        addFeature(features, vector, "${next2Word}5")
 
-        addFeature(features, vector, "${pre2Pos}A")
-        addFeature(features, vector, "${prePos}B")
-        addFeature(features, vector, "${curPos}C")
-        addFeature(features, vector, "${nextPos}D")
-        addFeature(features, vector, "${next2Pos}E")
+        addFeature(features, vector, buffer, pre2Word, '1')
+        addFeature(features, vector, buffer, preWord, '2')
+        addFeature(features, vector, buffer, curWord, '3')
+        addFeature(features, vector, buffer, nextWord, '4')
+        addFeature(features, vector, buffer, next2Word, '5')
 
-        addFeature(features, vector, "$pre2Pos${prePos}F")
-        addFeature(features, vector, "$prePos${curPos}G")
-        addFeature(features, vector, "$curPos${nextPos}H")
-        addFeature(features, vector, "$nextPos${next2Pos}I")
+        addFeature(features, vector, buffer, pre2Pos, 'A')
+        addFeature(features, vector, buffer, prePos, 'B')
+        addFeature(features, vector, buffer, curPos, 'C')
+        addFeature(features, vector, buffer, nextPos, 'D')
+        addFeature(features, vector, buffer, next2Pos, 'E')
 
+        addFeature(features, vector, buffer, pre2Pos, prePos, 'F')
+        addFeature(features, vector, buffer, prePos, curPos, 'G')
+        addFeature(features, vector, buffer, curPos, nextPos, 'H')
+        addFeature(features, vector, buffer, nextPos, next2Pos, 'I')
 
-        //最后一列保留给特征向量使用
+        addFeature(features, vector, buffer, pre3Word, 'J')
+
         vector.add(0)
-
         return vector
     }
 
@@ -159,11 +172,16 @@ object NERPerceptronFeature {
         val size = sentence.size
 
         var pre2Word = B
+        var pre3Word = B
         var pre2Pos = B
         if (position >= 2) {
             val x = sentence[position - 2]
             pre2Word = x.word
             pre2Pos = x.pos
+
+            if (position > 2) {
+                pre3Word = sentence[position - 3].word
+            }
         }
 
         var preWord = B
@@ -210,11 +228,17 @@ object NERPerceptronFeature {
         callBack.accept("$prePos${curPos}G")
         callBack.accept("$curPos${nextPos}H")
         callBack.accept("$nextPos${next2Pos}I")
+        callBack.accept("${pre3Word}J")
 
     }
 
-    private inline fun addFeature(features: FeatureSet, vector: IntArrayList, feature: String) {
-        val id = features.featureId(feature)
+    private fun addFeature(features: FeatureSet, vector: IntArrayList, stringBuilder: StringBuilder, vararg parts: Any) {
+        for (x in parts) {
+            stringBuilder.append(x)
+        }
+        val id = features.featureId(stringBuilder)
+
+        stringBuilder.clear()
         if (id >= 0) {
             vector.add(id)
         }
@@ -276,7 +300,7 @@ class NERPerceptronTrainer(val targetPos: Set<String>) {
                     val ner = NERPerceptron(model, labelList)
                     NEREvaluateUtils.evaluateNER(ner, evaluateList, targetPos)
                 },
-                maxIter)
+                maxIter, false)
 
         val model = trainer.train(threadNumber)
 
@@ -374,14 +398,14 @@ class NerSamples(val targetPos: Set<String>, val labelMap: Map<String, Int>, val
      *
      */
     fun sentenceToSample(line: List<PkuWord>): TrainSample {
-
+        val buffer = java.lang.StringBuilder()
         val wordTermList = NEREvaluateUtils.convert(line, targetPos)
 
         val poss = wordTermList.map { labelMap[it.customFlag]!! }.toIntArray()
 
         val featureMatrix = ArrayList<IntArrayList>(wordTermList.size)
         for (i in 0 until wordTermList.size) {
-            featureMatrix += NERPerceptronFeature.extractFeatureVector(wordTermList, i, featureSet)
+            featureMatrix += NERPerceptronFeature.extractFeatureVector(wordTermList, i, featureSet, buffer)
         }
 
 
@@ -453,7 +477,9 @@ object NEREvaluateUtils {
 
             val sentenceWordTerm = convert(sentence, targetPos)
 
-            val pred = combineNER(recognizer.decode(sentenceWordTerm))
+            recognizer.decode(sentenceWordTerm)
+            val nerResult = sentenceWordTerm.map { it.customFlag }
+            val pred = combineNER(nerResult)
             val gold = combineNER(sentenceWordTerm.map { it.customFlag }.toList())
             for (p in pred) {
                 val type = p.split("\t".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[2]

@@ -19,9 +19,9 @@ package com.mayabot.nlp.segment.tokenizer.xprocessor;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.mayabot.nlp.segment.Nature;
 import com.mayabot.nlp.segment.WordpathProcessor;
-import com.mayabot.nlp.segment.common.BaseMynlpComponent;
-import com.mayabot.nlp.segment.dictionary.Nature;
+import com.mayabot.nlp.segment.common.BaseSegmentComponent;
 import com.mayabot.nlp.segment.perceptron.PerceptronPosService;
 import com.mayabot.nlp.segment.wordnet.Vertex;
 import com.mayabot.nlp.segment.wordnet.Wordpath;
@@ -35,7 +35,7 @@ import java.util.List;
  * @author jimichan
  */
 @Singleton
-public class PosPerceptronProcessor extends BaseMynlpComponent implements WordpathProcessor {
+public class PosPerceptronProcessor extends BaseSegmentComponent implements WordpathProcessor {
 
     private final PerceptronPosService perceptronPosService;
 
@@ -53,7 +53,7 @@ public class PosPerceptronProcessor extends BaseMynlpComponent implements Wordpa
         List<Nature> posList = perceptronPosService.posFromVertex(vertices);
 
         for (int i = 0; i < vertices.size(); i++) {
-            vertices.get(i).setGuessNature(posList.get(i));
+            vertices.get(i).nature = (posList.get(i));
         }
 
         return wordPath;

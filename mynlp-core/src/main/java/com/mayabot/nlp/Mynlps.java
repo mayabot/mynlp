@@ -23,13 +23,12 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 
 /**
- * 包含一个IOC容器，管理Mynlp所有的资源。
+ * 包含一个guice实现的IOC容器，管理Mynlp所有的资源。
  * 在项目Mynlp对象应该作为单例，不需要重复创建。
  *
  * @author jimichan
  */
 public final class Mynlps {
-
 
     public static InternalLogger logger = InternalLoggerFactory.getInstance("com.mayabot.nlp.Mynlps");
 

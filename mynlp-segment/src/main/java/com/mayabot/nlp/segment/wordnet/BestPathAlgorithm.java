@@ -17,7 +17,8 @@
 package com.mayabot.nlp.segment.wordnet;
 
 /**
- * 选择最佳路径。viterbi 维特比 viterbi算法 dijkstra算法 NShort算法 最笨的前向最大路径算法
+ * 选择最佳路径接口。具体实现有，viterbi 维特比 dijkstra算法 NShort算法 前向最大路径算法
+ *
  * @author jimichan
  */
 public interface BestPathAlgorithm {
@@ -25,8 +26,8 @@ public interface BestPathAlgorithm {
     /**
      * 从词图网络中选择一条从头到尾的路径
      *
-     * @param wordnet
-     * @return
+     * @param wordnet 输入词图
+     * @return Wordpath
      */
     Wordpath select(Wordnet wordnet);
 

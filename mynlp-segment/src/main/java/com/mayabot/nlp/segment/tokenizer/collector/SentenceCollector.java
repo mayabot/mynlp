@@ -13,6 +13,7 @@ import java.util.function.Consumer;
 /**
  * Nlp收集方式，不处理子词
  * 按照WordPath里面描述的唯一切分路径，构建WordTerm序列
+ *
  * @author jimichan
  */
 public class SentenceCollector implements WordTermCollector {
@@ -24,7 +25,7 @@ public class SentenceCollector implements WordTermCollector {
 
         while (vertexIterator.hasNext()) {
             Vertex vertex = vertexIterator.next();
-            WordTerm term = new WordTerm(vertex.realWord(), vertex.guessNature(), vertex.getRowNum());
+            WordTerm term = new WordTerm(vertex.realWord(), vertex.nature, vertex.getRowNum());
 
             if (StringUtils.isWhiteSpace(term.word)) {
                 continue;

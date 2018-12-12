@@ -34,7 +34,6 @@ import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 import java.util.List;
-import java.util.regex.Pattern;
 
 /**
  * 核心词典的二元接续词典，采用整型储存，高性能。
@@ -65,8 +64,6 @@ public class CoreBiGramTableDictionary extends NlpResouceExternalizable {
     public String sourceVersion(MynlpEnv mynlp) {
         return mynlp.loadResource(path).hash().substring(0, 6);
     }
-
-    private final Pattern pattern = Pattern.compile("^(.+)@(.+)\\s+(\\d+)$");
 
     @Override
     public void loadFromSource(MynlpEnv mynlp) throws Exception {

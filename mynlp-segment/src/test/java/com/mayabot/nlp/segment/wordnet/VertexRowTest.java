@@ -23,11 +23,11 @@ public class VertexRowTest {
         {
             VertexRow map = new VertexRow(1, null);
 
-            map.put(new Vertex(9, "9"));
-            map.put(new Vertex(1, "1"));
-            map.put(new Vertex(5, "5.1"));
-            map.put(new Vertex(2, "2"));
-            map.put(new Vertex(5, "5.2"));
+            map.put(new Vertex(9));
+            map.put(new Vertex(1));
+            map.put(new Vertex(5));
+            map.put(new Vertex(2));
+            map.put(new Vertex(5));
             // System.out.println(vertexRow.values());
             //
             // System.out.println("Contains 4 "+vertexRow.in((short)4));
@@ -42,10 +42,10 @@ public class VertexRowTest {
         for (int i = 0; i < 1000000; i++) {
             VertexRow map = new VertexRow(1, null);
 
-            map.put(new Vertex(9, "9"));
-            map.put(new Vertex(1, "1"));
-            map.put(new Vertex(5, "5.1"));
-            map.put(new Vertex(2, "2"));
+            map.put(new Vertex(9));
+            map.put(new Vertex(1));
+            map.put(new Vertex(5));
+            map.put(new Vertex(2));
 //			vertexRow.put(new Vertex(5, "5.2"));
             // System.out.println(vertexRow.values());
             //

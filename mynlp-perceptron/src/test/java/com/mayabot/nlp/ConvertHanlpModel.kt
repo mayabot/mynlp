@@ -1,6 +1,6 @@
 package com.mayabot.nlp
 
-import com.mayabot.nlp.collection.dat.DATArrayIndex
+import com.mayabot.nlp.collection.dat.DoubleArrayTrie
 import com.mayabot.nlp.perceptron.FeatureSet
 import com.mayabot.nlp.perceptron.PerceptronModel
 import java.io.DataInputStream
@@ -79,7 +79,7 @@ object ConvertHanlpModel {
         }
 
 
-        val newFeatureMap = DATArrayIndex(sortedList)
+        val newFeatureMap = DoubleArrayTrie(sortedList)
         val x = FeatureSet(newFeatureMap, sortedList)
         val model = PerceptronModel(x, 4, newParameters)
 
