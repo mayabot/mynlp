@@ -16,11 +16,8 @@
 
 package com.mayabot.nlp.segment.wordnet;
 
-import com.mayabot.nlp.segment.dictionary.Nature;
-import com.mayabot.nlp.segment.dictionary.NatureAttribute;
-import com.mayabot.nlp.segment.dictionary.core.CoreDictionary;
-
-import java.util.Map;
+import com.mayabot.nlp.segment.Nature;
+import com.mayabot.nlp.segment.dictionary.DictionaryAbsWords;
 
 /**
  * WordNode中的一个节点。顶点 它同时实现了LinkedList中节点的功能指针
@@ -48,30 +45,19 @@ public class Vertex {
     ////////////////////////////////////////////
 
     /**
-     * 节点对应的等效词(抽象词)（如未##数）
-     * Hanlp 中这个对应的字段是word，有些时候，当没有等效词的时候，这就是实际的词
-     */
-    public String abstractWord;
-
-    /**
-     * 核心词典的ID,也是Attribute的下标. 主要是针对核心词典的ID 或者词ID id之间有ngram统计关系
+     * 核心词典的ID,主要是针对核心词典的ID 或者词ID id之间有ngram统计关系
      */
     public int wordID = -1;
 
     /**
-     * 词的属性
-     * 如果要修改，应当new一个Attribute
+     * 词性
      */
-    public NatureAttribute natureAttribute;
-
-    /////////////////////////////////////////////
+    public Nature nature;
 
     /**
-     * 词性分析计算出来的词性,计算后的结果
+     * 二元模型分词时，需要从里面放入词频
      */
-    private Nature guessNature = null;
-
-    private int natureFreq;
+    public int freq = 0;
 
 
     /////////////////////////////////////////////
@@ -81,9 +67,10 @@ public class Vertex {
     }
 
 
-    public Vertex(int length, int wordID, String abstractWord, NatureAttribute natureAttribute) {
+    public Vertex(int length, int wordID, int freq) {
         this.length = (short) length;
-        setWordInfo(wordID, abstractWord, natureAttribute);
+        this.wordID = wordID;
+        this.freq = freq;
     }
 
     /**
@@ -93,14 +80,9 @@ public class Vertex {
      */
     public Vertex(Vertex node) {
         this.length = node.length;
-        this.abstractWord = node.abstractWord;
         this.wordID = node.wordID;
-        this.natureAttribute = node.natureAttribute;
     }
 
-    public static boolean hasNature(Vertex vertex, Nature nature) {
-        return vertex != null && vertex.natureAttribute != null && vertex.natureAttribute.hasNature(nature);
-    }
 
     /**
      * copy to new object , in abstractWord length wordinfo
@@ -111,42 +93,57 @@ public class Vertex {
         return new Vertex(this);
     }
 
-    public char theChar() {
-        return this.vertexRow.theChar();
-    }
-
-    // for test
-    public Vertex(int length, String abstractWord) {
-        this.length = (short) length;
-        this.abstractWord = abstractWord;
-    }
+//    public char theChar() {
+//        return this.vertexRow.theChar();
+//    }
 
     /**
-     * 设置核心词典的属性
+     * 设定抽象词词性和对应的频率.
      *
-     * @param wordID    核心词典的词下标(包括等效词下标)
-     * @param word      等效词()
-     * @param attribute 属性(包含了词性等信息)
-     * @return 自己本身
-     */
-    public Vertex setWordInfo(int wordID, String word, NatureAttribute attribute) {
-        this.wordID = wordID;
-        this.abstractWord = word;
-        this.natureAttribute = attribute;
-        return this;
-    }
-
-    /**
-     * @param wordID
-     * @param attribute
+     * @param nature
+     * @param freq
      * @return
      */
-    public Vertex setWordInfo(int wordID, NatureAttribute attribute) {
-        this.wordID = wordID;
-        this.abstractWord = null;
-        this.natureAttribute = attribute;
+    public Vertex setAbsWordNatureAndFreq(Nature nature, int freq) {
+        this.wordID = DictionaryAbsWords.nature2id(nature);
+        if (wordID >= 0 && wordID <= DictionaryAbsWords.MaxId) {
+            this.nature = nature;
+            this.freq = freq;
+        }
+
         return this;
     }
+
+    public Vertex setAbsWordNatureAndFreq(Nature nature) {
+        return setAbsWordNatureAndFreq(nature, 10000);
+    }
+
+    /**
+     * 是否抽象词
+     *
+     * @return
+     */
+    public boolean isAbsWord() {
+        return wordID <= DictionaryAbsWords.MaxId;
+    }
+
+    /**
+     * 如果是抽象词的标签,不是返回null
+     *
+     * @return
+     */
+    public String absWordLabel() {
+        if (isAbsWord()) {
+            return DictionaryAbsWords.id2label(wordID);
+        } else {
+            return null;
+        }
+    }
+
+    public boolean isNature(Nature nature) {
+        return this.nature != null && nature == this.nature;
+    }
+
 
     /**
      * 接续行.接续是End就返回null
@@ -177,6 +174,8 @@ public class Vertex {
      * @return
      */
     private String realWord;
+
+
     public String realWord() {
         if (vertexRow.rowNum == -1) {
             return "";
@@ -189,77 +188,6 @@ public class Vertex {
 
     public int offset() {
         return vertexRow.rowNum;
-    }
-
-    /**
-     * 获取最可能的词性
-     * 如果没有调用confirmNature 那么只能获取仅有一个词性的词语
-     *
-     * @return
-     */
-    public Nature guessNature() {
-        if (guessNature != null) {
-            return guessNature;
-        }
-
-        if (natureAttribute == null) {
-            return null;
-        }
-
-
-        if (natureAttribute.size() == 1) {
-            Map.Entry<Nature, Integer> one = natureAttribute.one();
-            this.guessNature = one.getKey();
-            this.natureFreq = one.getValue();
-            return guessNature;
-        }
-
-        return null;
-    }
-
-    public int natureFreq() {
-        return this.natureFreq;
-    }
-
-    public boolean confirmNature(Nature nature) {
-        if (nature == null) {
-
-            return true;
-        }
-        if (natureAttribute.size() == 1 && natureAttribute.one().getKey() == nature) {
-            this.guessNature = nature;
-            this.natureFreq = natureAttribute.one().getValue();
-            return true;
-        }
-        boolean result = true;
-        int frequency = natureAttribute.getNatureFrequency(nature);
-
-        if (frequency == 0) {
-            frequency = 1000;
-            result = false;
-        }
-
-        guessNature = nature;
-        this.natureFreq = frequency;
-        return result;
-    }
-
-    public void setGuessNature(Nature nature) {
-        guessNature = nature;
-    }
-
-    public void setNatureAttribute(NatureAttribute attribute) {
-        this.natureAttribute = attribute;
-    }
-
-    public boolean setNature(Nature nature, boolean updateWord) {
-        if (nature == Nature.m) {
-            abstractWord = CoreDictionary.TAG_NUMBER;
-        } else if (nature == Nature.t) {
-            abstractWord = CoreDictionary.TAG_TIME;
-        }
-        return confirmNature(nature);
-
     }
 
     // hash 和 eq 只认 length
@@ -289,15 +217,11 @@ public class Vertex {
 
     @Override
     public String toString() {
-        return "WordNode [length=" + length + "]" + (abstractWord == null ? "" : abstractWord);
+        return "Vertex [length=" + length + "]";
     }
 
     public Vertex next() {
         return next;
-    }
-
-    public int getLength() {
-        return length;
     }
 
     public int length() {
@@ -310,23 +234,6 @@ public class Vertex {
 
     public int getRowNum() {
         return vertexRow.rowNum;
-    }
-
-    public Vertex setAbstractWord(String abstractWord) {
-        this.abstractWord = abstractWord;
-        return this;
-    }
-
-    public Vertex setAbstractWordIfEmpty(String abstractWord) {
-        if (this.abstractWord == null) {
-            this.abstractWord = abstractWord;
-        }
-        return this;
-    }
-
-    public Vertex setWordID(int wordID) {
-        this.wordID = wordID;
-        return this;
     }
 
     public Vertex getNext() {
@@ -409,4 +316,5 @@ public class Vertex {
     public void setTempChar(char tempChar) {
         this.tempChar = tempChar;
     }
+
 }

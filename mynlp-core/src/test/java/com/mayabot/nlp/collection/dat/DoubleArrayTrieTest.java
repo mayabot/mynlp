@@ -1,6 +1,5 @@
 package com.mayabot.nlp.collection.dat;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.HashSet;
@@ -9,11 +8,11 @@ import java.util.TreeMap;
 
 public class DoubleArrayTrieTest {
 
-    DoubleArrayTrie<String> trie() {
+    DoubleArrayTrieMap<String> trie() {
         TreeMap<String, String> map = new TreeMap<>();
 
-                String[] list  = (
-                        "一举\n" +
+        String[] list = (
+                "一举\n" +
                         "一举一动\n" +
                         "一举成名\n" +
                         "一举成名天下知\n" +
@@ -30,8 +29,7 @@ public class DoubleArrayTrieTest {
             }
         }
 
-        DoubleArrayTrieBuilder builder = new DoubleArrayTrieBuilder();
-        DoubleArrayTrie trie = builder.build(map);
+        DoubleArrayTrieMap trie = new DoubleArrayTrieMap(map);
 
         sets.forEach(
                 c -> System.out.println(c + " -> " + (int) c)
@@ -43,38 +41,44 @@ public class DoubleArrayTrieTest {
 
     @Test
     public void test() {
-        DoubleArrayTrie<String> trie = trie();
-
-        String x = trie.get("一举成名");
-
-        int[] base = trie.base;
-        int c =0;
-        for (int i = base.length-1; i >=0 ; i--) {
-            if (0== base[i]) {
-                c++;
-            }else{
-                System.out.println("+"+i);
-                break;
-            }
-        }
-
-        System.out.println(base.length);
-        System.out.println(c);
-
-        System.out.println(x);
-        Assert.assertEquals(x,"一举成名");
-
-        System.out.println(trie.base.length);
-
-        System.out.println("Index" + "\t" + "Base" + "\t" + "Check");
-
-        //IntIntHashMap intIntMap = new IntIntHashMap();
-
-        for (int i = 0; i < trie.base.length; i++) {
-            if (trie.base[i] != 0 || trie.check[i] != 0) {
-                System.out.println(i + "\t\t" + trie.base[i] + "\t\t" + trie.check[i]);
-            }
-        }
-
+        DoubleArrayTrieMap<String> trie = trie();
+        System.out.println(trie.containsKey("一举成名"));
     }
+
+//    @Test
+//    public void test() {
+//        DoubleArrayTrieMap<String> trie = trie();
+//
+//        String x = trie.get("一举成名");
+//
+//        int[] base = trie.base;
+//        int c =0;
+//        for (int i = base.length-1; i >=0 ; i--) {
+//            if (0== base[i]) {
+//                c++;
+//            }else{
+//                System.out.println("+"+i);
+//                break;
+//            }
+//        }
+//
+//        System.out.println(base.length);
+//        System.out.println(c);
+//
+//        System.out.println(x);
+//        Assert.assertEquals(x,"一举成名");
+//
+//        System.out.println(trie.base.length);
+//
+//        System.out.println("Index" + "\t" + "Base" + "\t" + "Check");
+//
+//        //IntIntHashMap intIntMap = new IntIntHashMap();
+//
+//        for (int i = 0; i < trie.base.length; i++) {
+//            if (trie.base[i] != 0 || trie.check[i] != 0) {
+//                System.out.println(i + "\t\t" + trie.base[i] + "\t\t" + trie.check[i]);
+//            }
+//        }
+//
+//    }
 }

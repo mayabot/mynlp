@@ -30,12 +30,6 @@ public class ClasspathNlpResourceFactory implements NlpResourceFactory {
             return new URLNlpResource(resource, charset);
         }
 
-        resource = classLoader.getResource(path + ".zip");
-        if (resource != null) {
-            return new URLNlpResource(resource, charset);
-        }
-
-
         return null;
     }
 }

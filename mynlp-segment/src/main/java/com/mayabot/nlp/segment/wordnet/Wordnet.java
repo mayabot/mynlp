@@ -16,8 +16,6 @@
 
 package com.mayabot.nlp.segment.wordnet;
 
-import com.mayabot.nlp.segment.dictionary.Nature;
-import com.mayabot.nlp.segment.dictionary.NatureAttribute;
 import com.mayabot.nlp.utils.CustomCharSequence;
 
 import java.util.BitSet;
@@ -25,7 +23,6 @@ import java.util.Iterator;
 import java.util.function.Consumer;
 
 /**
- *
  * <p>
  * #S# [0] #Start 品 [1] 品质 质 [2] 质 和 [3] {和、和服} 服 [4] 服务 务 [5] 务 #E# [6] #End
  * <p>
@@ -35,7 +32,8 @@ import java.util.function.Consumer;
  * WordNodeLinkedList 是一个优化过的linkedlist，去除了中间node节点,并增量排序和特殊性质
  * <p>
  * 实现CharSequence接口，可以进行当做字符串类型处理
- *O
+ * O
+ *
  * @author jimichan
  */
 public class Wordnet implements CharSequence {
@@ -96,13 +94,14 @@ public class Wordnet implements CharSequence {
     }
 
 
-    static final NatureAttribute df = NatureAttribute.create(Nature.x, 1);
+//    static final NatureAttribute df = NatureAttribute.create(Nature.x, 1);
 
     public void fillNill() {
         for (VertexRow row : slotList) {
             if (row.first == null) {
                 Vertex creted = row.getOrCrete(1);
-                creted.natureAttribute = df;
+                //creted.natureAttribute = df;
+                creted.freq = 1;
             }
         }
     }
@@ -135,7 +134,7 @@ public class Wordnet implements CharSequence {
      * 或者 根本不存在跳转到当前行的路径(前置条件是没有被路径覆盖)
      * 寻找 悬空行，会导致路径中断
      *
-     * @return
+     * @return bitset
      */
     public BitSet findDangling() {
         BitSet bitSet = new BitSet(charSize);
@@ -169,8 +168,8 @@ public class Wordnet implements CharSequence {
     /**
      * 如果对应行不存在，那么会自动创建
      *
-     * @param sindex
-     * @return
+     * @param sindex index
+     * @return VertexRow
      */
     public final VertexRow getRow(int sindex) {
         return indexAt(sindex);

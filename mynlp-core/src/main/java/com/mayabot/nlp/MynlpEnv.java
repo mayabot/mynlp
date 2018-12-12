@@ -28,9 +28,8 @@ import java.nio.charset.Charset;
 import java.util.List;
 
 /**
- * Mynlp执行环境。
+ * Mynlp运行环境。
  * 负责数据目录，缓存、资源加载、Settings等
- *
  * @author jimichan
  */
 public class MynlpEnv {
@@ -82,7 +81,7 @@ public class MynlpEnv {
      *
      * @param resourceName 资源路径名称 dict/abc.dict
      * @param charset      字符集
-     * @return
+     * @return NlpResource
      */
     public NlpResource loadResource(String resourceName, Charset charset) {
         if (resourceName == null || resourceName.trim().isEmpty()) {
@@ -102,13 +101,13 @@ public class MynlpEnv {
      * 加载资源
      *
      * @param resourceName 资源路径名称 dict/abc.dict
-     * @return
+     * @return NlpResource
      */
     public NlpResource loadResource(String resourceName) {
         return this.loadResource(resourceName, Charsets.UTF_8);
     }
 
-    public NlpResource loadResource(Setting<String> resourceNameSettting) {
+    public NlpResource loadResource(SettingItem<String> resourceNameSettting) {
         return this.loadResource(settings.get(resourceNameSettting), Charsets.UTF_8);
     }
 

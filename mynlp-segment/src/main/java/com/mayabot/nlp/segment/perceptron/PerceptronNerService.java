@@ -10,8 +10,8 @@ import com.mayabot.nlp.logging.InternalLoggerFactory;
 import com.mayabot.nlp.perceptron.FeatureSet;
 import com.mayabot.nlp.perceptron.solution.ner.NERPerceptron;
 import com.mayabot.nlp.resources.NlpResource;
+import com.mayabot.nlp.segment.Nature;
 import com.mayabot.nlp.segment.WordTerm;
-import com.mayabot.nlp.segment.dictionary.Nature;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -60,35 +60,30 @@ public class PerceptronNerService {
     }
 
     /**
-     * WordTerm里面准备word和nature
-     *
-     * @param sentence
+     * 返回双层嵌套结构的句子列表
+     * @param list
      * @return
      */
-    public List<String> decode(List<WordTerm> sentence) {
-        return perceptron.decode(sentence);
-    }
+    public static List<WordTerm> toNerComposite(List<WordTerm> list) {
 
-    /**
-     * 要求WordTerm已经词性填充完成
-     *
-     * @param list
-     */
-    public List<WordTerm> ner(List<WordTerm> list, boolean pos) {
-
-        if (pos) {
-            posService.posFromTerm(list);
+        boolean findLab = false;
+        for (WordTerm x : list) {
+            if (x.getCustomFlag() != null) {
+                findLab = true;
+                break;
+            }
+        }
+        if (!findLab) {
+            return list;
         }
 
-        List<String> decode = perceptron.decode(list);
 
         List<WordTerm> result = new ArrayList<>(list.size());
         List<WordTerm> temp = null;
 
-        int i = 0;
         String nerPOS = null;
-        for (String label : decode) {
-            WordTerm word = list.get(i++);
+        for (WordTerm word : list) {
+            String label = word.getCustomFlag();
 
             if ("O".equals(label) || "S".equals(label)) {
                 if (temp != null) {
@@ -132,6 +127,22 @@ public class PerceptronNerService {
         }
 
         return result;
+    }
+
+    /**
+     * 要求WordTerm已经词性填充完成
+     *
+     * @param list
+     */
+    public List<WordTerm> ner(List<WordTerm> list, boolean pos) {
+
+        if (pos) {
+            posService.posFromTerm(list);
+        }
+
+        perceptron.decode(list);
+
+        return toNerComposite(list);
     }
 
     /**

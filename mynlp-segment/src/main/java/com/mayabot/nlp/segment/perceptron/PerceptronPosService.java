@@ -1,16 +1,14 @@
 package com.mayabot.nlp.segment.perceptron;
 
-import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.mayabot.nlp.MynlpEnv;
-import com.mayabot.nlp.Mynlps;
 import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
 import com.mayabot.nlp.perceptron.FeatureSet;
 import com.mayabot.nlp.resources.NlpResource;
+import com.mayabot.nlp.segment.Nature;
 import com.mayabot.nlp.segment.WordTerm;
-import com.mayabot.nlp.segment.dictionary.Nature;
 import com.mayabot.nlp.segment.wordnet.Vertex;
 
 import java.io.BufferedInputStream;
@@ -91,12 +89,5 @@ public class PerceptronPosService {
         return term.word;
     }
 
-    public static void main(String[] args) {
-        PerceptronPosService service = Mynlps.getInstance(PerceptronPosService.class);
-
-        List<Nature> natureList = service.pos(Lists.newArrayList("22 23456 中国 的 土地，".split(" ")));
-
-        System.out.println(natureList);
-    }
 
 }

@@ -30,7 +30,7 @@ public class SuxTest {
         System.out.println(pat.size());
 //        long t1 = System.currentTimeMillis();
 //        DoubleArrayTrieBuilder builder = new DoubleArrayTrieBuilder();
-//        DoubleArrayTrie trie = builder.build(treeMap);
+//        DoubleArrayTrieMap trie = builder.build(treeMap);
 //        long t2 = System.currentTimeMillis();
 
 //        System.out.println(t2-t1);

@@ -22,10 +22,9 @@ import com.google.inject.Inject;
 import com.mayabot.nlp.fst.FST;
 import com.mayabot.nlp.fst.FstMatcher;
 import com.mayabot.nlp.fst.FstNode;
+import com.mayabot.nlp.segment.Nature;
 import com.mayabot.nlp.segment.WordpathProcessor;
-import com.mayabot.nlp.segment.common.BaseMynlpComponent;
-import com.mayabot.nlp.segment.dictionary.Nature;
-import com.mayabot.nlp.segment.dictionary.NatureAttribute;
+import com.mayabot.nlp.segment.common.BaseSegmentComponent;
 import com.mayabot.nlp.segment.dictionary.core.CoreDictionary;
 import com.mayabot.nlp.segment.wordnet.Vertex;
 import com.mayabot.nlp.segment.wordnet.Wordnet;
@@ -37,8 +36,6 @@ import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.mayabot.nlp.segment.wordnet.Vertex.hasNature;
-
 
 /**
  * 各种场景的合并场景
@@ -49,10 +46,10 @@ import static com.mayabot.nlp.segment.wordnet.Vertex.hasNature;
  *
  * @author jimichan
  */
-public class CombineProcessor extends BaseMynlpComponent implements WordpathProcessor {
-
-    private final int x_cluster_wordid;
-    private final NatureAttribute x_cluster_nature = NatureAttribute.create(Nature.x, 100000);
+public class CombineProcessor extends BaseSegmentComponent implements WordpathProcessor {
+//
+//    private final int x_cluster_wordid;
+//    private final NatureAttribute x_cluster_nature = NatureAttribute.create(Nature.x, 100000);
 
     private FST<Vertex> shuLiang;
 
@@ -85,14 +82,14 @@ public class CombineProcessor extends BaseMynlpComponent implements WordpathProc
      */
     @Inject
     public CombineProcessor(CoreDictionary coreDictionary) {
-        x_cluster_wordid = coreDictionary.getWordID(CoreDictionary.TAG_CLUSTER);
+//        x_cluster_wordid = coreDictionary.getWordID(CoreDictionary.X_TAG);
         this.setOrder(ORDER_MIDDLE + 10);
         shuLiang = make(fst -> {
             FstNode<Vertex> shuzi = fst.start().to("shuzi",
-                    (index, vertex) -> hasNature(vertex, Nature.m));
+                    (index, vertex) -> vertex.isNature(Nature.m));
 
             FstNode<Vertex> danwei = shuzi.to("danwei",
-                    (index, vertex) -> hasNature(vertex, Nature.q) ||
+                    (index, vertex) -> vertex.isNature(Nature.q) ||
                             QuantityUnit.contains(vertex.realWord().toLowerCase())
             );
 
@@ -138,16 +135,17 @@ public class CombineProcessor extends BaseMynlpComponent implements WordpathProc
                 int start = matcher.start();
                 int end = matcher.end();
 
-                int wordID = x_cluster_wordid;
-                Vertex bookName = wordnet.row(start + 1).getOrCrete(end - start - 2);
-                if (bookName.wordID == -1) {
-                    //FIXME 这里不产生wordID有没有问题
-                    //主要给切分子词做一些准备
-                    bookName.setNatureAttribute(NatureAttribute.create1000(Nature.n));
-                }
+                //int wordID = x_cluster_wordid;
+//                Vertex bookName = wordnet.row(start + 1).getOrCrete(end - start - 2);
+//                if (bookName.wordID == -1) {
+//                    //FIXME 这里不产生wordID有没有问题
+//                    //主要给切分子词做一些准备
+////                    bookName.setNatureAttribute(NatureAttribute.create1000(Nature.n));
+//                    //bookName.nature = Nature.newWord;
+//                }
 
                 Vertex vertex = wordPath.combine(start, end - start);
-                vertex.setWordInfo(wordID, CoreDictionary.TAG_CLUSTER, NatureAttribute.create1000(Nature.n));
+//                vertex.setWordInfo(wordID, CoreDictionary.X_TAG, NatureAttribute.create1000(Nature.n));
 
             }
         }
@@ -172,8 +170,7 @@ public class CombineProcessor extends BaseMynlpComponent implements WordpathProc
             }
 
             Vertex vertex = wordPath.combine(start, end - start);
-            int wordID = x_cluster_wordid;
-            vertex.setWordInfo(wordID, CoreDictionary.TAG_CLUSTER, x_cluster_nature);
+            vertex.setAbsWordNatureAndFreq(Nature.x);
         }
     }
 
@@ -186,7 +183,7 @@ public class CombineProcessor extends BaseMynlpComponent implements WordpathProc
 
             int from = m.getStartObj().getRowNum();
 
-            int len = m.getEndObj().getRowNum() + m.getEndObj().getLength() - from;
+            int len = m.getEndObj().getRowNum() + m.getEndObj().length() - from;
 
             if (wordPath.willCutOtherWords(from, len)) {
                 continue;
@@ -194,8 +191,7 @@ public class CombineProcessor extends BaseMynlpComponent implements WordpathProc
 
             Vertex vertex = wordPath.combine(from, len);
 
-            int wordID = x_cluster_wordid;
-            vertex.setWordInfo(wordID, CoreDictionary.TAG_CLUSTER, x_cluster_nature);
+            vertex.setAbsWordNatureAndFreq(Nature.x);
         }
     }
 

@@ -21,13 +21,11 @@ import com.google.common.hash.Hashing;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.mayabot.nlp.MynlpEnv;
-import com.mayabot.nlp.collection.dat.DATMatcher;
-import com.mayabot.nlp.collection.dat.DoubleArrayTrie;
-import com.mayabot.nlp.collection.dat.DoubleArrayTrieBuilder;
+import com.mayabot.nlp.collection.dat.DoubleArrayTrieStringIntMap;
 import com.mayabot.nlp.resources.NlpResouceExternalizable;
 import com.mayabot.nlp.resources.NlpResource;
-import com.mayabot.nlp.segment.dictionary.Nature;
-import com.mayabot.nlp.segment.dictionary.NatureAttribute;
+import com.mayabot.nlp.segment.Nature;
+import com.mayabot.nlp.segment.dictionary.DictionaryAbsWords;
 import com.mayabot.nlp.utils.CharSourceLineReader;
 
 import java.io.IOException;
@@ -47,6 +45,7 @@ import java.util.TreeMap;
  * 二元文法词典data/dictionary/CoreNatureDictionary.ngram.txt储存的是两个词的接续，如果你发现不可能存在这种接续时，删掉即可。
  * 你也可以添加你认为合理的接续，但是这两个词必须同时在核心词典中才会生效。
  * </pre>
+ *
  * @author jimichan
  */
 @Singleton
@@ -65,25 +64,12 @@ public class CoreDictionary extends NlpResouceExternalizable {
      */
     public int totalFreq;
 
-    private DoubleArrayTrie<NatureAttribute> trie;
+    private DoubleArrayTrieStringIntMap trie;
 
     @Inject
     public CoreDictionary(MynlpEnv mynlp) throws Exception {
 
         this.restore(mynlp);
-
-        //计算出预编译的量
-        Begin_WORD_ID = getWordID(TAG_BIGIN);
-        End_WORD_ID = getWordID(TAG_END);
-
-        XX_WORD_ID = getWordID(TAG_OTHER);
-        NR_WORD_ID = getWordID(TAG_PEOPLE);
-        NS_WORD_ID = getWordID(TAG_PLACE);
-        NT_WORD_ID = getWordID(TAG_GROUP);
-        T_WORD_ID = getWordID(TAG_TIME);
-        X_WORD_ID = getWordID(TAG_CLUSTER);
-        M_WORD_ID = getWordID(TAG_NUMBER);
-        NX_WORD_ID = getWordID(TAG_NX);
 
         MAX_FREQUENCY = this.totalFreq;
     }
@@ -93,7 +79,8 @@ public class CoreDictionary extends NlpResouceExternalizable {
     public void loadFromSource(MynlpEnv mynlp) throws Exception {
         NlpResource dictResource = mynlp.loadResource(path);
 
-        TreeMap<String, NatureAttribute> map = new TreeMap<>();
+        //词和词频
+        TreeMap<String, Integer> map = new TreeMap<>();
 
         int maxFreq = 0;
 
@@ -103,26 +90,33 @@ public class CoreDictionary extends NlpResouceExternalizable {
 
                 String[] param = line.split("\\s");
 
-                NatureAttribute attribute = NatureAttribute.create(param);
-                map.put(param[0], attribute);
-                maxFreq += attribute.getTotalFrequency();
+                Integer count = Integer.valueOf(param[1]);
+                map.put(param[0], count);
+                maxFreq += count;
             }
         }
 
         this.totalFreq = maxFreq;
 
+        //补齐，确保ID顺序正确
+        for (String label : DictionaryAbsWords.allLabel()) {
+            if (!map.containsKey(label)) {
+                map.put(label, 1);
+            }
+        }
+
         if (map.isEmpty()) {
             throw new RuntimeException("not found core dict file ");
         }
 
-        this.trie = (DoubleArrayTrie<NatureAttribute>) new DoubleArrayTrieBuilder().build(map);
+        this.trie = new DoubleArrayTrieStringIntMap(map);
     }
 
     @Override
     public String sourceVersion(MynlpEnv mynlp) {
         return Hashing.md5().newHasher().
                 putString(mynlp.loadResource(path).hash(), Charsets.UTF_8).
-                putString(NatureAttribute.version, Charsets.UTF_8)
+                putString("v2", Charsets.UTF_8)
                 //如果Nature有任何变化
                 .putString(Joiner.on(",").join(Nature.values()), Charsets.UTF_8)
                 .hash().toString()
@@ -132,14 +126,14 @@ public class CoreDictionary extends NlpResouceExternalizable {
     @Override
     public void writeExternal(ObjectOutput out) throws IOException {
         out.writeInt(totalFreq);
-        DoubleArrayTrie.write(trie, out, NatureAttribute::write);
+        trie.save(out);
         out.flush();
     }
 
     @Override
     public void readExternal(ObjectInput in) throws IOException {
         this.totalFreq = in.readInt();
-        this.trie = DoubleArrayTrie.read(in, NatureAttribute::read);
+        this.trie = new DoubleArrayTrieStringIntMap(in);
     }
 
     /**
@@ -148,7 +142,7 @@ public class CoreDictionary extends NlpResouceExternalizable {
      * @param key
      * @return
      */
-    public NatureAttribute get(String key) {
+    public Integer get(String key) {
         return trie.get(key);
     }
 
@@ -158,7 +152,7 @@ public class CoreDictionary extends NlpResouceExternalizable {
      * @param wordID
      * @return
      */
-    public NatureAttribute get(int wordID) {
+    public Integer get(int wordID) {
         return trie.get(wordID);
     }
 
@@ -186,11 +180,11 @@ public class CoreDictionary extends NlpResouceExternalizable {
      * @return
      */
     public int getTermFrequency(String term) {
-        NatureAttribute attribute = get(term);
+        Integer attribute = get(term);
         if (attribute == null) {
             return 0;
         }
-        return attribute.getTotalFrequency();
+        return attribute.intValue();
     }
 
     /**
@@ -213,96 +207,11 @@ public class CoreDictionary extends NlpResouceExternalizable {
         return trie.indexOf(word);
     }
 
-    public DATMatcher<NatureAttribute> match(char[] text, int offset) {
+    public DoubleArrayTrieStringIntMap.DATMapMatcherInt match(char[] text, int offset) {
         return trie.match(text, offset);
     }
 
     public int size() {
         return trie.size();
     }
-
-
-    /**
-     * 句子的开始 begin
-     */
-    public final static String TAG_BIGIN = "始##始";
-
-    /**
-     * 结束 end
-     */
-    public final static String TAG_END = "末##末";
-
-    /**
-     * 其它
-     */
-    public final static String TAG_OTHER = "未##它";
-    /**
-     * 团体名词 组织机构 nt
-     */
-    public final static String TAG_GROUP = "未##团";
-    /**
-     * 数词 m
-     */
-    public final static String TAG_NUMBER = "未##数";
-    /**
-     * 数量词 mq （现在觉得应该和数词同等处理，比如一个人和一人都是合理的）
-     */
-    public final static String TAG_QUANTIFIER = "未##量";
-    /**
-     * nx 中文语料里面出现了英文单词。
-     * 不能叫专有名词
-     */
-    public final static String TAG_NX = "未##E";
-
-    /**
-     * 时间 t
-     */
-    public final static String TAG_TIME = "未##时";
-
-    /**
-     * 字符串 x
-     */
-    public final static String TAG_CLUSTER = "未##串";
-
-
-    /**
-     * 地址 ns
-     */
-    public final static String TAG_PLACE = "未##地";
-    /**
-     * 人名 nr
-     */
-    public final static String TAG_PEOPLE = "未##人";
-
-
-    // 一些特殊的WORD_ID
-    /**
-     * 始##始
-     * TAG_BIGIN
-     */
-    public final int Begin_WORD_ID;
-
-    /**
-     * 末##末
-     */
-    public final int End_WORD_ID;
-
-    /**
-     * TAG_PEOPLE
-     */
-    public final int NR_WORD_ID;
-    public final int NS_WORD_ID;
-
-    public final int NT_WORD_ID;
-    public final int T_WORD_ID;
-
-    /**
-     * 字符串
-     */
-    public final int X_WORD_ID;
-    public final int M_WORD_ID;
-
-    public final int NX_WORD_ID;
-
-    public final int XX_WORD_ID;
 }

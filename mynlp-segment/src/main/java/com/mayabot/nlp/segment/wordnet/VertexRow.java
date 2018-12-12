@@ -131,11 +131,6 @@ public class VertexRow implements Iterable<Vertex> {
             v.setOptimizeNewNode(true);
         }
 
-        //END节点的length就是0
-        if (v.length != 0) {
-            //this.wordnet.addFlag(this.rowNum+v.length); //给被链入的行记数字
-        }
-
         int key = v.length;
         //两种操作要么，要么替换、要么插入
         v.vertexRow = this;
@@ -155,11 +150,7 @@ public class VertexRow implements Iterable<Vertex> {
                 //替换吧
                 replace(x, v);
 
-//				if(x == select){ //选择这个新的节点
-//					select = v;
-//				}
                 return x;
-
             }
             if (x.next == null) {
                 if (key < x.length) {

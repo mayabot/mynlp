@@ -19,12 +19,11 @@ package com.mayabot.nlp.segment.tokenizer.xprocessor;
 import com.google.common.collect.ImmutableList;
 import com.google.inject.Inject;
 import com.mayabot.nlp.Mynlps;
-import com.mayabot.nlp.collection.dat.DATMatcher;
-import com.mayabot.nlp.collection.dat.DoubleArrayTrie;
+import com.mayabot.nlp.collection.dat.DATMapMatcher;
+import com.mayabot.nlp.collection.dat.DoubleArrayTrieMap;
 import com.mayabot.nlp.segment.WordpathProcessor;
-import com.mayabot.nlp.segment.common.BaseMynlpComponent;
+import com.mayabot.nlp.segment.common.BaseSegmentComponent;
 import com.mayabot.nlp.segment.dictionary.CustomDictionary;
-import com.mayabot.nlp.segment.dictionary.NatureAttribute;
 import com.mayabot.nlp.segment.dictionary.core.CoreDictionary;
 import com.mayabot.nlp.segment.wordnet.Vertex;
 import com.mayabot.nlp.segment.wordnet.Wordnet;
@@ -32,7 +31,7 @@ import com.mayabot.nlp.segment.wordnet.Wordpath;
 
 /**
  * 自定义词典的合并处理器.
- *
+ * <p>
  * 小词合并为大词
  * 但是不去解决  AAA BBB CCC 有一个自定义词汇 ABBBC 这个时候不能去拆分，变更原有路径
  * 只能解决 A BB C 然后有自定义词 ABBC 那可以把他们联合起来
@@ -40,7 +39,7 @@ import com.mayabot.nlp.segment.wordnet.Wordpath;
  *
  * @author jimichan
  */
-public class CustomDictionaryProcessor extends BaseMynlpComponent implements WordpathProcessor {
+public class CustomDictionaryProcessor extends BaseSegmentComponent implements WordpathProcessor {
 
     private CustomDictionary dictionary;
 
@@ -51,7 +50,6 @@ public class CustomDictionaryProcessor extends BaseMynlpComponent implements Wor
         this.dictionary = dictionary;
         this.coreDictionary = coreDictionary;
         this.setOrder(ORDER_MIDDLE - 10);
-
     }
 
     public CustomDictionaryProcessor(CustomDictionary dictionary) {
@@ -61,7 +59,7 @@ public class CustomDictionaryProcessor extends BaseMynlpComponent implements Wor
     @Override
     public Wordpath process(Wordpath wordPath) {
 
-        DoubleArrayTrie<NatureAttribute> dat = dictionary.getTrie();
+        DoubleArrayTrieMap<Integer> dat = dictionary.getTrie();
 
         if (dat == null) {
             return wordPath;
@@ -70,12 +68,12 @@ public class CustomDictionaryProcessor extends BaseMynlpComponent implements Wor
         Wordnet wordnet = wordPath.getWordnet();
         char[] text = wordnet.getCharArray();
 
-        for (DoubleArrayTrie<NatureAttribute> d : ImmutableList.of(dat)) {
+        for (DoubleArrayTrieMap<Integer> d : ImmutableList.of(dat)) {
             if (d == null) {
                 continue;
             }
 
-            DATMatcher<NatureAttribute> datSearch = d.match(text, 0);
+            DATMapMatcher<Integer> datSearch = d.match(text, 0);
 
             while (datSearch.next()) {
                 int offset = datSearch.getBegin();
@@ -87,11 +85,12 @@ public class CustomDictionaryProcessor extends BaseMynlpComponent implements Wor
                     if (wordnet.getVertex(offset, length) == null) {
                         // wordnet 中是否缺乏对应的节点，如果没有需要补上
 
-                        NatureAttribute attr = datSearch.getValue();
+                        Integer freq = datSearch.getValue();
 
                         Vertex v = wordPath.combine(offset, length);
+
                         //没有等效果词
-                        v.setWordInfo(coreDictionary.X_WORD_ID, CoreDictionary.TAG_CLUSTER, attr);
+                        //v.setWordInfo(coreDictionary.X_WORD_ID, CoreDictionary.X_TAG, attr);
                     } else {
                         //FIXME 要不要覆盖attr.
                         //也就是自定义词典里面包含了重复的词汇

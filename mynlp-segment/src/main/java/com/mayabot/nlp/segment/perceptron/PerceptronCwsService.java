@@ -7,10 +7,12 @@ import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
 import com.mayabot.nlp.perceptron.FeatureSet;
 import com.mayabot.nlp.resources.NlpResource;
+import com.mayabot.nlp.utils.CharNormUtils;
 
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.util.List;
 
 /**
  * 感知机分词服务
@@ -47,5 +49,11 @@ public class PerceptronCwsService {
                 new BufferedInputStream(parameterResource.openInputStream()),
                 new BufferedInputStream(new FileInputStream(featureDatFile)));
 
+    }
+
+    public List<String> splitWord(String sentence) {
+        sentence = CharNormUtils.convert(sentence);
+        List<String> strings = perceptron.decodeToWordList(sentence);
+        return strings;
     }
 }

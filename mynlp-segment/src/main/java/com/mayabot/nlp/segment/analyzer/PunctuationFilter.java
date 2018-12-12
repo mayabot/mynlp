@@ -21,6 +21,7 @@ import com.mayabot.nlp.utils.Characters;
 
 /**
  * 过滤标点符号
+ *
  * @author jimichan
  */
 public class PunctuationFilter extends FilterWordTermGenerator implements

@@ -2,7 +2,7 @@ package com.mayabot.nlp.segment.perceptron
 
 import com.carrotsearch.hppc.IntArrayList
 import com.mayabot.nlp.perceptron.*
-import com.mayabot.nlp.segment.dictionary.Nature
+import com.mayabot.nlp.segment.Nature
 import com.mayabot.nlp.segment.perceptron.POSPerceptronFeature.extractFeature
 import com.mayabot.nlp.segment.perceptron.POSPerceptronFeature.extractFeatureVector
 import com.mayabot.nlp.segment.perceptron.POSPerceptronFeature.extractFeatureVector2
@@ -10,10 +10,8 @@ import com.mayabot.nlp.utils.CharNormUtils
 import com.mayabot.nlp.utils.Characters
 import java.io.File
 import java.io.InputStream
-import java.util.*
 import java.util.function.Consumer
 import java.util.function.Function
-import kotlin.collections.ArrayList
 
 /**
  * 词性分析感知机
@@ -22,14 +20,16 @@ class POSPerceptron(val model: Perceptron, val labelList: Array<String>) {
 
     private val featureSet = model.featureSet()
 
+    val parameter = (model as PerceptronModel).parameter
+
     val natureList = labelList.map { Nature.parse(it) }.toTypedArray()
 
     fun decodeToPos(sentence: List<String>): List<String> {
 
         val featureList = ArrayList<IntArrayList>(sentence.size)
-
+        val buffer = java.lang.StringBuilder()
         for (i in 0 until sentence.size) {
-            featureList += extractFeatureVector(sentence, sentence.size, i, featureSet)
+            featureList += extractFeatureVector(sentence, sentence.size, i, featureSet, buffer)
         }
 
         val result = model.decode(featureList)
@@ -38,12 +38,12 @@ class POSPerceptron(val model: Perceptron, val labelList: Array<String>) {
     }
 
     fun decode(sentence: List<String>): List<Nature> {
-
+        val buffer = java.lang.StringBuilder()
         val size = sentence.size
         val featureList = ArrayList<IntArrayList>(size)
 
         for (i in 0 until size) {
-            featureList += extractFeatureVector(sentence, size, i, featureSet)
+            featureList += extractFeatureVector(sentence, size, i, featureSet, buffer)
         }
 
         val result = model.decode(featureList)
@@ -54,15 +54,49 @@ class POSPerceptron(val model: Perceptron, val labelList: Array<String>) {
     fun <T> decode(sentence: List<T>, sink: Function<T, String>): List<Nature> {
 
         val size = sentence.size
+        val buffer = java.lang.StringBuilder()
         val featureList = ArrayList<IntArrayList>(size)
 
         for (i in 0 until size) {
-            featureList += extractFeatureVector2(sentence, size, i, featureSet, sink)
+            featureList += extractFeatureVector2(sentence, size, i, featureSet, sink, buffer)
         }
 
         val result = model.decode(featureList)
 
         return result.map { natureList[it] }
+    }
+
+    /**
+     * 特殊情况，只是查询一个词的词性
+     */
+    fun decode(word: String): Nature {
+        val labelSize = labelList.size
+        val buffer = java.lang.StringBuilder()
+        val vector = POSPerceptronFeature.extractFeatureVector(listOf(word), 1, 0, featureSet, buffer)
+        val vectorBuffer = vector.buffer
+        var maxIndex = 0
+        var maxScore = Double.MIN_VALUE
+
+        val offset = IntArray(vector.size() - 1)
+        for (j in 0 until vector.size() - 1) {
+            val index = vectorBuffer[j]
+            offset[j] = index * labelSize
+        }
+
+        for (label in 0 until labelSize) {
+            var score = 0.0
+
+            for (j in 0 until vector.size() - 1) {
+                score += parameter[offset[j] + label]
+            }
+
+            if (score > maxScore) {
+                maxIndex = label
+                maxScore = score
+            }
+        }
+
+        return natureList[maxIndex]
     }
 
 
@@ -103,6 +137,7 @@ class POSPerceptron(val model: Perceptron, val labelList: Array<String>) {
         @JvmStatic
         fun load(parameterBin: InputStream, featureBin: InputStream, labelText: InputStream): POSPerceptron {
             val model = PerceptronModel.load(parameterBin, featureBin, true)
+            model.decodeQuickModel = true
             val labelList = labelText.use { it.bufferedReader().readLines() }
             return POSPerceptron(model, labelList.toTypedArray())
         }
@@ -182,16 +217,17 @@ object POSPerceptronFeature {
     val s2s = Function<String, String> { it }
 
     @JvmStatic
-    fun extractFeatureVector(sentence: List<String>, size: Int, position: Int, features: FeatureSet): IntArrayList {
-        return extractFeatureVector2(sentence, size, position, features, s2s)
+    fun extractFeatureVector(sentence: List<String>, size: Int, position: Int, features: FeatureSet, buffer: java.lang.StringBuilder): IntArrayList {
+        return extractFeatureVector2(sentence, size, position, features, s2s, buffer)
     }
 
 
     //TODO 这里可以把String变成CharSequence. 这样vertex就可以传入char[]进行优化
     @JvmStatic
-    fun <T> extractFeatureVector2(sentence: List<T>, size: Int, position: Int, features: FeatureSet, sink: Function<T, String>): IntArrayList {
+    fun <T> extractFeatureVector2(sentence: List<T>, size: Int, position: Int, features: FeatureSet, sink: Function<T, String>, buffer: java.lang.StringBuilder): IntArrayList {
 
         val vector = IntArrayList(11)
+        buffer.clear()
 
         var preWord = if (position > 0) sink.apply(sentence[position - 1]) else CHAR_BEGIN
         val curWord = sink.apply(sentence[position])
@@ -215,7 +251,7 @@ object POSPerceptronFeature {
             }
         }
 
-        addFeature(features, vector, "${preWord}☺")
+        addFeature(features, vector, buffer, preWord, '☺')
 
         //让同一个特征出现两次。我认为这个特征比较重要
         val id = features.featureId(curWord)
@@ -224,7 +260,7 @@ object POSPerceptronFeature {
             vector.add(id)
         }
 
-        addFeature(features, vector, "${nextWord}♂")
+        addFeature(features, vector, buffer, nextWord, '♂')
 
         val length = curWord.length
 
@@ -235,33 +271,40 @@ object POSPerceptronFeature {
             val c1 = curWord[0]
             val l1 = curWord[last]
 
-            addFeature(features, vector, "$c1★")
-            addFeature(features, vector, "$l1✆")
+            addFeature(features, vector, buffer, c1, '★')
+            addFeature(features, vector, buffer, l1, '✆')
 
             if (length >= 3) {
                 val c2 = curWord[1]
                 val l2 = curWord[last - 1]
 
-                addFeature(features, vector, "$c1$c2★")
-                addFeature(features, vector, "$l1$l2✆")
+                addFeature(features, vector, buffer, c1, c2, '★')
+                addFeature(features, vector, buffer, l1, l2, '✆')
 
                 if (length >= 4) {
                     val c3 = curWord[2]
                     val l3 = curWord[last - 2]
-                    addFeature(features, vector, "$c1$c2$c3★")
-                    addFeature(features, vector, "$l1$l2$l3✆")
+                    addFeature(features, vector, buffer, c1, c2, c3, '★')
+                    addFeature(features, vector, buffer, l1, l2, l3, '✆')
                 }
             }
         }
 
-        //最后一列保留给特征向量使用
+
+//
+//        //最后一列保留给特征向量使用
         vector.add(0)
 
         return vector
     }
 
-    private inline fun addFeature(features: FeatureSet, vector: IntArrayList, feature: String) {
-        val id = features.featureId(feature)
+    private fun addFeature(features: FeatureSet, vector: IntArrayList, stringBuilder: StringBuilder, vararg parts: Any) {
+        for (x in parts) {
+            stringBuilder.append(x)
+        }
+        val id = features.featureId(stringBuilder)
+
+        stringBuilder.clear()
         if (id >= 0) {
             vector.add(id)
         }
@@ -279,11 +322,27 @@ class POSPerceptronTrainer {
     /**
      * 保存 词性->词性ID
      */
-    lateinit var labelMap: Map<String, Int>
+    val labelMap: Map<String, Int>
 
-    fun train(dir: File, maxIter: Int, threadNumber: Int): POSPerceptron {
+    init {
+        val list = Nature.values().filter {
+            it != Nature.newWord
+                    && it != Nature.begin
+                    && it != Nature.end
+        }.map { it.name }.sorted()
+        val map = HashMap<String, Int>(Nature.values().size * 3)
 
-        val allFiles = if (dir.isFile) listOf(dir) else dir.walkTopDown().filter { it.isFile && !it.name.startsWith(".") }.toList()
+        list.zip(0 until list.size).forEach { x ->
+            map[x.first] = x.second
+        }
+
+        labelMap = map
+    }
+
+
+    fun train(trainFile: File, evaluate: File, maxIter: Int, threadNumber: Int): POSPerceptron {
+
+        val allFiles = trainFile.allFiles()
 
         prepareFeatureSet(allFiles)
 
@@ -291,20 +350,30 @@ class POSPerceptronTrainer {
 
         val sampleList = loadSamples(allFiles)
 
+        val evaluateSampleList = if (evaluate == trainFile) {
+            sampleList
+        } else {
+            loadSamples(evaluate.allFiles())
+        }
+
         println("Start Train ... ")
 
         val trainer = PerceptronTrainer(
                 featureSet,
                 labelMap.size,
                 sampleList,
-                POSEvaluateRunner(5, sampleList),
-                maxIter)
+                POSEvaluateRunner(evaluateSampleList),
+                maxIter, true)
 
         val model = trainer.train(threadNumber)
 
+        // model.compress(0.1,0.001)
+
         println("--------------------")
 
-        POSEvaluateRunner(0, sampleList).run(model)
+        POSEvaluateRunner(evaluateSampleList).run(model)
+
+
 
         return POSPerceptron(model, labelMap.keys.sorted().toTypedArray())
     }
@@ -313,7 +382,7 @@ class POSPerceptronTrainer {
     /**
      * 从文件中加载TrainSample
      */
-    public fun loadSamples(files: List<File>): List<TrainSample> {
+    fun loadSamples(files: List<File>): List<TrainSample> {
 
         /**
          * 把一个句子，变化为TrainSample
@@ -321,12 +390,13 @@ class POSPerceptronTrainer {
          *
          */
         fun sentenceToSample(line: List<PkuWord>): TrainSample {
+            val buffer = java.lang.StringBuilder()
             val words = line.map { it.word }
             val poss = line.map { labelMap[it.pos]!! }.toIntArray()
 
             val featureMatrix = ArrayList<IntArrayList>(words.size)
             for (i in 0 until words.size) {
-                featureMatrix += POSPerceptronFeature.extractFeatureVector(words, words.size, i, featureSet)
+                featureMatrix += POSPerceptronFeature.extractFeatureVector(words, words.size, i, featureSet, buffer)
             }
 
             return TrainSample(featureMatrix, poss)
@@ -380,23 +450,7 @@ class POSPerceptronTrainer {
         println("开始构建POS FeatureSet")
         val t1 = System.currentTimeMillis()
 
-
-        val posSet = HashSet<String>(500)
-        corposFiles.forEach { file ->
-            println(file.absolutePath)
-            file.useLines { lines ->
-                lines.forEach { line ->
-                    val flatWords = line.parseToFlatWords()
-                    flatWords.forEach {
-                        if (it.pos != "" && !posSet.contains(it.pos)) {
-                            posSet.add(it.pos)
-                        }
-                    }
-                }
-            }
-        }
-
-        val builder = DATFeatureSetBuilder(posSet.size)
+        val builder = DATFeatureSetBuilder(labelMap.size)
         val fit = Consumer<String> { f ->
             builder.put(f)
         }
@@ -418,58 +472,41 @@ class POSPerceptronTrainer {
 
         this.featureSet = builder.build()
 
-        this.labelMap = posSet.sorted().zip(0 until posSet.size).toMap()
-
         println("FeatureSet构建完成,用时${System.currentTimeMillis() - t1}ms")
     }
 
 }
 
 
-class POSEvaluateRunner(var loop: Int, val sampleList: List<TrainSample>) : EvaluateRunner {
-
-    var count = 0
+/**
+ * 词性评估
+ */
+class POSEvaluateRunner(private val sampleList: List<TrainSample>) : EvaluateRunner {
 
     override fun run(model: Perceptron) {
-        count++
 
-        if (loop == 0) {
-            count = 5
-            loop = 5
-        }
-
-        //每隔5轮验证一次
-        if (count % loop != 0) {
-            return
-        }
-
-        val random = Random(0)
-        val bili = 0.5f
         var total = 0.0
         var right = 0.0
-        var targetSampleSize = (sampleList.size * bili).toInt()
-        var count = 0
-        System.out.print("Evaluating 0%")
+//        var targetSampleSize = sampleList.size
+//        var count = 0
+//        System.out.print("Evaluating 0%")
         sampleList.forEach { sample ->
             // 抽样10%进行验证
-            if (random.nextDouble() < bili) {
-                count++
-                total += sample.label.size
-                val result = model.decode(sample.featureMatrix)
-                for (x in 0 until result.size) {
-                    if (sample.label[x] == result[x]) {
-                        right++
-                    }
-                }
-                if (count % 200 == 0) {
-                    System.out.print("\rEvaluating ${"%.2f".format(count * 100.0 / targetSampleSize)}%")
-
+//                count++
+            total += sample.label.size
+            val result = model.decode(sample.featureMatrix)
+            for (x in 0 until result.size) {
+                if (sample.label[x] == result[x]) {
+                    right++
                 }
             }
+//                if (count % 2000 == 0) {
+//                    System.out.print("\rEvaluating ${"%.2f".format(count * 100.0 / targetSampleSize)}%")
+//
+//                }
         }
-        System.out.print("\r")
 
-        System.out.println("P = ${"%.3f".format((right / total))}")
+        System.out.println("P = ${"%.3f".format((right / total))}\n")
     }
 
 }

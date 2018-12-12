@@ -17,12 +17,9 @@
 package com.mayabot.nlp.segment.tokenizer.xprocessor;
 
 import com.google.common.collect.Lists;
-import com.google.inject.Inject;
+import com.mayabot.nlp.segment.Nature;
 import com.mayabot.nlp.segment.WordnetInitializer;
-import com.mayabot.nlp.segment.common.BaseMynlpComponent;
-import com.mayabot.nlp.segment.dictionary.Nature;
-import com.mayabot.nlp.segment.dictionary.NatureAttribute;
-import com.mayabot.nlp.segment.dictionary.core.CoreDictionary;
+import com.mayabot.nlp.segment.common.BaseSegmentComponent;
 import com.mayabot.nlp.segment.wordnet.Vertex;
 import com.mayabot.nlp.segment.wordnet.VertexRow;
 import com.mayabot.nlp.segment.wordnet.Wordnet;
@@ -36,20 +33,13 @@ import java.util.regex.Pattern;
  *
  * @author jimichan
  */
-public class TimeStringProcessor extends BaseMynlpComponent implements WordnetInitializer {
+public class TimeStringProcessor extends BaseSegmentComponent implements WordnetInitializer {
 
 
     private List<Pattern> patternList = Lists.newArrayList();
 
-    final int timeWordID;
 
-    final NatureAttribute natureAttribute;
-
-    @Inject
-    public TimeStringProcessor(CoreDictionary coreDictionary) {
-
-        timeWordID = coreDictionary.getWordID(CoreDictionary.TAG_TIME);
-        natureAttribute = NatureAttribute.create(Nature.t, 1000);
+    public TimeStringProcessor() {
 
         patternList.add(Pattern.compile("(?:\\d{4}-\\d{2}-\\d{2})|(?:\\d{1,2}月\\d{1,2}[日号])|(?:\\d{2,4}年(?:\\d{1,2}月(?:\\d{1,2}日)?)?)"));
         patternList.add(Pattern.compile("\\d+个月"));
@@ -58,14 +48,8 @@ public class TimeStringProcessor extends BaseMynlpComponent implements WordnetIn
         patternList.add(Pattern.compile("[一二三四五六七八九十半]个?[天周月年]份?"));
         patternList.add(Pattern.compile("\\d{2}年"));
         patternList.add(Pattern.compile("[1-9|10|11|12|一|二|三|四|五|六|七|八|九|十|十一|十二]点[半|一刻]"));
-
     }
 
-    public static void main(String[] args) {
-        Pattern compile = Pattern.compile("(?:\\d{4}-\\d{2}-\\d{2})|(?:\\d{1,2}月\\d{1,2}[日号])|(?:\\d{2,4}年(?:\\d{1,2}月(?:\\d{1,2}日)?)?)");
-        Matcher matcher = compile.matcher("8月27日");
-        System.out.println(matcher.find());
-    }
 
     @Override
     public void fill(Wordnet wordnet) {
@@ -78,10 +62,16 @@ public class TimeStringProcessor extends BaseMynlpComponent implements WordnetIn
                 VertexRow row = wordnet.getRow(start);
                 Vertex v = row.getOrCrete(end - start);
 
-                v.setWordInfo(timeWordID, CoreDictionary.TAG_TIME, natureAttribute);
-
+                v.setAbsWordNatureAndFreq(Nature.t);
             }
         }
+    }
+
+
+    public static void main(String[] args) {
+        Pattern compile = Pattern.compile("(?:\\d{4}-\\d{2}-\\d{2})|(?:\\d{1,2}月\\d{1,2}[日号])|(?:\\d{2,4}年(?:\\d{1,2}月(?:\\d{1,2}日)?)?)");
+        Matcher matcher = compile.matcher("8月27日");
+        System.out.println(matcher.find());
     }
 
 }

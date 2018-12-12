@@ -19,11 +19,8 @@ package com.mayabot.nlp.segment.dictionary.custom;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
 import com.google.common.io.Files;
-import com.mayabot.nlp.collection.dat.DoubleArrayTrie;
-import com.mayabot.nlp.collection.dat.DoubleArrayTrieBuilder;
+import com.mayabot.nlp.collection.dat.DoubleArrayTrieMap;
 import com.mayabot.nlp.segment.dictionary.CustomDictionary;
-import com.mayabot.nlp.segment.dictionary.Nature;
-import com.mayabot.nlp.segment.dictionary.NatureAttribute;
 
 import java.io.File;
 import java.io.IOException;
@@ -32,17 +29,19 @@ import java.util.TreeMap;
 
 /**
  * File版本CustomDictionary
+ * 不管什么格式 壁式网球 nz 1
+ * 只取第一段，后面的忽略
  *
  * @author jimichan
  */
 public class FileCustomDictionary implements CustomDictionary {
 
-    private TreeMap<String, NatureAttribute> dict;
+    private TreeMap<String, Integer> dict;
 
-    private DoubleArrayTrie<NatureAttribute> trie;
+    private DoubleArrayTrieMap<Integer> trie;
 
     public FileCustomDictionary(File file, Charset charset) throws IOException {
-        TreeMap<String, NatureAttribute> dict = Maps.newTreeMap();
+        TreeMap<String, Integer> dict = Maps.newTreeMap();
 
         ImmutableList<String> lines = Files.asCharSource(file, charset).readLines();
 
@@ -50,23 +49,28 @@ public class FileCustomDictionary implements CustomDictionary {
 
             String[] params = line.split("\\s");
 
-            int natureCount = (params.length - 1) / 2;
+//            if (params.length == 1) {
+//                dict.put(params[0], 1000);
+//            }else{
+//                // int natureCount = (params.length - 1) / 2;
+////            NatureAttribute attribute;
+////            if (natureCount == 0) {
+////                attribute = NatureAttribute.create1000(Nature.n);
+////            } else {
+////                attribute = NatureAttribute.create(params);
+////            }
+//            }
 
-            NatureAttribute attribute;
-            if (natureCount == 0) {
-                attribute = NatureAttribute.create1000(Nature.n);
-            } else {
-                attribute = NatureAttribute.create(params);
-            }
+            dict.put(params[0], 1000);
 
-            dict.put(params[0], attribute);
+
         }
 
-        trie = new DoubleArrayTrieBuilder<NatureAttribute>().build(dict);
+        trie = new DoubleArrayTrieMap<>(dict);
     }
 
     @Override
-    public DoubleArrayTrie<NatureAttribute> getTrie() {
+    public DoubleArrayTrieMap<Integer> getTrie() {
         return trie;
     }
 

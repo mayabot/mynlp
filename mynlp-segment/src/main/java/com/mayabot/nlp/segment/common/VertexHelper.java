@@ -16,11 +16,7 @@
 
 package com.mayabot.nlp.segment.common;
 
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-import com.mayabot.nlp.segment.dictionary.Nature;
-import com.mayabot.nlp.segment.dictionary.NatureAttribute;
-import com.mayabot.nlp.segment.dictionary.core.CoreDictionary;
+import com.mayabot.nlp.segment.Nature;
 import com.mayabot.nlp.segment.wordnet.Vertex;
 
 /**
@@ -28,36 +24,28 @@ import com.mayabot.nlp.segment.wordnet.Vertex;
  *
  * @author jimichan
  */
-@Singleton
-public class VertexHelper {
+public abstract class VertexHelper {
 
-    private CoreDictionary coreDictionary;
-
-    private final NatureAttribute bigin_attr;
-    private final NatureAttribute endbigin_attr;
-
-    @Inject
-    public VertexHelper(CoreDictionary coreDictionary) {
-        this.coreDictionary = coreDictionary;
-        bigin_attr = NatureAttribute.create(Nature.begin, coreDictionary.totalFreq / 10);
-        endbigin_attr = NatureAttribute.create(Nature.end, coreDictionary.totalFreq / 10);
-    }
+    private static final int total = 25146057 / 10;
 
     /**
      * 生成线程安全的起始节点
      * begin
      *
-     * @return
+     * @return Begin Vertex
      */
-    public Vertex newBegin() {
+    public static Vertex newBegin() {
         Vertex v = new Vertex(1);
-        v.setWordInfo(coreDictionary.Begin_WORD_ID, CoreDictionary.TAG_BIGIN, bigin_attr);
+        v.setAbsWordNatureAndFreq(Nature.newWord, total);
         return v;
     }
 
-    public Vertex newEnd() {
+    /**
+     * @return End Vertex
+     */
+    public static Vertex newEnd() {
         Vertex v = new Vertex(0);
-        v.setWordInfo(coreDictionary.End_WORD_ID, CoreDictionary.TAG_END, endbigin_attr);
+        v.setAbsWordNatureAndFreq(Nature.end, total);
         return v;
     }
 
