@@ -19,77 +19,33 @@ import com.carrotsearch.hppc.IntArrayList
 import com.mayabot.nlp.perceptron.FeatureSet
 import com.mayabot.nlp.perceptron.Perceptron
 import com.mayabot.nlp.perceptron.PerceptronModel
+import com.mayabot.nlp.segment.WordTerm
 import com.mayabot.nlp.segment.crf.FeatureTemplateGroup.Companion.BOS
 import com.mayabot.nlp.segment.crf.FeatureTemplateGroup.Companion.EOS
-import com.mayabot.nlp.utils.CharNormUtils
 import java.io.File
 import java.io.InputStream
 import java.util.*
 
+/**
+ * 基于CRF算法的命名实体识别。
+ */
+class NerCrf(val model: Perceptron, val labels: Array<String>, val featureTemplateGroup: FeatureTemplateGroup) {
 
-fun main(args: Array<String>) {
-    var cwsCrf = CWSCrf.load(File("data.work/crf/model"))
+    val featureSet = model.featureSet()
 
-    //val x = cwsCrf.decode("商品和服务".toCharArray(), true)
-
-    println(cwsCrf.decodeToWordList("中新网客户端北京12月12日电(张旭)随着寒冬来临，羽绒服也迎来了属于自己的旺季。然而近期市场对羽绒服两大企业国产波司登、加拿大鹅(Canada Goose)却有着截然不同的反应，加拿大鹅股价连日走低，波司登股价则大涨，创5年新高。"))
-}
-
-class CWSCrf(val model: Perceptron, val labelList: Array<String>, val featureTemplateGroup: FeatureTemplateGroup) {
-
-    // 提前确定S和E对应的ID
-
-    private val S_ID: Int
-    private val E_ID: Int
-
-    init {
-        var s_id = 0
-        var e_id = 0
-        labelList.forEachIndexed { index, s ->
-            if (s == "S") {
-                s_id = index
-            }
-            if (s == "E") {
-                e_id = index
-            }
-        }
-
-        S_ID = s_id
-        E_ID = e_id
-    }
-
-    fun decodeToWordList(sentence: String): List<String> {
-        val result = ArrayList<String>()
-        val decode = decode(sentence.toCharArray(), true)
-        var p = 0
-
-        for (i in 0 until decode.size) {
-            val f = decode[i]
-            if (f == S_ID || f == E_ID) {
-                result += sentence.substring(p, i + 1)
-                p = i + 1
-            }
-        }
-
-        if (p < sentence.length) {
-            result += sentence.substring(p, sentence.length)
-        }
-        return result
-    }
-
-
-    fun decode(sentence: CharArray, convert: Boolean): IntArray {
-
-        if (convert) {
-            CharNormUtils.convert(sentence)
-        }
+    fun decode(sentence: List<WordTerm>) {
 
         val buffer = StringBuilder()
         val featureList = ArrayList<IntArrayList>(sentence.size)
         for (i in 0 until sentence.size) {
-            featureList += CWSCrfFeature.extractFeatureVector(sentence, i, model.featureSet(), featureTemplateGroup, buffer)
+            featureList += NerCrfFeature.extractFeatureVector(sentence, i, featureSet, featureTemplateGroup, buffer)
         }
-        return model.decode(featureList)
+
+        val result = model.decode(featureList)
+
+        for (i in 0 until sentence.size) {
+            sentence[i].customFlag = labels[result[i]]
+        }
     }
 
     companion object {
@@ -97,7 +53,7 @@ class CWSCrf(val model: Perceptron, val labelList: Array<String>, val featureTem
          * 加载CRF模型
          */
         @JvmStatic
-        fun load(dir: File): CWSCrf {
+        fun load(dir: File): NerCrf {
             val parameterBin = File(dir, "parameter.bin").inputStream().buffered()
             val featureBin = File(dir, "feature.dat").inputStream().buffered()
             val labelText = File(dir, "label.txt").inputStream().buffered()
@@ -113,15 +69,17 @@ class CWSCrf(val model: Perceptron, val labelList: Array<String>, val featureTem
          * @param featureTemplate featureTemplate文本文件
          */
         @JvmStatic
-        fun load(parameterBin: InputStream, featureBin: InputStream, labelText: InputStream,
+        fun load(parameterBin: InputStream,
+                 featureBin: InputStream,
+                 labelText: InputStream,
                  featureTemplate: InputStream
-        ): CWSCrf {
+        ): NerCrf {
             val model = PerceptronModel.load(parameterBin, featureBin, true)
             val labelList = labelText.use { it.bufferedReader().readLines() }
 
             val featureTemplateGroup = FeatureTemplateGroup(featureTemplate.use { it.bufferedReader().readLines() })
 
-            return CWSCrf(model, labelList.toTypedArray(), featureTemplateGroup)
+            return NerCrf(model, labelList.toTypedArray(), featureTemplateGroup)
         }
     }
 
@@ -131,12 +89,12 @@ class CWSCrf(val model: Perceptron, val labelList: Array<String>, val featureTem
 /**
  * 根据FeatureTemplate生成特征向量
  */
-object CWSCrfFeature {
+object NerCrfFeature {
 
-    fun extractFeatureVector(sentence: CharArray, position: Int, features: FeatureSet, featureTemplateGroup: FeatureTemplateGroup, sbFeature: StringBuilder): IntArrayList {
+    fun extractFeatureVector(sentence: List<WordTerm>, position: Int, features: FeatureSet, featureTemplateGroup: FeatureTemplateGroup, sbFeature: StringBuilder): IntArrayList {
         val vector = IntArrayList(featureTemplateGroup.size + 1)
-
         sbFeature.clear()
+
 
         for (ft in featureTemplateGroup.list) {
 
@@ -153,7 +111,7 @@ object CWSCrfFeature {
         return vector
     }
 
-    private fun extFeature(sentence: CharArray, position: Int, sbFeature: StringBuilder, ft: FeatureTemplate) {
+    private fun extFeature(sentence: List<WordTerm>, position: Int, sbFeature: StringBuilder, ft: FeatureTemplate) {
         val senLen = sentence.size
         for (x in ft.list) {
             val type = x.type
@@ -161,10 +119,13 @@ object CWSCrfFeature {
                 sbFeature.append(x.value)
             } else {
                 val offset = x.offset + position
+                val col = x.col
                 when {
                     offset < 0 -> sbFeature.append(BOS[-(offset + 1)])
                     offset >= senLen -> sbFeature.append(EOS[offset - senLen])
-                    else -> sbFeature.append(sentence[offset])
+                    else -> sbFeature.append(
+                            if (col == 0) sentence[offset].word else sentence[offset].natureString
+                    )
                 }
             }
         }

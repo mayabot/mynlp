@@ -1,4 +1,4 @@
-package com.mayabot.nlp.segment.crf
+package com.mayabot.nlp.segment.crf.utils
 
 import com.mayabot.nlp.perceptron.FeatureSet
 import java.io.DataOutputStream
