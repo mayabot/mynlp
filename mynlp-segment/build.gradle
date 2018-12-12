@@ -31,11 +31,12 @@ dependencies {
 
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
 
+    compile 'com.mayabot.mynlp.resource:mynlp-resource-pos:1.0.0'
     compile 'com.mayabot.mynlp.resource:mynlp-resource-coredict:1.0.0'
     compile 'com.mayabot.mynlp.resource:mynlp-resource-custom:1.0.0'
     compile 'com.mayabot.mynlp.resource:mynlp-resource-stopword:1.0.0'
     //mynlp-perceptron-resouces
-    compile 'com.mayabot.mynlp.resource:mynlp-resource-pos:1.0.0'
+
     compile 'com.mayabot.mynlp.resource:mynlp-resource-ner:1.0.0'
 
     compileOnly group: 'org.fusesource.jansi', name: 'jansi', version: '1.16'

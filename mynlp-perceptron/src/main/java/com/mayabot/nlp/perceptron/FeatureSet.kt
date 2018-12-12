@@ -33,8 +33,24 @@ class FeatureSet(
             return id
         }
 
-        return extMap[feature] ?: -1
+        return if (extMap.isNotEmpty()) {
+            extMap[feature] ?: -1
+        } else {
+            id
+        }
+    }
 
+    fun featureId(feature: StringBuilder): Int {
+        val id = dat.indexOf(feature)
+
+        if (id >= 0) {
+            return id
+        }
+        return if (extMap.isNotEmpty()) {
+            extMap[feature.toString()] ?: -1
+        } else {
+            id
+        }
     }
 
     fun newExtId(feature: String): Int {
@@ -123,8 +139,8 @@ class DATFeatureSetBuilder(labelCount: Int) {
         for (i in 0..labelCount) {
             keys.add("\u0000\u0001BL=$i")
         }
-
     }
+
     fun put(feature: String) {
         keys.add(feature)
     }
