@@ -18,7 +18,6 @@ package com.mayabot.nlp.segment.hmmner.place.ns;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.mayabot.nlp.MynlpEnv;
-import com.mayabot.nlp.SettingItem;
 import com.mayabot.nlp.collection.ahocorasick.AhoCoraickDoubleArrayTrieBuilder;
 import com.mayabot.nlp.collection.ahocorasick.AhoCorasickDoubleArrayTrie;
 import com.mayabot.nlp.common.matrix.EnumTransformMatrix;
@@ -58,7 +57,7 @@ public class PlaceDictionary {
      */
     private AhoCorasickDoubleArrayTrie<NSPattern> trie;
 
-    final SettingItem<String> orgTrDict = SettingItem.string("org.dict.tr", "dictionary/place/ns.tr.txt");
+    final String orgTrDict = "place/ns.tr.txt";
 
     @Inject
     public PlaceDictionary(NSDictionary dictionary, MynlpEnv mynlp) throws IOException {

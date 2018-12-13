@@ -16,7 +16,7 @@ public class DictionaryAbsWords {
 
     public static final int MaxId = 9;
 
-    public static final int BIGIN_ID = 0;
+    public static final int BEGIN_ID = 0;
     public static final int END_ID = 1;
     public static final int MQ_ID = 2;
     public static final int NX_ID = 3;
@@ -40,7 +40,7 @@ public class DictionaryAbsWords {
     public static int nature2id(Nature nature) {
         switch (nature) {
             case begin:
-                return BIGIN_ID;
+                return BEGIN_ID;
             case end:
                 return END_ID;
             case mq:
@@ -72,8 +72,8 @@ public class DictionaryAbsWords {
      */
     public static String id2label(int id) {
         switch (id) {
-            case BIGIN_ID:
-                return BIGIN_TAG;
+            case BEGIN_ID:
+                return BEGIN_TAG;
             case END_ID:
                 return END_TAG;
             case MQ_ID:
@@ -105,7 +105,7 @@ public class DictionaryAbsWords {
      */
     public static List<String> allLabel() {
         return Lists.newArrayList(
-                BIGIN_TAG,
+                BEGIN_TAG,
                 END_TAG,
                 MQ_TAG,
                 NX_TAG,
@@ -121,7 +121,7 @@ public class DictionaryAbsWords {
     /**
      * 句子的开始 begin
      */
-    public final static String BIGIN_TAG = "\u00010Begin";
+    public final static String BEGIN_TAG = "\u00010Begin";
 
     /**
      * 结束 end

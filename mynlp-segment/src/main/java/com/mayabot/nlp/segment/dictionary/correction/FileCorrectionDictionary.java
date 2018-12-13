@@ -20,6 +20,7 @@ import com.google.common.collect.Maps;
 import com.google.common.io.Files;
 import com.mayabot.nlp.collection.dat.DoubleArrayTrieMap;
 import com.mayabot.nlp.segment.dictionary.CorrectionDictionary;
+import com.mayabot.nlp.segment.dictionary.CorrectionWord;
 
 import java.io.File;
 import java.io.IOException;
@@ -37,18 +38,18 @@ import java.util.TreeMap;
  */
 public class FileCorrectionDictionary implements CorrectionDictionary {
 
-    private TreeMap<String, AdjustWord> dict;
+    private TreeMap<String, CorrectionWord> dict;
 
-    private DoubleArrayTrieMap<AdjustWord> trie;
+    private DoubleArrayTrieMap<CorrectionWord> trie;
 
     public FileCorrectionDictionary(File file, Charset charset) throws IOException {
-        TreeMap<String, AdjustWord> dict = Maps.newTreeMap();
+        TreeMap<String, CorrectionWord> dict = Maps.newTreeMap();
 
         ImmutableList<String> lines = Files.asCharSource(file, charset).readLines();
 
         for (String line : lines) {
 
-            AdjustWord adjustWord = AdjustWord.parse(line);
+            CorrectionWord adjustWord = CorrectionWord.parse(line);
 
             dict.put(adjustWord.path, adjustWord);
         }
@@ -57,7 +58,7 @@ public class FileCorrectionDictionary implements CorrectionDictionary {
     }
 
     @Override
-    public DoubleArrayTrieMap<AdjustWord> getTrie() {
+    public DoubleArrayTrieMap<CorrectionWord> getTrie() {
         return trie;
     }
 

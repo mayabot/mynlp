@@ -66,6 +66,7 @@ class POSPerceptron(val model: Perceptron, val labelList: Array<String>) {
         return result.map { natureList[it] }
     }
 
+
     /**
      * 特殊情况，只是查询一个词的词性
      */

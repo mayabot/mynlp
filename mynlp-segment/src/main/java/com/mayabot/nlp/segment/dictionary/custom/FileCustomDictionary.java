@@ -29,14 +29,12 @@ import java.util.TreeMap;
 
 /**
  * File版本CustomDictionary
- * 不管什么格式 壁式网球 nz 1
+ * 不管什么格式 壁式网球 1
  * 只取第一段，后面的忽略
  *
  * @author jimichan
  */
 public class FileCustomDictionary implements CustomDictionary {
-
-    private TreeMap<String, Integer> dict;
 
     private DoubleArrayTrieMap<Integer> trie;
 
@@ -48,18 +46,6 @@ public class FileCustomDictionary implements CustomDictionary {
         for (String line : lines) {
 
             String[] params = line.split("\\s");
-
-//            if (params.length == 1) {
-//                dict.put(params[0], 1000);
-//            }else{
-//                // int natureCount = (params.length - 1) / 2;
-////            NatureAttribute attribute;
-////            if (natureCount == 0) {
-////                attribute = NatureAttribute.create1000(Nature.n);
-////            } else {
-////                attribute = NatureAttribute.create(params);
-////            }
-//            }
 
             dict.put(params[0], 1000);
 

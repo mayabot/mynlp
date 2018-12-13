@@ -18,7 +18,6 @@ package com.mayabot.nlp.segment.hmmner.org.nt;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.mayabot.nlp.MynlpEnv;
-import com.mayabot.nlp.SettingItem;
 import com.mayabot.nlp.collection.ahocorasick.AhoCoraickDoubleArrayTrieBuilder;
 import com.mayabot.nlp.collection.ahocorasick.AhoCorasickDoubleArrayTrie;
 import com.mayabot.nlp.common.matrix.EnumTransformMatrix;
@@ -55,8 +54,7 @@ public class OrganizationDictionary {
      */
     private AhoCorasickDoubleArrayTrie<String> trie;
 
-    final SettingItem<String> orgDictSetting =
-            SettingItem.string("org.dict.tr", "dictionary/organization/nt.tr.txt");
+    final String orgDictSetting = "organization/nt.tr.txt";
 
 
     @Inject

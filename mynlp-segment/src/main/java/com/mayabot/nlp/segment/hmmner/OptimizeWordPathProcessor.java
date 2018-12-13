@@ -20,7 +20,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.inject.Inject;
 import com.mayabot.nlp.segment.WordpathProcessor;
 import com.mayabot.nlp.segment.common.BaseSegmentComponent;
-import com.mayabot.nlp.segment.tokenizer.xprocessor.RepairWordnetProcessor;
+import com.mayabot.nlp.segment.tokenizer.bestpath.ViterbiBestPathAlgorithm;
 import com.mayabot.nlp.segment.wordnet.Vertex;
 import com.mayabot.nlp.segment.wordnet.Wordnet;
 import com.mayabot.nlp.segment.wordnet.Wordpath;
@@ -37,9 +37,14 @@ public class OptimizeWordPathProcessor extends BaseSegmentComponent implements W
 
     private RepairWordnetProcessor repairWordnet;
 
+    private ViterbiBestPathAlgorithm bestPathAlgorithm;
+
     @Inject
-    public OptimizeWordPathProcessor(RepairWordnetProcessor repairWordnet) {
+    public OptimizeWordPathProcessor(
+            RepairWordnetProcessor repairWordnet,
+            OptimizeWordPathViterbiBestPathAlgorithm bestPathAlgorithm) {
         this.repairWordnet = repairWordnet;
+        this.bestPathAlgorithm = bestPathAlgorithm;
     }
 
     public void addOptimizeProcessor(OptimizeProcessor op) {
@@ -89,7 +94,7 @@ public class OptimizeWordPathProcessor extends BaseSegmentComponent implements W
         }
 
         if (change) {
-            wordPath = wordPath.getWordnet().getBestPathAlgorithm().select(wordnet);
+            wordPath = bestPathAlgorithm.select(wordnet);
             repairWordnet.process(wordPath);
         }
 

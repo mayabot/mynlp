@@ -50,7 +50,7 @@ public class PipelineTokenizer implements MynlpTokenizer {
     /**
      * 当wordnet创建后，调用这些处理器来填充里面的节点
      */
-    private WordnetInitializer[] initer;
+    private WordSplitAlgorithm[] initer;
 
     /**
      * 处理器网络
@@ -61,12 +61,12 @@ public class PipelineTokenizer implements MynlpTokenizer {
         return new PipelineTokenizerBuilder();
     }
 
-    PipelineTokenizer(List<WordnetInitializer> initer,
+    PipelineTokenizer(List<WordSplitAlgorithm> initer,
                       WordpathProcessor[] pipeline,
                       BestPathAlgorithm bestPathAlgorithm,
                       WordTermCollector termCollector,
                       List<CharNormalize> charNormalizes) {
-        this.initer = initer.toArray(new WordnetInitializer[0]);
+        this.initer = initer.toArray(new WordSplitAlgorithm[0]);
         this.pipeline = pipeline;
         this.bestPathAlgorithm = bestPathAlgorithm;
         this.collector = termCollector;
@@ -106,12 +106,12 @@ public class PipelineTokenizer implements MynlpTokenizer {
 
         //构建一个空的Wordnet对象
         final Wordnet wordnet = new Wordnet(text);
-        wordnet.setBestPathAlgorithm(bestPathAlgorithm);
+        //wordnet.setBestPathAlgorithm(bestPathAlgorithm);
 
         wordnet.getBeginRow().put(VertexHelper.newBegin());
         wordnet.getEndRow().put(VertexHelper.newEnd());
 
-        for (WordnetInitializer initializer : initer) {
+        for (WordSplitAlgorithm initializer : initer) {
             initializer.fill(wordnet);
         }
 
@@ -149,7 +149,7 @@ public class PipelineTokenizer implements MynlpTokenizer {
         sb.append("CharNormalize = " + Joiner.on(",").join(Lists.newArrayList(charNormalizes).stream().map(it -> it.getClass().getSimpleName()).collect(Collectors.toList()))).append("\n");
         sb.append("WordTermCollector = " + collector.getClass().getSimpleName() + "\n");
 
-        sb.append("WordnetInitializer = " + Joiner.on(",").join(Lists.newArrayList(initer).stream().map(it -> it.getClass().getSimpleName()).collect(Collectors.toList()))).append("\n");
+        sb.append("WordSplitAlgorithm = " + Joiner.on(",").join(Lists.newArrayList(initer).stream().map(it -> it.getClass().getSimpleName()).collect(Collectors.toList()))).append("\n");
         sb.append("WordpathProcessor = \n");
         for (WordpathProcessor processor : pipeline) {
             if (processor instanceof OptimizeWordPathProcessor) {

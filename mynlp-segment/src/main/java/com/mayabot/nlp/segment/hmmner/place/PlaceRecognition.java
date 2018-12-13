@@ -173,7 +173,9 @@ public class PlaceRecognition extends BaseSegmentComponent implements OptimizePr
             if (vertex.isAbsWord()) {
                 nrEnumFreqPair = nrDictionary.get(vertex.absWordLabel());
             } else {
-                nrEnumFreqPair = nrDictionary.get(text, vertex.offset(), vertex.length);
+                if (vertex.offset() >= 0 && vertex.length != 0) {
+                    nrEnumFreqPair = nrDictionary.get(text, vertex.offset(), vertex.length);
+                }
             }
 
 

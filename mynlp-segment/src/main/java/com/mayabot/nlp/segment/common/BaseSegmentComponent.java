@@ -16,6 +16,7 @@
 package com.mayabot.nlp.segment.common;
 
 import com.mayabot.nlp.segment.SegmentComponent;
+import com.mayabot.nlp.segment.SegmentComponentOrder;
 
 /**
  * @author jimichan
@@ -49,7 +50,7 @@ public abstract class BaseSegmentComponent implements SegmentComponent {
         this.enabled = false;
     }
 
-    private int order = 0;
+    private int order = SegmentComponentOrder.DEFAULT;
 
     @Override
     public int getOrder() {

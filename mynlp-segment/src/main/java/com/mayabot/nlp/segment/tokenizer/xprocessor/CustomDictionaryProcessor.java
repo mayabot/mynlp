@@ -21,11 +21,11 @@ import com.google.inject.Inject;
 import com.mayabot.nlp.Mynlps;
 import com.mayabot.nlp.collection.dat.DATMapMatcher;
 import com.mayabot.nlp.collection.dat.DoubleArrayTrieMap;
+import com.mayabot.nlp.segment.SegmentComponentOrder;
 import com.mayabot.nlp.segment.WordpathProcessor;
 import com.mayabot.nlp.segment.common.BaseSegmentComponent;
 import com.mayabot.nlp.segment.dictionary.CustomDictionary;
 import com.mayabot.nlp.segment.dictionary.core.CoreDictionary;
-import com.mayabot.nlp.segment.wordnet.Vertex;
 import com.mayabot.nlp.segment.wordnet.Wordnet;
 import com.mayabot.nlp.segment.wordnet.Wordpath;
 
@@ -43,13 +43,10 @@ public class CustomDictionaryProcessor extends BaseSegmentComponent implements W
 
     private CustomDictionary dictionary;
 
-    private CoreDictionary coreDictionary;
-
     @Inject
     public CustomDictionaryProcessor(CustomDictionary dictionary, CoreDictionary coreDictionary) {
         this.dictionary = dictionary;
-        this.coreDictionary = coreDictionary;
-        this.setOrder(ORDER_MIDDLE - 10);
+        this.setOrder(SegmentComponentOrder.DEFAULT);
     }
 
     public CustomDictionaryProcessor(CustomDictionary dictionary) {
@@ -83,17 +80,9 @@ public class CustomDictionaryProcessor extends BaseSegmentComponent implements W
 
                 if (!willCutOtherWords) {
                     if (wordnet.getVertex(offset, length) == null) {
-                        // wordnet 中是否缺乏对应的节点，如果没有需要补上
-
-                        Integer freq = datSearch.getValue();
-
-                        Vertex v = wordPath.combine(offset, length);
-
-                        //没有等效果词
-                        //v.setWordInfo(coreDictionary.X_WORD_ID, CoreDictionary.X_TAG, attr);
+                        wordPath.combine(offset, length);
                     } else {
-                        //FIXME 要不要覆盖attr.
-                        //也就是自定义词典里面包含了重复的词汇
+                        // 也就是自定义词典里面包含了重复的词汇
                     }
 
                 }
