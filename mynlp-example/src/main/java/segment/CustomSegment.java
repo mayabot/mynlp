@@ -2,7 +2,7 @@ package segment;
 
 import com.mayabot.nlp.segment.MynlpTokenizer;
 import com.mayabot.nlp.segment.dictionary.custom.MemCustomDictionary;
-import com.mayabot.nlp.segment.tokenizer.CoreTokenizerBuilder;
+import com.mayabot.nlp.segment.tokenizer.BigramTokenizerBuilder;
 import com.mayabot.nlp.segment.tokenizer.xprocessor.CustomDictionaryProcessor;
 
 public class CustomSegment {
@@ -11,7 +11,7 @@ public class CustomSegment {
 
         MemCustomDictionary memCustomDictionary = new MemCustomDictionary();
 
-        CoreTokenizerBuilder builder = new CoreTokenizerBuilder();
+        BigramTokenizerBuilder builder = new BigramTokenizerBuilder();
 
         builder.addComponent(
                 new CustomDictionaryProcessor(memCustomDictionary));

@@ -124,7 +124,7 @@ public class Vertex {
      * @return
      */
     public boolean isAbsWord() {
-        return wordID <= DictionaryAbsWords.MaxId;
+        return wordID >= 0 && wordID <= DictionaryAbsWords.MaxId;
     }
 
     /**

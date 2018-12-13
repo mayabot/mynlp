@@ -18,7 +18,6 @@ package com.mayabot.nlp.segment.hmmner.personname.nr;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.mayabot.nlp.MynlpEnv;
-import com.mayabot.nlp.SettingItem;
 import com.mayabot.nlp.collection.ahocorasick.AhoCoraickDoubleArrayTrieBuilder;
 import com.mayabot.nlp.collection.ahocorasick.AhoCorasickDoubleArrayTrie;
 import com.mayabot.nlp.common.matrix.EnumTransformMatrix;
@@ -27,7 +26,6 @@ import com.mayabot.nlp.logging.InternalLoggerFactory;
 import com.mayabot.nlp.resources.NlpResource;
 import com.mayabot.nlp.segment.hmmner.personname.NRTag;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.TreeMap;
 
@@ -39,7 +37,7 @@ import java.util.TreeMap;
 @Singleton
 public class PersonDictionary {
 
-    final static String tsfile = "person" + File.separator + "nr.tr.txt";
+    final static String tsfile = "person/nr.tr.txt";
 
 
     protected InternalLogger logger = InternalLoggerFactory.getInstance(this.getClass());
@@ -54,7 +52,7 @@ public class PersonDictionary {
      */
     private AhoCorasickDoubleArrayTrie<NRPattern> trie;
 
-    final SettingItem<String> orgTrDict = SettingItem.string("org.dict.tr", "dictionary/person/nr.tr.txt");
+    final String orgTrDict = "person/nr.tr.txt";
 
 
     @Inject

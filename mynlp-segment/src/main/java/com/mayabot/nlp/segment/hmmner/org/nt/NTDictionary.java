@@ -20,7 +20,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.mayabot.nlp.MynlpEnv;
 import com.mayabot.nlp.common.EnumFreqPair;
-import com.mayabot.nlp.segment.dictionary.CommonDictionary;
+import com.mayabot.nlp.segment.hmmner.CommonDictionary;
 import com.mayabot.nlp.segment.hmmner.org.NTTag;
 
 import java.io.DataInput;
@@ -45,7 +45,7 @@ public class NTDictionary extends CommonDictionary<EnumFreqPair<NTTag>> {
 
     @Override
     public String dicFilePath() {
-        return "dictionary/organization/nt.txt";
+        return "organization/nt.txt";
     }
 
     @Override

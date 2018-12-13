@@ -20,7 +20,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.mayabot.nlp.MynlpEnv;
 import com.mayabot.nlp.common.EnumFreqPair;
-import com.mayabot.nlp.segment.dictionary.CommonDictionary;
+import com.mayabot.nlp.segment.hmmner.CommonDictionary;
 import com.mayabot.nlp.segment.hmmner.place.NSTag;
 
 import java.io.DataInput;
@@ -42,7 +42,7 @@ public class NSDictionary extends CommonDictionary<EnumFreqPair<NSTag>> {
 
     @Override
     public String dicFilePath() {
-        return "dictionary/place/ns.txt";
+        return "place/ns.txt";
     }
 
     @Override

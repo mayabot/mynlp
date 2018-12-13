@@ -58,7 +58,7 @@ public class PipelineTokenizerBuilder implements MynlpTokenizerBuilder {
     /**
      * 词图初始填充器
      */
-    private List<WordnetInitializer> wordnetInitializer = Lists.newArrayList();
+    private List<WordSplitAlgorithm> wordSplitAlgorithm = Lists.newArrayList();
 
     /**
      * 分词逻辑管线
@@ -73,23 +73,29 @@ public class PipelineTokenizerBuilder implements MynlpTokenizerBuilder {
     /**
      * 最终结构收集器
      */
-    WordTermCollector termCollector;
+    private WordTermCollector termCollector;
 
     /**
-     * 默认构造函数。不公开
+     * 默认构造函数
      */
     public PipelineTokenizerBuilder() {
         this.mynlp = Mynlps.get();
     }
 
+    protected void setUp() {
+
+    }
+
     @Override
     public MynlpTokenizer build() {
+
+        setUp();
 
         // 1. bestPathAlgorithm
         Preconditions.checkNotNull(bestPathAlgorithm);
 
-        // 2. WordnetInitializer
-        Preconditions.checkState(!wordnetInitializer.isEmpty());
+        // 2. WordSplitAlgorithm
+        Preconditions.checkState(!wordSplitAlgorithm.isEmpty());
 
         // 3.termCollector
         if (termCollector == null) {
@@ -99,11 +105,11 @@ public class PipelineTokenizerBuilder implements MynlpTokenizerBuilder {
         // 4
         callListener();
 
-        Collections.sort(wordnetInitializer);
+        Collections.sort(wordSplitAlgorithm);
         Collections.sort(pipeLine);
 
         return new PipelineTokenizer(
-                wordnetInitializer,
+                wordSplitAlgorithm,
                 pipeLine.toArray(new WordpathProcessor[0]),
                 bestPathAlgorithm
                 , termCollector,
@@ -123,9 +129,9 @@ public class PipelineTokenizerBuilder implements MynlpTokenizerBuilder {
             }
         });
 
-        //wordnetInitializer
+        //wordSplitAlgorithm
         configListener.forEach(pair -> {
-            wordnetInitializer.forEach(wf -> {
+            wordSplitAlgorithm.forEach(wf -> {
                 if (pair.clazz.equals(wf.getClass()) ||
                         pair.clazz.isAssignableFrom(wf.getClass())) {
                     pair.consumer.accept(wf);
@@ -156,7 +162,7 @@ public class PipelineTokenizerBuilder implements MynlpTokenizerBuilder {
     }
 
     /**
-     * 设定针对WordpathProcessor，WordnetInitializer，WordTermCollector等组件后置逻辑。
+     * 设定针对WordpathProcessor，WordSplitAlgorithm，WordTermCollector等组件后置逻辑。
      * 通过这个方法可以已经创建的组件进行配置
      *
      * @param clazz
@@ -260,9 +266,9 @@ public class PipelineTokenizerBuilder implements MynlpTokenizerBuilder {
             addProcessor((WordpathProcessor) component);
         }
 
-        if (component instanceof WordnetInitializer) {
+        if (component instanceof WordSplitAlgorithm) {
             access = true;
-            addWordnetInitializer((WordnetInitializer) component);
+            addWordSplitAlgorithm((WordSplitAlgorithm) component);
         }
 
         if (!access) {
@@ -345,13 +351,13 @@ public class PipelineTokenizerBuilder implements MynlpTokenizerBuilder {
      * @param initializers
      * @return
      */
-    public PipelineTokenizerBuilder addWordnetInitializer(WordnetInitializer... initializers) {
+    public PipelineTokenizerBuilder addWordSplitAlgorithm(WordSplitAlgorithm... initializers) {
 
-        for (WordnetInitializer initializer : initializers) {
-            this.wordnetInitializer.add(initializer);
+        for (WordSplitAlgorithm initializer : initializers) {
+            this.wordSplitAlgorithm.add(initializer);
         }
 
-        Collections.sort(wordnetInitializer);
+        Collections.sort(wordSplitAlgorithm);
         return this;
     }
 
@@ -361,12 +367,12 @@ public class PipelineTokenizerBuilder implements MynlpTokenizerBuilder {
      * @param initializers
      * @return
      */
-    public PipelineTokenizerBuilder addWordnetInitializer(Class<? extends WordnetInitializer>... initializers) {
+    public PipelineTokenizerBuilder addWordSplitAlgorithm(Class<? extends WordSplitAlgorithm>... initializers) {
 
-        for (Class<? extends WordnetInitializer> clazz : initializers) {
-            this.wordnetInitializer.add(mynlp.getInstance(clazz));
+        for (Class<? extends WordSplitAlgorithm> clazz : initializers) {
+            this.wordSplitAlgorithm.add(mynlp.getInstance(clazz));
         }
-        Collections.sort(wordnetInitializer);
+        Collections.sort(wordSplitAlgorithm);
         return this;
     }
 

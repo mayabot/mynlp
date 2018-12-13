@@ -13,31 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.mayabot.nlp.segment;
 
-import com.mayabot.nlp.segment.tokenizer.BigramTokenizerBuilder;
+import com.mayabot.nlp.segment.wordnet.Wordnet;
 
 /**
- * 各种版本的Tokenizer的静态工厂
+ * 分词算法。
+ * 分词算法的作用是对文本分析后，产生一种或多种分词路径，结果保存在Wordnet数据结构里面。
  *
- * @author jimichan
+ * 1. 基于词典
+ * 3. 基于字分割
+ * 2. 基于规则
+ *
+ * 在一个具体的分词器中，有可能综合同时使用多个分词算法。
+ *
+ *  @author jimichan
  */
-public class MynlpTokenizers {
+public interface WordSplitAlgorithm extends SegmentComponent {
 
-    public static MynlpTokenizer coreTokenizer() {
-        return new BigramTokenizerBuilder().build();
-    }
-
-    public static BigramTokenizerBuilder coreTokenizerBuilder() {
-        return new BigramTokenizerBuilder();
-    }
-
-    public static MynlpTokenizer crfTokenizer() {
-        return new BigramTokenizerBuilder().build();
-    }
-
-    public static BigramTokenizerBuilder crfTokenizerBuilder() {
-        return new BigramTokenizerBuilder();
-    }
+    /**
+     * 初始化
+     *
+     * @param wordnet
+     */
+    void fill(Wordnet wordnet);
 
 }
