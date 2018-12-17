@@ -20,8 +20,6 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.mayabot.nlp.Mynlp;
 import com.mayabot.nlp.Mynlps;
-import com.mayabot.nlp.segment.hmmner.OptimizeProcessor;
-import com.mayabot.nlp.segment.hmmner.OptimizeWordPathProcessor;
 import com.mayabot.nlp.segment.tokenizer.collector.SentenceCollector;
 import com.mayabot.nlp.segment.tokenizer.normalize.DefaultCharNormalize;
 import com.mayabot.nlp.segment.wordnet.BestPathAlgorithm;
@@ -30,7 +28,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 /**
  * WordnetTokenizer构建器
@@ -148,14 +145,14 @@ public class PipelineTokenizerBuilder implements MynlpTokenizerBuilder {
                     pair.consumer.accept(it);
                 }
 
-                if (it instanceof OptimizeWordPathProcessor) {
-                    OptimizeWordPathProcessor op = (OptimizeWordPathProcessor) it;
-                    op.getOptimizeProcessorList().forEach(pp -> {
-                        if (pair.clazz.equals(pp.getClass()) || pair.clazz.isAssignableFrom(pp.getClass())) {
-                            pair.consumer.accept(pp);
-                        }
-                    });
-                }
+//                if (it instanceof OptimizeWordPathProcessor) {
+//                    OptimizeWordPathProcessor op = (OptimizeWordPathProcessor) it;
+//                    op.getOptimizeProcessorList().forEach(pp -> {
+//                        if (pair.clazz.equals(pp.getClass()) || pair.clazz.isAssignableFrom(pp.getClass())) {
+//                            pair.consumer.accept(pp);
+//                        }
+//                    });
+//                }
             });
         });
 
@@ -302,48 +299,6 @@ public class PipelineTokenizerBuilder implements MynlpTokenizerBuilder {
         return this;
     }
 
-    /**
-     * 增加一组OptimizeProcessor实现
-     *
-     * @param ops
-     * @return
-     */
-    public PipelineTokenizerBuilder addOptimizeProcessor(
-            List<? extends OptimizeProcessor> ops,
-            int order) {
-        OptimizeWordPathProcessor instance = mynlp.getInstance(OptimizeWordPathProcessor.class);
-        instance.setOrder(order);
-        instance.addAllOptimizeProcessor(ops);
-        addProcessor(instance);
-        return this;
-    }
-
-    public PipelineTokenizerBuilder addOptimizeProcessor(
-            List<? extends OptimizeProcessor> ops) {
-        this.addOptimizeProcessor(ops, 0);
-        return this;
-    }
-
-    /**
-     * 增加一组OptimizeProcessor实现类
-     *
-     * @param ops
-     * @return
-     */
-    public PipelineTokenizerBuilder addOptimizeProcessorClass(
-            List<Class<? extends OptimizeProcessor>> ops, int order) {
-        List<OptimizeProcessor> list =
-                ops.stream().map(it -> mynlp.getInstance(it)).collect(Collectors.toList());
-
-        return addOptimizeProcessor(list, order);
-    }
-
-    public PipelineTokenizerBuilder addOptimizeProcessorClass(
-            List<Class<? extends OptimizeProcessor>> ops) {
-        this.addOptimizeProcessorClass(ops, 0);
-        return this;
-    }
-
 
     /**
      * 增加WordnetInitializer对象
@@ -407,4 +362,48 @@ public class PipelineTokenizerBuilder implements MynlpTokenizerBuilder {
             this.consumer = consumer;
         }
     }
+
+
+//    /**
+//     * 增加一组OptimizeProcessor实现
+//     *
+//     * @param ops
+//     * @return
+//     */
+//    public PipelineTokenizerBuilder addOptimizeProcessor(
+//            List<? extends OptimizeProcessor> ops,
+//            int order) {
+//        OptimizeWordPathProcessor instance = mynlp.getInstance(OptimizeWordPathProcessor.class);
+//        instance.setOrder(order);
+//        instance.addAllOptimizeProcessor(ops);
+//        addProcessor(instance);
+//        return this;
+//    }
+//
+//    public PipelineTokenizerBuilder addOptimizeProcessor(
+//            List<? extends OptimizeProcessor> ops) {
+//        this.addOptimizeProcessor(ops, 0);
+//        return this;
+//    }
+//
+//    /**
+//     * 增加一组OptimizeProcessor实现类
+//     *
+//     * @param ops
+//     * @return
+//     */
+//    public PipelineTokenizerBuilder addOptimizeProcessorClass(
+//            List<Class<? extends OptimizeProcessor>> ops, int order) {
+//        List<OptimizeProcessor> list =
+//                ops.stream().map(it -> mynlp.getInstance(it)).collect(Collectors.toList());
+//
+//        return addOptimizeProcessor(list, order);
+//    }
+//
+//    public PipelineTokenizerBuilder addOptimizeProcessorClass(
+//            List<Class<? extends OptimizeProcessor>> ops) {
+//        this.addOptimizeProcessorClass(ops, 0);
+//        return this;
+//    }
+
 }

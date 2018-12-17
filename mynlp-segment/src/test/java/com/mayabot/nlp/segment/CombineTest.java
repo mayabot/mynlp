@@ -12,7 +12,7 @@ public class CombineTest {
 
         MynlpTokenizerBuilder builder =
                 MynlpTokenizers.coreTokenizerBuilder()
-                        .setPersonRecognition(false)
+//                        .setPersonRecognition(false)
                         .config(CommonRuleWordpathProcessor.class, x -> x.setEnableMqMerge(true));
 
 

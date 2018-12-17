@@ -372,7 +372,7 @@ class POSPerceptronTrainer {
 
         println("--------------------")
 
-        POSEvaluateRunner(evaluateSampleList).run(model)
+        POSEvaluateRunner(evaluateSampleList).run(0, model)
 
 
 
@@ -484,7 +484,7 @@ class POSPerceptronTrainer {
  */
 class POSEvaluateRunner(private val sampleList: List<TrainSample>) : EvaluateRunner {
 
-    override fun run(model: Perceptron) {
+    override fun run(k: Int, model: Perceptron) {
 
         var total = 0.0
         var right = 0.0

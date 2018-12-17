@@ -1,17 +1,13 @@
 package com.mayabot.nlp.segment.tokenizer;
 
-import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.mayabot.nlp.collection.dat.DoubleArrayTrieStringIntMap;
 import com.mayabot.nlp.segment.WordSplitAlgorithm;
 import com.mayabot.nlp.segment.common.BaseSegmentComponent;
 import com.mayabot.nlp.segment.dictionary.core.CoreDictionary;
-import com.mayabot.nlp.segment.hmmner.OptimizeProcessor;
-import com.mayabot.nlp.segment.hmmner.org.OrganizationRecognition;
-import com.mayabot.nlp.segment.hmmner.personname.PersonRecognition;
-import com.mayabot.nlp.segment.hmmner.place.PlaceRecognition;
 import com.mayabot.nlp.segment.tokenizer.bestpath.ViterbiBestPathAlgorithm;
 import com.mayabot.nlp.segment.tokenizer.splitalgorithm.CommonSplitAlgorithm;
+import com.mayabot.nlp.segment.tokenizer.splitalgorithm.PersonNameAlgorithm;
 import com.mayabot.nlp.segment.tokenizer.splitalgorithm.TimeSplitAlgorithm;
 import com.mayabot.nlp.segment.tokenizer.xprocessor.CommonRuleWordpathProcessor;
 import com.mayabot.nlp.segment.tokenizer.xprocessor.CorrectionWordpathProcessor;
@@ -19,8 +15,6 @@ import com.mayabot.nlp.segment.tokenizer.xprocessor.CustomDictionaryProcessor;
 import com.mayabot.nlp.segment.tokenizer.xprocessor.PosPerceptronProcessor;
 import com.mayabot.nlp.segment.wordnet.Vertex;
 import com.mayabot.nlp.segment.wordnet.Wordnet;
-
-import java.util.List;
 
 /**
  * 基于HMM-BiGram的分词器.
@@ -72,22 +66,31 @@ public class BigramTokenizerBuilder extends BaseTokenizerBuilder {
     /**
      * 是否启用人名识别
      */
-    private boolean hmmPersonName = true;
+    private boolean personName = true;
 
     /**
      * 是否启用地名识别
      */
-    private boolean hmmPlace = true;
+    private boolean placeName = true;
 
     /**
      * 是否启用组织结构名识别
      */
-    private boolean hmmOrg = true;
+    private boolean orgName = true;
 
 
     private boolean pos = true;
 
     private boolean email = false;
+
+    public boolean isPersonName() {
+        return personName;
+    }
+
+    public BigramTokenizerBuilder setPersonName(boolean personName) {
+        this.personName = personName;
+        return this;
+    }
 
     /**
      * 在这里装配所需要的零件吧！！！
@@ -106,29 +109,19 @@ public class BigramTokenizerBuilder extends BaseTokenizerBuilder {
                 TimeSplitAlgorithm.class
         );
 
+        if (personName) {
+            addWordSplitAlgorithm(PersonNameAlgorithm.class);
+        }
+
+//        addOptimizeProcessorClass(Lists.newArrayList(
+//                PersonRecognition2.class
+//        ));
+
         // Pipeline处理器
         this.addProcessor(CustomDictionaryProcessor.class);
 
         this.addProcessor(CommonRuleWordpathProcessor.class);
 
-        if (hmmPersonName || hmmPlace || hmmOrg) {
-
-            List<Class<? extends OptimizeProcessor>> list = Lists.newArrayList();
-            if (hmmPersonName) {
-                list.add(PersonRecognition.class);
-            }
-            if (hmmPlace) {
-                list.add(PlaceRecognition.class);
-            }
-            if (hmmOrg) {
-                list.add(OrganizationRecognition.class);
-            }
-
-            // 命名实体是被需要词性信息
-            addProcessor(PosPerceptronProcessor.class);
-
-            addOptimizeProcessorClass(list);
-        }
 
         //分词纠错
         addProcessor(CorrectionWordpathProcessor.class);
@@ -157,38 +150,6 @@ public class BigramTokenizerBuilder extends BaseTokenizerBuilder {
         return this;
     }
 
-    /**
-     * 是否启用人名识别
-     *
-     * @param personRecognition
-     * @return Self
-     */
-    public BigramTokenizerBuilder setPersonRecognition(boolean personRecognition) {
-        this.hmmPersonName = personRecognition;
-        return this;
-    }
-
-    /**
-     * 是否启用地名识别
-     *
-     * @param placeRecognition
-     * @return Self
-     */
-    public BigramTokenizerBuilder setPlaceRecognition(boolean placeRecognition) {
-        this.hmmPlace = placeRecognition;
-        return this;
-    }
-
-    /**
-     * 是否启用机构名名识别
-     *
-     * @param organizationRecognition
-     * @return Self
-     */
-    public BigramTokenizerBuilder setOrganizationRecognition(boolean organizationRecognition) {
-        this.hmmOrg = organizationRecognition;
-        return this;
-    }
 
 
 }

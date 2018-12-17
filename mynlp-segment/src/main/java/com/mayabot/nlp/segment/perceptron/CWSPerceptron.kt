@@ -238,7 +238,7 @@ object CWSPerceptronSample {
 
             if (split[i]) {
                 val wordLen = i - from + 1
-                if (wordLen == M) {
+                if (wordLen == 1) {
                     tagList[i] = S //S
                 } else {
                     tagList[from] = B //B
@@ -296,7 +296,7 @@ class CWSPerceptronTrainer {
         println("Start train ...")
 
         val trainer = PerceptronTrainer(featureSet, tagList.size, sampleList,
-                EvaluateRunner { it ->
+                EvaluateRunner { k, it ->
                     CWSEvaluate.evaluate(evaluateSample, CWSPerceptron(it))
                 }, maxIter, false)
 
@@ -362,14 +362,6 @@ class CWSPerceptronTrainer {
                 }
             }
         }
-
-        val f = File("data/pcws/features.txt").bufferedWriter()
-
-        builder.keys.forEach { key ->
-            f.write("$key\n")
-        }
-
-        f.close()
 
         featureSet = builder.build()
 

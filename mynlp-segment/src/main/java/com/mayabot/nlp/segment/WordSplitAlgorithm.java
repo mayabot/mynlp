@@ -20,6 +20,7 @@ import com.mayabot.nlp.segment.wordnet.Wordnet;
 
 /**
  * 分词算法。
+ * 分词逻辑基本上是面向字符的处理程序。
  * 分词算法的作用是对文本分析后，产生一种或多种分词路径，结果保存在Wordnet数据结构里面。
  *
  * 1. 基于词典

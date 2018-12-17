@@ -37,8 +37,6 @@ example.data
 /.idea
 *.iws
 
-**/out
-
 /.gradle
 **/*.iml
 *.ipr

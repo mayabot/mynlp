@@ -13,7 +13,7 @@ public class OrgTest {
             String text = "这|是|上海|万行|信息|科技|有限公司|的|财务报表";
 
             MynlpTokenizer tokenizer = new BigramTokenizerBuilder()
-                    .setOrganizationRecognition(false)
+//                    .setOrganizationRecognition(false)
                     .build();
 
             TokenizerTestHelp.test(tokenizer, text);
@@ -24,7 +24,7 @@ public class OrgTest {
             String text = "这|是|上海|万行|信息科技有限公司|的|财务报表";
 
             MynlpTokenizer tokenizer = new BigramTokenizerBuilder()
-                    .setOrganizationRecognition(true)
+//                    .setOrganizationRecognition(true)
                     .build();
 
 
