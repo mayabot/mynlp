@@ -16,9 +16,9 @@ public class PlaceTest {
             String text = "南翔|向|宁夏|固原市|彭|阳|县|红|河镇|黑|牛|沟|村|捐赠|了|挖掘机";
 
             MynlpTokenizer tokenizer = new BigramTokenizerBuilder()
-                    .setPlaceRecognition(false)
-                    .setPersonRecognition(false)
-                    .setOrganizationRecognition(false)
+//                    .setPlaceRecognition(false)
+//                    .setPersonRecognition(false)
+//                    .setOrganizationRecognition(false)
                     .disabledComponent(CustomDictionaryProcessor.class)
                     .build();
 
@@ -30,9 +30,9 @@ public class PlaceTest {
             String text = "南翔|向|宁夏|固原市|彭阳县|红河镇|黑牛沟村|捐赠|了|挖掘机";
 
             MynlpTokenizer tokenizer = new BigramTokenizerBuilder()
-                    .setPlaceRecognition(true)
-                    .setPersonRecognition(false)
-                    .setOrganizationRecognition(false)
+//                    .setPlaceRecognition(true)
+//                    .setPersonRecognition(false)
+//                    .setOrganizationRecognition(false)
                     .disabledComponent(CustomDictionaryProcessor.class)
                     .build();
 

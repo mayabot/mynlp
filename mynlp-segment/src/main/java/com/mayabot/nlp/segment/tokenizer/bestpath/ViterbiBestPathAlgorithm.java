@@ -25,7 +25,7 @@ import com.mayabot.nlp.segment.wordnet.*;
 
 /**
  * 基于核心词典的bi词之前的共出现的次数，采用viterbi选择出一个概率最大的path
- *
+ * 是权重越小越好 距离越短
  * @author jimichan
  */
 @Singleton
@@ -80,6 +80,8 @@ public class ViterbiBestPathAlgorithm implements BestPathAlgorithm {
     @Override
     public Wordpath select(Wordnet wordnet) {
 
+//        System.out.println(wordnet.toMoreString());
+
         //从第二个字符节点开始，一直到最后一个字符
         final int charSize = wordnet.getCharSizeLength();
 
@@ -116,6 +118,11 @@ public class ViterbiBestPathAlgorithm implements BestPathAlgorithm {
 
         }
 
+//
+//        System.out.println("-----------");
+//
+//        System.out.println(wordnet.toMoreString());
+
         return buildPath(wordnet);
     }
 
@@ -144,10 +151,12 @@ public class ViterbiBestPathAlgorithm implements BestPathAlgorithm {
 //			return -1000;
 //		}
 
+
         int nTwoWordsFreq = coreBiGramTableDictionary.getBiFrequency(from.wordID, to.wordID);
 //        double value = -Math
 //                .log(Predefine.dSmoothingPara * frequency / (Predefine.totalFreq) +
 //                        partA* (partB * nTwoWordsFreq / frequency + Predefine.dTemp));
+//        System.out.println(from.realWord()+"->"+to.realWord()+"="+nTwoWordsFreq);
         double value = -Math
                 .log(PartZ * frequency
                         +

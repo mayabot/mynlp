@@ -21,7 +21,6 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.mayabot.nlp.segment.common.VertexHelper;
-import com.mayabot.nlp.segment.hmmner.OptimizeWordPathProcessor;
 import com.mayabot.nlp.segment.wordnet.BestPathAlgorithm;
 import com.mayabot.nlp.segment.wordnet.Wordnet;
 import com.mayabot.nlp.segment.wordnet.Wordpath;
@@ -152,12 +151,12 @@ public class PipelineTokenizer implements MynlpTokenizer {
         sb.append("WordSplitAlgorithm = " + Joiner.on(",").join(Lists.newArrayList(initer).stream().map(it -> it.getClass().getSimpleName()).collect(Collectors.toList()))).append("\n");
         sb.append("WordpathProcessor = \n");
         for (WordpathProcessor processor : pipeline) {
-            if (processor instanceof OptimizeWordPathProcessor) {
-                sb.append("\t" + processor);
-                sb.append("\n");
-            } else {
+//            if (processor instanceof OptimizeWordPathProcessor) {
+//                sb.append("\t" + processor);
+//                sb.append("\n");
+//            } else {
                 sb.append("\t" + processor.getClass().getSimpleName()).append("\n");
-            }
+//            }
         }
         return sb.toString();
     }
