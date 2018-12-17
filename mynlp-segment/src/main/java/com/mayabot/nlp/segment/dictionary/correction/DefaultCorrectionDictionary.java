@@ -39,6 +39,7 @@ import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
 import com.mayabot.nlp.resources.NlpResource;
 import com.mayabot.nlp.segment.dictionary.CorrectionDictionary;
+import com.mayabot.nlp.segment.dictionary.CorrectionWord;
 import com.mayabot.nlp.utils.CharSourceLineReader;
 
 import java.util.List;
@@ -64,11 +65,11 @@ public class DefaultCorrectionDictionary implements CorrectionDictionary {
     public final static SettingItem<String> correctionDict = SettingItem.string("correction.dict", "dictionary/correction.txt");
 
 
-    private DoubleArrayTrieMap<AdjustWord> doubleArrayTrie;
+    private DoubleArrayTrieMap<CorrectionWord> doubleArrayTrie;
 
 
     @Override
-    public DoubleArrayTrieMap<AdjustWord> getTrie() {
+    public DoubleArrayTrieMap<CorrectionWord> getTrie() {
         return doubleArrayTrie;
     }
 
@@ -85,7 +86,7 @@ public class DefaultCorrectionDictionary implements CorrectionDictionary {
     }
 
     public void loadFromRealData(MynlpEnv mynlp, List<String> resourceUrls) throws Exception {
-        TreeMap<String, AdjustWord> map = new TreeMap<>();
+        TreeMap<String, CorrectionWord> map = new TreeMap<>();
 
         for (String url : resourceUrls) {
             NlpResource resource = mynlp.loadResource(url);
@@ -94,7 +95,7 @@ public class DefaultCorrectionDictionary implements CorrectionDictionary {
                 try (CharSourceLineReader reader = resource.openLineReader()) {
                     while (reader.hasNext()) {
                         String line = reader.next();
-                        AdjustWord adjustWord = AdjustWord.parse(line
+                        CorrectionWord adjustWord = CorrectionWord.parse(line
                         );
                         map.put(adjustWord.path, adjustWord);
                     }

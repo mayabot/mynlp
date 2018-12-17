@@ -32,7 +32,8 @@ fun main(args: Array<String>) {
 
     //val x = cwsCrf.decode("商品和服务".toCharArray(), true)
 
-    println(cwsCrf.decodeToWordList("中新网客户端北京12月12日电(张旭)随着寒冬来临，羽绒服也迎来了属于自己的旺季。然而近期市场对羽绒服两大企业国产波司登、加拿大鹅(Canada Goose)却有着截然不同的反应，加拿大鹅股价连日走低，波司登股价则大涨，创5年新高。"))
+    println(cwsCrf.decodeToWordList("中新网客户端北京12月12日电(张旭)随着寒冬来临，羽绒服也迎来了属于自己的旺季。然而近期市场对羽绒服两大企业国产波司登、加拿大鹅(Canada Goose)却有着截然不同的反应，加拿大鹅股价连日走低，波司登股价则大涨，创5年新高。\n" +
+            "心肌细胞是心脏泵血的动力来源，心肌细胞出问题可能会导致严重疾病甚至死亡。因此，如果能让心脏中长出新的心肌细胞，替换掉有问题的细胞，以此修复心脏，无疑是医学上的一大突破。"))
 }
 
 class CWSCrf(val model: Perceptron, val labelList: Array<String>, val featureTemplateGroup: FeatureTemplateGroup) {

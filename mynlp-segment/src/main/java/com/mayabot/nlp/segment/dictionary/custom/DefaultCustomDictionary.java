@@ -16,7 +16,6 @@
 
 package com.mayabot.nlp.segment.dictionary.custom;
 
-
 import com.google.common.base.Charsets;
 import com.google.common.hash.Hashing;
 import com.google.inject.Inject;
@@ -28,7 +27,6 @@ import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
 import com.mayabot.nlp.resources.NlpResouceExternalizable;
 import com.mayabot.nlp.resources.NlpResource;
-import com.mayabot.nlp.segment.Nature;
 import com.mayabot.nlp.segment.dictionary.CustomDictionary;
 import com.mayabot.nlp.utils.CharSourceLineReader;
 
@@ -40,8 +38,6 @@ import java.util.TreeSet;
 /**
  * 用户自定义词典
  * 缓存用户的自定义词典，查询出
- * <p>
- * reload watch
  *
  * @author jimichan
  */
@@ -50,21 +46,17 @@ public class DefaultCustomDictionary extends NlpResouceExternalizable implements
 
     static InternalLogger logger = InternalLoggerFactory.getInstance(DefaultCustomDictionary.class);
 
-    private final MynlpEnv mynlp;
-
     private DoubleArrayTrieMap<Integer> dat;
 
     private List<String> resourceUrls;
 
     private boolean isNormalization = false;
 
-    public static SettingItem<String> dictPathSetting = SettingItem.string(
+    public static final SettingItem<String> dictPathSetting = SettingItem.string(
             "custom.dictionary.path", "dictionary/CustomDictionary.txt");
 
     @Inject
     public DefaultCustomDictionary(MynlpEnv mynlp) throws Exception {
-
-        this.mynlp = mynlp;
 
         List<String> resourceUrls = mynlp.getSettings().getAsList(dictPathSetting);
 
@@ -114,7 +106,6 @@ public class DefaultCustomDictionary extends NlpResouceExternalizable implements
     public void loadFromSource(MynlpEnv mynlp) throws Exception {
         TreeMap<String, Integer> map = new TreeMap<>();
 
-        Nature defaultNature = Nature.n;
         for (String url : resourceUrls) {
             NlpResource resource = mynlp.loadResource(url);
 
@@ -128,14 +119,6 @@ public class DefaultCustomDictionary extends NlpResouceExternalizable implements
                     if (isNormalization) {
                         params[0] = normalizationString(params[0]);
                     }
-//                    int natureCount = (params.length - 1) / 2;
-//
-//                    NatureAttribute attribute;
-//                    if (natureCount == 0) {
-//                        attribute = NatureAttribute.create1000(defaultNature);
-//                    } else {
-//                        attribute = NatureAttribute.create(params);
-//                    }
 
                     map.put(params[0], 1000);
                 }
@@ -147,7 +130,7 @@ public class DefaultCustomDictionary extends NlpResouceExternalizable implements
             return;
         }
 
-        dat = new DoubleArrayTrieMap<Integer>(map);
+        dat = new DoubleArrayTrieMap<>(map);
     }
 
     /**

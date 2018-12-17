@@ -138,10 +138,11 @@ open class PerceptronModel(
 
 
     fun average(total: DoubleArray, timestamp: IntArray, current: Int) {
+        val cf = current.toFloat()
         for (i in 0 until parameter.size) {
-            val pass = current.toFloat() - timestamp[i].toFloat()
+            val pass = cf - timestamp[i].toFloat()
             val totali = total[i].toFloat()
-            parameter[i] = (totali + pass * parameter[i]) / current
+            parameter[i] = (totali + pass * parameter[i]) / cf
         }
     }
 
@@ -492,6 +493,7 @@ class PerceptronTrainer(
         val model = buildPerceptronModel(
                 featureSet, labelCount
         )
+
         //应该是权重的总和 最后要平均？
         val total = DoubleArray(model.parameter.size)
         //时间戳 每个正确预测的存活时间
@@ -519,11 +521,15 @@ class PerceptronTrainer(
             val t2 = System.currentTimeMillis()
 
             println("train use ${t2 - t1} ms\n")
+
+            // 备份参数
+            val back = Arrays.copyOf(model.parameter, model.parameter.size)
+            model.average(total, timestamp, current)
             // 运行评估
-            evaluateScript.run(model)
-
-
+            evaluateScript.run(k, model)
+            model.parameter = back
         }
+
         //
         model.average(total, timestamp, current)
         return model
@@ -591,7 +597,7 @@ class PerceptronTrainer(
             val t2 = System.currentTimeMillis()
 
             println("use ${t2 - t1} ms\n")
-            evaluateScript.run(modelArray.first())
+            evaluateScript.run(k, modelArray.first())
 
 
         }

@@ -31,7 +31,7 @@ public class CoreDictionaryTest {
 
         CoreDictionary dictionary = mynlp.getInstance(CoreDictionary.class);
 
-        Assert.assertTrue("{vn=546, v=237}".equals(dictionary.get("普查").toString()));
+        Assert.assertTrue("{vn=546, v=237}".equals(dictionary.get("普查")));
 
 //        long t1 = System.currentTimeMillis();
 //        System.out.println(dictionary.indexOf("人口"));

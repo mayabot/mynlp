@@ -20,8 +20,6 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.mayabot.nlp.Mynlp;
 import com.mayabot.nlp.Mynlps;
-import com.mayabot.nlp.segment.hmmner.OptimizeProcessor;
-import com.mayabot.nlp.segment.hmmner.OptimizeWordPathProcessor;
 import com.mayabot.nlp.segment.tokenizer.collector.SentenceCollector;
 import com.mayabot.nlp.segment.tokenizer.normalize.DefaultCharNormalize;
 import com.mayabot.nlp.segment.wordnet.BestPathAlgorithm;
@@ -30,7 +28,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 /**
  * WordnetTokenizer构建器
@@ -58,7 +55,7 @@ public class PipelineTokenizerBuilder implements MynlpTokenizerBuilder {
     /**
      * 词图初始填充器
      */
-    private List<WordnetInitializer> wordnetInitializer = Lists.newArrayList();
+    private List<WordSplitAlgorithm> wordSplitAlgorithm = Lists.newArrayList();
 
     /**
      * 分词逻辑管线
@@ -73,23 +70,29 @@ public class PipelineTokenizerBuilder implements MynlpTokenizerBuilder {
     /**
      * 最终结构收集器
      */
-    WordTermCollector termCollector;
+    private WordTermCollector termCollector;
 
     /**
-     * 默认构造函数。不公开
+     * 默认构造函数
      */
     public PipelineTokenizerBuilder() {
         this.mynlp = Mynlps.get();
     }
 
+    protected void setUp() {
+
+    }
+
     @Override
     public MynlpTokenizer build() {
+
+        setUp();
 
         // 1. bestPathAlgorithm
         Preconditions.checkNotNull(bestPathAlgorithm);
 
-        // 2. WordnetInitializer
-        Preconditions.checkState(!wordnetInitializer.isEmpty());
+        // 2. WordSplitAlgorithm
+        Preconditions.checkState(!wordSplitAlgorithm.isEmpty());
 
         // 3.termCollector
         if (termCollector == null) {
@@ -99,11 +102,11 @@ public class PipelineTokenizerBuilder implements MynlpTokenizerBuilder {
         // 4
         callListener();
 
-        Collections.sort(wordnetInitializer);
+        Collections.sort(wordSplitAlgorithm);
         Collections.sort(pipeLine);
 
         return new PipelineTokenizer(
-                wordnetInitializer,
+                wordSplitAlgorithm,
                 pipeLine.toArray(new WordpathProcessor[0]),
                 bestPathAlgorithm
                 , termCollector,
@@ -123,9 +126,9 @@ public class PipelineTokenizerBuilder implements MynlpTokenizerBuilder {
             }
         });
 
-        //wordnetInitializer
+        //wordSplitAlgorithm
         configListener.forEach(pair -> {
-            wordnetInitializer.forEach(wf -> {
+            wordSplitAlgorithm.forEach(wf -> {
                 if (pair.clazz.equals(wf.getClass()) ||
                         pair.clazz.isAssignableFrom(wf.getClass())) {
                     pair.consumer.accept(wf);
@@ -142,21 +145,21 @@ public class PipelineTokenizerBuilder implements MynlpTokenizerBuilder {
                     pair.consumer.accept(it);
                 }
 
-                if (it instanceof OptimizeWordPathProcessor) {
-                    OptimizeWordPathProcessor op = (OptimizeWordPathProcessor) it;
-                    op.getOptimizeProcessorList().forEach(pp -> {
-                        if (pair.clazz.equals(pp.getClass()) || pair.clazz.isAssignableFrom(pp.getClass())) {
-                            pair.consumer.accept(pp);
-                        }
-                    });
-                }
+//                if (it instanceof OptimizeWordPathProcessor) {
+//                    OptimizeWordPathProcessor op = (OptimizeWordPathProcessor) it;
+//                    op.getOptimizeProcessorList().forEach(pp -> {
+//                        if (pair.clazz.equals(pp.getClass()) || pair.clazz.isAssignableFrom(pp.getClass())) {
+//                            pair.consumer.accept(pp);
+//                        }
+//                    });
+//                }
             });
         });
 
     }
 
     /**
-     * 设定针对WordpathProcessor，WordnetInitializer，WordTermCollector等组件后置逻辑。
+     * 设定针对WordpathProcessor，WordSplitAlgorithm，WordTermCollector等组件后置逻辑。
      * 通过这个方法可以已经创建的组件进行配置
      *
      * @param clazz
@@ -260,9 +263,9 @@ public class PipelineTokenizerBuilder implements MynlpTokenizerBuilder {
             addProcessor((WordpathProcessor) component);
         }
 
-        if (component instanceof WordnetInitializer) {
+        if (component instanceof WordSplitAlgorithm) {
             access = true;
-            addWordnetInitializer((WordnetInitializer) component);
+            addWordSplitAlgorithm((WordSplitAlgorithm) component);
         }
 
         if (!access) {
@@ -296,48 +299,6 @@ public class PipelineTokenizerBuilder implements MynlpTokenizerBuilder {
         return this;
     }
 
-    /**
-     * 增加一组OptimizeProcessor实现
-     *
-     * @param ops
-     * @return
-     */
-    public PipelineTokenizerBuilder addOptimizeProcessor(
-            List<? extends OptimizeProcessor> ops,
-            int order) {
-        OptimizeWordPathProcessor instance = mynlp.getInstance(OptimizeWordPathProcessor.class);
-        instance.setOrder(order);
-        instance.addAllOptimizeProcessor(ops);
-        addProcessor(instance);
-        return this;
-    }
-
-    public PipelineTokenizerBuilder addOptimizeProcessor(
-            List<? extends OptimizeProcessor> ops) {
-        this.addOptimizeProcessor(ops, 0);
-        return this;
-    }
-
-    /**
-     * 增加一组OptimizeProcessor实现类
-     *
-     * @param ops
-     * @return
-     */
-    public PipelineTokenizerBuilder addOptimizeProcessorClass(
-            List<Class<? extends OptimizeProcessor>> ops, int order) {
-        List<OptimizeProcessor> list =
-                ops.stream().map(it -> mynlp.getInstance(it)).collect(Collectors.toList());
-
-        return addOptimizeProcessor(list, order);
-    }
-
-    public PipelineTokenizerBuilder addOptimizeProcessorClass(
-            List<Class<? extends OptimizeProcessor>> ops) {
-        this.addOptimizeProcessorClass(ops, 0);
-        return this;
-    }
-
 
     /**
      * 增加WordnetInitializer对象
@@ -345,13 +306,13 @@ public class PipelineTokenizerBuilder implements MynlpTokenizerBuilder {
      * @param initializers
      * @return
      */
-    public PipelineTokenizerBuilder addWordnetInitializer(WordnetInitializer... initializers) {
+    public PipelineTokenizerBuilder addWordSplitAlgorithm(WordSplitAlgorithm... initializers) {
 
-        for (WordnetInitializer initializer : initializers) {
-            this.wordnetInitializer.add(initializer);
+        for (WordSplitAlgorithm initializer : initializers) {
+            this.wordSplitAlgorithm.add(initializer);
         }
 
-        Collections.sort(wordnetInitializer);
+        Collections.sort(wordSplitAlgorithm);
         return this;
     }
 
@@ -361,12 +322,12 @@ public class PipelineTokenizerBuilder implements MynlpTokenizerBuilder {
      * @param initializers
      * @return
      */
-    public PipelineTokenizerBuilder addWordnetInitializer(Class<? extends WordnetInitializer>... initializers) {
+    public PipelineTokenizerBuilder addWordSplitAlgorithm(Class<? extends WordSplitAlgorithm>... initializers) {
 
-        for (Class<? extends WordnetInitializer> clazz : initializers) {
-            this.wordnetInitializer.add(mynlp.getInstance(clazz));
+        for (Class<? extends WordSplitAlgorithm> clazz : initializers) {
+            this.wordSplitAlgorithm.add(mynlp.getInstance(clazz));
         }
-        Collections.sort(wordnetInitializer);
+        Collections.sort(wordSplitAlgorithm);
         return this;
     }
 
@@ -401,4 +362,48 @@ public class PipelineTokenizerBuilder implements MynlpTokenizerBuilder {
             this.consumer = consumer;
         }
     }
+
+
+//    /**
+//     * 增加一组OptimizeProcessor实现
+//     *
+//     * @param ops
+//     * @return
+//     */
+//    public PipelineTokenizerBuilder addOptimizeProcessor(
+//            List<? extends OptimizeProcessor> ops,
+//            int order) {
+//        OptimizeWordPathProcessor instance = mynlp.getInstance(OptimizeWordPathProcessor.class);
+//        instance.setOrder(order);
+//        instance.addAllOptimizeProcessor(ops);
+//        addProcessor(instance);
+//        return this;
+//    }
+//
+//    public PipelineTokenizerBuilder addOptimizeProcessor(
+//            List<? extends OptimizeProcessor> ops) {
+//        this.addOptimizeProcessor(ops, 0);
+//        return this;
+//    }
+//
+//    /**
+//     * 增加一组OptimizeProcessor实现类
+//     *
+//     * @param ops
+//     * @return
+//     */
+//    public PipelineTokenizerBuilder addOptimizeProcessorClass(
+//            List<Class<? extends OptimizeProcessor>> ops, int order) {
+//        List<OptimizeProcessor> list =
+//                ops.stream().map(it -> mynlp.getInstance(it)).collect(Collectors.toList());
+//
+//        return addOptimizeProcessor(list, order);
+//    }
+//
+//    public PipelineTokenizerBuilder addOptimizeProcessorClass(
+//            List<Class<? extends OptimizeProcessor>> ops) {
+//        this.addOptimizeProcessorClass(ops, 0);
+//        return this;
+//    }
+
 }

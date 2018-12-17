@@ -1,7 +1,7 @@
 package com.mayabot.nlp.segment;
 
 import com.google.common.base.Joiner;
-import com.mayabot.nlp.segment.tokenizer.xprocessor.CombineProcessor;
+import com.mayabot.nlp.segment.tokenizer.xprocessor.CommonRuleWordpathProcessor;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -12,8 +12,8 @@ public class CombineTest {
 
         MynlpTokenizerBuilder builder =
                 MynlpTokenizers.coreTokenizerBuilder()
-                        .setPersonRecognition(false)
-                        .config(CombineProcessor.class, x -> x.setEnableShuLiang(true));
+//                        .setPersonRecognition(false)
+                        .config(CommonRuleWordpathProcessor.class, x -> x.setEnableMqMerge(true));
 
 
 
@@ -23,16 +23,14 @@ public class CombineTest {
                 "五十八公斤\n" +
                 "产品编号BN-598\n" +
                 "产品编号BN-598-122N\n" +
-                "阅读了《西行漫步》这一本书\n" +
                 "我买了一台 very cool iPhone7\n" +
                 "分词标签是__lable__";
 
 
         String[] result = ("体重 182kg\n" +
                 "五十八公斤\n" +
-                "产品编号 bn-598\n" +
-                "产品编号 bn-598-122n\n" +
-                "阅读 了 《西行漫步》 这 一 本书\n" +
+                "产品 编号 bn-598\n" +
+                "产品 编号 bn-598-122n\n" +
                 "我 买了 一台 very cool iphone7\n" +
                 "分词 标签 是 __lable__").split("\n");
 

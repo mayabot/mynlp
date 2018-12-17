@@ -142,7 +142,7 @@ public class CoreDictionary extends NlpResouceExternalizable {
      * @param key
      * @return
      */
-    public Integer get(String key) {
+    public int get(String key) {
         return trie.get(key);
     }
 
@@ -152,7 +152,7 @@ public class CoreDictionary extends NlpResouceExternalizable {
      * @param wordID
      * @return
      */
-    public Integer get(int wordID) {
+    public int get(int wordID) {
         return trie.get(wordID);
     }
 

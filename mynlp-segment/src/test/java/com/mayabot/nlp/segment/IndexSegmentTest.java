@@ -10,8 +10,8 @@ public class IndexSegmentTest {
 
         MynlpTokenizer mynlpTokenizer = MynlpTokenizers.
                 coreTokenizerBuilder()
-                .sentenceIndexCollector().
-                        build();
+//                .sentenceIndexCollector().
+                .build();
 
 
         System.out.println(mynlpTokenizer.tokenToTermList("中华人民共和国的利益"));
