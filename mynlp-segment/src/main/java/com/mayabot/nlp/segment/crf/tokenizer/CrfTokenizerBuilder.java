@@ -5,10 +5,10 @@
 //import com.mayabot.nlp.segment.tokenizer.BaseTokenizerBuilder;
 //import com.mayabot.nlp.segment.tokenizer.bestpath.ViterbiBestPathAlgorithm;
 //import com.mayabot.nlp.segment.tokenizer.collector.SentenceCollector;
-//import com.mayabot.nlp.segment.tokenizer.xprocessor.AtomSegmenterInitializer;
-//import com.mayabot.nlp.segment.tokenizer.xprocessor.CombineProcessor;
+//import com.mayabot.nlp.segment.tokenizer.xprocessor.CommonSplitAlgorithm;
+//import com.mayabot.nlp.segment.tokenizer.xprocessor.CommonRuleWordpathProcessor;
 //import com.mayabot.nlp.segment.tokenizer.xprocessor.CustomDictionaryProcessor;
-//import com.mayabot.nlp.segment.tokenizer.xprocessor.TimeStringProcessor;
+//import com.mayabot.nlp.segment.tokenizer.xprocessor.TimeSplitAlgorithm;
 //
 //public class CrfTokenizerBuilder extends BaseTokenizerBuilder {
 //
@@ -17,10 +17,10 @@
 //    protected void setUp(PipelineTokenizerBuilder builder) {
 //
 //        //wordnet初始化填充
-//        builder.addWordnetInitializer(
+//        builder.addWordSplitAlgorithm(
 //                CrfBaseSegmentInitializer.class,
-//                AtomSegmenterInitializer.class,
-//                TimeStringProcessor.class
+//                CommonSplitAlgorithm.class,
+//                TimeSplitAlgorithm.class
 //        );
 //
 //        //最优路径算法w
@@ -29,7 +29,7 @@
 //
 //        // Pipeline处理器
 //        builder.addProcessor(CustomDictionaryProcessor.class);
-//        builder.addProcessor(CombineProcessor.class);
+//        builder.addProcessor(CommonRuleWordpathProcessor.class);
 //
 //
 //        builder.setTermCollector(new SentenceCollector());

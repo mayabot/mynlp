@@ -18,7 +18,7 @@
 //
 //import com.google.inject.Inject;
 //import com.google.inject.Singleton;
-//import com.mayabot.nlp.segment.WordnetInitializer;
+//import com.mayabot.nlp.segment.WordSplitAlgorithm;
 //import com.mayabot.nlp.segment.common.BaseSegmentComponent;
 //import com.mayabot.nlp.segment.wordnet.Vertex;
 //import com.mayabot.nlp.segment.wordnet.Wordnet;
@@ -29,7 +29,7 @@
 // * @author jimichan
 // */
 //@Singleton
-//public class CrfBaseSegmentInitializer extends BaseSegmentComponent implements WordnetInitializer {
+//public class CrfBaseSegmentInitializer extends BaseSegmentComponent implements WordSplitAlgorithm {
 //
 //
 //    private final CrfSegmentModel crfModel;

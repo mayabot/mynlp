@@ -38,7 +38,7 @@ import java.util.function.Consumer;
  */
 public class Wordnet implements CharSequence {
 
-    private BestPathAlgorithm bestPathAlgorithm;
+    //private BestPathAlgorithm bestPathAlgorithm;
 
     /**
      * 节点，每一行都是前缀词，和 char数字一一对应
@@ -93,15 +93,14 @@ public class Wordnet implements CharSequence {
         }
     }
 
-
-//    static final NatureAttribute df = NatureAttribute.create(Nature.x, 1);
-
+    /**
+     * 补齐空洞，这样viterbi总是能走到底
+     */
     public void fillNill() {
         for (VertexRow row : slotList) {
             if (row.first == null) {
-                Vertex creted = row.getOrCrete(1);
-                //creted.natureAttribute = df;
-                creted.freq = 1;
+                Vertex vertex = row.getOrCrete(1);
+                vertex.freq = 1;
             }
         }
     }
@@ -441,12 +440,12 @@ public class Wordnet implements CharSequence {
         return slotList;
     }
 
-    public BestPathAlgorithm getBestPathAlgorithm() {
-        return bestPathAlgorithm;
-    }
-
-    public Wordnet setBestPathAlgorithm(BestPathAlgorithm bestPathAlgorithm) {
-        this.bestPathAlgorithm = bestPathAlgorithm;
-        return this;
-    }
+//    public BestPathAlgorithm getBestPathAlgorithm() {
+//        return bestPathAlgorithm;
+//    }
+//
+//    public Wordnet setBestPathAlgorithm(BestPathAlgorithm bestPathAlgorithm) {
+//        this.bestPathAlgorithm = bestPathAlgorithm;
+//        return this;
+//    }
 }

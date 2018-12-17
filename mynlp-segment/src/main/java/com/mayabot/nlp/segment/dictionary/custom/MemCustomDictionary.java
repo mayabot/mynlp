@@ -31,13 +31,13 @@ public class MemCustomDictionary implements CustomDictionary {
 
     private DoubleArrayTrieMap<Integer> trie;
 
-    public MemCustomDictionary(TreeMap<String, Integer> dict) {
-        this.dict = dict;
+    public MemCustomDictionary() {
+        this.dict = new TreeMap<>();
         rebuild();
     }
 
-    public MemCustomDictionary() {
-        this.dict = new TreeMap<>();
+    public MemCustomDictionary(TreeMap<String, Integer> dict) {
+        this.dict = dict;
         rebuild();
     }
 
