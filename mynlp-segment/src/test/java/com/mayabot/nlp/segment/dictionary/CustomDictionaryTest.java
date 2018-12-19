@@ -17,7 +17,7 @@
 package com.mayabot.nlp.segment.dictionary;
 
 import com.mayabot.nlp.Mynlps;
-import com.mayabot.nlp.segment.dictionary.custom.DefaultCustomDictionary;
+import com.mayabot.nlp.segment.plugins.customwords.DefaultCustomDictionary;
 import org.junit.Test;
 
 public class CustomDictionaryTest  {

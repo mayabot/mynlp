@@ -17,11 +17,10 @@
 package com.mayabot.nlp.segment.wordnet;
 
 import com.mayabot.nlp.segment.Nature;
-import com.mayabot.nlp.segment.dictionary.DictionaryAbsWords;
+import com.mayabot.nlp.segment.core.DictionaryAbsWords;
 
 /**
  * WordNode中的一个节点。顶点 它同时实现了LinkedList中节点的功能指针
- * <p>
  *
  * @author jimichan
  */
@@ -38,7 +37,6 @@ public class Vertex {
     VertexRow vertexRow;
 
     // 链表使用的相关属性
-
     Vertex next;
     Vertex prev;
 
@@ -59,6 +57,26 @@ public class Vertex {
      */
     public int freq = 0;
 
+    /**
+     * 返回在原始文本中真实的词
+     *
+     * @return
+     */
+    private String realWord;
+
+    // ########################################//
+    // 在最短路相关计算中用到的几个变量 //
+    // ########################################//
+
+    /**
+     * 到该节点的最短路径的前驱节点
+     */
+    public Vertex from;
+
+    /**
+     * 最短路径对应的权重
+     */
+    public double weight;
 
     /////////////////////////////////////////////
 
@@ -93,9 +111,6 @@ public class Vertex {
         return new Vertex(this);
     }
 
-//    public char theChar() {
-//        return this.vertexRow.theChar();
-//    }
 
     /**
      * 设定抽象词词性和对应的频率.
@@ -168,20 +183,10 @@ public class Vertex {
         return follow;
     }
 
-    /**
-     * 返回在原始文本中真实的词
-     *
-     * @return
-     */
-    private String realWord;
-
 
     public String realWord() {
-        if (vertexRow.rowNum == -1) {
-            return "";
-        }
         if (realWord == null) {
-            realWord = new String(vertexRow.wordnet.getCharArray(), vertexRow.rowNum, length);
+            realWord = vertexRow.subString(length);
         }
         return realWord;
     }
@@ -241,80 +246,66 @@ public class Vertex {
     }
 
 
-    // ########################################//
-    // 在最短路相关计算中用到的几个变量 //
-    // ########################################//
-
-    /**
-     * 到该节点的最短路径的前驱节点
-     */
-    public Vertex from;
-
-    /**
-     * 最短路径对应的权重
-     */
-    public double weight;
-
 //    /**
 //     * 调节的权重。人工可以控制强制选择或不选择一些节点. 好像是越小越好
 //     */
 //    public double adjustWeight;
 
-    /**
-     * 优化网络的节点标记.
-     */
-    private boolean optimize = false;
+//    /**
+//     * 优化网络的节点标记.
+//     */
+//    private boolean optimize = false;
+//
+//    /**
+//     * 当网络状态为优化网络。那么之后新增的词，比较为true
+//     */
+//    private boolean optimizeNewNode = false;
 
-    /**
-     * 当网络状态为优化网络。那么之后新增的词，比较为true
-     */
-    private boolean optimizeNewNode = false;
+//    private Object tempObj;
+//
+//    private char tempChar;
+//
+//    public void clearTemp() {
+//        tempChar = 0;
+//        tempObj = null;
+//    }
 
-    private Object tempObj;
+//
+//    public boolean isOptimize() {
+//        return optimize;
+//    }
+//
+//    public void setOptimize(boolean optimize) {
+//        this.optimize = optimize;
+//    }
+//
+//    public boolean isOptimizeNewNode() {
+//        return optimizeNewNode;
+//    }
+//
+//    /**
+//     * 当网络状态为优化网络。那么之后新增的词，比较为true
+//     *
+//     * @param optimizeNewNode
+//     */
+//    public void setOptimizeNewNode(boolean optimizeNewNode) {
+//        this.optimizeNewNode = optimizeNewNode;
+//    }
 
-    private char tempChar;
-
-    public void clearTemp() {
-        tempChar = 0;
-        tempObj = null;
-    }
-
-
-    public boolean isOptimize() {
-        return optimize;
-    }
-
-    public void setOptimize(boolean optimize) {
-        this.optimize = optimize;
-    }
-
-    public boolean isOptimizeNewNode() {
-        return optimizeNewNode;
-    }
-
-    /**
-     * 当网络状态为优化网络。那么之后新增的词，比较为true
-     *
-     * @param optimizeNewNode
-     */
-    public void setOptimizeNewNode(boolean optimizeNewNode) {
-        this.optimizeNewNode = optimizeNewNode;
-    }
-
-    public <T> T getTempObj() {
-        return (T) tempObj;
-    }
-
-    public void setTempObj(Object tempObj) {
-        this.tempObj = tempObj;
-    }
-
-    public char getTempChar() {
-        return tempChar;
-    }
-
-    public void setTempChar(char tempChar) {
-        this.tempChar = tempChar;
-    }
+//    public <T> T getTempObj() {
+//        return (T) tempObj;
+//    }
+//
+//    public void setTempObj(Object tempObj) {
+//        this.tempObj = tempObj;
+//    }
+//
+//    public char getTempChar() {
+//        return tempChar;
+//    }
+//
+//    public void setTempChar(char tempChar) {
+//        this.tempChar = tempChar;
+//    }
 
 }

@@ -1,5 +1,6 @@
 package segment;
 
+import com.google.common.collect.Lists;
 import com.mayabot.nlp.segment.*;
 
 import java.io.Reader;
@@ -15,5 +16,7 @@ public class CoreSegment {
         Reader reader = new StringReader("假装这是一个大文本");
         Iterable<WordTerm> result = analyzer.parse(reader);
 
+
+        System.out.printf("result" + Lists.newArrayList(result));
     }
 }

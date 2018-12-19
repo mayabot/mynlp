@@ -94,7 +94,9 @@ public class DoubleArrayMaker {
 //            System.out.print("\rDAT build Process 100% use time " + (t2 - t1) + "ms");
 //            System.out.println();
 //        }
-        logger.info("DAT double array build use time " + (t2 - t1) + " ms");
+        if ((t2 - t1) > 200) {
+            logger.info("DAT double array build use time " + (t2 - t1) + " ms");
+        }
         used = null;
         data = null;
 

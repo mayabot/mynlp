@@ -90,7 +90,11 @@ public class MynlpEnv {
         for (NlpResourceFactory factory : resourceFactory) {
             NlpResource resource = factory.load(resourceName, charset);
             if (resource != null) {
-                logger.info("load resource from {}", resource.toString());
+                String string = resource.toString();
+                if (string.length() >= 60) {
+                    string = "../.." + string.substring(string.length() - 60);
+                }
+                logger.info("load resource {}", string);
                 return resource;
             }
         }

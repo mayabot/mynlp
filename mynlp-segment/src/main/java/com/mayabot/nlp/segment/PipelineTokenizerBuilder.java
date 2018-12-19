@@ -20,8 +20,8 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.mayabot.nlp.Mynlp;
 import com.mayabot.nlp.Mynlps;
-import com.mayabot.nlp.segment.tokenizer.collector.SentenceCollector;
-import com.mayabot.nlp.segment.tokenizer.normalize.DefaultCharNormalize;
+import com.mayabot.nlp.segment.common.DefaultCharNormalize;
+import com.mayabot.nlp.segment.plugins.collector.SentenceCollector;
 import com.mayabot.nlp.segment.wordnet.BestPathAlgorithm;
 
 import java.util.ArrayList;

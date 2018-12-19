@@ -17,8 +17,8 @@
 package com.mayabot.nlp.segment.dictionary;
 
 import com.mayabot.nlp.Mynlps;
-import com.mayabot.nlp.segment.dictionary.core.CoreBiGramTableDictionary;
-import com.mayabot.nlp.segment.dictionary.core.CoreDictionary;
+import com.mayabot.nlp.segment.core.CoreBiGramTableDictionary;
+import com.mayabot.nlp.segment.core.CoreDictionary;
 import org.junit.Test;
 
 public class CoreGiGramTableDictionaryTest{

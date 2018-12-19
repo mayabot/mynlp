@@ -104,6 +104,11 @@ public final class WordTerm implements Serializable {
         return subword;
     }
 
+
+    public boolean hasSubword() {
+        return subword != null && !subword.isEmpty();
+    }
+
     public String getWord() {
         return word;
     }

@@ -1,8 +1,8 @@
 package com.mayabot.nlp.segment.collector;
 
 import com.mayabot.nlp.segment.MynlpTokenizer;
-import com.mayabot.nlp.segment.tokenizer.BigramTokenizerBuilder;
-import com.mayabot.nlp.segment.tokenizer.collector.SentenceIndexWordCollector;
+import com.mayabot.nlp.segment.core.CoreTokenizerBuilder;
+import com.mayabot.nlp.segment.plugins.collector.SentenceIndexWordCollector;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -15,13 +15,13 @@ public class SentenceIndexWordCollectorTest {
         SentenceIndexWordCollector collector = new SentenceIndexWordCollector();
         collector.setFolded(true);
 
-        MynlpTokenizer tokenizer = BigramTokenizerBuilder.builder().setTermCollector(
+        MynlpTokenizer tokenizer = CoreTokenizerBuilder.builder().setTermCollector(
                 collector
         ).build();
 
         Assert.assertTrue(
                 "[中华人民共和国/ns[中华/nz, 华人/n, 人民/n, 共和/n, 共和国/n], 的/ude1, 主副食品/n[主副食/j, 副食/n, 副食品/n, 食品/n], 安全/an, 法/n]"
-                        .equals(tokenizer.tokenToTermList("中华人民共和国的主副食品安全法").toString()));
+                        .equals(tokenizer.parse("中华人民共和国的主副食品安全法").toString()));
 
     }
 
@@ -30,13 +30,13 @@ public class SentenceIndexWordCollectorTest {
         SentenceIndexWordCollector collector = new SentenceIndexWordCollector();
         collector.setFolded(false);
 
-        MynlpTokenizer tokenizer = BigramTokenizerBuilder.builder().setTermCollector(
+        MynlpTokenizer tokenizer = CoreTokenizerBuilder.builder().setTermCollector(
                 collector
         ).build();
 
         Assert.assertTrue(
                 "[中华人民共和国/ns, 中华/nz, 华人/n, 人民/n, 共和/n, 共和国/n, 的/ude1, 主副食品/n, 主副食/j, 副食/n, 副食品/n, 食品/n, 安全/an, 法/n]"
-                        .equals(tokenizer.tokenToTermList("中华人民共和国的主副食品安全法").toString()));
+                        .equals(tokenizer.parse("中华人民共和国的主副食品安全法").toString()));
 
     }
 
@@ -52,12 +52,12 @@ public class SentenceIndexWordCollectorTest {
         collector.setExcludeDict(exclude);
 
 
-        MynlpTokenizer tokenizer = BigramTokenizerBuilder.builder().setTermCollector(
+        MynlpTokenizer tokenizer = CoreTokenizerBuilder.builder().setTermCollector(
                 collector
         ).build();
 
         Assert.assertEquals("[中华人民共和国/ns, 中华/nz, 人民/n, 共和国/n, 的/ude1, 主副食品/n, 主副食/j, 副食/n, 副食品/n, 食品/n, 安全/an, 法/n]",
-                tokenizer.tokenToTermList("中华人民共和国的主副食品安全法").toString()
+                tokenizer.parse("中华人民共和国的主副食品安全法").toString()
         );
 
 

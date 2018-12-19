@@ -1,15 +1,15 @@
 package segment;
 
 import com.mayabot.nlp.segment.MynlpTokenizer;
-import com.mayabot.nlp.segment.tokenizer.BigramTokenizerBuilder;
-import com.mayabot.nlp.segment.tokenizer.xprocessor.CommonRuleWordpathProcessor;
+import com.mayabot.nlp.segment.core.CoreTokenizerBuilder;
+import com.mayabot.nlp.segment.plugins.CommonRuleWordpathProcessor;
 
 import java.util.List;
 
 public class DisableEmailPattern {
 
     public static void main(String[] args) {
-        MynlpTokenizer tokenizer = new BigramTokenizerBuilder()
+        MynlpTokenizer tokenizer = new CoreTokenizerBuilder()
                 .config(CommonRuleWordpathProcessor.class, it -> it.setEnableEmail(false)).build();
 
 

@@ -15,7 +15,7 @@ public class SegmentTest {
     public void test() {
         MynlpTokenizer mynlpTokenizer = MynlpTokenizers.coreTokenizer();
 
-        Iterable<WordTerm> parse = mynlpTokenizer.tokenToTermList(text1);
+        Iterable<WordTerm> parse = mynlpTokenizer.parse(text1).asWordList();
 
 
         parse.forEach(System.out::println);
@@ -28,7 +28,7 @@ public class SegmentTest {
     public void test2(){
         MynlpTokenizer mynlpTokenizer = MynlpTokenizers.coreTokenizer();
 
-        System.out.println(mynlpTokenizer.tokenToStringList("年收入达百万"));
+        System.out.println(mynlpTokenizer.parse("年收入达百万"));
 
     }
 }

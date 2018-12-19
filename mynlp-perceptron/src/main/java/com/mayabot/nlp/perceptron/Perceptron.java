@@ -44,11 +44,12 @@ public interface Perceptron {
     void makeSureParameter(int featureId);
 
     /**
-     * 在线学习,更新
      *
      * @param data 样例
      */
     void update(TrainSample data);
+
+    void updateForOnlineLearn(TrainSample data);
 
     /**
      * 压缩

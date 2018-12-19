@@ -46,6 +46,7 @@ public abstract class NlpResouceExternalizable implements Externalizable {
      */
     public abstract void loadFromSource(MynlpEnv mynlp) throws Exception;
 
+
     /**
      * @throws Exception
      */
@@ -57,7 +58,9 @@ public abstract class NlpResouceExternalizable implements Externalizable {
 
         String sourceName = this.getClass().getSimpleName();
 
-        File cache = new File(mynlp.getCacheDir(), sourceName + "_" + sourceVersion(mynlp) + ".bin");
+        File cache = new File(new File(mynlp.getCacheDir(), sourceName), sourceVersion(mynlp) + ".dat");
+
+        Files.createParentDirs(cache);
 
         boolean loadFromBin = false;
         if (cache != null && cache.exists() && cache.canRead()) {

@@ -7,6 +7,7 @@ import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
 import com.mayabot.nlp.perceptron.FeatureSet;
 import com.mayabot.nlp.resources.NlpResource;
+import com.mayabot.nlp.segment.plugins.ner.PerceptronNerService;
 import com.mayabot.nlp.utils.CharNormUtils;
 
 import java.io.BufferedInputStream;

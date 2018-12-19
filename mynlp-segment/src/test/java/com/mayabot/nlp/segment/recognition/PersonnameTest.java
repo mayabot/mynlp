@@ -2,7 +2,7 @@ package com.mayabot.nlp.segment.recognition;
 
 import com.mayabot.nlp.segment.MynlpTokenizer;
 import com.mayabot.nlp.segment.TokenizerTestHelp;
-import com.mayabot.nlp.segment.tokenizer.BigramTokenizerBuilder;
+import com.mayabot.nlp.segment.core.CoreTokenizerBuilder;
 import org.junit.Test;
 
 public class PersonnameTest {
@@ -12,7 +12,7 @@ public class PersonnameTest {
         {
             String text = "这|是|陈|建国|的|快递";
 
-            MynlpTokenizer tokenizer = new BigramTokenizerBuilder()
+            MynlpTokenizer tokenizer = new CoreTokenizerBuilder()
                     .setPersonName(false)
                     .build();
 
@@ -24,12 +24,12 @@ public class PersonnameTest {
         {
             String text = "这|是|陈建国|的|快递";
 
-            MynlpTokenizer tokenizer = new BigramTokenizerBuilder()
+            MynlpTokenizer tokenizer = new CoreTokenizerBuilder()
                     .setPersonName(true)
                     .build();
 
-            System.out.println(tokenizer.tokenToStringList("龚学平等领导说,邓颖超生前杜绝超生"));
-            System.out.println(tokenizer.tokenToStringList("先后视察了华鑫海欣楼宇党建（群团）服务站和江阴顺天村项目"));
+            System.out.println(tokenizer.parse("龚学平等领导说,邓颖超生前杜绝超生"));
+            System.out.println(tokenizer.parse("先后视察了华鑫海欣楼宇党建（群团）服务站和江阴顺天村项目"));
 
             TokenizerTestHelp.test(tokenizer, text);
         }
@@ -37,7 +37,7 @@ public class PersonnameTest {
 
     @Test
     public void test2() {
-        MynlpTokenizer tokenizer = new BigramTokenizerBuilder()
+        MynlpTokenizer tokenizer = new CoreTokenizerBuilder()
                 .setPersonName(true)
                 .build();
 
@@ -61,7 +61,7 @@ public class PersonnameTest {
 
         for (String line : strings) {
             System.out.println(line + "\n");
-            System.out.println(tokenizer.tokenToStringList(line));
+            System.out.println(tokenizer.parse(line));
             System.out.println("\n");
         }
     }

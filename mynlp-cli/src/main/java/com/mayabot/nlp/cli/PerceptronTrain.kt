@@ -1,7 +1,7 @@
 package com.mayabot.nlp.cli
 
 import com.mayabot.nlp.perceptron.solution.ner.NERPerceptronTrainer
-import com.mayabot.nlp.segment.perceptron.POSPerceptronTrainer
+import com.mayabot.nlp.segment.plugins.pos.POSPerceptronTrainer
 import org.apache.commons.cli.DefaultParser
 import org.apache.commons.cli.Option
 import org.apache.commons.cli.Options

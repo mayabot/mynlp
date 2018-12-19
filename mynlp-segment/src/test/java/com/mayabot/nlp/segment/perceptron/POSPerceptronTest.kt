@@ -1,5 +1,6 @@
 package com.mayabot.nlp.segment.perceptron
 
+import com.mayabot.nlp.segment.plugins.pos.POSPerceptronTrainer
 import com.mayabot.nlp.utils.CharNormUtils
 import java.io.File
 
@@ -30,5 +31,5 @@ fun main(args: Array<String>) {
 //    var index = DoubleArrayTrie(lines)
 //
 //
-//    println(index.indexOf("望京☺"))
+//    println(index.wordId("望京☺"))
 }
