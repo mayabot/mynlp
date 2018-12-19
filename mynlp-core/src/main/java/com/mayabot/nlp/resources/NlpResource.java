@@ -48,7 +48,7 @@ public interface NlpResource {
         };
 
         try {
-            return byteSource.hash(Hashing.md5()).toString();
+            return byteSource.hash(Hashing.murmur3_32()).toString();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

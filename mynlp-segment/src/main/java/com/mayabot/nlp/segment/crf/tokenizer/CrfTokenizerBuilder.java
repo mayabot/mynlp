@@ -4,7 +4,7 @@
 //import com.mayabot.nlp.segment.crf.tokenizer.CrfBaseSegmentInitializer;
 //import com.mayabot.nlp.segment.tokenizer.BaseTokenizerBuilder;
 //import com.mayabot.nlp.segment.tokenizer.bestpath.ViterbiBestPathAlgorithm;
-//import com.mayabot.nlp.segment.tokenizer.collector.SentenceCollector;
+//import SentenceCollector;
 //import com.mayabot.nlp.segment.tokenizer.xprocessor.CommonSplitAlgorithm;
 //import com.mayabot.nlp.segment.tokenizer.xprocessor.CommonRuleWordpathProcessor;
 //import com.mayabot.nlp.segment.tokenizer.xprocessor.CustomDictionaryProcessor;

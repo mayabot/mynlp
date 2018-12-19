@@ -22,7 +22,7 @@ public class TokenizerTestHelp {
 
         String input = text.replace("|", "");
 
-        String out = Joiner.on("|").join(tokenizer.tokenToStringList(input));
+        String out = Joiner.on("|").join(tokenizer.parse(input).asStringList());
 
         Assert.assertTrue("Out is " + out + " ,Input " + text, text.equalsIgnoreCase(out));
     }

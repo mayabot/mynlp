@@ -14,7 +14,7 @@ public class IndexSegmentTest {
                 .build();
 
 
-        System.out.println(mynlpTokenizer.tokenToTermList("中华人民共和国的利益"));
+        System.out.println(mynlpTokenizer.parse("中华人民共和国的利益"));
 
 
     }

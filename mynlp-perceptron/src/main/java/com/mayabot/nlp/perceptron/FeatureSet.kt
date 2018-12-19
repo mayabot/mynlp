@@ -40,7 +40,7 @@ class FeatureSet(
         }
     }
 
-    fun featureId(feature: StringBuilder): Int {
+    fun featureId(feature: CharSequence): Int {
         val id = dat.indexOf(feature)
 
         if (id >= 0) {

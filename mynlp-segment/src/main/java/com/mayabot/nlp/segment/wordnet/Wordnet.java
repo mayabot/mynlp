@@ -19,7 +19,6 @@ package com.mayabot.nlp.segment.wordnet;
 import com.mayabot.nlp.utils.CustomCharSequence;
 
 import java.util.BitSet;
-import java.util.Iterator;
 import java.util.function.Consumer;
 
 /**
@@ -37,8 +36,6 @@ import java.util.function.Consumer;
  * @author jimichan
  */
 public class Wordnet implements CharSequence {
-
-    //private BestPathAlgorithm bestPathAlgorithm;
 
     /**
      * 节点，每一行都是前缀词，和 char数字一一对应
@@ -58,17 +55,17 @@ public class Wordnet implements CharSequence {
     /**
      * 原始句子对应的数组
      */
-    private final char[] charArray;
+    final char[] charArray;
 
     /**
      * 字符的数量
      */
     private final int charSize;
 
-    /**
-     * 是否工作在优化网络模式
-     */
-    private boolean optimizeNet = false;
+//    /**
+//     * 是否工作在优化网络模式
+//     */
+//    private boolean optimizeNet = false;
 
 
     /**
@@ -343,24 +340,6 @@ public class Wordnet implements CharSequence {
 
 
     /**
-     * 标记优化网络的路径，根据目前的最优路径来标记
-     * 目前最有路径上的点，标记为优化网络
-     */
-    public void tagOptimizeNetVertex(Wordpath wordPath) {
-        Iterator<Vertex> ite = wordPath.iteratorVertex();
-        while (ite.hasNext()) {
-            Vertex node = ite.next();
-            node.setOptimize(true);
-        }
-    }
-
-    public void tagOptimizeNetVertex(Vertex[] wordPath) {
-        for (Vertex node : wordPath) {
-            node.setOptimize(true);
-        }
-    }
-
-    /**
      * 根据当前的最优路径，设定已经选择的最优路径中的Vertex的最优网络标记为true
      */
     @Override
@@ -420,25 +399,45 @@ public class Wordnet implements CharSequence {
         return new CustomCharSequence(charArray, start, end - start);
     }
 
-    public boolean isOptimizeNet() {
-        return optimizeNet;
-    }
-
-    public void setOptimizeNet(boolean optimizeNet) {
-        this.optimizeNet = optimizeNet;
-        //重置所有节点的optimize标记为false
-        accessAllVertex(it -> {
-            if (it.isOptimize()) {
-                it.setOptimize(false);
-                it.setOptimizeNewNode(false);
-            }
-        });
-
-    }
 
     public VertexRow[] getSlotList() {
         return slotList;
     }
+
+
+//    /**
+//     * 标记优化网络的路径，根据目前的最优路径来标记
+//     * 目前最有路径上的点，标记为优化网络
+//     */
+//    public void tagOptimizeNetVertex(Wordpath wordPath) {
+//        Iterator<Vertex> ite = wordPath.iteratorVertex();
+//        while (ite.hasNext()) {
+//            Vertex node = ite.next();
+//            node.setOptimize(true);
+//        }
+//    }
+//
+//    public void tagOptimizeNetVertex(Vertex[] wordPath) {
+//        for (Vertex node : wordPath) {
+//            node.setOptimize(true);
+//        }
+//    }
+
+//    public boolean isOptimizeNet() {
+//        return optimizeNet;
+//    }
+//
+//    public void setOptimizeNet(boolean optimizeNet) {
+//        this.optimizeNet = optimizeNet;
+//        //重置所有节点的optimize标记为false
+//        accessAllVertex(it -> {
+//            if (it.isOptimize()) {
+//                it.setOptimize(false);
+//                it.setOptimizeNewNode(false);
+//            }
+//        });
+//
+//    }
 
 //    public BestPathAlgorithm getBestPathAlgorithm() {
 //        return bestPathAlgorithm;

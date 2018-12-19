@@ -85,9 +85,6 @@ class WordNetToStringBuilder {
                             line.append("\t");
                         }
 
-                        if (v.isOptimize()) {
-                            line.append("[Y]");
-                        }
                         // 原始词
                         line.append(text, i, v.length);
 

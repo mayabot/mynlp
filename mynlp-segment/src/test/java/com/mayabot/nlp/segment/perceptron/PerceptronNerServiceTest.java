@@ -2,6 +2,7 @@ package com.mayabot.nlp.segment.perceptron;
 
 import com.mayabot.nlp.Mynlps;
 import com.mayabot.nlp.segment.WordTerm;
+import com.mayabot.nlp.segment.plugins.ner.PerceptronNerService;
 
 import java.util.List;
 

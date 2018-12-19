@@ -1,7 +1,6 @@
 package com.mayabot.nlp.segment;
 
-import com.google.common.base.Joiner;
-import com.mayabot.nlp.segment.tokenizer.xprocessor.CommonRuleWordpathProcessor;
+import com.mayabot.nlp.segment.plugins.CommonRuleWordpathProcessor;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -36,7 +35,7 @@ public class CombineTest {
 
         int i = 0;
         for (String text : test.split("\n")) {
-            String t = Joiner.on(" ").join(tokenizer.tokenToStringList(text)).toLowerCase();
+            String t = tokenizer.parse(text).toString();
             Assert.assertTrue(t + "--->" + result[i], t.equals(result[i].toLowerCase()));
             i++;
         }

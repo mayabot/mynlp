@@ -54,6 +54,13 @@ public class VertexRow implements Iterable<Vertex> {
         this.wordnet = wordnet;
     }
 
+    public String subString(int length) {
+        if (rowNum == -1 || length == 0) {
+            return "";
+        }
+        return new String(wordnet.charArray, rowNum, length);
+    }
+
     public Vertex getOrCrete(int length) {
 
         Vertex v = get(length);
@@ -126,10 +133,10 @@ public class VertexRow implements Iterable<Vertex> {
     public Vertex put(Vertex v) {
 
         //如果当期是优化网络模式，那么节点也是优化网络的节点模式
-        if (this.wordnet.isOptimizeNet()) {
-            v.setOptimize(true);
-            v.setOptimizeNewNode(true);
-        }
+//        if (this.wordnet.isOptimizeNet()) {
+//            v.setOptimize(true);
+//            v.setOptimizeNewNode(true);
+//        }
 
         int key = v.length;
         //两种操作要么，要么替换、要么插入

@@ -37,7 +37,7 @@ public class CmbSegment {
         for (String line : text.split("\n")) {
             System.out.print(line + "\t");
 
-            System.out.println(tokenizer.tokenToStringList(line));
+            System.out.println(tokenizer.parse(line));
         }
     }
 

@@ -9,7 +9,6 @@ import java.io.InputStream
 import java.util.*
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.Executors
-import kotlin.math.max
 
 /**
  * 感知机训练的样本
@@ -35,6 +34,8 @@ open class PerceptronModel(
     private val MaxScore = Integer.MIN_VALUE.toDouble()
     var decodeQuickModel = false
 
+    val labelLimitInParameter = (labelCount + 1) * labelCount
+
 
     constructor(featureSet: FeatureSet, labelCount: Int) :
             this(featureSet, labelCount, FloatArray(featureSet.size() * labelCount))
@@ -43,9 +44,9 @@ open class PerceptronModel(
 
 
     override fun makeSureParameter(featureId: Int) {
-        if (featureId * labelCount >= parameter.size) {
-            var inc = max(2000 * labelCount, featureId * labelCount)
-            parameter = Arrays.copyOf(parameter, parameter.size + inc)
+        val newsize = (featureId + 1) * labelCount
+        if (newsize > parameter.size) {
+            parameter = Arrays.copyOf(parameter, newsize)
         }
     }
 
@@ -76,6 +77,77 @@ open class PerceptronModel(
             updateOnline(labels.goldFeature, labels.predFeature)
         }
     }
+
+
+    override fun updateForOnlineLearn(data: TrainSample) {
+        var over = 0
+        for (i in 0 until 10) {
+            var eq = updateForOnlineLearnInner(data, 1f)
+            if (eq) {
+                over++
+                if (over > 1) {
+                    return
+                }
+            }
+        }
+
+    }
+
+    private fun updateForOnlineLearnInner(data: TrainSample, step: Float): Boolean {
+        val length = data.size
+        val guessLabel = IntArray(length)
+        decode(data.featureMatrix, guessLabel)
+
+        for (i in 0 until length) {
+            val labels = featureToLabel(data, guessLabel, i)
+            updateOnline2(labels.goldFeature, labels.predFeature, step)
+        }
+
+
+        decode(data.featureMatrix, guessLabel)
+        return Arrays.equals(guessLabel, data.label)
+    }
+
+    private fun updateOnline2(goldIndex: IntArray, predictIndex: IntArray, step: Float) {
+        for (i in goldIndex.indices) {
+
+            val xii = predictIndex[i]
+            if (goldIndex[i] == xii)
+                continue
+            else {
+                val toAdd = goldIndex[i]
+                if (toAdd > labelLimitInParameter) {
+                    parameter[toAdd] += step
+                }
+
+                if (xii >= 0 && xii < parameter.size && xii > labelLimitInParameter) {
+                    parameter[xii] -= step
+                } else {
+                    //throw IllegalArgumentException("更新参数时传入了非法的下标")
+                }
+            }
+        }
+    }
+
+
+    private fun updateOnline(goldIndex: IntArray, predictIndex: IntArray) {
+        for (i in goldIndex.indices) {
+
+            val xii = predictIndex[i]
+            if (goldIndex[i] == xii)
+                continue
+            else {
+                parameter[goldIndex[i]]++
+                if (xii >= 0 && xii < parameter.size)
+                    parameter[xii]--
+                else {
+                    throw IllegalArgumentException("更新参数时传入了非法的下标")
+                }
+            }
+        }
+    }
+
+
 
     private fun featureToLabel(data: TrainSample, guessLabel: IntArray, i: Int): Labels {
         //序号代替向量 替代数组
@@ -110,23 +182,6 @@ open class PerceptronModel(
             }
         }
         return true
-    }
-
-    private fun updateOnline(goldIndex: IntArray, predictIndex: IntArray) {
-        for (i in goldIndex.indices) {
-
-            val xii = predictIndex[i]
-            if (goldIndex[i] == xii)
-                continue
-            else {
-                parameter[goldIndex[i]]++
-                if (xii >= 0 && xii < parameter.size)
-                    parameter[xii]--
-                else {
-                    throw IllegalArgumentException("更新参数时传入了非法的下标")
-                }
-            }
-        }
     }
 
     private fun record(index: Int, value: Float, total: DoubleArray, timestamp: IntArray, current: Int) {
@@ -351,20 +406,19 @@ open class PerceptronModel(
         }
 
         val sentenceLength = featureSequence.size
-        val labelSize = labelCount
 
-        val preMatrix = IntArray(sentenceLength * labelSize)
+        val preMatrix = IntArray(sentenceLength * labelCount)
 
 //        val scoreMatrix = Array(2) { DoubleArray(labelSize) }
         //上一回的状态
-        var scoreMLast = DoubleArray(labelSize)
-        var scoreMNow = DoubleArray(labelSize)
+        var scoreMLast = DoubleArray(labelCount)
+        var scoreMNow = DoubleArray(labelCount)
 
         //first
         val firstFeature = featureSequence[0]
 
         val bos = labelCount
-        val bosBase = bos * labelSize
+        val bosBase = bos * labelCount
         for (j in 0 until labelCount) {
             preMatrix[j] = j
             val score = scoreBase(firstFeature, j) + parameter[bosBase + j]
@@ -375,7 +429,7 @@ open class PerceptronModel(
         for (i in 1 until sentenceLength) {
 
             val allFeature = featureSequence[i]
-            val base = i * labelSize
+            val base = i * labelCount
 
             for (curLabel in 0 until labelCount) {
 
@@ -386,7 +440,7 @@ open class PerceptronModel(
                 for (preLabel in 0 until labelCount) {
 
 //                    val curScore = scoreMLast[preLabel] + baseScore + parameter[transBaseIndex[preLabel] + curLabel]
-                    val curScore = scoreMLast[preLabel] + baseScore + parameter[preLabel * labelSize + curLabel]
+                    val curScore = scoreMLast[preLabel] + baseScore + parameter[preLabel * labelCount + curLabel]
 
                     if (curScore > maxScore) {
                         maxScore = curScore
@@ -395,6 +449,8 @@ open class PerceptronModel(
                     }
                 }
             }
+
+            //println(preMatrix.toList())
 
             //switch
             val temp = scoreMLast

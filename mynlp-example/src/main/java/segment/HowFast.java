@@ -4,7 +4,7 @@ import com.google.common.base.Joiner;
 import com.mayabot.nlp.segment.MynlpAnalyzer;
 import com.mayabot.nlp.segment.MynlpAnalyzers;
 import com.mayabot.nlp.segment.MynlpTokenizer;
-import com.mayabot.nlp.segment.tokenizer.BigramTokenizerBuilder;
+import com.mayabot.nlp.segment.core.CoreTokenizerBuilder;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -24,17 +24,14 @@ import java.util.stream.Collectors;
  */
 public class HowFast {
     public static void main(String[] args) throws Exception {
-        File file = new File("data/红楼梦.txt");
+        File file = new File("data.work/红楼梦.txt");
 
 
         List<String> lines = Files.readAllLines(file.toPath()).stream().filter(it -> !it.isEmpty()).collect(Collectors.toList());
 
         String text = Joiner.on("\n").join(lines);
 
-        MynlpTokenizer tokenizer = new BigramTokenizerBuilder()
-                .setPersonRecognition(false)
-                .setOrganizationRecognition(false)
-                .setPlaceRecognition(false)
+        MynlpTokenizer tokenizer = new CoreTokenizerBuilder()
 //                .disabledComponent(TimeSplitAlgorithm.class)
 //                .disabledComponent(CommonRuleWordpathProcessor.class)
 //                .disabledComponent(CustomDictionaryProcessor.class)

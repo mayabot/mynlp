@@ -15,7 +15,7 @@
  */
 package com.mayabot.nlp.segment;
 
-import com.mayabot.nlp.segment.tokenizer.BigramTokenizerBuilder;
+import com.mayabot.nlp.segment.core.CoreTokenizerBuilder;
 
 /**
  * 各种版本的Tokenizer的静态工厂
@@ -25,19 +25,19 @@ import com.mayabot.nlp.segment.tokenizer.BigramTokenizerBuilder;
 public class MynlpTokenizers {
 
     public static MynlpTokenizer coreTokenizer() {
-        return new BigramTokenizerBuilder().build();
+        return new CoreTokenizerBuilder().build();
     }
 
-    public static BigramTokenizerBuilder coreTokenizerBuilder() {
-        return new BigramTokenizerBuilder();
+    public static CoreTokenizerBuilder coreTokenizerBuilder() {
+        return new CoreTokenizerBuilder();
     }
 
     public static MynlpTokenizer crfTokenizer() {
-        return new BigramTokenizerBuilder().build();
+        return new CoreTokenizerBuilder().build();
     }
 
-    public static BigramTokenizerBuilder crfTokenizerBuilder() {
-        return new BigramTokenizerBuilder();
+    public static CoreTokenizerBuilder crfTokenizerBuilder() {
+        return new CoreTokenizerBuilder();
     }
 
 }
