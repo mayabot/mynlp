@@ -49,7 +49,7 @@ public class HowFast {
             });
         }
         lines.forEach(line -> {
-            tokenizer.tokenToTermList(line);
+            tokenizer.parse(line);
         });
 
 
@@ -59,7 +59,7 @@ public class HowFast {
             long t1 = System.currentTimeMillis();
 
             lines.forEach(line -> {
-                tokenizer.tokenToTermList(line);
+                tokenizer.parse(line);
             });
 
             long t2 = System.currentTimeMillis();

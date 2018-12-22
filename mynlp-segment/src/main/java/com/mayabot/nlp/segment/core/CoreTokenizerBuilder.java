@@ -24,7 +24,7 @@ public class CoreTokenizerBuilder extends PipelineTokenizerBuilder {
     /**
      * 是否启用人名识别
      */
-    private boolean personName = true;
+    private boolean personName = false;
 
     /**
      * 是否启用地名识别
@@ -37,7 +37,7 @@ public class CoreTokenizerBuilder extends PipelineTokenizerBuilder {
     private boolean orgName = true;
 
 
-    private boolean pos = true;
+    private boolean pos = false;
 
     private boolean email = false;
 

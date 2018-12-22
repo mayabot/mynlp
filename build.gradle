@@ -58,21 +58,6 @@ subprojects {
         from javadoc.destinationDir
     }
 
-//    if(project.path!=':mynlp-all' && project.path!=':mynlp-segment-resources')
-//    {
-//        sourceSets {
-//            example {
-//                compileClasspath += sourceSets.main.output
-//                runtimeClasspath += sourceSets.main.output
-//            }
-//        }
-//
-//        configurations {
-//            exampleImplementation.extendsFrom implementation
-//            exampleRuntimeOnly.extendsFrom runtimeOnly
-//        }
-//    }
-
     publishing {
         publications {
             java(MavenPublication) {

@@ -25,7 +25,6 @@ import java.io.ObjectInput;
 import java.io.ObjectOutput;
 import java.io.Serializable;
 import java.util.Arrays;
-import java.util.BitSet;
 import java.util.Map;
 
 /**
@@ -38,7 +37,7 @@ public class CSRSparseMatrix implements Serializable {
     private int[] columnIndices;
     private int[] values;
 
-    private BitSet collBitSet = new BitSet();
+//    private BitSet collBitSet = new BitSet();
 
 
     public CSRSparseMatrix(int[] rowOffset, int[] columnIndices, int[] values) {
@@ -70,7 +69,7 @@ public class CSRSparseMatrix implements Serializable {
         columnIndices = new int[size];
 
         this.rowOffset = new int[totalRow + 1];
-        collBitSet = new BitSet(totalRow + 1);
+//        collBitSet = new BitSet(totalRow + 1);
         //rowOffset[0]=0;
 
         int point = -1;
@@ -84,7 +83,7 @@ public class CSRSparseMatrix implements Serializable {
             for (Map.Entry<Integer, Integer> entry : row.entrySet()) {
                 point++;
 
-                collBitSet.set(entry.getKey());
+//                collBitSet.set(entry.getKey());
 
                 columnIndices[point] = entry.getKey();
                 values[point] = entry.getValue();
@@ -109,17 +108,17 @@ public class CSRSparseMatrix implements Serializable {
         DataInOutputUtils.writeIntArray(this.getRowOffset(), out);
         DataInOutputUtils.writeIntArray(this.getValues(), out);
 
-        out.writeObject(collBitSet);
+//        out.writeObject(collBitSet);
 
     }
 
-    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+    public void readExternal(ObjectInput in) throws IOException {
 
         this.columnIndices = DataInOutputUtils.readIntArray(in);
         rowOffset = DataInOutputUtils.readIntArray(in);
         values = DataInOutputUtils.readIntArray(in);
 
-        this.collBitSet = (BitSet) in.readObject();
+//        this.collBitSet = (BitSet) in.readObject();
     }
 
     /**
@@ -143,9 +142,9 @@ public class CSRSparseMatrix implements Serializable {
             return 0;
         }
 
-        if (!collBitSet.get(col)) {
-            return 0;
-        }
+//        if (!collBitSet.get(col)) {
+//            return 0;
+//        }
         //columnIndices
 
         int index = Arrays.binarySearch(columnIndices, off, end, col);

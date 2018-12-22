@@ -13,7 +13,7 @@ public class DisableEmailPattern {
                 .config(CommonRuleWordpathProcessor.class, it -> it.setEnableEmail(false)).build();
 
 
-        List<String> list = tokenizer.tokenToStringList("这是我的email jimichan@gmail.com");
+        List<String> list = tokenizer.parse("这是我的email jimichan@gmail.com").asStringList();
 
         System.out.println(list);
 
