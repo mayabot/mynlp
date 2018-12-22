@@ -31,7 +31,6 @@ import com.mayabot.nlp.resources.NlpResouceExternalizable;
 import com.mayabot.nlp.resources.NlpResource;
 import com.mayabot.nlp.segment.common.ResourceLastVersion;
 import com.mayabot.nlp.utils.CharSourceLineReader;
-import com.mayabot.nlp.utils.DataInOutputUtils;
 
 import java.io.IOException;
 import java.io.ObjectInput;
@@ -41,7 +40,6 @@ import java.util.List;
 /**
  * 核心词典的二元接续词典，采用整型储存，高性能。
  * 表示一个词接着另外一个词的概率次数
- * TODO 查询时，大部分组合不在内。使用BloomFilter
  * @author jimichan
  */
 @Singleton
@@ -49,7 +47,7 @@ public class CoreBiGramTableDictionary extends NlpResouceExternalizable {
 
     private CSRSparseMatrix matrix;
 
-    public final String path = "dictionary/CoreDict.bigram.txt";
+    public final String path = "core-dict/CoreDict.bigram.txt";
 
     protected InternalLogger logger = InternalLoggerFactory.getInstance(this.getClass());
 
@@ -67,7 +65,7 @@ public class CoreBiGramTableDictionary extends NlpResouceExternalizable {
     public String sourceVersion(MynlpEnv mynlp) {
         return Hashing.murmur3_32().newHasher().
                 putString(mynlp.loadResource(path).hash(), Charsets.UTF_8).
-                putString("v1", Charsets.UTF_8)
+                putString("v2", Charsets.UTF_8)
                 .hash().toString();
     }
 
@@ -95,67 +93,39 @@ public class CoreBiGramTableDictionary extends NlpResouceExternalizable {
                     int firstWh = line.indexOf(" ");
                     String numString = line.substring(1, firstWh);
                     int num = Ints.tryParse(numString);
-                    List<String> words = splitter.splitToList(line.substring(firstWh) + 1);
+                    List<String> words = splitter.splitToList(line.substring(firstWh + 1));
 
                     String wordA = firstWord;
-
+                    int idA = coreDictionary.wordId(wordA);
+                    if (idA == -1) {
+                        continue;
+                    }
                     for (String wordB : words) {
-                        int idA = coreDictionary.wordId(wordA);
-                        if (idA >= 0) {
                             int idB = coreDictionary.wordId(wordB);
                             if (idB >= 0) {
                                 table.put(idA, idB, num);
                             }
-                        }
                     }
 
                 } else {
                     firstWord = line;
                 }
-//
-//
-//                Matcher matcher = pattern.matcher(line);
-//                if (matcher.find()) {
-//                    String wordA = matcher.group(1);
-//                    String wordB = matcher.group(2);
-//                    String num = matcher.group(3);
-//                    int idA = coreDictionary.wordId(wordA);
-//                    if (idA >= 0) {
-//                        int idB = coreDictionary.wordId(wordB);
-//                        if (idB >= 0) {
-//                            table.put(idA, idB, Ints.tryParse(num));
-//                        }
-//                    }
-//                }
+
             }
         }
-
-//        bloomFilter = TwoIntBloomFilter.create(table.size());
-//
-//        for (Table.Cell<Integer, Integer, Integer> cell : table.cellSet()) {
-//            bloomFilter.put(cell.getRowKey(),cell.getColumnKey());
-//        }
-
 
         this.matrix = new CSRSparseMatrix(table, coreDictionary.size());
     }
 
     @Override
     public void writeExternal(ObjectOutput out) throws IOException {
-        DataInOutputUtils.writeIntArray(matrix.getColumnIndices(), out);
-        DataInOutputUtils.writeIntArray(matrix.getRowOffset(), out);
-        DataInOutputUtils.writeIntArray(matrix.getValues(), out);
-//        bloomFilter.writeTo(out);
+        matrix.writeExternal(out);
     }
 
     @Override
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
-
-        int[] columnIndices = DataInOutputUtils.readIntArray(in);
-        int[] rowOffset = DataInOutputUtils.readIntArray(in);
-        int[] values = DataInOutputUtils.readIntArray(in);
-        this.matrix = new CSRSparseMatrix(rowOffset, columnIndices, values);
-//        this.bloomFilter = TwoIntBloomFilter.readFrom(in);
+        this.matrix = new CSRSparseMatrix();
+        this.matrix.readExternal(in);
     }
 
     /**
@@ -166,8 +136,6 @@ public class CoreBiGramTableDictionary extends NlpResouceExternalizable {
      * @return 第一个词@第二个词出现的频次
      */
     public int getBiFrequency(String a, String b) {
-
-
         int idA = coreDictionary.getWordID(a);
         if (idA < 0) {
             return 0;
@@ -187,14 +155,6 @@ public class CoreBiGramTableDictionary extends NlpResouceExternalizable {
      * @return 共现频次, 不存在就返回0
      */
     public int getBiFrequency(int idA, int idB) {
-//        if (idA < 10) {
-//            if (bloomFilter.mightContain(idA, idB)) {
-//                return matrix.wordFreq(idA, idB);
-//            }else{
-//                return 0;
-//            }
-//        }else{
         return matrix.get(idA, idB);
-//        }
     }
 }

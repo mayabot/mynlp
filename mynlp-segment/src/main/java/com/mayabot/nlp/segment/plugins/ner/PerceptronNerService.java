@@ -34,7 +34,7 @@ public class PerceptronNerService {
     ) throws Exception {
 
         this.posService = posService;
-        NlpResource parameterResource = mynlp.loadResource("ner/parameter.bin");
+        NlpResource parameterResource = mynlp.loadResource("ner-model/parameter.bin");
 
         if (parameterResource == null) {
             logger.error("Not found ner/parameter.bin \n" +
@@ -43,8 +43,8 @@ public class PerceptronNerService {
             );
         }
 
-        NlpResource labelResource = mynlp.loadResource("ner/label.txt");
-        NlpResource featureResource = mynlp.loadResource("ner/feature.txt");
+        NlpResource labelResource = mynlp.loadResource("ner-model/label.txt");
+        NlpResource featureResource = mynlp.loadResource("ner-model/feature.txt");
 
         File temp = mynlp.getCacheDir();
 

@@ -47,7 +47,7 @@ public class DefaultCustomDictionary implements CustomDictionary {
     private boolean isNormalization = false;
 
     public static final SettingItem<String> dictPathSetting = SettingItem.string(
-            "custom.dictionary.path", "dictionary/CustomDictionary.txt");
+            "custom.dictionary.path", "custom-dict/CustomDictionary.txt");
 
     @Inject
     public DefaultCustomDictionary(MynlpEnv mynlp) throws Exception {
@@ -65,6 +65,10 @@ public class DefaultCustomDictionary implements CustomDictionary {
 
         for (String url : resourceUrls) {
             NlpResource resource = mynlp.loadResource(url);
+
+            if (resource == null) {
+                continue;
+            }
 
             try (CharSourceLineReader reader = resource.openLineReader()) {
                 while (reader.hasNext()) {

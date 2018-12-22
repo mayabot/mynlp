@@ -36,15 +36,15 @@ public class PerceptronPosService {
 
     @Inject
     public PerceptronPosService(MynlpEnv mynlp) throws Exception {
-        NlpResource parameterResource = mynlp.loadResource("pos/parameter.bin");
+        NlpResource parameterResource = mynlp.loadResource("pos-model/parameter.bin");
 
         if (parameterResource == null) {
             logger.error("Not found pos/parameter.bin \n");
             logger.error(ResourceLastVersion.show(ResourceLastVersion.pos));
         }
 
-        NlpResource labelResource = mynlp.loadResource("pos/label.txt");
-        NlpResource featureResource = mynlp.loadResource("pos/feature.txt");
+        NlpResource labelResource = mynlp.loadResource("pos-model/label.txt");
+        NlpResource featureResource = mynlp.loadResource("pos-model/feature.txt");
 
         File temp = new File(mynlp.getCacheDir(), "pos");
         File featureDatFile = new File(temp, featureResource.hash() + ".dat");

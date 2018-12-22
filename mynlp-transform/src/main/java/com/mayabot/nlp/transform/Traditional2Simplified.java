@@ -16,6 +16,6 @@ public class Traditional2Simplified extends BaseTransformDictionary {
 
     @Override
     public TreeMap<String, String> loadDictionary() {
-        return loadFromResouce("ts/t2s.txt");
+        return loadFromResouce("ts-dict/t2s.txt");
     }
 }

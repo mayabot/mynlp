@@ -38,7 +38,7 @@ public class StopwordFilter extends FilterWordTermGenerator implements Predicate
     static Set<String> defaultSet = ImmutableSet.of();
 
     static {
-        URL url = Resources.getResource("maya_data/stopwords.txt");
+        URL url = Resources.getResource("stopword-dict/stopwords.txt");
         try {
             defaultSet = ImmutableSet.copyOf(Resources.asCharSource(url, Charsets.UTF_8).readLines().stream().collect(Collectors.toSet()));
         } catch (Exception e) {

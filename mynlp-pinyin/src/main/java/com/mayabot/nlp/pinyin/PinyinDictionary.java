@@ -40,7 +40,7 @@ public class PinyinDictionary extends BasePinyinDictionary {
 
 
     public final static SettingItem<String> pinyinSetting =
-            string("pinyin.dict", "dictionary/pinyin.txt");
+            string("pinyin.dict", "mynlp-pinyin.txt");
 
     public final static SettingItem<String> pinyinExtDicSetting =
             string("pinyin.ext.dict", null);

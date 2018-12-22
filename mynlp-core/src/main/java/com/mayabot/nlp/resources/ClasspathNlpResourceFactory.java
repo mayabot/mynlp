@@ -4,7 +4,7 @@ import java.net.URL;
 import java.nio.charset.Charset;
 
 /**
- * 从Claspath下面的maya_data路径下加载资源
+ * 从Claspath下面的路径下加载资源
  *
  * @author jimichan
  */
@@ -22,7 +22,7 @@ public class ClasspathNlpResourceFactory implements NlpResourceFactory {
         if (resourceName.startsWith("/")) {
             resourceName = resourceName.substring(1);
         }
-        String path = "maya_data/" + resourceName;
+        String path = resourceName;
 
         URL resource = classLoader.getResource(path);
 
