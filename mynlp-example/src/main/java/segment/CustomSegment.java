@@ -20,11 +20,11 @@ public class CustomSegment {
 
         System.out.println(tokenizer);
 
-        System.out.println(tokenizer.tokenToStringList("欢迎来到松江临港科技城"));
+        System.out.println(tokenizer.parse("欢迎来到松江临港科技城"));
 
         memCustomDictionary.addWord("临港科技城");
         memCustomDictionary.rebuild();
 
-        System.out.println(tokenizer.tokenToStringList("欢迎来到松江临港科技城"));
+        System.out.println(tokenizer.parse("欢迎来到松江临港科技城"));
     }
 }

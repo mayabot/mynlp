@@ -74,7 +74,7 @@ public class WordpathTest {
 
         StringBuilder sb = new StringBuilder();
         wordPath.iteratorVertex().forEachRemaining(vertex -> {
-            sb.append(line.substring(vertex.offset(), vertex.offset() + vertex.length));
+            sb.append(line, vertex.offset(), vertex.offset() + vertex.length);
         });
 
 

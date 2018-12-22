@@ -1,4 +1,4 @@
-package com.mayabot.nlp.segment.recognition;
+package com.mayabot.nlp.segment.ner;
 
 import com.mayabot.nlp.segment.MynlpTokenizer;
 import com.mayabot.nlp.segment.TokenizerTestHelp;

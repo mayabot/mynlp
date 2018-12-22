@@ -24,6 +24,6 @@ public class MakeCrfFileRunnerTest {
 
     @Test
     public void test() {
-        String text = "";
+        // String text = "";
     }
 }
