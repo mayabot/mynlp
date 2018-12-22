@@ -58,7 +58,6 @@ public class MynlpEnv {
     }
 
 
-
     /**
      * 给只从classpath下加载资源的环境
      */

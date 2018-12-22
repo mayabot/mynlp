@@ -71,8 +71,7 @@ public class Application {
     static Map<String, CmdRunner> commands = new HashMap<String, CmdRunner>() {
         {
             put("segment", new SegmentCmdRunner());
-            put("pos-train", new POSPerceptronTrain());
-            put("ner-train", new NerPerceptronTrain());
+            put("train", new PerceptronTrain());
         }
     };
 

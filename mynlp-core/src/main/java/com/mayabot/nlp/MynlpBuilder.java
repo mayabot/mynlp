@@ -27,6 +27,7 @@ import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
 import com.mayabot.nlp.resources.ClasspathNlpResourceFactory;
 import com.mayabot.nlp.resources.FileNlpResourceFactory;
+import com.mayabot.nlp.resources.JarNlpResourceFactory;
 import com.mayabot.nlp.resources.NlpResourceFactory;
 import com.mayabot.nlp.utils.MynlpFactories;
 
@@ -97,7 +98,7 @@ public class MynlpBuilder {
 
             File cacheDirFile;
             if (cacheDir == null) {
-                cacheDirFile = ensureDir(new File(dataDirFile, "cache"));
+                cacheDirFile = ensureDir(new File(System.getProperty("java.io.tmpdir"), "mynlp"));
             } else {
                 cacheDirFile = ensureDir(new File(cacheDir));
             }
@@ -105,6 +106,7 @@ public class MynlpBuilder {
             logger.info("Mynlp cache dir is {}", cacheDirFile.getAbsolutePath());
 
             resourceFactoryList.add(new FileNlpResourceFactory(dataDirFile));
+            resourceFactoryList.add(new JarNlpResourceFactory(dataDirFile));
             resourceFactoryList.add(new ClasspathNlpResourceFactory(Mynlps.class.getClassLoader()));
 
             ImmutableList.copyOf(resourceFactoryList);

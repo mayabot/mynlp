@@ -3,16 +3,16 @@ package com.mayabot.nlp.segment.perceptron;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.mayabot.nlp.MynlpEnv;
+import com.mayabot.nlp.SettingItem;
 import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
-import com.mayabot.nlp.perceptron.FeatureSet;
 import com.mayabot.nlp.resources.NlpResource;
+import com.mayabot.nlp.segment.common.DownloadManager;
 import com.mayabot.nlp.segment.plugins.ner.PerceptronNerService;
 import com.mayabot.nlp.utils.CharNormUtils;
 
 import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.util.List;
 
 /**
@@ -25,30 +25,34 @@ public class PerceptronCwsService {
 
     static InternalLogger logger = InternalLoggerFactory.getInstance(PerceptronNerService.class);
 
+    /**
+     */
+    final SettingItem<String> resourceName =
+            SettingItem.string("cws.model.name", "mynlp-resource-cws-1.0.0.jar");
+
     @Inject
-    public PerceptronCwsService(MynlpEnv mynlp) throws Exception {
-        NlpResource parameterResource = mynlp.loadResource("cws/parameter.bin");
+    public PerceptronCwsService(MynlpEnv mynlp, DownloadManager download) throws Exception {
+
+        NlpResource parameterResource = mynlp.loadResource("cws-model/parameter.bin");
 
         if (parameterResource == null) {
-            logger.error("Not found cws/parameter.bin \n" +
-                    "add dependencies with gradle\n" +
-                    "compile 'com.mayabot.mynlp:mynlp-resource-cws:1.0.0'"
-            );
+            logger.info("Not found cws-model in classpath or data dir,Now auto download from server\n");
+
+            String fileName = mynlp.getSettings().get(this.resourceName);
+            File jar = download.download(fileName);
+
+            parameterResource = mynlp.loadResource("cws-model/parameter.bin");
+            if (jar == null) {
+                logger.error("download " + fileName + " fail. see wiki https://github.com/mayabot/mynlp/wiki");
+                System.exit(0);
+            }
         }
 
-        NlpResource featureResource = mynlp.loadResource("cws/feature.txt");
-
-        File temp = mynlp.getCacheDir();
-
-        File featureDatFile = new File(temp, featureResource.hash() + ".cws.dat");
-        if (!featureDatFile.exists()) {
-            FeatureSet featureSet = FeatureSet.readFromText(new BufferedInputStream(featureResource.openInputStream()));
-            featureSet.save(featureDatFile, null);
-        }
+        NlpResource featureResource = mynlp.loadResource("cws-model/feature.dat");
 
         this.perceptron = CWSPerceptron.load(
                 new BufferedInputStream(parameterResource.openInputStream()),
-                new BufferedInputStream(new FileInputStream(featureDatFile)));
+                new BufferedInputStream(featureResource.openInputStream()));
 
     }
 

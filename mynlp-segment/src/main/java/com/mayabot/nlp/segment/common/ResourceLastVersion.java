@@ -1,5 +1,8 @@
 package com.mayabot.nlp.segment.common;
 
+/**
+ * http://mayaasserts.oss-cn-shanghai.aliyuncs.com/mynlp/files/mynlp-resource-cws-hanlp-1.7.0.jar
+ */
 public class ResourceLastVersion {
 
     public static final String coreDict = "com.mayabot.mynlp.resource:mynlp-resource-coredict:1.0.0";

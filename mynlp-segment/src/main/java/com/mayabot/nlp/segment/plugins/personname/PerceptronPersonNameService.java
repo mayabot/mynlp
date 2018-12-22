@@ -29,14 +29,14 @@ public class PerceptronPersonNameService {
 
     @Inject
     public PerceptronPersonNameService(MynlpEnv mynlp) throws Exception {
-        NlpResource parameterResource = mynlp.loadResource("nr-ner/parameter.bin");
+        NlpResource parameterResource = mynlp.loadResource("person-name-model/parameter.bin");
 
         if (parameterResource == null) {
             logger.error("Not found nr-ner/parameter.bin \n");
             logger.error(ResourceLastVersion.show(ResourceLastVersion.ner));
         }
 
-        NlpResource featureResource = mynlp.loadResource("nr-ner/feature.txt");
+        NlpResource featureResource = mynlp.loadResource("person-name-model/feature.txt");
 
         File temp = new File(mynlp.getCacheDir(), "ner");
 

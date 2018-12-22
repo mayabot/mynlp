@@ -18,9 +18,14 @@ package com.mayabot.nlp.common.matrix;
 
 import com.google.common.collect.Table;
 import com.google.common.collect.TreeBasedTable;
+import com.mayabot.nlp.utils.DataInOutputUtils;
 
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.BitSet;
 import java.util.Map;
 
 /**
@@ -32,6 +37,8 @@ public class CSRSparseMatrix implements Serializable {
     private int[] rowOffset;
     private int[] columnIndices;
     private int[] values;
+
+    private BitSet collBitSet = new BitSet();
 
 
     public CSRSparseMatrix(int[] rowOffset, int[] columnIndices, int[] values) {
@@ -52,13 +59,18 @@ public class CSRSparseMatrix implements Serializable {
         return values;
     }
 
+
+    public CSRSparseMatrix() {
+
+    }
+
     public CSRSparseMatrix(TreeBasedTable<Integer, Integer, Integer> table, int totalRow) {
         int size = table.size();
         values = new int[size];
         columnIndices = new int[size];
 
         this.rowOffset = new int[totalRow + 1];
-
+        collBitSet = new BitSet(totalRow + 1);
         //rowOffset[0]=0;
 
         int point = -1;
@@ -72,6 +84,8 @@ public class CSRSparseMatrix implements Serializable {
             for (Map.Entry<Integer, Integer> entry : row.entrySet()) {
                 point++;
 
+                collBitSet.set(entry.getKey());
+
                 columnIndices[point] = entry.getKey();
                 values[point] = entry.getValue();
             }
@@ -79,6 +93,7 @@ public class CSRSparseMatrix implements Serializable {
         int x = 0;
         for (int i = 0; i < this.rowOffset.length; i++) {
             int p = this.rowOffset[i];
+
             if (p > 0) {
                 x = p;
             } else {
@@ -88,6 +103,24 @@ public class CSRSparseMatrix implements Serializable {
 
     }
 
+
+    public void writeExternal(ObjectOutput out) throws IOException {
+        DataInOutputUtils.writeIntArray(this.getColumnIndices(), out);
+        DataInOutputUtils.writeIntArray(this.getRowOffset(), out);
+        DataInOutputUtils.writeIntArray(this.getValues(), out);
+
+        out.writeObject(collBitSet);
+
+    }
+
+    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+
+        this.columnIndices = DataInOutputUtils.readIntArray(in);
+        rowOffset = DataInOutputUtils.readIntArray(in);
+        values = DataInOutputUtils.readIntArray(in);
+
+        this.collBitSet = (BitSet) in.readObject();
+    }
 
     /**
      * 获得矩阵的cell值
@@ -103,12 +136,16 @@ public class CSRSparseMatrix implements Serializable {
         }
 
 
+
         int off = rowOffset[row];
         int end = rowOffset[row + 1];
         if (off == end) {
             return 0;
         }
 
+        if (!collBitSet.get(col)) {
+            return 0;
+        }
         //columnIndices
 
         int index = Arrays.binarySearch(columnIndices, off, end, col);

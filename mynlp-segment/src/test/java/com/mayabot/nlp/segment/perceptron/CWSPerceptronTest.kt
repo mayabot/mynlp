@@ -8,7 +8,7 @@ object CWSPerceptronTest {
 
     @JvmStatic
     fun main(args: Array<String>) {
-        //train()
+//        train()
         test()
     }
 
@@ -18,13 +18,13 @@ object CWSPerceptronTest {
 //        val trainFile = File("data.work/corpus.segment/backoff2005/msr_training.txt")
 //        val evaluateFile = File("data.work/corpus.segment/backoff2005/msr_test_gold.txt")
 
-        val trainFile = File("data.work/nercorpus")
-        val evaluateFile = File("data.work/nercorpus/hr_0.txt")
+        val trainFile = File("data.work/cws")
+        val evaluateFile = File("data.work/cws/pku/199801.txt")
 
         val cws = trainer.train(
                 trainFile,
                 evaluateFile,
-                5, 1)
+                150, 2)
 
         println("compress")
         cws.compress(0.2, 1e-3)
@@ -35,7 +35,8 @@ object CWSPerceptronTest {
     }
 
     fun test() {
-        val model = PerceptronModel.load(File("data.work/pcws/model-hanlp-compress"))
+//        val model = PerceptronModel.load(File("data.work/pcws/model-hanlp-compress"))
+        val model = PerceptronModel.load(File("data/cws-model"))
 
         //model.compress(0.1,0.01)
 
@@ -43,12 +44,12 @@ object CWSPerceptronTest {
 
         //cws.save(File("data/pcws/model-hanlp-compress"))
 ////
-//        val tester = File("data/corpus.segment/backoff2005/msr_training.txt").readLines()
-//
+//        val tester = File("data.work/cws/pku/199801.txt").readLines()
+//////
 //        CWSEvaluate.evaluate(tester, cws)
-//        println("---")
+        println("---")
 
-        val text = "先后视察了华鑫海欣楼宇党建（群团）服务站和江阴顺天村项目\n" +
+        val text = "2017年2月5日先后视察了华鑫海欣楼宇党建（群团）服务站和江阴市顺天村项目\n" +
                 "南海地区的航行和飞越自由根本不存在问题，每年10万余艘各国各类船只能够在南海安全、顺利地通行，而中国南沙和西沙群岛远离国际航道。但在美方眼里这不叫航行自由，美方所谓“航行自由行动”，是按照自己对国际法的单方面解释，派出军舰挑战其它国家对海上领土主权和海洋权益的所谓“过度”主张和行使。放着宽阔的南海国际航道不走，美国军舰却屡次进入中国驻守的南海岛礁12海里之内宣示“航行自由”，实际上是别有用心。\n" +
                 "美国当地时间星期二，谷歌旗下流媒体视频网站YouTube在晚上6点左右陷入全球性宕机状态，直到7点20分才恢复功能。\n" +
                 "\n" +

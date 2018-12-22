@@ -75,7 +75,7 @@ public class SegmentCmdRunner implements CmdRunner {
                 int count = 0;
                 String text = null;
                 while ((text = reader.readLine()) != null) {
-                    List<WordTerm> result = tokenizer.tokenToTermList(text);
+                    List<WordTerm> result = tokenizer.parse(text).asWordList();
                     count++;
                     if (count % 200 == 0) {
                         System.out.print(".");
@@ -102,7 +102,7 @@ public class SegmentCmdRunner implements CmdRunner {
         } else {
             String text = Joiner.on(" ").join(line.getArgList());
 
-            List<WordTerm> result = tokenizer.tokenToTermList(text);
+            List<WordTerm> result = tokenizer.parse(text).asWordList();
 
             if (!line.hasOption("o")) {
                 result.forEach(x -> {

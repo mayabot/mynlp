@@ -45,7 +45,7 @@ public class CoreDictionary extends NlpResouceExternalizable {
 
     private InternalLogger logger = InternalLoggerFactory.getInstance(CoreDictionary.class);
 
-    public final String path = "dictionary/CoreDict.txt";
+    public final String path = "core-dict/CoreDict.txt";
 
     /**
      * 词频总和
