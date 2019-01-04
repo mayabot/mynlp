@@ -58,6 +58,7 @@ public class VertexRow implements Iterable<Vertex> {
         if (rowNum == -1 || length == 0) {
             return "";
         }
+        //FIXME 这里改成substring比较好，或者返回CharSeq 这里存在复制的问题
         return new String(wordnet.charArray, rowNum, length);
     }
 

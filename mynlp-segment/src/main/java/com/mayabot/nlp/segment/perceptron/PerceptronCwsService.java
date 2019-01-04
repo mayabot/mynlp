@@ -7,7 +7,6 @@ import com.mayabot.nlp.SettingItem;
 import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
 import com.mayabot.nlp.resources.NlpResource;
-import com.mayabot.nlp.segment.common.DownloadManager;
 import com.mayabot.nlp.segment.plugins.ner.PerceptronNerService;
 import com.mayabot.nlp.utils.CharNormUtils;
 
@@ -31,7 +30,7 @@ public class PerceptronCwsService {
             SettingItem.string("cws.model.name", "mynlp-resource-cws-1.0.0.jar");
 
     @Inject
-    public PerceptronCwsService(MynlpEnv mynlp, DownloadManager download) throws Exception {
+    public PerceptronCwsService(MynlpEnv mynlp) throws Exception {
 
         NlpResource parameterResource = mynlp.loadResource("cws-model/parameter.bin");
 
@@ -39,7 +38,7 @@ public class PerceptronCwsService {
             logger.info("Not found cws-model in classpath or data dir,Now auto download from server\n");
 
             String fileName = mynlp.getSettings().get(this.resourceName);
-            File jar = download.download(fileName);
+            File jar = mynlp.download(fileName);
 
             parameterResource = mynlp.loadResource("cws-model/parameter.bin");
             if (jar == null) {

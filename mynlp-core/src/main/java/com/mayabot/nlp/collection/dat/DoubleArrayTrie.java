@@ -36,7 +36,6 @@
 package com.mayabot.nlp.collection.dat;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -48,7 +47,9 @@ import static com.mayabot.nlp.utils.DataInOutputUtils.writeIntArray;
 
 /**
  * 双数组Trie树。
+ *
  * 每个key对应其数值的下标（这个特性可以用来做List String 的索引）
+ *
  */
 public class DoubleArrayTrie {
 
@@ -121,6 +122,23 @@ public class DoubleArrayTrie {
     public DATMatcher matcher(char[] text) {
         return new DATMatcher(this, text, 0);
     }
+
+    public DATLongMatcher matcherLong(String text, int offset) {
+        return new DATLongMatcher(this, text, offset);
+    }
+
+    public DATLongMatcher matcherLong(char[] text, int offset) {
+        return new DATLongMatcher(this, text, offset);
+    }
+
+    public DATLongMatcher matcherLong(String text) {
+        return new DATLongMatcher(this, text, 0);
+    }
+
+    public DATLongMatcher matcherLong(char[] text) {
+        return new DATLongMatcher(this, text, 0);
+    }
+
 
     /**
      * 精确匹配
@@ -488,30 +506,6 @@ public class DoubleArrayTrie {
         }
 
         return result;
-    }
-
-
-    public static void main(String[] args) {
-        TreeSet<String> tr = Sets.newTreeSet();
-
-        Random random = new Random(0);
-
-
-        for (int i = 0; i < 1000; i++) {
-            String s = random.nextInt() + "";
-            tr.add(s);
-        }
-
-        ArrayList<String> list = Lists.newArrayList(tr);
-
-
-        DoubleArrayTrie index = new DoubleArrayTrie(list);
-
-        random = new Random(0);
-        for (int i = 0; i < 1000; i++) {
-            String s = random.nextInt() + "";
-            System.out.println(index.indexOf(s));
-        }
     }
 
 }

@@ -36,10 +36,10 @@ package com.mayabot.nlp.collection.dat;
 
 /**
  * 一个搜索工具（注意，当调用next()返回false后不应该继续调用next()，除非reset状态）
- *
+ * <p>
  * DAT的匹配器是一个多匹配器，把各种可能都计算出来
  */
-public class DATMatcher {
+public class DATLongMatcher {
 
     /**
      * key的起点(在原始文本中)
@@ -73,11 +73,11 @@ public class DATMatcher {
 
     private DoubleArrayTrie dat;
 
-
     private int[] base;
     private int[] check;
 
-
+    private Object value = null;
+    private Object obj = new Object();
 
     /**
      * 构造一个双数组搜索工具
@@ -85,12 +85,12 @@ public class DATMatcher {
      * @param offset 搜索的起始位置
      * @param text   搜索的目标字符数组
      */
-    DATMatcher(DoubleArrayTrie dat, String text, int offset) {
+    DATLongMatcher(DoubleArrayTrie dat, String text, int offset) {
         this(dat, text.toCharArray(), offset);
     }
 
 
-    DATMatcher(DoubleArrayTrie dat, char[] charArray, int offset) {
+    DATLongMatcher(DoubleArrayTrie dat, char[] charArray, int offset) {
         this.charArray = charArray;
         this.dat = dat;
         i = offset;
@@ -105,7 +105,6 @@ public class DATMatcher {
             begin = offset;
         }
 
-
         base = dat.base;
         check = dat.check;
     }
@@ -116,46 +115,38 @@ public class DATMatcher {
      * @return 是否命中，当返回false表示搜索结束，否则使用公开的成员读取命中的详细信息
      */
     public boolean next() {
-        int b = last;
+        value = null;
+        begin = i;
+        int b = base[0];
         int n;
         int p;
 
         for (; ; ++i) {
-            if (i == arrayLength) // 指针到头了，将起点往前挪一个，重新开始，状态归零
+            if (i >= arrayLength)               // 指针到头了，将起点往前挪一个，重新开始，状态归零
             {
-                ++begin;
-                if (begin == arrayLength) {
-                    break;
-                }
-                i = begin;
-                b = base[0];
+                return value != null;
             }
-            p = b + (int) (charArray[i]) + 1; // 状态转移 p = base[char[i-1]] +
-            // char[i] + 1
-            if (b == check[p]) // base[char[i-1]] == check[base[char[i-1]] +
-                // char[i] + 1]
-            {
-                b = base[p]; // 转移成功
-            } else {
-                i = begin; // 转移失败，也将起点往前挪一个，重新开始，状态归零
-                ++begin;
-                if (begin == arrayLength) {
-                    break;
+            p = b + (int) (charArray[i]) + 1;   // 状态转移 p = base[char[i-1]] + char[i] + 1
+            if (b == check[p])                  // base[char[i-1]] == check[base[char[i-1]] + char[i] + 1]
+                b = base[p];                    // 转移成功
+            else {
+                if (begin == arrayLength) break;
+                if (value != null) {
+                    i = begin + length;         // 输出最长词后，从该词语的下一个位置恢复扫描
+                    return true;
                 }
+
+                i = begin;                      // 转移失败，也将起点往前挪一个，重新开始，状态归零
+                ++begin;
                 b = base[0];
-                continue;
             }
             p = b;
             n = base[p];
-            if (b == check[p] && n < 0) // base[p] == check[p] && base[p] <
-            // 0
-            // 查到一个词
+            if (b == check[p] && n < 0)         // base[p] == check[p] && base[p] < 0 查到一个词
             {
                 length = i - begin + 1;
                 index = -n - 1;
-                last = b;
-                ++i;
-                return true;
+                value = obj;
             }
         }
 

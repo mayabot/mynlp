@@ -20,7 +20,6 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
-import com.mayabot.nlp.segment.common.VertexHelper;
 import com.mayabot.nlp.segment.wordnet.BestPathAlgorithm;
 import com.mayabot.nlp.segment.wordnet.Wordnet;
 import com.mayabot.nlp.segment.wordnet.Wordpath;
@@ -105,10 +104,6 @@ public class PipelineTokenizer implements MynlpTokenizer {
 
         //构建一个空的Wordnet对象
         final Wordnet wordnet = new Wordnet(text);
-        //wordnet.setBestPathAlgorithm(bestPathAlgorithm);
-
-        wordnet.getBeginRow().put(VertexHelper.newBegin());
-        wordnet.getEndRow().put(VertexHelper.newEnd());
 
         for (WordSplitAlgorithm initializer : initer) {
             initializer.fill(wordnet);
@@ -117,7 +112,7 @@ public class PipelineTokenizer implements MynlpTokenizer {
         // 对WordNet进行补齐,避免意外的错误
         wordnet.fillNill();
 
-//        System.out.println(wordnet.toMoreString());
+//      System.out.println(wordnet.toMoreString());
 
         //选择一个路径出来
         Wordpath wordPath = bestPathAlgorithm.select(wordnet);

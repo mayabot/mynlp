@@ -1,6 +1,5 @@
 package com.mayabot.nlp.segment;
 
-import com.mayabot.nlp.segment.plugins.CommonRuleWordpathProcessor;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -10,9 +9,7 @@ public class CombineTest {
     public void test() {
 
         MynlpTokenizerBuilder builder =
-                MynlpTokenizers.coreTokenizerBuilder()
-//                        .setPersonRecognition(false)
-                        .config(CommonRuleWordpathProcessor.class, x -> x.setEnableMqMerge(true));
+                MynlpTokenizers.coreTokenizerBuilder();
 
 
 
