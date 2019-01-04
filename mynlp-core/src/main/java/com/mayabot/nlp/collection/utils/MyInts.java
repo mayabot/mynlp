@@ -16,6 +16,9 @@
 
 package com.mayabot.nlp.collection.utils;
 
+/**
+ * @author jimichan
+ */
 public class MyInts {
     public static byte[] toByteArray(int value) {
         return new byte[]{(byte) (value >> 24), (byte) (value >> 16),

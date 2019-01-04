@@ -17,13 +17,17 @@ package com.mayabot.nlp;
 
 import com.google.common.base.Charsets;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
+import com.google.common.io.ByteStreams;
 import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
 import com.mayabot.nlp.resources.ClasspathNlpResourceFactory;
 import com.mayabot.nlp.resources.NlpResource;
 import com.mayabot.nlp.resources.NlpResourceFactory;
 
-import java.io.File;
+import java.io.*;
+import java.net.URL;
+import java.net.URLConnection;
 import java.nio.charset.Charset;
 import java.util.List;
 
@@ -50,6 +54,10 @@ public class MynlpEnv {
 
     private Settings settings;
 
+    private List<ResoucesMissing> missingList = Lists.newArrayList();
+
+    private String downloadBaseUrl = "http://cdn.mayabot.com/mynlp/files/";
+
     public MynlpEnv(File dataDir, File cacheDir, List<NlpResourceFactory> resourceFactory, Settings settings) {
         this.dataDir = dataDir;
         this.cacheDir = cacheDir;
@@ -57,13 +65,16 @@ public class MynlpEnv {
         this.settings = settings;
     }
 
-
     /**
      * 给只从classpath下加载资源的环境
      */
     public MynlpEnv() {
         resourceFactory = ImmutableList.of(new ClasspathNlpResourceFactory(Mynlps.class.getClassLoader()));
         settings = Settings.defaultSystemSettings();
+    }
+
+    public void registeResourceMissing(ResoucesMissing missing) {
+        this.missingList.add(missing);
     }
 
 
@@ -83,21 +94,47 @@ public class MynlpEnv {
      * @return NlpResource
      */
     public NlpResource loadResource(String resourceName, Charset charset) {
+
         if (resourceName == null || resourceName.trim().isEmpty()) {
             return null;
         }
+
+        NlpResource resource = getNlpResource(resourceName, charset);
+
+        boolean ps = false;
+
+        if (resource == null) {
+            for (ResoucesMissing missing : missingList) {
+                boolean r = missing.process(resourceName, this);
+                if (r) {
+                    ps = true;
+                    break;
+                }
+            }
+        }
+
+        if (ps) {
+            // load again
+            resource = getNlpResource(resourceName, charset);
+        }
+
+        return resource;
+    }
+
+    private NlpResource getNlpResource(String resourceName, Charset charset) {
+        NlpResource resource = null;
         for (NlpResourceFactory factory : resourceFactory) {
-            NlpResource resource = factory.load(resourceName, charset);
+            resource = factory.load(resourceName, charset);
             if (resource != null) {
                 String string = resource.toString();
                 if (string.length() >= 60) {
                     string = "../.." + string.substring(string.length() - 60);
                 }
                 logger.info("load resource {}", string);
-                return resource;
+                break;
             }
         }
-        return null;
+        return resource;
     }
 
     /**
@@ -124,4 +161,47 @@ public class MynlpEnv {
     }
 
 
+    /**
+     * 从url地址下载jar文件，保存到data目录下
+     */
+    public File download(String fileName) {
+
+        // http://mayaasserts.oss-cn-shanghai.aliyuncs.com/mynlp/files/mynlp-resource-cws-hanlp-1.7.0.jar
+
+        File file = new File(dataDir, fileName);
+
+        if (file.exists()) {
+            return file;
+        }
+
+        try {
+            URL url = new URL(downloadBaseUrl + fileName);
+
+            URLConnection connection = url.openConnection();
+
+            connection.setConnectTimeout(5000);
+            connection.setReadTimeout(5000);
+            System.out.println("Downloading " + url);
+            connection.connect();
+
+            try (InputStream inputStream = new BufferedInputStream(connection.getInputStream());
+                 OutputStream out = new BufferedOutputStream(new FileOutputStream(file))
+            ) {
+                ByteStreams.copy(inputStream, out);
+            }
+            System.out.println("Downloaded " + url);
+
+            if (file.exists()) {
+                return file;
+            }
+
+        } catch (Exception e) {
+            System.err.println("Download " + (downloadBaseUrl + fileName) + " error!!!");
+            //下载失败 退出系统
+            //System.exit(0);
+        }
+
+        return null;
+
+    }
 }

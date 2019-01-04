@@ -24,12 +24,13 @@ import com.mayabot.nlp.segment.wordnet.*;
 /**
  * 基于核心词典的bi词之前的共出现的次数，采用viterbi选择出一个概率最大的path
  * 是权重越小越好 距离越短
+ *
  * @author jimichan
  */
 @Singleton
-public class ViterbiBestPathAlgorithm implements BestPathAlgorithm {
+public final class ViterbiBestPathAlgorithm implements BestPathAlgorithm {
 
-    protected CoreBiGramTableDictionary coreBiGramTableDictionary;
+    private CoreBiGramTableDictionary coreBiGramTableDictionary;
 
 
     /**
@@ -48,12 +49,17 @@ public class ViterbiBestPathAlgorithm implements BestPathAlgorithm {
      * @param to
      * @return
      */
-    protected final double partA = (1 - dSmoothingPara);
-    protected final double partB;
-    protected final double PARTA_PARTB;
-    protected final double PARTTA_Dtemp;
-    protected final double PartZ;
-
+    private final double partA = (1 - dSmoothingPara);
+    private final double partB;
+    private final double PARTA_PARTB;
+    private final double PARTTA_Dtemp;
+    private final double PartZ;
+    final double value1;
+    final double value2;
+    final double value3;
+    final double value4;
+    final double value5;
+    final double[] values = new double[21];
 
     @Inject
     public ViterbiBestPathAlgorithm(CoreBiGramTableDictionary coreBiGramTableDictionary,
@@ -64,6 +70,17 @@ public class ViterbiBestPathAlgorithm implements BestPathAlgorithm {
         PARTA_PARTB = partA * partB;
         PARTTA_Dtemp = partA * dTemp;
         PartZ = dSmoothingPara / coreDictionary.totalFreq;
+
+        for (int i = 0; i < 21; i++) {
+            values[i] = Math.abs(-Math
+                    .log(PartZ * i + PARTTA_Dtemp
+                    ));
+        }
+        value1 = values[1];
+        value2 = values[2];
+        value3 = values[3];
+        value4 = values[4];
+        value5 = values[5];
     }
 
 
@@ -116,16 +133,11 @@ public class ViterbiBestPathAlgorithm implements BestPathAlgorithm {
 
         }
 
-//
-//        System.out.println("-----------");
-//
-//        System.out.println(wordnet.toMoreString());
-
         return buildPath(wordnet);
     }
 
 
-    protected void updateFrom(Wordnet wordnet, Vertex the, Vertex from) {
+    private void updateFrom(Wordnet wordnet, Vertex the, Vertex from) {
 
         //是权重越小越好 距离越短
         double weight = from.weight + calculateWeight(from, the);
@@ -136,7 +148,7 @@ public class ViterbiBestPathAlgorithm implements BestPathAlgorithm {
     }
 
 
-    protected double calculateWeight(Vertex from, Vertex to) {
+    private double calculateWeight(Vertex from, Vertex to) {
         int frequency = from.freq;
         if (frequency == 0) {
             // 防止发生除零错误
@@ -155,13 +167,36 @@ public class ViterbiBestPathAlgorithm implements BestPathAlgorithm {
 //                .log(Predefine.dSmoothingPara * frequency / (Predefine.totalFreq) +
 //                        partA* (partB * nTwoWordsFreq / frequency + Predefine.dTemp));
 //        System.out.println(from.realWord()+"->"+to.realWord()+"="+nTwoWordsFreq);
-        double value = -Math
-                .log(PartZ * frequency
-                        +
-                        PARTA_PARTB * nTwoWordsFreq / frequency
+        double value = 0;
 
-                        + PARTTA_Dtemp
-                );
+        if (nTwoWordsFreq > 0) {
+            value = -Math
+                    .log(PartZ * frequency
+                            +
+                            PARTA_PARTB * nTwoWordsFreq / frequency
+
+                            + PARTTA_Dtemp
+                    );
+
+        } else {
+            if (frequency == 1) {
+                value = value1;
+            } else if (frequency == 2) {
+                value = value1;
+            } else if (frequency == 3) {
+                value = value3;
+            } else if (frequency == 4) {
+                value = value4;
+            } else if (frequency == 5) {
+                value = value5;
+            } else {
+                value = -Math
+                        .log(PartZ * frequency + PARTTA_Dtemp
+                        );
+
+            }
+        }
+
         if (value < 0.0) {
             value = -value;
         }
@@ -177,7 +212,7 @@ public class ViterbiBestPathAlgorithm implements BestPathAlgorithm {
      * @param wordnet
      * @return
      */
-    protected Wordpath buildPath(Wordnet wordnet) {
+    private Wordpath buildPath(Wordnet wordnet) {
         //从后到前，获得完整的路径
         Wordpath wordPath = new Wordpath(wordnet);
 
@@ -190,8 +225,6 @@ public class ViterbiBestPathAlgorithm implements BestPathAlgorithm {
             wordPath.combine(point);
             point = point.from;
         }
-
-        //System.out.println(wordnet.toMoreString());
 
         // 最后一个point必定指向start节点
 

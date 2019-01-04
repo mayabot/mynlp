@@ -16,11 +16,11 @@ import java.util.stream.Collectors;
 /**
  * 速度比较。
  * <p>
- * Mynlp 分词 使用 786 ms
- * 速度 1140243字/秒
+ * Mynlp 分词 使用 612 ms
+ * 速度 1464429字/秒
  * <p>
  * Ansj 分词 使用 1296 ms
- * 速度 691536字/秒
+ * 速度  691536字/秒
  */
 public class HowFast {
     public static void main(String[] args) throws Exception {

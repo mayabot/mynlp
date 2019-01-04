@@ -49,6 +49,8 @@ import static com.mayabot.nlp.utils.DataInOutputUtils.writeIntArray;
 
 /**
  * 【String int】的map
+ * 这是一个定制化的String，Int的DATMap的实现，采用int来存储，比Integer对内存的要求更低。
+ * @author jimichan
  */
 public class DoubleArrayTrieStringIntMap {
 
@@ -118,6 +120,29 @@ public class DoubleArrayTrieStringIntMap {
      * @param offset 文本中的偏移量
      * @return
      */
+    public DATMapLongMatcherInt matchLong(char[] text, int offset) {
+        return new DATMapLongMatcherInt(dat.matcherLong(text, offset));
+    }
+
+
+    /**
+     * DAT的搜索器
+     *
+     * @param text   带计算的文本
+     * @param offset 文本中的偏移量
+     * @return
+     */
+    public DATMapLongMatcherInt matchLong(String text, int offset) {
+        return new DATMapLongMatcherInt(dat.matcherLong(text, offset));
+    }
+
+    /**
+     * DAT的搜索器
+     *
+     * @param text   带计算的文本
+     * @param offset 文本中的偏移量
+     * @return
+     */
     public DATMapMatcherInt match(char[] text, int offset) {
         return new DATMapMatcherInt(dat.matcher(text, offset));
     }
@@ -127,6 +152,41 @@ public class DoubleArrayTrieStringIntMap {
         DATMatcher datMater;
 
         public DATMapMatcherInt(DATMatcher datMater) {
+            this.datMater = datMater;
+        }
+
+        public boolean next() {
+            return datMater.next();
+        }
+
+        public int getBegin() {
+            return datMater.getBegin();
+        }
+
+        public int getLength() {
+            return datMater.getLength();
+        }
+
+        public int getValue() {
+            int index = datMater.getIndex();
+            if (index == -1) {
+                return -1;
+            } else {
+                return values[index];
+            }
+        }
+
+        public int getIndex() {
+            return datMater.getIndex();
+        }
+    }
+
+
+    public class DATMapLongMatcherInt {
+
+        DATLongMatcher datMater;
+
+        public DATMapLongMatcherInt(DATLongMatcher datMater) {
             this.datMater = datMater;
         }
 

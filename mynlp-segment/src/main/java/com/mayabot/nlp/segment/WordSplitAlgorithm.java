@@ -17,6 +17,7 @@
 package com.mayabot.nlp.segment;
 
 import com.mayabot.nlp.segment.wordnet.Wordnet;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * 分词算法。
@@ -38,6 +39,6 @@ public interface WordSplitAlgorithm extends SegmentComponent {
      *
      * @param wordnet
      */
-    void fill(Wordnet wordnet);
+    void fill(@NotNull Wordnet wordnet);
 
 }

@@ -23,6 +23,4 @@ class SegmentErrorCasesTest {
             println(tokenizer.parse(s))
         }
     }
-
-
 }

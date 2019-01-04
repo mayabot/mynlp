@@ -1,9 +1,7 @@
 package com.mayabot.nlp.segment.core;
 
 import com.mayabot.nlp.segment.PipelineTokenizerBuilder;
-import com.mayabot.nlp.segment.plugins.CommonRuleWordpathProcessor;
-import com.mayabot.nlp.segment.plugins.CommonSplitAlgorithm;
-import com.mayabot.nlp.segment.plugins.TimeSplitAlgorithm;
+import com.mayabot.nlp.segment.plugins.AtomSplitAlgorithm;
 import com.mayabot.nlp.segment.plugins.correction.CorrectionWordpathProcessor;
 import com.mayabot.nlp.segment.plugins.customwords.CustomDictionaryProcessor;
 import com.mayabot.nlp.segment.plugins.personname.PersonNameAlgorithm;
@@ -62,8 +60,7 @@ public class CoreTokenizerBuilder extends PipelineTokenizerBuilder {
         //切词算法
         this.addWordSplitAlgorithm(
                 CoreDictionarySplitAlgorithm.class,
-                CommonSplitAlgorithm.class,
-                TimeSplitAlgorithm.class
+                AtomSplitAlgorithm.class
         );
 
         if (personName) {
@@ -73,9 +70,6 @@ public class CoreTokenizerBuilder extends PipelineTokenizerBuilder {
         // Pipeline处理器
         this.addProcessor(CustomDictionaryProcessor.class);
 
-        this.addProcessor(CommonRuleWordpathProcessor.class);
-
-
         //分词纠错
         addProcessor(CorrectionWordpathProcessor.class);
 
@@ -83,12 +77,6 @@ public class CoreTokenizerBuilder extends PipelineTokenizerBuilder {
             addProcessor(PosPerceptronProcessor.class);
         }
 
-        //一些通用模式识别的处理
-        addProcessor(CommonRuleWordpathProcessor.class);
-
-        config(CommonRuleWordpathProcessor.class, x -> {
-            x.setEnableEmail(email);
-        });
     }
 
 

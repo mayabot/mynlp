@@ -65,6 +65,7 @@ public class MynlpBuilder {
 
     private Map<Class, Object> injectInstance = Maps.newHashMap();
 
+
     Mynlp build() throws RuntimeException {
         try {
             logger.info("Current Working Dir is " + new File(".").getAbsolutePath());
@@ -73,7 +74,7 @@ public class MynlpBuilder {
                 /**
                  * 在全局配置文件中 data.dir 可以指定dir目录，默认是当前工作目录下面的data
                  */
-                dataDir = settings.get("data.dir", "data");
+                dataDir = settings.get("data.dir", null);
 
                 //通过JVM系统属性配置 -Dmynlp.data=/path/data
 
@@ -84,10 +85,13 @@ public class MynlpBuilder {
             }
 
             if (dataDir == null) {
-                dataDir = "data";
+                dataDir = System.getProperty("user.home") + "/.mynlp.data";
             }
 
             File dataDirFile = new File(dataDir);
+            if (!dataDirFile.exists()) {
+                dataDirFile.mkdir();
+            }
             logger.info("Mynlp data dir is " + dataDirFile.getAbsolutePath() + ",exists " + dataDirFile.exists());
 
             if (settings.get("cache.dir") != null) {
@@ -120,35 +124,34 @@ public class MynlpBuilder {
         }
     }
 
-    private Injector createInject(MynlpEnv mynlp) {
+    private Injector createInject(MynlpEnv mynlpEnv) {
 
         ArrayList<Module> modules = Lists.newArrayList();
 
         modules.add(new AbstractModule() {
             @Override
             protected void configure() {
-                bind(MynlpEnv.class).toInstance(mynlp);
-
+                bind(MynlpEnv.class).toInstance(mynlpEnv);
                 injectInstance.forEach((k, v) -> bind(k).toInstance(v));
             }
         });
 
         //加载模块，在配置文件中声明的
-        modules.addAll(loadModules());
+        modules.addAll(loadModules(mynlpEnv));
 
         return Guice.createInjector(modules);
     }
 
-    private List<Module> loadModules() {
+    private List<Module> loadModules(MynlpEnv mynlp) {
         try {
             Collection<Class> classes = MynlpFactories.load().get(MynlpFactories.GuiceModule);
 
             return classes.stream().map(clazz -> {
                 try {
                     try {
-                        Constructor<? extends Module> c1 = clazz.getConstructor(Mynlps.class);
+                        Constructor<? extends Module> c1 = clazz.getConstructor(MynlpEnv.class);
                         if (c1 != null) {
-                            return c1.newInstance(this);
+                            return c1.newInstance(mynlp);
                         }
                     } catch (NoSuchMethodException e) {
                         //throw new RuntimeException(e);

@@ -38,7 +38,7 @@ public class FST<T> {
 
     private Map<String, FstNode<T>> nodeMap = Maps.newHashMap();
 
-//
+
 //    private int idCount = 1;
 //
 //    public int incIdCount() {

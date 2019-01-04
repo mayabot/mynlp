@@ -36,8 +36,10 @@ package com.mayabot.nlp.collection.dat;
 
 /**
  * 一个搜索工具（注意，当调用next()返回false后不应该继续调用next()，除非reset状态）
- * <p>
+ *
  * DAT的匹配器是一个多匹配器，把各种可能都计算出来
+ *
+ * @author jimichan
  */
 public interface DATMapMatcher<V> {
 
@@ -45,17 +47,9 @@ public interface DATMapMatcher<V> {
 
     public int getBegin();
 
-//	public void setBegin(int begin) {
-//		this.begin = begin;
-//	}
-
     public int getLength();
 
     public V getValue();
-
-//	public void setValue(V value) {
-//		this.value = value;
-//	}
 
     public int getIndex();
 }

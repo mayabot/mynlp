@@ -16,7 +16,9 @@
 
 package com.mayabot.nlp.segment.wordnet;
 
+import com.mayabot.nlp.segment.common.VertexHelper;
 import com.mayabot.nlp.utils.CustomCharSequence;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.BitSet;
 import java.util.function.Consumer;
@@ -88,6 +90,9 @@ public class Wordnet implements CharSequence {
         for (int i = 0; i < charSize; i++) {
             slotList[i] = new VertexRow(i, this);
         }
+
+        getBeginRow().put(VertexHelper.newBegin());
+        getEndRow().put(VertexHelper.newEnd());
     }
 
     /**
@@ -374,7 +379,8 @@ public class Wordnet implements CharSequence {
      *
      * @return
      */
-    public char[] getCharArray() {
+    public @NotNull
+    char[] getCharArray() {
         return charArray;
     }
 
