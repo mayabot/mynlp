@@ -36,7 +36,6 @@ public class CustomDictionaryProcessor extends BaseSegmentComponent implements W
 
     private CustomDictionary dictionary;
 
-
     @Inject
     public CustomDictionaryProcessor(CustomDictionary dictionary) {
         this.dictionary = dictionary;

@@ -25,6 +25,8 @@ public abstract class BaseSegmentComponent implements SegmentComponent {
 
     private boolean enabled = true;
 
+    private int order = SegmentComponentOrder.DEFAULT;
+
     @Override
     public String getName() {
         return this.getClass().getSimpleName().replace("XProcess", "");
@@ -49,8 +51,6 @@ public abstract class BaseSegmentComponent implements SegmentComponent {
     public void disable() {
         this.enabled = false;
     }
-
-    private int order = SegmentComponentOrder.DEFAULT;
 
     @Override
     public int getOrder() {

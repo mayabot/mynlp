@@ -34,6 +34,9 @@ public final class Mynlps {
 
     private static final ConcurrentHashMap<String, Mynlp> map = new ConcurrentHashMap<>();
 
+    /**
+     * @param consumer
+     */
     public static void install(Consumer<MynlpBuilder> consumer) {
         if (map.isEmpty()) {
             MynlpBuilder builder = new MynlpBuilder();

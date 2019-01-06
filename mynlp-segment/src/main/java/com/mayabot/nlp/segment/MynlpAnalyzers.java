@@ -28,7 +28,7 @@ import com.mayabot.nlp.segment.analyzer.WordTermGenerator;
 public class MynlpAnalyzers {
 
     /**
-     * 准分词。
+     * 带停用词过滤和标点符号过滤的标准分词。
      *
      * @param tokenizer
      * @return

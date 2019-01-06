@@ -13,7 +13,7 @@ public class CustomSegment {
 
         CoreTokenizerBuilder builder = new CoreTokenizerBuilder();
 
-        builder.addComponent(
+        builder.addProcessor(
                 new CustomDictionaryProcessor(memCustomDictionary));
 
         MynlpTokenizer tokenizer = builder.build();

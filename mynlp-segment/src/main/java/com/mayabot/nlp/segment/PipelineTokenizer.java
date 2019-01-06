@@ -73,7 +73,6 @@ public class PipelineTokenizer implements MynlpTokenizer {
         Preconditions.checkNotNull(bestPathAlgorithm);
         Preconditions.checkNotNull(this.initer);
         Preconditions.checkNotNull(pipeline);
-        Preconditions.checkArgument(pipeline.length != 0);
     }
 
     @Override

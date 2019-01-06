@@ -1,21 +1,15 @@
 package com.mayabot.nlp.segment.plugins.pos;
 
-import com.google.common.io.Files;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.mayabot.nlp.MynlpEnv;
 import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
-import com.mayabot.nlp.perceptron.FeatureSet;
 import com.mayabot.nlp.resources.NlpResource;
 import com.mayabot.nlp.segment.Nature;
 import com.mayabot.nlp.segment.WordTerm;
-import com.mayabot.nlp.segment.common.ResourceLastVersion;
 import com.mayabot.nlp.segment.wordnet.Vertex;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.util.List;
 import java.util.function.Function;
 
@@ -37,30 +31,19 @@ public class PerceptronPosService {
     @Inject
     public PerceptronPosService(MynlpEnv mynlp) throws Exception {
         NlpResource parameterResource = mynlp.loadResource("pos-model/parameter.bin");
-
-        if (parameterResource == null) {
-            logger.error("Not found pos/parameter.bin \n");
-            logger.error(ResourceLastVersion.show(ResourceLastVersion.pos));
-        }
-
+        NlpResource featureResource = mynlp.loadResource("pos-model/feature.dat");
         NlpResource labelResource = mynlp.loadResource("pos-model/label.txt");
-        NlpResource featureResource = mynlp.loadResource("pos-model/feature.txt");
 
-        File temp = new File(mynlp.getCacheDir(), "pos");
-        File featureDatFile = new File(temp, featureResource.hash() + ".dat");
-
-        Files.createParentDirs(featureDatFile);
-
-        if (!featureDatFile.exists()) {
-            FeatureSet featureSet = FeatureSet.readFromText(new BufferedInputStream(featureResource.openInputStream()));
-            featureSet.save(featureDatFile, null);
-        }
+        long t1 = System.currentTimeMillis();
 
         this.perceptron = POSPerceptron.load(
-                new BufferedInputStream(parameterResource.openInputStream()),
-                new BufferedInputStream(new FileInputStream(featureDatFile)),
-                new BufferedInputStream(labelResource.openInputStream()));
+                parameterResource.openInputStream(),
+                featureResource.openInputStream(),
+                labelResource.openInputStream());
 
+        long t2 = System.currentTimeMillis();
+
+        logger.info("PerceptronPosService Load use " + (t2 - t1) + " ms");
     }
 
     public List<Nature> pos(List<String> words) {

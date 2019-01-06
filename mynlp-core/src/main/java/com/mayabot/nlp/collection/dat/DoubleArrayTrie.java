@@ -75,21 +75,8 @@ public class DoubleArrayTrie {
         check = datDoubleArrayMaker.getCheck();
         base = datDoubleArrayMaker.getBase();
 
-        int i = 0;
-        for (String key : sortedKeys) {
-            if (indexOf(key) != i) {
-                System.out.println();
-            }
-            i++;
-        }
     }
 
-//    public DoubleArrayTrie(int[] check, int[] base, int size) {
-//        super();
-//        this.check = check;
-//        this.base = base;
-//        this.size = 0;
-//    }
 
     public void write(DataOutput out) throws IOException {
         out.writeInt(size);

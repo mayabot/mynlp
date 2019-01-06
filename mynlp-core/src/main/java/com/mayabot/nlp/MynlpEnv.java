@@ -86,6 +86,22 @@ public class MynlpEnv {
         settings.put(key, value);
     }
 
+
+    /**
+     * 计算资源的hash值
+     *
+     * @param resourceName
+     * @return
+     */
+    public String hashResource(String resourceName) {
+
+        NlpResource r1 = loadResource(resourceName, Charsets.UTF_8);
+        if (r1 != null) {
+            return r1.hash();
+        }
+        return null;
+    }
+
     /**
      * 加载资源
      *
@@ -123,14 +139,16 @@ public class MynlpEnv {
 
     private NlpResource getNlpResource(String resourceName, Charset charset) {
         NlpResource resource = null;
+        long t1 = System.currentTimeMillis();
         for (NlpResourceFactory factory : resourceFactory) {
             resource = factory.load(resourceName, charset);
             if (resource != null) {
                 String string = resource.toString();
-                if (string.length() >= 60) {
+                if (string.length() >= 100) {
                     string = "../.." + string.substring(string.length() - 60);
                 }
-                logger.info("load resource {}", string);
+                long t2 = System.currentTimeMillis();
+                logger.info("load resource {} ,use time {} ms", string,t2-t1);
                 break;
             }
         }

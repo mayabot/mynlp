@@ -2,6 +2,7 @@ package com.mayabot.nlp.segment.core;
 
 import com.google.inject.Inject;
 import com.mayabot.nlp.collection.dat.DoubleArrayTrieStringIntMap;
+import com.mayabot.nlp.segment.SegmentComponentOrder;
 import com.mayabot.nlp.segment.WordSplitAlgorithm;
 import com.mayabot.nlp.segment.common.BaseSegmentComponent;
 import com.mayabot.nlp.segment.wordnet.Vertex;
@@ -19,7 +20,7 @@ public class CoreDictionarySplitAlgorithm extends BaseSegmentComponent implement
     @Inject
     public CoreDictionarySplitAlgorithm(CoreDictionary coreDictionary) {
         this.coreDictionary = coreDictionary;
-        setOrder(Integer.MIN_VALUE);
+        setOrder(SegmentComponentOrder.FIRST);
     }
 
     @Override
