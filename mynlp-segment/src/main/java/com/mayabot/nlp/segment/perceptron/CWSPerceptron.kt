@@ -168,7 +168,6 @@ object CWSPerceptronFeature {
             }
         }
 
-
         vector.add(0)
         return vector
     }

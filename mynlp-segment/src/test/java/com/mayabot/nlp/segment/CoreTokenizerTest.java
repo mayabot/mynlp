@@ -48,6 +48,7 @@ public class CoreTokenizerTest {
     @Test
     public void test5() {
 
+        System.out.println(tokenizer.parse("区块链"));
         System.out.println(tokenizer.parse("交辅警报名"));
         System.out.println(tokenizer.parse("第几套房"));
         System.out.println(tokenizer.parse("这个套房多少钱"));

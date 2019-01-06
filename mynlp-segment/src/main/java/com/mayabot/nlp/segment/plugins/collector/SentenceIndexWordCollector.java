@@ -57,7 +57,7 @@ public class SentenceIndexWordCollector implements WordTermCollector {
 
 
     /**
-     * 字词的词典
+     * 子词的词典
      */
     private DoubleArrayTrieMap[] dictList;
 

@@ -17,6 +17,7 @@
 package com.mayabot.nlp.segment.core;
 
 import com.google.common.base.Charsets;
+import com.google.common.base.Preconditions;
 import com.google.common.base.Splitter;
 import com.google.common.collect.TreeBasedTable;
 import com.google.common.hash.Hashing;
@@ -29,7 +30,6 @@ import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
 import com.mayabot.nlp.resources.NlpResouceExternalizable;
 import com.mayabot.nlp.resources.NlpResource;
-import com.mayabot.nlp.segment.common.ResourceLastVersion;
 import com.mayabot.nlp.utils.CharSourceLineReader;
 
 import java.io.IOException;
@@ -64,7 +64,7 @@ public class CoreBiGramTableDictionary extends NlpResouceExternalizable {
     @Override
     public String sourceVersion(MynlpEnv mynlp) {
         return Hashing.murmur3_32().newHasher().
-                putString(mynlp.loadResource(path).hash(), Charsets.UTF_8).
+                putString(mynlp.hashResource(path), Charsets.UTF_8).
                 putString("v2", Charsets.UTF_8)
                 .hash().toString();
     }
@@ -74,11 +74,7 @@ public class CoreBiGramTableDictionary extends NlpResouceExternalizable {
 
         NlpResource source = mynlp.loadResource(path);
 
-        if (source == null) {
-            logger.warn("Not Found Resource " + path);
-            logger.warn(ResourceLastVersion.show(ResourceLastVersion.coreDict));
-            System.exit(0);
-        }
+        Preconditions.checkNotNull(source);
 
         TreeBasedTable<Integer, Integer, Integer> table = TreeBasedTable.create();
 

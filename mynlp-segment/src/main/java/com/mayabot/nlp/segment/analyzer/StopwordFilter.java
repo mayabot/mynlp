@@ -16,16 +16,12 @@
 
 package com.mayabot.nlp.segment.analyzer;
 
-import com.google.common.base.Charsets;
-import com.google.common.collect.ImmutableSet;
-import com.google.common.io.Resources;
+import com.mayabot.nlp.Mynlps;
 import com.mayabot.nlp.segment.WordTerm;
 
-import java.net.URL;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 /**
  * 过滤停用词
@@ -35,22 +31,12 @@ import java.util.stream.Collectors;
 public class StopwordFilter extends FilterWordTermGenerator implements Predicate<WordTerm>,
         com.google.common.base.Predicate<WordTerm> {
 
-    static Set<String> defaultSet = ImmutableSet.of();
-
-    static {
-        URL url = Resources.getResource("stopword-dict/stopwords.txt");
-        try {
-            defaultSet = ImmutableSet.copyOf(Resources.asCharSource(url, Charsets.UTF_8).readLines().stream().collect(Collectors.toSet()));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     Set<String> stopWords;
 
     public StopwordFilter(WordTermGenerator base, Set<String> stopwords) {
         super(base);
-        this.stopWords = stopWords;
+
+        Set<String> defaultSet = Mynlps.getInstance(StopWordDict.class).getSet();
 
         stopWords = new HashSet<>();
         if (stopwords == null) {

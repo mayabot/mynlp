@@ -8,7 +8,6 @@ import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
 import com.mayabot.nlp.perceptron.FeatureSet;
 import com.mayabot.nlp.resources.NlpResource;
-import com.mayabot.nlp.segment.common.ResourceLastVersion;
 import com.mayabot.nlp.segment.plugins.ner.PerceptronNerService;
 import com.mayabot.nlp.utils.CharNormUtils;
 
@@ -29,13 +28,9 @@ public class PerceptronPersonNameService {
 
     @Inject
     public PerceptronPersonNameService(MynlpEnv mynlp) throws Exception {
+
+        long t1 = System.currentTimeMillis();
         NlpResource parameterResource = mynlp.loadResource("person-name-model/parameter.bin");
-
-        if (parameterResource == null) {
-            logger.error("Not found nr-ner/parameter.bin \n");
-            logger.error(ResourceLastVersion.show(ResourceLastVersion.ner));
-        }
-
         NlpResource featureResource = mynlp.loadResource("person-name-model/feature.txt");
 
         File temp = new File(mynlp.getCacheDir(), "ner");
@@ -49,8 +44,12 @@ public class PerceptronPersonNameService {
         }
 
         this.perceptron = PersonNamePerceptron.load(
-                new BufferedInputStream(parameterResource.openInputStream()),
-                new BufferedInputStream(new FileInputStream(featureDatFile)));
+                parameterResource.openInputStream(),
+                new FileInputStream(featureDatFile));
+
+        long t2 = System.currentTimeMillis();
+
+        logger.info("PerceptronPersonNameService load use " + (t2 - t1) + " ms");
 
     }
 

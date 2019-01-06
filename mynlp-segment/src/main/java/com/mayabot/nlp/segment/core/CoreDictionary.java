@@ -25,7 +25,6 @@ import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
 import com.mayabot.nlp.resources.NlpResouceExternalizable;
 import com.mayabot.nlp.resources.NlpResource;
-import com.mayabot.nlp.segment.common.ResourceLastVersion;
 import com.mayabot.nlp.utils.CharSourceLineReader;
 
 import java.io.IOException;
@@ -56,21 +55,13 @@ public class CoreDictionary extends NlpResouceExternalizable {
 
     @Inject
     public CoreDictionary(MynlpEnv mynlp) throws Exception {
-
         this.restore(mynlp);
-
     }
 
     @Override
     @SuppressWarnings(value = "rawtypes")
     public void loadFromSource(MynlpEnv mynlp) throws Exception {
         NlpResource dictResource = mynlp.loadResource(path);
-
-        if (dictResource == null) {
-            logger.warn("Not Found Resource " + path);
-            logger.warn(ResourceLastVersion.show(ResourceLastVersion.coreDict));
-            System.exit(0);
-        }
 
         //词和词频
         TreeMap<String, Integer> map = new TreeMap<>();
@@ -108,7 +99,7 @@ public class CoreDictionary extends NlpResouceExternalizable {
     @Override
     public String sourceVersion(MynlpEnv mynlp) {
         return Hashing.murmur3_32().newHasher().
-                putString(mynlp.loadResource(path).hash(), Charsets.UTF_8).
+                putString(mynlp.hashResource(path), Charsets.UTF_8).
                 putString("v2", Charsets.UTF_8)
                 .hash().toString();
     }

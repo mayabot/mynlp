@@ -4,6 +4,7 @@ import com.carrotsearch.hppc.CharScatterSet
 import com.google.common.collect.Lists
 import com.mayabot.nlp.collection.dat.DoubleArrayTrieStringIntMap
 import com.mayabot.nlp.segment.Nature
+import com.mayabot.nlp.segment.SegmentComponentOrder
 import com.mayabot.nlp.segment.WordSplitAlgorithm
 import com.mayabot.nlp.segment.common.BaseSegmentComponent
 import com.mayabot.nlp.segment.common.String2
@@ -40,6 +41,8 @@ class AtomSplitAlgorithm : BaseSegmentComponent(), WordSplitAlgorithm {
     val xPattern = Pattern.compile("A+[N\\-][N\\-A]*")
 
     init {
+
+        this.order = SegmentComponentOrder.DEFAULT
 
         val treeMap = TreeMap<String, Int>()
 

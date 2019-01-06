@@ -2,10 +2,12 @@ package com.mayabot.nlp.perceptron
 
 import com.carrotsearch.hppc.IntArrayList
 import com.mayabot.nlp.collection.dat.DoubleArrayTrie
+import com.mayabot.nlp.utils.ByteArrayInputStreamMynlp
 import java.io.DataInputStream
 import java.io.DataOutputStream
 import java.io.File
 import java.io.InputStream
+import java.nio.ByteBuffer
 import java.util.*
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.Executors
@@ -331,14 +333,33 @@ open class PerceptronModel(
 
             var labelCount = 0
             var parameter = FloatArray(0)
-            parameterBin.use { x ->
-                val input = DataInputStream(x)
-                labelCount = input.readInt()
 
-                val pSize = input.readInt()
+            if (parameterBin is ByteArrayInputStreamMynlp) {
+                var buf = parameterBin.buf
+
+                val wrap = ByteBuffer.wrap(buf)
+
+                labelCount = wrap.int
+
+                val pSize = wrap.int
                 parameter = FloatArray(pSize)
+
                 for (i in 0 until pSize) {
-                    parameter[i] = input.readFloat()
+                    parameter[i] = wrap.float
+                }
+
+            } else {
+                parameterBin.use { x ->
+
+                    val input = DataInputStream(x)
+                    labelCount = input.readInt()
+
+                    val pSize = input.readInt()
+                    parameter = FloatArray(pSize)
+
+                    for (i in 0 until pSize) {
+                        parameter[i] = input.readFloat()
+                    }
                 }
             }
 

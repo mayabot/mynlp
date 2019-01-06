@@ -35,14 +35,6 @@ public class PerceptronNerService {
 
         this.posService = posService;
         NlpResource parameterResource = mynlp.loadResource("ner-model/parameter.bin");
-
-        if (parameterResource == null) {
-            logger.error("Not found ner/parameter.bin \n" +
-                    "add dependencies with gradle\n" +
-                    "compile 'com.mayabot.mynlp:mynlp-resource-ner:1.0.0'"
-            );
-        }
-
         NlpResource labelResource = mynlp.loadResource("ner-model/label.txt");
         NlpResource featureResource = mynlp.loadResource("ner-model/feature.txt");
 
@@ -55,9 +47,9 @@ public class PerceptronNerService {
         }
 
         this.perceptron = NERPerceptron.load(
-                new BufferedInputStream(parameterResource.openInputStream()),
-                new BufferedInputStream(new FileInputStream(featureDatFile)),
-                new BufferedInputStream(labelResource.openInputStream()));
+                parameterResource.openInputStream(),
+                new FileInputStream(featureDatFile),
+                labelResource.openInputStream());
     }
 
     /**
