@@ -1,6 +1,9 @@
 package com.mayabot.nlp.segment.perceptron
 
+import com.mayabot.nlp.perceptron.solution.ner.NERPerceptron
 import com.mayabot.nlp.perceptron.solution.ner.NERPerceptronTrainer
+import com.mayabot.nlp.segment.MynlpTokenizers
+import com.mayabot.nlp.segment.plugins.ner.PerceptronNerService
 import java.io.File
 
 
@@ -9,38 +12,39 @@ object NERPerceptronTest {
     @JvmStatic
     fun main(args: Array<String>) {
 //        train()
-//        test()
+        test()
     }
 
     fun train() {
         val trainer = NERPerceptronTrainer()
 
-        val trainFile = File("data/pku")
-        val evaluateFile = File("data/pku/199802.txt")
+        val trainFile = File("data.work/ner")
+        val evaluateFile = File("data.work/ner-test/ner_1.txt")
 
         val model = trainer.train(
                 trainFile, evaluateFile,
-                5, 2)
+                130, 1)
 
-
-        // model.save(File("data/ner/model"))
+        model.save(File("data.work/ner.model"))
     }
 
-//    fun test() {
-////        val evaluateFile = File("data/pku/199802.txt")
-//
-//        val tokenizer = MynlpTokenizers.coreTokenizer()
-//        val text = "这是陈建国的快递,来自上海万行信息科技有限公司的报告"
-//
-//        val termList = tokenizer.tokenToTermList(text)
-//
-//        println(termList)
-//
-//        val ner = NERPerceptron.load(File("data/ner"))
-//
-//        var result = ner.decode(termList)
-//
-//        println(result.joinToString(separator = ","))
-//
-//    }
+    fun test() {
+//        val evaluateFile = File("data/pku/199802.txt")
+
+        val tokenizer = MynlpTokenizers.coreTokenizer()
+        val text = "这是陈建国的快递,来自上海万行信息科技有限公司的报告"
+
+        val termList = tokenizer.parse(text).asWordList()
+
+
+        val ner = NERPerceptron.load(File("data.work/ner.model"))
+
+
+        println(termList)
+
+        ner.decode(termList)
+
+        println(PerceptronNerService.toNerComposite(termList).joinToString(separator = ","))
+
+    }
 }

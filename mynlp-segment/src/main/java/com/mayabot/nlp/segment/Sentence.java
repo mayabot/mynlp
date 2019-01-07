@@ -10,6 +10,10 @@ import java.util.List;
  */
 public final class Sentence {
 
+    public static final Sentence of(List<WordTerm> words) {
+        return new Sentence(words);
+    }
+
     private List<WordTerm> words;
 
     public Sentence(List<WordTerm> words) {
@@ -37,6 +41,7 @@ public final class Sentence {
                     sb.append("/");
                     sb.append(term.getNature());
                 }
+                sb.append(" ");
             } else {
                 sb.append(term.word);
                 if (term.getNature() != null) {

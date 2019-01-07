@@ -1,7 +1,7 @@
 package com.mayabot.nlp.segment.perceptron;
 
 import com.mayabot.nlp.Mynlps;
-import com.mayabot.nlp.segment.WordTerm;
+import com.mayabot.nlp.segment.Sentence;
 import com.mayabot.nlp.segment.plugins.ner.PerceptronNerService;
 
 import java.util.List;
@@ -18,7 +18,7 @@ public class PerceptronNerServiceTest {
                 "\n" +
                 "\n");
 
-        List<WordTerm> ner1 = ner.ner(words);
+        Sentence ner1 = ner.ner(words);
 
         System.out.println(ner1);
 

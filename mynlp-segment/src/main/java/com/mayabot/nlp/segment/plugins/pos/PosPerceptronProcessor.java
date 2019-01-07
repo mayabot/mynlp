@@ -53,7 +53,10 @@ public class PosPerceptronProcessor extends BaseSegmentComponent implements Word
         List<Nature> posList = perceptronPosService.posFromVertex(vertices);
 
         for (int i = 0; i < vertices.size(); i++) {
-            vertices.get(i).nature = (posList.get(i));
+            Vertex vertex = vertices.get(i);
+            if (vertex.nature == null) {
+                vertex.nature = (posList.get(i));
+            }
         }
 
         return wordPath;

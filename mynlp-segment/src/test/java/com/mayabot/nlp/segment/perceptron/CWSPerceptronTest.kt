@@ -8,8 +8,8 @@ object CWSPerceptronTest {
 
     @JvmStatic
     fun main(args: Array<String>) {
-//        train()
-        test()
+        train()
+        // test()
     }
 
     fun train() {
@@ -18,7 +18,7 @@ object CWSPerceptronTest {
 //        val trainFile = File("data.work/corpus.segment/backoff2005/msr_training.txt")
 //        val evaluateFile = File("data.work/corpus.segment/backoff2005/msr_test_gold.txt")
 
-        val trainFile = File("data.work/cws")
+        val trainFile = File("data.work/cws/pku")
         val evaluateFile = File("data.work/cws/pku/199801.txt")
 
         val cws = trainer.train(

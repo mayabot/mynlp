@@ -1,6 +1,8 @@
 package com.mayabot.nlp.perceptron.solution.ner
 
 import com.carrotsearch.hppc.IntArrayList
+import com.google.common.collect.Lists
+import com.mayabot.nlp.common.FastStringBuilder
 import com.mayabot.nlp.perceptron.*
 import com.mayabot.nlp.segment.Nature
 import com.mayabot.nlp.segment.WordTerm
@@ -24,7 +26,7 @@ class NERPerceptron(val model: Perceptron, private val labels: List<String>) {
      * 解码结果保存在WordTerm的customFlag字段里面
      */
     fun decode(sentence: List<WordTerm>) {
-        val buffer = java.lang.StringBuilder()
+        val buffer = FastStringBuilder(100)
         val featureList = ArrayList<IntArrayList>(sentence.size)
         for (i in 0 until sentence.size) {
             featureList += NERPerceptronFeature.extractFeatureVector(sentence, i, featureSet, buffer)
@@ -96,7 +98,7 @@ object NERPerceptronFeature {
 
     private const val E = "_E_"
 
-    fun extractFeatureVector(sentence: List<WordTerm>, position: Int, features: FeatureSet, buffer: java.lang.StringBuilder): IntArrayList {
+    fun extractFeatureVector(sentence: List<WordTerm>, position: Int, features: FeatureSet, buffer: FastStringBuilder): IntArrayList {
 
         buffer.clear()
 
@@ -144,25 +146,70 @@ object NERPerceptronFeature {
 
         val vector = IntArrayList(15)
 
+        buffer.append(pre2Word)
+        buffer.append('1')
+        addFeature(features, vector, buffer)
 
-        addFeature(features, vector, buffer, pre2Word, '1')
-        addFeature(features, vector, buffer, preWord, '2')
-        addFeature(features, vector, buffer, curWord, '3')
-        addFeature(features, vector, buffer, nextWord, '4')
-        addFeature(features, vector, buffer, next2Word, '5')
+        buffer.append(preWord)
+        buffer.append('2')
+        addFeature(features, vector, buffer)
 
-        addFeature(features, vector, buffer, pre2Pos, 'A')
-        addFeature(features, vector, buffer, prePos, 'B')
-        addFeature(features, vector, buffer, curPos, 'C')
-        addFeature(features, vector, buffer, nextPos, 'D')
-        addFeature(features, vector, buffer, next2Pos, 'E')
+        buffer.append(curWord)
+        buffer.append('3')
+        addFeature(features, vector, buffer)
 
-        addFeature(features, vector, buffer, pre2Pos, prePos, 'F')
-        addFeature(features, vector, buffer, prePos, curPos, 'G')
-        addFeature(features, vector, buffer, curPos, nextPos, 'H')
-        addFeature(features, vector, buffer, nextPos, next2Pos, 'I')
+        buffer.append(nextWord)
+        buffer.append('4')
+        addFeature(features, vector, buffer)
 
-        addFeature(features, vector, buffer, pre3Word, 'J')
+        buffer.append(next2Word)
+        buffer.append('5')
+        addFeature(features, vector, buffer)
+
+
+        buffer.append(pre2Pos)
+        buffer.append('A')
+        addFeature(features, vector, buffer)
+
+        buffer.append(prePos)
+        buffer.append('B')
+        addFeature(features, vector, buffer)
+
+        buffer.append(curPos)
+        buffer.append('C')
+        addFeature(features, vector, buffer)
+
+        buffer.append(nextPos)
+        buffer.append('D')
+        addFeature(features, vector, buffer)
+
+        buffer.append(next2Pos)
+        buffer.append('E')
+        addFeature(features, vector, buffer)
+
+        buffer.append(pre2Pos)
+        buffer.append(prePos)
+        buffer.append('F')
+        addFeature(features, vector, buffer)
+
+        buffer.append(prePos)
+        buffer.append(curPos)
+        buffer.append('G')
+        addFeature(features, vector, buffer)
+
+        buffer.append(curPos)
+        buffer.append(nextPos)
+        buffer.append('H')
+        addFeature(features, vector, buffer)
+
+        buffer.append(nextPos)
+        buffer.append(next2Pos)
+        buffer.append('I')
+        addFeature(features, vector, buffer)
+
+        buffer.append(pre3Word)
+        buffer.append('J')
+        addFeature(features, vector, buffer)
 
         vector.add(0)
         return vector
@@ -232,10 +279,8 @@ object NERPerceptronFeature {
 
     }
 
-    private fun addFeature(features: FeatureSet, vector: IntArrayList, stringBuilder: StringBuilder, vararg parts: Any) {
-        for (x in parts) {
-            stringBuilder.append(x)
-        }
+    private fun addFeature(features: FeatureSet, vector: IntArrayList, stringBuilder: FastStringBuilder) {
+
         val id = features.featureId(stringBuilder)
 
         stringBuilder.clear()
@@ -375,15 +420,13 @@ class NerSamples(val targetPos: Set<String>, val labelMap: Map<String, Int>, val
             file.useLines { lines ->
                 lines.forEach { line ->
                     val words = line.parseToWords()
-                    words.forEach {
-                        if (it.hasSub()) {
-                            it.subWord.forEach { w -> w.word = CharNormUtils.convert(w.word) }
-                        } else {
-                            it.word = CharNormUtils.convert(it.word)
-                        }
-
-                    }
-
+//                    words.forEach {
+//                        if (it.hasSub()) {
+//                            it.subWord.forEach { w -> w.word = CharNormUtils.convert(w.word) }
+//                        } else {
+//                            it.word = CharNormUtils.convert(it.word)
+//                        }
+//                    }
                     sampleList += sentenceToSample(words)
                 }
             }
@@ -397,9 +440,9 @@ class NerSamples(val targetPos: Set<String>, val labelMap: Map<String, Int>, val
      * 一个用空格分隔的句子.
      *
      */
-    fun sentenceToSample(line: List<PkuWord>): TrainSample {
-        val buffer = java.lang.StringBuilder()
-        val wordTermList = NEREvaluateUtils.convert(line, targetPos)
+    private fun sentenceToSample(line: List<PkuWord>): TrainSample {
+        val buffer = FastStringBuilder(100)
+        val wordTermList = convert(line, targetPos)
 
         val poss = wordTermList.map { labelMap[it.customFlag]!! }.toIntArray()
 
@@ -408,11 +451,102 @@ class NerSamples(val targetPos: Set<String>, val labelMap: Map<String, Int>, val
             featureMatrix += NERPerceptronFeature.extractFeatureVector(wordTermList, i, featureSet, buffer)
         }
 
-
         return TrainSample(featureMatrix, poss)
     }
 
+    companion object {
+        /**
+         * 把句子序列，打上标签。
+         * 利用WordTerm的customFlag存储tag
+         */
+        fun convert(sentence: List<PkuWord>, targetPOS: Set<String>): List<WordTerm> {
+            val list = ArrayList<WordTerm>(sentence.size)
 
+
+            for (word in sentence) {
+                var pos = word.pos
+                if (word.hasSub()) {
+                    val wordList = word.subWord
+                    if (targetPOS.contains(word.pos)) {
+                        val first = wordList.first()
+                        list += word(first.word, first.pos, "B-$pos")
+                        for (i in 1 until wordList.size - 1) {
+                            val the = wordList[i]
+                            list += word(the.word, the.pos, "M-$pos")
+                        }
+                        val last = wordList.last()
+                        list += word(last.word, last.pos, "E-$pos")
+
+                    } else {
+                        for (sub in wordList) {
+                            list += word(sub.word, sub.pos, "O")
+                        }
+                    }
+                } else {
+                    if (targetPOS.contains(word.pos)) {
+                        list += word(word.word, word.pos, "S")
+                    } else {
+                        list += word(word.word, word.pos, "O")
+                    }
+                }
+            }
+            return list
+        }
+
+
+        fun word(word: String, pos: String, label: String): WordTerm {
+            val term = WordTerm(word, Nature.parse(pos))
+            term.customFlag = label
+            return term
+        }
+    }
+
+}
+
+/**
+ * 第一步：把语料库清理为格式化过的格式
+ */
+object NERCorpus {
+    @JvmStatic
+    fun main(args: Array<String>) {
+        val files = Lists.newArrayList<File>()
+        files += File("data.work/cncorpus").allFiles()
+        files += File("data.work/pku").allFiles()
+
+        val writers = (1..20).map { File("data.work/ner/ner_$it.txt").writer() }.toList()
+        val random = Random()
+        var count = 0
+        files.forEach { file ->
+            file.useLines { lines ->
+                lines.forEach { line ->
+                    if (line.isNotBlank()) {
+                        val words = line.parseToWords()
+
+                        var foundNER = false
+                        words.forEach {
+                            if (it.hasSub()) {
+                                foundNER = true
+                                it.subWord.forEach { w -> w.word = CharNormUtils.convert(w.word) }
+                            } else {
+                                it.word = CharNormUtils.convert(it.word)
+                            }
+                        }
+
+                        if (foundNER) {
+                            count++
+                            writers[random.nextInt(writers.size)].appendln(line)
+                        }
+
+                    }
+                }
+            }
+        }
+
+        println(count)
+
+
+        writers.forEach { it.flush();it.close() }
+    }
 }
 
 /**
@@ -420,48 +554,6 @@ class NerSamples(val targetPos: Set<String>, val labelMap: Map<String, Int>, val
  */
 object NEREvaluateUtils {
 
-    /**
-     * 利用WordTerm的customFlag存储tag
-     */
-    fun convert(sentence: List<PkuWord>, targetPOS: Set<String>): List<WordTerm> {
-        val list = ArrayList<WordTerm>(sentence.size)
-
-
-        for (word in sentence) {
-            var pos = word.pos
-            if (word.hasSub()) {
-                val wordList = word.subWord
-                if (targetPOS.contains(word.pos)) {
-                    val first = wordList.first()
-                    list += word(first.word, first.pos, "B-$pos")
-                    for (i in 1 until wordList.size - 1) {
-                        val the = wordList[i]
-                        list += word(the.word, the.pos, "M-$pos")
-                    }
-                    val last = wordList.last()
-                    list += word(last.word, last.pos, "E-$pos")
-
-                } else {
-                    for (sub in wordList) {
-                        list += word(sub.word, sub.pos, "O")
-                    }
-                }
-            } else {
-                if (targetPOS.contains(word.pos)) {
-                    list += word(word.word, word.pos, "S")
-                } else {
-                    list += word(word.word, word.pos, "O")
-                }
-            }
-        }
-        return list
-    }
-
-    private fun word(word: String, pos: String, label: String): WordTerm {
-        val term = WordTerm(word, Nature.parse(pos))
-        term.customFlag = label
-        return term
-    }
 
     fun evaluateNER(recognizer: NERPerceptron,
                     evaluateData: List<String>,
@@ -472,15 +564,17 @@ object NEREvaluateUtils {
         for (line in evaluateData) {
             val sentence = line.parseToWords()
 
-            //CharNorm
-            sentence.forEach { if (it.hasSub()) it.subWord.forEach { x -> x.word = CharNormUtils.convert(x.word) } else it.word = CharNormUtils.convert(it.word) }
+            //CharNorm 语料库预先处理过
+            //         sentence.forEach { if (it.hasSub()) it.subWord.forEach { x -> x.word = CharNormUtils.convert(x.word) } else it.word = CharNormUtils.convert(it.word) }
 
-            val sentenceWordTerm = convert(sentence, targetPos)
+            val sentenceWordTerm = NerSamples.convert(sentence, targetPos)
+
+            val gold = combineNER(sentenceWordTerm.map { it.customFlag }.toList())
 
             recognizer.decode(sentenceWordTerm)
-            val nerResult = sentenceWordTerm.map { it.customFlag }
-            val pred = combineNER(nerResult)
-            val gold = combineNER(sentenceWordTerm.map { it.customFlag }.toList())
+            val pred = combineNER(sentenceWordTerm.map { it.customFlag })
+
+
             for (p in pred) {
                 val type = p.split("\t".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[2]
                 var s: DoubleArray? = scores[type]

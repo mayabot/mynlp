@@ -11,8 +11,10 @@ import com.mayabot.nlp.perceptron.FeatureSet;
 import com.mayabot.nlp.perceptron.solution.ner.NERPerceptron;
 import com.mayabot.nlp.resources.NlpResource;
 import com.mayabot.nlp.segment.Nature;
+import com.mayabot.nlp.segment.Sentence;
 import com.mayabot.nlp.segment.WordTerm;
 import com.mayabot.nlp.segment.plugins.pos.PerceptronPosService;
+import com.mayabot.nlp.utils.CharNormUtils;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -48,7 +50,7 @@ public class PerceptronNerService {
 
         this.perceptron = NERPerceptron.load(
                 parameterResource.openInputStream(),
-                new FileInputStream(featureDatFile),
+                new BufferedInputStream(new FileInputStream(featureDatFile)),
                 labelResource.openInputStream());
     }
 
@@ -113,8 +115,6 @@ public class PerceptronNerService {
             }
             WordTerm group = new WordTerm(bigName.toString(), Nature.valueOf(nerPOS));
             group.setSubword(temp);
-            temp = null;
-            nerPOS = null;
 
             result.add(group);
         }
@@ -123,9 +123,9 @@ public class PerceptronNerService {
     }
 
     /**
-     * 要求WordTerm已经词性填充完成
      *
      * @param list
+     * @param pos 是否需要计算词性
      */
     public List<WordTerm> ner(List<WordTerm> list, boolean pos) {
 
@@ -144,13 +144,13 @@ public class PerceptronNerService {
      *
      * @param list
      */
-    public List<WordTerm> ner(List<String> list) {
+    public Sentence ner(List<String> list) {
         List<WordTerm> list2 = Lists.newArrayListWithCapacity(list.size());
         for (String w : list) {
-            list2.add(new WordTerm(w, Nature.x));
+            list2.add(new WordTerm(CharNormUtils.convert(w), Nature.x));
         }
 
-        return ner(list2, true);
+        return Sentence.of(ner(list2, true));
     }
 
 
@@ -158,6 +158,6 @@ public class PerceptronNerService {
         PerceptronNerService service = Mynlps.getInstance(PerceptronNerService.class);
         System.out.println(service.ner(Lists.newArrayList("上海 万行 信息 科技 有限 公司 在 上海 注册 成功".split(" "))));
         System.out.println(service.ner(Lists.newArrayList("上海 华 安 工业 （ 集团 ） 公司 董事长 谭旭光 和 秘书 胡花蕊 来 到 美国 纽约 现代 艺术 博物馆 参观".split(" "))));
-
+        System.out.println(service.ner(Lists.newArrayList("这|是|上海|万|行|信息|科技|有限公司|的|财务|报表".split("\\|"))));
     }
 }

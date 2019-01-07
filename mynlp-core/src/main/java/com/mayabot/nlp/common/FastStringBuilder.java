@@ -11,8 +11,20 @@ public class FastStringBuilder implements CharSequence {
 
     private int length = 0;
 
+
     public FastStringBuilder(int max) {
         text = new char[max];
+    }
+
+
+    public void append(String string) {
+        for (int i = 0; i < string.length(); i++) {
+            text[length++] = string.charAt(i);
+        }
+    }
+
+    public void append(char c) {
+        text[length++] = c;
     }
 
     public final void append(char c1, char c2) {
@@ -31,6 +43,13 @@ public class FastStringBuilder implements CharSequence {
         text[0] = c1;
         text[1] = c2;
         length = 2;
+    }
+
+    public final void set3(char c1, char c2, char c3) {
+        text[0] = c1;
+        text[1] = c2;
+        text[2] = c3;
+        length = 3;
     }
 
     public final void set4(char c1, char c2, char c3, char c4) {
