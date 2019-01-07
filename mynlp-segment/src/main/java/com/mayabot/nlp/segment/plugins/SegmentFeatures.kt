@@ -11,20 +11,13 @@ interface PersonNameRecognition {
 }
 
 /**
- * 地名识别
+ * 地名和组织机构名识别
  * @author jimichan
  */
-interface PlaceNameRecognition {
-    fun setEnablePlaceName(enable: Boolean): PipelineTokenizerBuilder
+interface NERRecognition {
+    fun setEnableNER(enable: Boolean): PipelineTokenizerBuilder
 }
 
-/**
- * 地名识别
- * @author jimichan
- */
-interface OrgNameRecognition {
-    fun setEnableOrgName(enable: Boolean): PipelineTokenizerBuilder
-}
 
 /**
  * 用户自定义词典

@@ -5,11 +5,13 @@ import com.google.common.collect.Lists
 import com.mayabot.nlp.common.FastStringBuilder
 import com.mayabot.nlp.perceptron.*
 import com.mayabot.nlp.segment.Nature
+import com.mayabot.nlp.segment.WordAndNature
 import com.mayabot.nlp.segment.WordTerm
 import com.mayabot.nlp.segment.common.PkuWord
 import com.mayabot.nlp.segment.common.allFiles
 import com.mayabot.nlp.segment.common.parseToFlatWords
 import com.mayabot.nlp.segment.common.parseToWords
+import com.mayabot.nlp.segment.wordnet.Vertex
 import com.mayabot.nlp.utils.CharNormUtils
 import java.io.File
 import java.io.InputStream
@@ -37,6 +39,23 @@ class NERPerceptron(val model: Perceptron, private val labels: List<String>) {
         for (i in 0 until sentence.size) {
             sentence[i].customFlag = labels[result[i]]
         }
+    }
+
+    fun decodeVertexList(sentence: List<Vertex>): List<String> {
+        val buffer = FastStringBuilder(100)
+        val result = Lists.newArrayListWithExpectedSize<String>(sentence.size)
+
+        val featureList = ArrayList<IntArrayList>(sentence.size)
+        for (i in 0 until sentence.size) {
+            featureList += NERPerceptronFeature.extractFeatureVector(sentence, i, featureSet, buffer)
+        }
+
+        val result2 = model.decode(featureList)
+
+        for (i in 0 until sentence.size) {
+            result += labels[result2[i]]
+        }
+        return result
     }
 
 
@@ -98,7 +117,7 @@ object NERPerceptronFeature {
 
     private const val E = "_E_"
 
-    fun extractFeatureVector(sentence: List<WordTerm>, position: Int, features: FeatureSet, buffer: FastStringBuilder): IntArrayList {
+    fun extractFeatureVector(sentence: List<WordAndNature>, position: Int, features: FeatureSet, buffer: FastStringBuilder): IntArrayList {
 
         buffer.clear()
 
@@ -109,7 +128,7 @@ object NERPerceptronFeature {
         if (position >= 2) {
             val x = sentence[position - 2]
             pre2Word = x.word
-            pre2Pos = x.natureString
+            pre2Pos = x.natureName
 
             if (position > 2) {
                 pre3Word = sentence[position - 3].word
@@ -121,19 +140,19 @@ object NERPerceptronFeature {
         if (position >= 1) {
             val x = sentence[position - 1]
             preWord = x.word
-            prePos = x.natureString
+            prePos = x.natureName
         }
 
         val cur = sentence[position]
         val curWord = cur.word
-        val curPos = cur.natureString
+        val curPos = cur.natureName
 
         var nextWord = E
         var nextPos = E
         if (position <= size - 2) {
             val x = sentence[position + 1]
             nextWord = x.word
-            nextPos = x.natureString
+            nextPos = x.natureName
         }
 
         var next2Word = E
@@ -141,7 +160,7 @@ object NERPerceptronFeature {
         if (position <= size - 3) {
             val x = sentence[position + 2]
             next2Word = x.word
-            next2Pos = x.natureString
+            next2Pos = x.natureName
         }
 
         val vector = IntArrayList(15)

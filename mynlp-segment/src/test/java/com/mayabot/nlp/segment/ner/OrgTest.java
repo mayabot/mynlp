@@ -13,7 +13,7 @@ public class OrgTest {
             String text = "这|是|上海|万|行|信息|科技|有限公司|的|财务|报表";
 
             MynlpTokenizer tokenizer = new CoreTokenizerBuilder()
-                    .setEnableOrgName(false)
+                    .setEnableNER(false)
                     .build();
 
             TokenizerTestHelp.test(tokenizer, text);
@@ -21,10 +21,10 @@ public class OrgTest {
 
 
         {
-            String text = "这|是|上海|万|行|信息|科技|有限公司|的|财务|报表";
+            String text = "这|是|上海万行信息科技有限公司|的|财务|报表";
 
             MynlpTokenizer tokenizer = new CoreTokenizerBuilder()
-                    .setEnableOrgName(true)
+                    .setEnableNER(true)
                     .build();
 
 

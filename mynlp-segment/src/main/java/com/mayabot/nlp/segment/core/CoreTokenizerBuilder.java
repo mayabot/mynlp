@@ -4,6 +4,7 @@ import com.mayabot.nlp.segment.PipelineTokenizerBuilder;
 import com.mayabot.nlp.segment.plugins.*;
 import com.mayabot.nlp.segment.plugins.correction.CorrectionWordpathProcessor;
 import com.mayabot.nlp.segment.plugins.customwords.CustomDictionaryProcessor;
+import com.mayabot.nlp.segment.plugins.ner.NerProcessor;
 import com.mayabot.nlp.segment.plugins.personname.PersonNameAlgorithm;
 import com.mayabot.nlp.segment.plugins.pos.PosPerceptronProcessor;
 import org.jetbrains.annotations.NotNull;
@@ -13,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
  * @author jimichan
  */
 public class CoreTokenizerBuilder extends PipelineTokenizerBuilder
-        implements PersonNameRecognition, PlaceNameRecognition, OrgNameRecognition,
+        implements PersonNameRecognition, NERRecognition,
         CustomDictionaryRecognition, PartOfSpeechTagging, Correction {
 
     public static CoreTokenizerBuilder builder() {
@@ -21,8 +22,7 @@ public class CoreTokenizerBuilder extends PipelineTokenizerBuilder
     }
 
     private boolean enablePersonName = true;
-    private boolean enablePlaceName = true;
-    private boolean enableOrgName = true;
+    private boolean enableNER = true;
     private boolean enableCustomDictionary = false;
     private boolean enablePOS = true;
     private boolean enableCorrection = true;
@@ -56,13 +56,13 @@ public class CoreTokenizerBuilder extends PipelineTokenizerBuilder
             addProcessor(CorrectionWordpathProcessor.class);
         }
 
-        //词性标注
-        if (enablePOS) {
+        //词性标注(NER时强制开启)
+        if (enablePOS || enableNER) {
             addProcessor(PosPerceptronProcessor.class);
         }
 
-        if (enableOrgName) {
-            //addWordSplitAlgorithm()
+        if (enableNER) {
+            addProcessor(NerProcessor.class);
         }
 
     }
@@ -78,25 +78,14 @@ public class CoreTokenizerBuilder extends PipelineTokenizerBuilder
         return this;
     }
 
-    public boolean isEnablePlaceName() {
-        return enablePlaceName;
+    public boolean isEnableNER() {
+        return enableNER;
     }
 
     @NotNull
     @Override
-    public CoreTokenizerBuilder setEnablePlaceName(boolean enablePlaceName) {
-        this.enablePlaceName = enablePlaceName;
-        return this;
-    }
-
-    public boolean isEnableOrgName() {
-        return enableOrgName;
-    }
-
-    @NotNull
-    @Override
-    public CoreTokenizerBuilder setEnableOrgName(boolean enableOrgName) {
-        this.enableOrgName = enableOrgName;
+    public CoreTokenizerBuilder setEnableNER(boolean enableNER) {
+        this.enableNER = enableNER;
         return this;
     }
 

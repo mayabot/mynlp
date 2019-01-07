@@ -3,7 +3,6 @@ package com.mayabot.nlp.segment.ner;
 import com.mayabot.nlp.segment.MynlpTokenizer;
 import com.mayabot.nlp.segment.TokenizerTestHelp;
 import com.mayabot.nlp.segment.core.CoreTokenizerBuilder;
-import com.mayabot.nlp.segment.plugins.customwords.CustomDictionaryProcessor;
 import org.junit.Test;
 
 public class PlaceTest {
@@ -13,13 +12,10 @@ public class PlaceTest {
 
 
         {
-            String text = "南翔|向|宁夏|固原市|彭|阳|县|红|河镇|黑|牛|沟|村|捐赠|了|挖掘机";
+            String text = "中央|大街|浪漫|永|存";
 
             MynlpTokenizer tokenizer = new CoreTokenizerBuilder()
-//                    .setPlaceRecognition(false)
-//                    .setPersonRecognition(false)
-//                    .setOrganizationRecognition(false)
-                    .disabledComponent(CustomDictionaryProcessor.class)
+                    .setEnableNER(false)
                     .build();
 
             TokenizerTestHelp.test(tokenizer, text);
@@ -27,13 +23,10 @@ public class PlaceTest {
 
 
         {
-            String text = "南翔|向|宁夏|固原市|彭阳县|红河镇|黑牛沟村|捐赠|了|挖掘机";
+            String text = "中央大街|浪漫|永|存";
 
             MynlpTokenizer tokenizer = new CoreTokenizerBuilder()
-//                    .setPlaceRecognition(true)
-//                    .setPersonRecognition(false)
-//                    .setOrganizationRecognition(false)
-                    .disabledComponent(CustomDictionaryProcessor.class)
+                    .setEnableNER(true)
                     .build();
 
 

@@ -17,6 +17,7 @@
 package com.mayabot.nlp.segment.wordnet;
 
 import com.mayabot.nlp.segment.Nature;
+import com.mayabot.nlp.segment.WordAndNature;
 import com.mayabot.nlp.segment.core.DictionaryAbsWords;
 
 /**
@@ -24,7 +25,7 @@ import com.mayabot.nlp.segment.core.DictionaryAbsWords;
  *
  * @author jimichan
  */
-public class Vertex {
+public class Vertex implements WordAndNature {
 
     /**
      * 词的长度
@@ -101,6 +102,20 @@ public class Vertex {
         this.wordID = node.wordID;
     }
 
+
+    @Override
+    public String getWord() {
+        return realWord();
+    }
+
+    @Override
+    public String getNatureName() {
+        if (nature != null) {
+            return nature.name();
+        } else {
+            return "";
+        }
+    }
 
     /**
      * copy to new object , in abstractWord length wordinfo

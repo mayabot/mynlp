@@ -154,6 +154,10 @@ public class PerceptronNerService {
     }
 
 
+    public NERPerceptron getPerceptron() {
+        return perceptron;
+    }
+
     public static void main(String[] args) {
         PerceptronNerService service = Mynlps.getInstance(PerceptronNerService.class);
         System.out.println(service.ner(Lists.newArrayList("上海 万行 信息 科技 有限 公司 在 上海 注册 成功".split(" "))));
