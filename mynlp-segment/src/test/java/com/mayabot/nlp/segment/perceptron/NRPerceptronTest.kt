@@ -21,8 +21,8 @@ object NRPerceptronTest {
     fun train() {
         val trainer = NRPerceptronTrainer()
 
-        val trainFile = File("data.work/nercorpus")
-        val evaluateFile = File("data.work/nercorpus.test/hr_0.txt")
+        val trainFile = File("data.work/nr.corpus")
+        val evaluateFile = File("data.work/nr.corpus.test/hr_0.txt")
 //336
 
         // 74 这个轮次比较满意

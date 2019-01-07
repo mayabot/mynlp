@@ -348,6 +348,7 @@ open class PerceptronModel(
                     parameter[i] = wrap.float
                 }
 
+
             } else {
                 parameterBin.use { x ->
 

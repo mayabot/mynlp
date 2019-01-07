@@ -23,7 +23,7 @@ public class CoreTokenizerBuilder extends PipelineTokenizerBuilder
     private boolean enablePersonName = true;
     private boolean enablePlaceName = true;
     private boolean enableOrgName = true;
-    private boolean enableCustomDictionary = true;
+    private boolean enableCustomDictionary = false;
     private boolean enablePOS = true;
     private boolean enableCorrection = true;
 
@@ -45,6 +45,7 @@ public class CoreTokenizerBuilder extends PipelineTokenizerBuilder
             addWordSplitAlgorithm(PersonNameAlgorithm.class);
         }
 
+
         // Pipeline处理器
         if (enableCorrection) {
             this.addProcessor(CustomDictionaryProcessor.class);
@@ -58,6 +59,10 @@ public class CoreTokenizerBuilder extends PipelineTokenizerBuilder
         //词性标注
         if (enablePOS) {
             addProcessor(PosPerceptronProcessor.class);
+        }
+
+        if (enableOrgName) {
+            //addWordSplitAlgorithm()
         }
 
     }

@@ -1,6 +1,7 @@
 package com.mayabot.nlp.segment.plugins.pos
 
 import com.carrotsearch.hppc.IntArrayList
+import com.mayabot.nlp.common.FastStringBuilder
 import com.mayabot.nlp.perceptron.*
 import com.mayabot.nlp.segment.Nature
 import com.mayabot.nlp.segment.common.PkuWord
@@ -29,7 +30,7 @@ class POSPerceptron(val model: Perceptron, val labelList: Array<String>) {
 
 
     fun decode(sentence: List<String>): List<Nature> {
-        val buffer = java.lang.StringBuilder()
+        val buffer = FastStringBuilder(100)
         val size = sentence.size
         val featureList = ArrayList<IntArrayList>(size)
 
@@ -45,7 +46,7 @@ class POSPerceptron(val model: Perceptron, val labelList: Array<String>) {
     fun <T> decode(sentence: List<T>, sink: Function<T, String>): List<Nature> {
 
         val size = sentence.size
-        val buffer = java.lang.StringBuilder()
+        val buffer = FastStringBuilder(100)
         val featureList = ArrayList<IntArrayList>(size)
 
         for (i in 0 until size) {
@@ -63,7 +64,7 @@ class POSPerceptron(val model: Perceptron, val labelList: Array<String>) {
      */
     fun decode(word: String): Nature {
         val labelSize = labelList.size
-        val buffer = java.lang.StringBuilder()
+        val buffer = FastStringBuilder(50)
         val vector = POSPerceptronFeature.extractFeatureVector(listOf(word), 1, 0, featureSet, buffer)
         val vectorBuffer = vector.buffer
         var maxIndex = 0
@@ -134,7 +135,6 @@ class POSPerceptron(val model: Perceptron, val labelList: Array<String>) {
             val labelList = labelText.use { it.bufferedReader().readLines() }
             return POSPerceptron(model, labelList.toTypedArray())
         }
-
 
     }
 }
@@ -211,14 +211,14 @@ object POSPerceptronFeature {
     val s2s = Function<String, String> { it }
 
     @JvmStatic
-    fun extractFeatureVector(sentence: List<String>, size: Int, position: Int, features: FeatureSet, buffer: java.lang.StringBuilder): IntArrayList {
+    fun extractFeatureVector(sentence: List<String>, size: Int, position: Int, features: FeatureSet, buffer: FastStringBuilder): IntArrayList {
         return extractFeatureVector2(sentence, size, position, features, s2s, buffer)
     }
 
 
     //TODO 这里可以把String变成CharSequence. 这样vertex就可以传入char[]进行优化
     @JvmStatic
-    fun <T> extractFeatureVector2(sentence: List<T>, size: Int, position: Int, features: FeatureSet, sink: Function<T, String>, buffer: java.lang.StringBuilder): IntArrayList {
+    fun <T> extractFeatureVector2(sentence: List<T>, size: Int, position: Int, features: FeatureSet, sink: Function<T, String>, buffer: FastStringBuilder): IntArrayList {
 
         val vector = IntArrayList(11)
         buffer.clear()
@@ -245,7 +245,9 @@ object POSPerceptronFeature {
             }
         }
 
-        addFeature(features, vector, buffer, preWord, '☺')
+        buffer.append(preWord);
+        buffer.append('☺')
+        addFeature(features, vector, buffer)
 
         //让同一个特征出现两次。我认为这个特征比较重要
         val id = features.featureId(curWord)
@@ -254,7 +256,9 @@ object POSPerceptronFeature {
             vector.add(id)
         }
 
-        addFeature(features, vector, buffer, nextWord, '♂')
+        buffer.append(nextWord);
+        buffer.append('♂')
+        addFeature(features, vector, buffer)
 
         val length = curWord.length
 
@@ -265,21 +269,30 @@ object POSPerceptronFeature {
             val c1 = curWord[0]
             val l1 = curWord[last]
 
-            addFeature(features, vector, buffer, c1, '★')
-            addFeature(features, vector, buffer, l1, '✆')
+
+            buffer.set2(c1, '★')
+            addFeature(features, vector, buffer)
+
+            buffer.set2(l1, '✆')
+            addFeature(features, vector, buffer)
 
             if (length >= 3) {
                 val c2 = curWord[1]
                 val l2 = curWord[last - 1]
 
-                addFeature(features, vector, buffer, c1, c2, '★')
-                addFeature(features, vector, buffer, l1, l2, '✆')
+                buffer.set3(c1, c2, '★')
+                addFeature(features, vector, buffer)
+
+                buffer.set3(l1, l2, '✆')
+                addFeature(features, vector, buffer)
 
                 if (length >= 4) {
                     val c3 = curWord[2]
                     val l3 = curWord[last - 2]
-                    addFeature(features, vector, buffer, c1, c2, c3, '★')
-                    addFeature(features, vector, buffer, l1, l2, l3, '✆')
+                    buffer.set4(c1, c2, c3, '★')
+                    addFeature(features, vector, buffer)
+                    buffer.set4(l1, l2, l3, '✆')
+                    addFeature(features, vector, buffer)
                 }
             }
         }
@@ -292,10 +305,8 @@ object POSPerceptronFeature {
         return vector
     }
 
-    private fun addFeature(features: FeatureSet, vector: IntArrayList, stringBuilder: StringBuilder, vararg parts: Any) {
-        for (x in parts) {
-            stringBuilder.append(x)
-        }
+    private fun addFeature(features: FeatureSet, vector: IntArrayList, stringBuilder: FastStringBuilder) {
+
         val id = features.featureId(stringBuilder)
 
         stringBuilder.clear()
@@ -384,7 +395,7 @@ class POSPerceptronTrainer {
          *
          */
         fun sentenceToSample(line: List<PkuWord>): TrainSample {
-            val buffer = java.lang.StringBuilder()
+            val buffer = FastStringBuilder(100)
             val words = line.map { it.word }
             val poss = line.map { labelMap[it.pos]!! }.toIntArray()
 

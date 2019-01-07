@@ -9,7 +9,6 @@ import com.mayabot.nlp.resources.NlpResource;
 import com.mayabot.nlp.segment.plugins.ner.PerceptronNerService;
 import com.mayabot.nlp.utils.CharNormUtils;
 
-import java.io.BufferedInputStream;
 import java.util.List;
 
 /**
@@ -29,8 +28,8 @@ public class PerceptronCwsService {
         NlpResource featureResource = mynlp.loadResource("cws-model/feature.dat");
 
         this.perceptron = CWSPerceptron.load(
-                new BufferedInputStream(parameterResource.openInputStream()),
-                new BufferedInputStream(featureResource.openInputStream()));
+                parameterResource.openInputStream(),
+                featureResource.openInputStream());
 
     }
 
