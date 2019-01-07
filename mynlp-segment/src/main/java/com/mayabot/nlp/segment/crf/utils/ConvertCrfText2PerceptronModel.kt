@@ -108,8 +108,8 @@ object ConvertCrfText2PerceptronModel {
 //        parameterWriter.writeInt(maxid + labelSize)
 //        //参数
         for (i in 0 until labelSize * labelSize) {
-            val line = reader.readLine()!!
-            val weight = line.toFloat()
+            val line2 = reader.readLine()!!
+            val weight = line2.toFloat()
             parameterArray[p++] = weight
         }
 //     //这里会多一个Lable,但是用不到
@@ -119,7 +119,7 @@ object ConvertCrfText2PerceptronModel {
 
         line = reader.readLine()
         while (line != null && line.isNotEmpty()) {
-            val weight = line!!.toFloat()
+            val weight = line.toFloat()
             parameterArray[p++] = weight
 
             line = reader.readLine()

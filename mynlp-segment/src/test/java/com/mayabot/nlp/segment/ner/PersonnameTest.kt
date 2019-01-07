@@ -1,7 +1,7 @@
 package com.mayabot.nlp.segment.ner
 
-import com.mayabot.nlp.segment.TokenizerTestHelp
 import com.mayabot.nlp.segment.core.CoreTokenizerBuilder
+import com.mayabot.nlp.segment.utils.TokenizerTestHelp
 import org.junit.Test
 
 class PersonnameTest {

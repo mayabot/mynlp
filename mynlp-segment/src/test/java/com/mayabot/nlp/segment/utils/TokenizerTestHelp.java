@@ -1,6 +1,7 @@
-package com.mayabot.nlp.segment;
+package com.mayabot.nlp.segment.utils;
 
 import com.google.common.base.Joiner;
+import com.mayabot.nlp.segment.MynlpTokenizer;
 import org.junit.Assert;
 
 public class TokenizerTestHelp {

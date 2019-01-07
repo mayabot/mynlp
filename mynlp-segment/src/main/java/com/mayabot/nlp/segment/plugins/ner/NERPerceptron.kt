@@ -360,7 +360,7 @@ class NERPerceptronTrainer(val targetPos: Set<String>) {
                 featureSet,
                 labelMap.size,
                 sampleList,
-                EvaluateRunner { k, model ->
+                EvaluateRunner { _, model ->
                     val ner = NERPerceptron(model, labelList)
                     NEREvaluateUtils.evaluateNER(ner, evaluateList, targetPos)
                 },
