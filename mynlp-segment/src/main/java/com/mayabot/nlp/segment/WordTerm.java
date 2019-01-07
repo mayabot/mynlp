@@ -24,7 +24,7 @@ import java.util.List;
  *
  * @author jimichan
  */
-public final class WordTerm implements Serializable {
+public final class WordTerm implements Serializable, WordAndNature {
 
     static final long serialVersionUID = 1L;
 
@@ -111,6 +111,11 @@ public final class WordTerm implements Serializable {
 
     public String getWord() {
         return word;
+    }
+
+    @Override
+    public String getNatureName() {
+        return getNatureString();
     }
 
     public void setOffset(int offset) {

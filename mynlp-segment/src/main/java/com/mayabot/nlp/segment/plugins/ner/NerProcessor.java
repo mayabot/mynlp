@@ -1,11 +1,17 @@
 package com.mayabot.nlp.segment.plugins.ner;
 
+import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.mayabot.nlp.segment.Nature;
 import com.mayabot.nlp.segment.SegmentComponentOrder;
 import com.mayabot.nlp.segment.WordpathProcessor;
 import com.mayabot.nlp.segment.common.BaseSegmentComponent;
+import com.mayabot.nlp.segment.wordnet.Vertex;
 import com.mayabot.nlp.segment.wordnet.Wordpath;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Singleton
 public class NerProcessor extends BaseSegmentComponent implements WordpathProcessor {
@@ -23,16 +29,38 @@ public class NerProcessor extends BaseSegmentComponent implements WordpathProces
     @Override
     public Wordpath process(Wordpath wordPath) {
 
-//        service.
-//        ArrayList<Vertex> vertices = Lists.newArrayList(wordPath.iteratorVertex());
-//        List<Nature> posList = perceptronPosService.posFromVertex(vertices);
-//
-//        for (int i = 0; i < vertices.size(); i++) {
-//            Vertex vertex = vertices.get(i);
-//            if (vertex.nature == null) {
-//                vertex.nature = (posList.get(i));
-//            }
-//        }
+        ArrayList<Vertex> vertices = Lists.newArrayList(wordPath.iteratorVertex());
+
+        List<String> tagS = service.getPerceptron().decodeVertexList(vertices);
+
+        int from = -1;
+        int lenght = 0;
+        for (int i = 0; i < vertices.size(); i++) {
+            String tag = tagS.get(i);
+            Vertex vertex = vertices.get(i);
+
+            if ("O".equals(tag) || "S".equals(tag)) {
+                from = -1;
+                lenght = 0;
+            } else if (tag.startsWith("B-")) {
+                from = vertex.offset();
+                lenght += vertex.length;
+            } else if (tag.startsWith("M-")) {
+                lenght += vertex.length;
+            } else if (tag.startsWith("E-")) {
+                lenght += vertex.length;
+                if (from != -1) {
+                    Vertex x = wordPath.combine(from, lenght);
+
+                    if (tag.equals("E-nt")) {
+                        x.nature = Nature.nt;
+                    }
+                    if (tag.equals("E-ns")) {
+                        x.nature = Nature.ns;
+                    }
+                }
+            }
+        }
 
         return wordPath;
     }
