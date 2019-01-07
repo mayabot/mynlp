@@ -1,5 +1,6 @@
 package com.mayabot.nlp.segment;
 
+import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 
@@ -22,6 +23,10 @@ public final class Sentence {
 
     public Sentence() {
         this.words = ImmutableList.of();
+    }
+
+    public String toWordString() {
+        return Joiner.on(' ').join(asStringList());
     }
 
     public String toString() {

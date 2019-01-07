@@ -84,11 +84,6 @@ public class PipelineTokenizerBuilder implements MynlpTokenizerBuilder {
 
     }
 
-    public static void main(String[] args) {
-        LinkedList<String> pipeLine = Lists.newLinkedList(Lists.newArrayList("a", "b", "c"));
-        pipeLine.add(1, "x");
-        System.out.println(pipeLine);
-    }
 
     /**
      * 默认情况下，是否开启字词模式
@@ -344,6 +339,15 @@ public class PipelineTokenizerBuilder implements MynlpTokenizerBuilder {
             this.clazz = clazz;
             this.consumer = consumer;
         }
+    }
+
+    public boolean isEnableIndexModel() {
+        return enableIndexModel;
+    }
+
+    public PipelineTokenizerBuilder setEnableIndexModel(boolean enableIndexModel) {
+        this.enableIndexModel = enableIndexModel;
+        return this;
     }
 
 }

@@ -162,8 +162,16 @@ if (JavaVersion.current().isJava8Compatible()) {
             options.encoding = "UTF-8"
             options.compilerArgs += ["-Xdoclint:none", "-Xlint:none", "-nowarn"]
         }
-        tasks.withType(Test){
-            enabled = false
+//        tasks.withType(Test){
+//            enabled = false
+//        }
+
+        tasks.withType(Javadoc) {
+            options{
+                encoding "UTF-8"
+                charSet 'UTF-8'
+                links "http://docs.oracle.com/javase/8/docs/api"
+            }
         }
     }
 }

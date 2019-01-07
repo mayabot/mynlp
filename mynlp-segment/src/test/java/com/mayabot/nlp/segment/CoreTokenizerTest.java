@@ -17,6 +17,7 @@
 package com.mayabot.nlp.segment;
 
 import com.google.common.collect.Lists;
+import com.mayabot.nlp.segment.utils.TokenizerTestHelp;
 import org.junit.Test;
 
 import java.util.List;
@@ -30,11 +31,11 @@ public class CoreTokenizerTest {
         List<String> lines = Lists.newArrayList();
         lines.add("工信处|女|干事|每月|经过|下属|科室|都|要|亲口|交代|24口|交换机|等|技术性|器件|的|安装|工作");
         lines.add("计划|建立|一个|5|万|公顷|面积|的|航天站");
-        lines.add("不要|把|一星半点|儿|的|酒|全部|都|喝掉|嘛");
+        lines.add("不要|把|一星半点儿|的|酒|全部|都|喝掉|嘛");
         lines.add("商品|和|服务");
         lines.add("这个|是|你|第|几套|房|了");
         lines.add("这个|是|你|的|ipad3|么");
-        lines.add("以|每|台|约|200|元|的|价格|送到|苹果|售后|维修|中心|换|新机|(|苹果|的|保修|基本|是|免费|换|新机");
+        lines.add("以|每|台|约|200元|的|价格|送到|苹果|售后|维修|中心|换|新机|(|苹果|的|保修|基本|是|免费|换|新机");
         lines.add("受约束|,|需要|遵守|心理学会|所|定|的|道德|原则|,|所|需要|时|须|说明|该|实验|与|所|能|得到|的|知识|的|关系");
 
         for (String line : lines) {
@@ -79,7 +80,7 @@ public class CoreTokenizerTest {
     public void testEmail() {
         MynlpTokenizer tokenizer = MynlpTokenizers.coreTokenizer();
 
-        String line = "这个|是|你|jimi@mayabot.com|邮箱地址|么|2017-10-12";
+        String line = "这个|是|你|jimi@mayabot.com|邮箱|地址|么|2017-10-12";
 
         TokenizerTestHelp.test(tokenizer, line);
 
@@ -89,7 +90,7 @@ public class CoreTokenizerTest {
     public void testDate() {
         MynlpTokenizer tokenizer = MynlpTokenizers.coreTokenizer();
 
-        String line = "2017年|的|第一个|夏天|是|2017-10-12"; // 目标 是 第几套 房
+        String line = "2017年|的|第一|个|夏天|是|2017-10-12"; // 目标 是 第几套 房
 
         TokenizerTestHelp.test(tokenizer, line);
 
@@ -100,17 +101,7 @@ public class CoreTokenizerTest {
     public void testPersonName() {
         MynlpTokenizer tokenizer = MynlpTokenizers.coreTokenizer();
 
-        String line = "这里有关天培的烈士.龚学平等领导, 邓颖超生前"; // 目标 是 第几套 房
-
-        System.out.println(tokenizer.parse(line));
-
-    }
-
-    @Test
-    public void testPlaceName() {
-        MynlpTokenizer tokenizer = MynlpTokenizers.coreTokenizer();
-
-        String line = "蓝翔给宁夏固原市彭阳县红河镇黑牛沟村捐赠了挖掘机"; // 目标 是 第几套 房
+        String line = "这里有关天培的烈士.龚学平等领导, 邓颖超生前";
 
         System.out.println(tokenizer.parse(line));
 
@@ -118,7 +109,7 @@ public class CoreTokenizerTest {
 
     @Test
     public void testOrgName() {
-        MynlpTokenizer tokenizer = MynlpTokenizers.coreTokenizer();
+        MynlpTokenizer tokenizer = MynlpTokenizers.coreTokenizerBuilder().setEnableNER(true).build();
 
         String line = "陈汝烨偶尔去开元地中海影城看电影。" +
                 "上海万行信息科技有限公司的招聘信息," +
@@ -134,7 +125,7 @@ public class CoreTokenizerTest {
 
         String line = "钱管家中怎么绑定网银"; // 目标 是 第几套 房
 
-        System.out.println(tokenizer.parse(line));
+        System.out.println(tokenizer.parse(line).toWordString().equals("钱 管家 中 怎么 绑定 网银"));
 
     }
 
@@ -152,7 +143,7 @@ public class CoreTokenizerTest {
     public void test613() {
         MynlpTokenizer tokenizer = MynlpTokenizers.coreTokenizer();
 
-        String line = "非洲八冠王曾夺世界季军"; // 目标 是 第几套 房
+        String line = "非洲八冠王曾夺世界季军";
 
         System.out.println(tokenizer.parse(line));
 

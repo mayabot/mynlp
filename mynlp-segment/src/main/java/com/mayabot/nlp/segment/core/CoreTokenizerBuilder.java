@@ -22,10 +22,10 @@ public class CoreTokenizerBuilder extends PipelineTokenizerBuilder
     }
 
     private boolean enablePersonName = true;
-    private boolean enableNER = true;
-    private boolean enableCustomDictionary = false;
     private boolean enablePOS = true;
     private boolean enableCorrection = true;
+    private boolean enableNER = false;
+    private boolean enableCustomDictionary = false;
 
     /**
      * 在这里装配所需要的零件吧！！！

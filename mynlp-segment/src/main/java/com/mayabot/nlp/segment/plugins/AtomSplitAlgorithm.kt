@@ -56,6 +56,7 @@ class AtomSplitAlgorithm : BaseSegmentComponent(), WordSplitAlgorithm {
 
         //年月日
         treeMap.addTemplate("{N[2,4]}年{N[1,2]}月{N[1,2]}{(日|号)}", 1)
+        treeMap.addTemplate("{N[2,4]}-{N[2]}-{N[2]}", 1)
 
         //年
         treeMap.addTemplate("{N|Z[2,4]}年", 1)
@@ -103,7 +104,7 @@ class AtomSplitAlgorithm : BaseSegmentComponent(), WordSplitAlgorithm {
         treeMap.addTemplate("负{Z[1-20]}点{N[1,20]}", 2)
 
         //MQ 数量 一个 一双
-        treeMap.addTemplate("{Z|N[1-10]}{(串|事|册|丘|下|丈|丝|举|具|包|厘|刀|分|列|则|剂|副|些|匝|队|部|出|个)}", 3)
+        treeMap.addTemplate("{Z|N[1-10]}{(元|串|事|册|丘|下|丈|丝|举|具|包|厘|刀|分|列|则|剂|副|些|匝|队|部|出|个)}", 3)
         treeMap.addTemplate("{Z|N[1-10]}{(介|令|份|伙|件|任|倍|儋|亩|记|双|发|叠|节|茎|通|造|遍|道)}", 3)
         treeMap.addTemplate("{Z|N[1-10]}{(遭|对|尊|头|套|弓|引|张|弯|开|庄|床|座|庹|帖|帧|席|常|幅|幢|口|句|号|台|只|吊|合|名)}", 3)
         treeMap.addTemplate("{Z|N[1-10]}{(吨|和|味|响|骑|门|间|阕|宗|客|家|彪|层|尾|届|声|扎|打|扣|把|抛|批|抔|抱|拨|担|拉|抬)}", 3)
@@ -120,6 +121,7 @@ class AtomSplitAlgorithm : BaseSegmentComponent(), WordSplitAlgorithm {
         treeMap.addTemplate("{Z|N[1-10]}{(mhz|khz|赫兹)}", 3)
         treeMap.addTemplate("{Z|N[1-10]}{(mpa|kpa|hpa|帕)}", 3)
         treeMap.addTemplate("{Z|N[1-10]}{(tb|gb|mb|kb|字节|兆)}", 3)
+        treeMap.addTemplate("{N[1-10]}{A[1-3]}", 3)
 
 
         //单词
@@ -168,8 +170,9 @@ class AtomSplitAlgorithm : BaseSegmentComponent(), WordSplitAlgorithm {
                     if (c >= '0' && c <= '9') {
                         newChars[i] = 'N'
                         continue
-                    } else if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z')) {
+                    } else if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || c == '_') {
                         newChars[i] = 'A'
+                        // _也算字母
                         continue
                     } else if (c == '.') {
                         // 把点也归一化为数字N的一种形式
@@ -185,7 +188,7 @@ class AtomSplitAlgorithm : BaseSegmentComponent(), WordSplitAlgorithm {
                 }
             }
 
-            //println(String(newChars))
+//            println(String(newChars))
 
             val match = dat.matchLong(newChars, 0)
 
@@ -224,7 +227,7 @@ class AtomSplitAlgorithm : BaseSegmentComponent(), WordSplitAlgorithm {
                 }
 
 
-                //println("Found " + String(chars, match.begin, match.length))
+//                println("Found " + String(chars, match.begin, match.length))
             }
 
 
@@ -275,12 +278,14 @@ class AtomSplitAlgorithm : BaseSegmentComponent(), WordSplitAlgorithm {
                     range.split(",").map { it.toInt() }.forEach { n ->
                         e.forEach { st.add(it.repeat(n)) }
                     }
-                } else {
+                } else if (range.contains("-")) {
                     val start = range.split("-")[0].toInt()
                     val end = range.split("-")[1].toInt()
                     for (n in start..end) {
                         e.forEach { st.add(it.repeat(n)) }
                     }
+                } else {
+                    e.forEach { st.add(it.repeat(range.toInt())) }
                 }
                 list.add(st)
             } else {
@@ -296,7 +301,7 @@ class AtomSplitAlgorithm : BaseSegmentComponent(), WordSplitAlgorithm {
     companion object {
         @JvmStatic
         fun main(args: Array<String>) {
-            val wordnet = Wordnet("你的ipad3么".toCharArray())
+            val wordnet = Wordnet("这个是你jimi@mayabot.com邮箱地址么2017-10-12".toCharArray())
 //            val wordnet = Wordnet("你的ipad3么 ,最近三天花了多少钱 a-ff  -102 @163.com,一万八千八百八十八,FM98.1，jimi@mayabot.com,周一下午九点钟,一九九八年三月，2018年2月2日,2013年,周一下午三点半有个重量为11225.6公斤,123234".toCharArray())
             val x = AtomSplitAlgorithm()
             x.fill(wordnet)

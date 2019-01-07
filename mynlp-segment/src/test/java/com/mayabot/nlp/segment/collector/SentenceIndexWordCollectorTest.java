@@ -19,10 +19,10 @@ public class SentenceIndexWordCollectorTest {
                 collector
         ).build();
 
-        System.out.println(tokenizer.parse("中华人民共和国的主副食品安全法").toString());
+        //System.out.println(tokenizer.parse("中华人民共和国的主副食品安全法").toString());
 
         Assert.assertTrue(
-                "[中华人民共和国/ns[中华/nz, 华人/n, 人民/n, 共和/n, 共和国/n], 的/ude1, 主副食品/n[主副食/j, 副食/n, 副食品/n, 食品/n], 安全/an, 法/n]"
+                "[中华 华人 人民 人民共和国 共和 共和国]/ns 的/u 主副/n 食品/n 安全/a 法/k"
                         .equals(tokenizer.parse("中华人民共和国的主副食品安全法").toString()));
 
     }
@@ -36,8 +36,9 @@ public class SentenceIndexWordCollectorTest {
                 collector
         ).build();
 
+        //System.out.println(tokenizer.parse("中华人民共和国的主副食品安全法").toString());
         Assert.assertTrue(
-                "[中华人民共和国/ns, 中华/nz, 华人/n, 人民/n, 共和/n, 共和国/n, 的/ude1, 主副食品/n, 主副食/j, 副食/n, 副食品/n, 食品/n, 安全/an, 法/n]"
+                "中华人民共和国/ns 中华 华人 人民 人民共和国 共和 共和国 的/u 主副/n 食品/n 安全/a 法/k"
                         .equals(tokenizer.parse("中华人民共和国的主副食品安全法").toString()));
 
     }
@@ -58,7 +59,7 @@ public class SentenceIndexWordCollectorTest {
                 collector
         ).build();
 
-        Assert.assertEquals("[中华人民共和国/ns, 中华/nz, 人民/n, 共和国/n, 的/ude1, 主副食品/n, 主副食/j, 副食/n, 副食品/n, 食品/n, 安全/an, 法/n]",
+        Assert.assertEquals("中华人民共和国/ns 中华 人民 人民共和国 共和国 的/u 主副/n 食品/n 安全/a 法/k",
                 tokenizer.parse("中华人民共和国的主副食品安全法").toString()
         );
 

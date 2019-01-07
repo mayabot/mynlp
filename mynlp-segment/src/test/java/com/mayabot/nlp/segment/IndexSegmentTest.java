@@ -10,7 +10,7 @@ public class IndexSegmentTest {
 
         MynlpTokenizer mynlpTokenizer = MynlpTokenizers.
                 coreTokenizerBuilder()
-//                .sentenceIndexCollector().
+                .setEnableIndexModel(true)
                 .build();
 
 
