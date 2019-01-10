@@ -1,5 +1,6 @@
 package com.mayabot.nlp.resources;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Ordering;
@@ -18,6 +19,8 @@ import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -35,8 +38,27 @@ public class JarNlpResourceFactory implements NlpResourceFactory {
     public JarNlpResourceFactory(File baseDir) {
         this.baseDir = baseDir;
 
-        //后面覆盖前面的
-        List<File> jarFiles = Ordering.from(Comparator.comparing(File::getName))
+
+        //后面覆盖前面的. 1.0.9 1.0.10 保证顺序正确
+        List<File> jarFiles = Ordering.<File>from(
+                Comparator.comparing(file -> {
+                    String text = file.getName();
+                    Pattern pattern = Pattern.compile("(\\d+)\\.(\\d+)\\.(\\d+)\\.jar$");
+
+                    StringBuffer sb = new StringBuffer();
+
+                    Matcher matcher = pattern.matcher(text);
+
+                    while (matcher.find()) {
+                        String v1 = Strings.padStart(matcher.group(1), 3, '0');
+                        String v2 = Strings.padStart(matcher.group(2), 3, '0');
+                        String v3 = Strings.padStart(matcher.group(3), 3, '0');
+                        matcher.appendReplacement(sb, v1 + "." + v2 + "." + v3 + ".jar");
+                    }
+
+                    matcher.appendTail(sb);
+                    return sb.toString();
+                }, String.CASE_INSENSITIVE_ORDER))
                 .sortedCopy(Lists.newArrayList(
                         baseDir.listFiles(file -> file.isFile() && file.getName().endsWith(".jar")
                         ))

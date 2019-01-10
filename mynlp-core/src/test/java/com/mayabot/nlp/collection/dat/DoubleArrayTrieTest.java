@@ -1,5 +1,6 @@
 package com.mayabot.nlp.collection.dat;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.HashSet;
@@ -31,10 +32,6 @@ public class DoubleArrayTrieTest {
 
         DoubleArrayTrieMap trie = new DoubleArrayTrieMap(map);
 
-        sets.forEach(
-                c -> System.out.println(c + " -> " + (int) c)
-        );
-
         return trie;
     }
 
@@ -42,43 +39,9 @@ public class DoubleArrayTrieTest {
     @Test
     public void test() {
         DoubleArrayTrieMap<String> trie = trie();
-        System.out.println(trie.containsKey("一举成名"));
+
+        Assert.assertTrue(trie.containsKey("一举成名"));
+        Assert.assertTrue(!trie.containsKey("一举2"));
     }
 
-//    @Test
-//    public void test() {
-//        DoubleArrayTrieMap<String> trie = trie();
-//
-//        String x = trie.get("一举成名");
-//
-//        int[] base = trie.base;
-//        int c =0;
-//        for (int i = base.length-1; i >=0 ; i--) {
-//            if (0== base[i]) {
-//                c++;
-//            }else{
-//                System.out.println("+"+i);
-//                break;
-//            }
-//        }
-//
-//        System.out.println(base.length);
-//        System.out.println(c);
-//
-//        System.out.println(x);
-//        Assert.assertEquals(x,"一举成名");
-//
-//        System.out.println(trie.base.length);
-//
-//        System.out.println("Index" + "\t" + "Base" + "\t" + "Check");
-//
-//        //IntIntHashMap intIntMap = new IntIntHashMap();
-//
-//        for (int i = 0; i < trie.base.length; i++) {
-//            if (trie.base[i] != 0 || trie.check[i] != 0) {
-//                System.out.println(i + "\t\t" + trie.base[i] + "\t\t" + trie.check[i]);
-//            }
-//        }
-//
-//    }
 }

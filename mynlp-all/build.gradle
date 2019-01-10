@@ -1,0 +1,87 @@
+/*
+ * Copyright 2018 mayabot.com authors. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+plugins {
+    id 'com.github.johnrengelman.shadow' version '2.0.4'
+}
+
+description = "mynlp-all 打包所有的组件到一个JAR包"
+
+
+dependencies {
+
+    compile project(":mynlp-segment")
+    compile project(":mynlp-pinyin")
+    compile project(":mynlp-transform")
+    compile project(":mynlp-classification")
+    compile project(":mynlp-summary")
+
+}
+
+// Must be BELOW subprojects{}
+//task alljavadoc(type: Javadoc) {
+//    source subprojects.collect { it.sourceSets.main.allJava }
+//    classpath = files(subprojects.collect { it.sourceSets.main.compileClasspath })
+//    destinationDir = file("${buildDir}/docs/javadoc")
+//}
+//
+//task javadocJar2(type: Jar, dependsOn: alljavadoc) {
+//    classifier = 'javadoc'
+//    from alljavadoc.destinationDir
+//}
+
+task sourceJar(type: Jar,overwrite:true) {
+    classifier = 'sources'
+    from project(":mynlp-core").sourceSets.main.allSource
+    from project(":mynlp-perceptron").sourceSets.main.allSource
+    from project(":mynlp-pinyin").sourceSets.main.allJava
+    from project(":mynlp-segment").sourceSets.main.allSource
+    from project(":mynlp-summary").sourceSets.main.allSource
+    from project(":mynlp-transform").sourceSets.main.allJava
+}
+
+
+//shadowJar.finalizedBy javadocJar2
+shadowJar.finalizedBy sourceJar
+
+shadowJar {
+    classifier ''
+    relocate 'com.google', 'com.mayabot.t.google'
+    relocate 'com.carrotsearch', 'com.mayabot.t.carrotsearch'
+    relocate 'kotlin', 'com.mayabot.t.kotlin'
+}
+
+
+publishJavaPublicationToMayaPrivateRepository.enabled = false
+publishJavaPublicationToMavenLocal.enabled = false
+publishJavaPublicationToOssPublicRepository.enabled = false
+
+publishing.publications {
+
+        shadow(MavenPublication) { publication ->
+            project.shadow.component(publication)
+            artifact sourceJar {
+                classifier "sources"
+            }
+
+            artifact javadocJar {
+                classifier "javadoc"
+            }
+        }
+}
+
+signing {
+    sign publishing.publications.shadow
+}

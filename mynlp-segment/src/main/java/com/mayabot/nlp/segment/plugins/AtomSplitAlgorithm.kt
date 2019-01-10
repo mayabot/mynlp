@@ -59,7 +59,7 @@ class AtomSplitAlgorithm : BaseSegmentComponent(), WordSplitAlgorithm {
         treeMap.addTemplate("{N[2,4]}-{N[2]}-{N[2]}", 1)
 
         //年
-        treeMap.addTemplate("{N|Z[2,4]}年", 1)
+        treeMap.addTemplate("{N|Z[2,4]}{(年|年度)}", 1)
 
         //年月
         treeMap.addTemplate("{N|Z[2,4]}年{N[1,2]}月", 1)
