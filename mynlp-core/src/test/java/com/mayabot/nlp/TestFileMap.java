@@ -1,4 +1,4 @@
-package common;
+package com.mayabot.nlp;
 
 import java.io.File;
 import java.io.FileOutputStream;
