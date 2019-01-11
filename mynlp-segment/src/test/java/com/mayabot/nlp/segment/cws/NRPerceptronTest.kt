@@ -1,4 +1,4 @@
-package com.mayabot.nlp.segment.perceptron
+package com.mayabot.nlp.segment.cws
 
 import com.google.common.collect.Lists
 import com.mayabot.nlp.perceptron.PerceptronModel

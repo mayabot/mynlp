@@ -207,7 +207,8 @@ public class MynlpEnv {
             ) {
                 ByteStreams.copy(inputStream, out);
             }
-            System.out.println("Downloaded " + url);
+
+            System.out.println("Downloaded " + url + " , to " + file);
 
             if (file.exists()) {
                 return file;

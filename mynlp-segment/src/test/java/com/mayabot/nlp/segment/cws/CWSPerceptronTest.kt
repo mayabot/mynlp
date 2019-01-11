@@ -1,4 +1,4 @@
-package com.mayabot.nlp.segment.perceptron
+package com.mayabot.nlp.segment.cws
 
 import com.mayabot.nlp.perceptron.PerceptronModel
 import java.io.File
@@ -8,8 +8,8 @@ object CWSPerceptronTest {
 
     @JvmStatic
     fun main(args: Array<String>) {
-        train()
-        // test()
+//        train()
+        test()
     }
 
     fun train() {
@@ -36,7 +36,7 @@ object CWSPerceptronTest {
 
     fun test() {
 //        val model = PerceptronModel.load(File("data.work/pcws/model-hanlp-compress"))
-        val model = PerceptronModel.load(File("data/cws-model"))
+        val model = PerceptronModel.load(File("data.work/cws-model"))
 
         //model.compress(0.1,0.01)
 
@@ -65,7 +65,8 @@ object CWSPerceptronTest {
                 "这是你买的第几套房子，这就是总统套房了，芝士汉堡是什么味道\n" +
                 "小孩多大学跳舞\n" +
                 "外地人生孩子\n" +
-                "被拆迁人为低收入"
+                "被拆迁人为低收入" +
+                "经过长时间的感情探索和临时分居后"
         ""
 
 //        val text = "心肌细胞是心脏泵血的动力来源"

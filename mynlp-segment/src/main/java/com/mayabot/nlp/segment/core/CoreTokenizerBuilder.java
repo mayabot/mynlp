@@ -47,7 +47,7 @@ public class CoreTokenizerBuilder extends PipelineTokenizerBuilder
 
 
         // Pipeline处理器
-        if (enableCorrection) {
+        if (enableCustomDictionary) {
             this.addProcessor(CustomDictionaryProcessor.class);
         }
 

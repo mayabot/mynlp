@@ -1,3 +1,18 @@
+/*
+ * Copyright 2018 mayabot.com authors. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.mayabot.nlp.perceptron
 
 import com.carrotsearch.hppc.IntArrayList
@@ -25,18 +40,19 @@ class TrainSample(
 class Labels(val goldFeature: IntArray, val predFeature: IntArray)
 
 /**
- * 感知机模型
+ * 感知机模型实现。
+ * @author jimichan
  */
 open class PerceptronModel(
-        private var featureSet: FeatureSet,
-        protected val labelCount: Int,
+        var featureSet: FeatureSet,
+        val labelCount: Int,
         var parameter: FloatArray
 ) : Perceptron {
 
-    private val MaxScore = Integer.MIN_VALUE.toDouble()
+    private val maxScore = Integer.MIN_VALUE.toDouble()
     var decodeQuickModel = false
 
-    val labelLimitInParameter = (labelCount + 1) * labelCount
+    private val labelLimitInParameter = (labelCount + 1) * labelCount
 
 
     constructor(featureSet: FeatureSet, labelCount: Int) :
@@ -82,9 +98,15 @@ open class PerceptronModel(
 
 
     override fun updateForOnlineLearn(data: TrainSample) {
+        val guessLabel = IntArray(data.size)
+        decode(data.featureMatrix, guessLabel)
+        if (Arrays.equals(guessLabel, data.label)) {
+            return
+        }
+
         var over = 0
         for (i in 0 until 10) {
-            var eq = updateForOnlineLearnInner(data, 1f)
+            val eq = updateForOnlineLearnInner(data, 1f)
             if (eq) {
                 over++
                 if (over > 1) {
@@ -148,7 +170,6 @@ open class PerceptronModel(
             }
         }
     }
-
 
 
     private fun featureToLabel(data: TrainSample, guessLabel: IntArray, i: Int): Labels {
@@ -335,7 +356,7 @@ open class PerceptronModel(
             var parameter = FloatArray(0)
 
             if (parameterBin is ByteArrayInputStreamMynlp) {
-                var buf = parameterBin.buf
+                val buf = parameterBin.buf
 
                 val wrap = ByteBuffer.wrap(buf)
 
@@ -394,7 +415,7 @@ open class PerceptronModel(
             val buffer = feature.buffer
             val sizeM1 = feature.size() - 1
 
-            var maxScore = MaxScore
+            var maxScore = maxScore
             var maxIndex = 0
 
             for (label in 0 until labelCount) {
@@ -455,7 +476,7 @@ open class PerceptronModel(
 
             for (curLabel in 0 until labelCount) {
 
-                var maxScore = MaxScore
+                var maxScore = maxScore
 
                 val baseScore = scoreBase(allFeature, curLabel)
 
@@ -626,8 +647,7 @@ class PerceptronTrainer(
         for (k in 1..maxIter) {
             println("#ITER $k/$maxIter")
             val t1 = System.currentTimeMillis()
-
-            var countDownLatch = CountDownLatch(threadNumber)
+            val countDownLatch = CountDownLatch(threadNumber)
             for (s in 0 until threadNumber) {
                 executor.submit {
                     try {
@@ -696,10 +716,10 @@ class PerceptronTrainer(
 /**
  * Top K 最小值。
  */
-class TopIntMinK(val k: Int) {
+class TopIntMinK(private val k: Int) {
 
-    val heap = FloatArray(k)
-    val idIndex = IntArray(k) { -1 }
+    private val heap = FloatArray(k)
+    private val idIndex = IntArray(k) { -1 }
 
     var size = 0
 
@@ -741,7 +761,7 @@ class TopIntMinK(val k: Int) {
         }
     }
 
-    fun topify(i: Int) {
+    private fun topify(i: Int) {
         val l = 2 * i + 1
         val r = 2 * i + 2
         var max: Int
@@ -775,100 +795,3 @@ class TopIntMinK(val k: Int) {
     }
 }
 
-
-///**
-// * 求最大Top K
-// * 内部是小顶堆
-// */
-//class TopIntMaxK(val k: Int) {
-//
-//    val heap = DoubleArray(k)
-//    val idIndex = IntArray(k) { -1 }
-//
-//    var size = 0
-//
-//    fun clear() {
-//        size = 0
-//        heap.fill(0.0)
-//        idIndex.fill(-1)
-//    }
-//
-//    fun push(id: Int, score: Double) {
-//        if (size < k) {
-//            heap[size] = score
-//            idIndex[size] = id
-//            size++
-//
-//            if (size == k) {
-//                buildMinHeap()
-//            }
-//        } else {
-//            // 如果这个数据大于最下值，那么有资格进入
-//            if (score > heap[0]) {
-//                heap[0] = score
-//                idIndex[0] = id
-//
-//                mintopify(0)
-//            }
-//        }
-//    }
-//
-//    fun topCount() = Math.min(k, size)
-//
-//    fun resort(): List<Pair<Int, Double>> {
-//        val top = Math.min(k, size)
-//        val list = java.util.ArrayList<Pair<Int, Double>>(top)
-//
-//
-//        for (i in top - 1 downTo 0) {
-//            list += idIndex[i] to heap[i]
-//        }
-//
-//
-//        list.sortByDescending { it.second }
-//        return list
-//    }
-//
-//    private fun buildMinHeap() {
-//        for (i in k / 2 - 1 downTo 0) {
-//            mintopify(i)// 依次向上将当前子树最大堆化
-//        }
-//    }
-//
-//    /**
-//     * 让heap数组符合堆特性
-//     * @param i
-//     */
-//    private fun mintopify(i: Int) {
-//        val l = 2 * i + 1
-//        val r = 2 * i + 2
-//        var min: Int
-//
-//        if (l < k && heap[l] < heap[i])
-//            min = l
-//        else
-//            min = i
-//
-//        if (r < k && heap[r] < heap[min])
-//            min = r
-//
-//        if (min == i || min >= k) {
-//            // 如果largest等于i说明i是最大元素
-//            // largest超出heap范围说明不存在比i节点大的子女
-//            return
-//        }
-//
-//        swap(i, min)
-//        mintopify(min)
-//    }
-//
-//    private fun swap(i: Int, j: Int) {
-//        val tmp = heap[i]
-//        heap[i] = heap[j]
-//        heap[j] = tmp
-//
-//        val tmp2 = idIndex[i]
-//        idIndex[i] = idIndex[j]
-//        idIndex[j] = tmp2
-//    }
-//}

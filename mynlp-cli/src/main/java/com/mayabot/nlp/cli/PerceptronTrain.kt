@@ -1,7 +1,7 @@
 package com.mayabot.nlp.cli
 
-import com.mayabot.nlp.segment.perceptron.CWSEvaluate
-import com.mayabot.nlp.segment.perceptron.CWSPerceptronTrainer
+import com.mayabot.nlp.segment.cws.CWSEvaluate
+import com.mayabot.nlp.segment.cws.CWSPerceptronTrainer
 import org.apache.commons.cli.DefaultParser
 import org.apache.commons.cli.Option
 import org.apache.commons.cli.Options
