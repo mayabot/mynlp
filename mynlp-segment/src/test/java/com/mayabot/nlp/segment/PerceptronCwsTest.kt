@@ -6,7 +6,7 @@ import org.junit.Test
 
 class CwsTest {
 
-    val cws = Mynlps.getInstance(CwsService::class.java)
+    val cws = Mynlps.instanceOf(CwsService::class.java)
 
     @Test
     fun testCwsService() {

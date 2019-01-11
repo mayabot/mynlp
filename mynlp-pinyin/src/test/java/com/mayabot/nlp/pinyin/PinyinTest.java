@@ -24,11 +24,11 @@ public class PinyinTest {
 
     @Test
     public void testSpeed() {
-        Mynlps.getInstance(PinyinDictionary.class);
+        Mynlps.instanceOf(PinyinDictionary.class);
 
         long t1 = System.currentTimeMillis();
         for (int i = 0; i < 10000; i++) {
-            Mynlps.getInstance(PinyinDictionary.class);
+            Mynlps.instanceOf(PinyinDictionary.class);
         }
         long t2 = System.currentTimeMillis();
 
@@ -84,7 +84,7 @@ public class PinyinTest {
     public void test3() {
         Mynlps.clear();
 
-        PinyinDictionary pinyinService = Mynlps.getInstance(PinyinDictionary.class);
+        PinyinDictionary pinyinService = Mynlps.instanceOf(PinyinDictionary.class);
 
         CustomPinyin customPinyin = pinyinService.getCustomPinyin();
         customPinyin.put("朝朝盈", "zhao1,zhao1,yin2");

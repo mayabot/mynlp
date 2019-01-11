@@ -4,7 +4,7 @@ import com.google.common.base.Charsets;
 import com.google.common.base.Joiner;
 import com.google.common.io.Files;
 import com.mayabot.nlp.segment.MynlpTokenizer;
-import com.mayabot.nlp.segment.MynlpTokenizers;
+import com.mayabot.nlp.segment.Tokenizers;
 import com.mayabot.nlp.segment.WordTerm;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.DefaultParser;
@@ -59,7 +59,7 @@ public class SegmentCmdRunner implements CmdRunner {
         CommandLine line = new DefaultParser().parse(options(), args);
 
         boolean pos = line.hasOption("pos");
-        MynlpTokenizer tokenizer = MynlpTokenizers.coreTokenizer();
+        MynlpTokenizer tokenizer = Tokenizers.coreTokenizer();
 
         if (line.hasOption("f")) {
             if (!line.hasOption("o")) {

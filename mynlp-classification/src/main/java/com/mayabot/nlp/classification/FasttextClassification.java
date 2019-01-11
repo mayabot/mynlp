@@ -4,8 +4,8 @@ import com.google.common.base.CharMatcher;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import com.mayabot.mynlp.fasttext.*;
+import com.mayabot.nlp.segment.Analyzers;
 import com.mayabot.nlp.segment.MynlpAnalyzer;
-import com.mayabot.nlp.segment.MynlpAnalyzers;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -41,7 +41,7 @@ public class FasttextClassification {
         Splitter splitter = Splitter.on(CharMatcher.whitespace()).omitEmptyStrings().trimResults();
 
 
-        MynlpAnalyzer analyzer = MynlpAnalyzers.standard();
+        MynlpAnalyzer analyzer = Analyzers.standard();
 
         FileTrainExampleSource source = new FileTrainExampleSource(
                 new WordSplitter() {
@@ -106,7 +106,7 @@ public class FasttextClassification {
 
     public static String predict(FastText model, String text) {
         if (mynlpAnalyzer == null) {
-            mynlpAnalyzer = MynlpAnalyzers.standard();
+            mynlpAnalyzer = Analyzers.standard();
         }
 
         return predict(model, mynlpAnalyzer, text);

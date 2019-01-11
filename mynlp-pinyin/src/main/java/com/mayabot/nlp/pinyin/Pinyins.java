@@ -7,14 +7,14 @@ import com.mayabot.nlp.Mynlps;
  */
 public class Pinyins {
 
-    static PinyinDictionary pinyinService = Mynlps.getInstance(PinyinDictionary.class);
+    static PinyinDictionary pinyinService = Mynlps.instanceOf(PinyinDictionary.class);
 
     public static PinyinResult convert(String text) {
         return pinyinService.text2Pinyin(text);
     }
 
     public static void reset() {
-        pinyinService = Mynlps.getInstance(PinyinDictionary.class);
+        pinyinService = Mynlps.instanceOf(PinyinDictionary.class);
     }
 
 

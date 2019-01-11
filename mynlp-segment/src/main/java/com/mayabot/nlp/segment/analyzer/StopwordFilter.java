@@ -36,7 +36,7 @@ public class StopwordFilter extends FilterWordTermGenerator implements Predicate
     public StopwordFilter(WordTermGenerator base, Set<String> stopwords) {
         super(base);
 
-        Set<String> defaultSet = Mynlps.getInstance(StopWordDict.class).getSet();
+        Set<String> defaultSet = Mynlps.instanceOf(StopWordDict.class).getSet();
 
         stopWords = new HashSet<>();
         if (stopwords == null) {

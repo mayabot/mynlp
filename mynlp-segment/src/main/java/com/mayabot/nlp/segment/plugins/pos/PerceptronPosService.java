@@ -19,7 +19,7 @@ import java.util.function.Function;
  * <p>
  * 该服务可以独立调用
  * <p>
- * PerceptronPosService service = Mynlps.getInstance(PerceptronPosService.class);
+ * PerceptronPosService service = Mynlps.instanceOf(PerceptronPosService.class);
  */
 @Singleton
 public class PerceptronPosService {

@@ -10,9 +10,9 @@ public class CoreSegment {
 
     public static void main(String[] args) {
         long t1 = System.currentTimeMillis();
-        MynlpTokenizer tokenizer = MynlpTokenizers.coreTokenizer();
+        MynlpTokenizer tokenizer = Tokenizers.coreTokenizer();
 
-        MynlpAnalyzer analyzer = MynlpAnalyzers.standard(tokenizer);
+        MynlpAnalyzer analyzer = Analyzers.standard(tokenizer);
 
         Reader reader = new StringReader("假装这是一个大文本");
         Iterable<WordTerm> result = analyzer.parse(reader);

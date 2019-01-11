@@ -23,7 +23,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 
 /**
- * 包含一个guice实现的IOC容器，管理Mynlp所有的资源。
+ * Mynlp包含一个guice实现的IOC容器，管理Mynlp所有的资源。
  * 在项目Mynlp对象应该作为单例，不需要重复创建。
  *
  * @author jimichan
@@ -35,7 +35,8 @@ public final class Mynlps {
     private static final ConcurrentHashMap<String, Mynlp> map = new ConcurrentHashMap<>();
 
     /**
-     * @param consumer
+     * 其他任何Mynlp方式之前调用，通过回调MynlpBuilder进行系统设置。
+     * @param consumer 设置MynlpBuilder
      */
     public static void install(Consumer<MynlpBuilder> consumer) {
         if (map.isEmpty()) {
@@ -47,10 +48,27 @@ public final class Mynlps {
         }
     }
 
+    /**
+     * 设置DataDir。
+     * 在调用install和其他任何Mynlp方式之前调用
+     *
+     * @param dataDir 数据目录。默认在当前用户目录下.mynlp.data文件夹
+     */
+    public static void setDataDir(String dataDir) {
+        System.setProperty("mynlp.data.dir", dataDir);
+    }
+
+    /**
+     * 清空Mynlp实例。
+     */
     public static void clear() {
         map.clear();
     }
 
+    /**
+     * 获取全局唯一的Mynlp实例。
+     * @return
+     */
     public static Mynlp get() {
         return map.computeIfAbsent("I", Mynlps::create);
     }
@@ -59,11 +77,21 @@ public final class Mynlps {
         return new MynlpBuilder().build();
     }
 
+    /**
+     * 不可被外界实例化
+     */
     private Mynlps() {
 
     }
 
-    public static <T> T getInstance(Class<T> clazz) {
+    /**
+     * 返回Mynlp容器中指定class的Bean。
+     *
+     * @param clazz class
+     * @param <T>   类型参数
+     * @return 返回实例Bean
+     */
+    public static <T> T instanceOf(Class<T> clazz) {
         return get().getInstance(clazz);
     }
 

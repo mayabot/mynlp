@@ -154,19 +154,19 @@ public class CharSet implements Serializable {
      * <p>
      * <p>There are two ways to add a literal negation character ({@code ^}):</p>
      * <ul>
-     * <li>As the last character in a string, e.g. {@code CharSet.getInstance("a-z^")}</li>
-     * <li>As a separate element, e.g. {@code CharSet.getInstance("^","a-z")}</li>
+     * <li>As the last character in a string, e.g. {@code CharSet.instanceOf("a-z^")}</li>
+     * <li>As a separate element, e.g. {@code CharSet.instanceOf("^","a-z")}</li>
      * </ul>
      * <p>
      * <p>Examples using the negation character:</p>
      * <pre>
-     *     CharSet.getInstance("^a-c").contains('a') = false
-     *     CharSet.getInstance("^a-c").contains('d') = true
-     *     CharSet.getInstance("^^a-c").contains('a') = true // (only '^' is negated)
-     *     CharSet.getInstance("^^a-c").contains('^') = false
-     *     CharSet.getInstance("^a-cd-f").contains('d') = true
-     *     CharSet.getInstance("a-c^").contains('^') = true
-     *     CharSet.getInstance("^", "a-c").contains('^') = true
+     *     CharSet.instanceOf("^a-c").contains('a') = false
+     *     CharSet.instanceOf("^a-c").contains('d') = true
+     *     CharSet.instanceOf("^^a-c").contains('a') = true // (only '^' is negated)
+     *     CharSet.instanceOf("^^a-c").contains('^') = false
+     *     CharSet.instanceOf("^a-cd-f").contains('d') = true
+     *     CharSet.instanceOf("a-c^").contains('^') = true
+     *     CharSet.instanceOf("^", "a-c").contains('^') = true
      * </pre>
      * <p>
      * <p>All CharSet objects returned by this method will be immutable.</p>

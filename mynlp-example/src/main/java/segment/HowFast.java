@@ -1,8 +1,8 @@
 package segment;
 
 import com.google.common.base.Joiner;
+import com.mayabot.nlp.segment.Analyzers;
 import com.mayabot.nlp.segment.MynlpAnalyzer;
-import com.mayabot.nlp.segment.MynlpAnalyzers;
 import com.mayabot.nlp.segment.MynlpTokenizer;
 import com.mayabot.nlp.segment.core.CoreTokenizerBuilder;
 
@@ -36,7 +36,7 @@ public class HowFast {
 //                .disabledComponent(CommonRuleWordpathProcessor.class)
 //                .disabledComponent(CustomDictionaryProcessor.class)
                 .build();
-        MynlpAnalyzer analyzer = MynlpAnalyzers.base(tokenizer);
+        MynlpAnalyzer analyzer = Analyzers.base(tokenizer);
 
 //        MynlpTokenizer tokenizer = new SimpleDictTokenizerBuilder().build();
 

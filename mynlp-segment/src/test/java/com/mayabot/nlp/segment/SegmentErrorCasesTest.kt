@@ -9,7 +9,7 @@ class SegmentErrorCasesTest {
 
     @Test
     fun carwords() {
-        val tokenizer = MynlpTokenizers.coreTokenizer()
+        val tokenizer = Tokenizers.coreTokenizer()
         val lines = arrayOf(
                 "你好离合器片的生产日期是2013-05-034S回复人635110101001",
                 "第一次维修更换中间轴前轴承和倒档惰轮总成第二次是20170年6",

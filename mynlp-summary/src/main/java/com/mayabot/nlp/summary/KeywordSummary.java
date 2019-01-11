@@ -2,8 +2,8 @@ package com.mayabot.nlp.summary;
 
 import com.mayabot.nlp.algorithm.TopMaxK;
 import com.mayabot.nlp.common.Pair;
+import com.mayabot.nlp.segment.Analyzers;
 import com.mayabot.nlp.segment.MynlpAnalyzer;
-import com.mayabot.nlp.segment.MynlpAnalyzers;
 
 import java.io.Reader;
 import java.io.StringReader;
@@ -32,7 +32,7 @@ public class KeywordSummary {
 
     private float minDiff = 0.001f;
 
-    private MynlpAnalyzer analyzer = MynlpAnalyzers.standard();
+    private MynlpAnalyzer analyzer = Analyzers.standard();
 
 
     public List<String> keyword(String text, int top) {

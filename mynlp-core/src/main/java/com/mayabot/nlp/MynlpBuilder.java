@@ -71,17 +71,17 @@ public class MynlpBuilder {
             logger.info("Current Working Dir is " + new File(".").getAbsolutePath());
 
             if (dataDir == null) {
-                /**
-                 * 在全局配置文件中 data.dir 可以指定dir目录，默认是当前工作目录下面的data
-                 */
-                dataDir = settings.get("data.dir", null);
-
                 //通过JVM系统属性配置 -Dmynlp.data=/path/data
 
                 if (System.getProperty("mynlp.data.dir") != null) {
                     dataDir = System.getProperty("mynlp.data.dir");
                 }
-
+            }
+            if (dataDir == null) {
+                /**
+                 * 在全局配置文件中 data.dir 可以指定dir目录，默认是当前工作目录下面的data
+                 */
+                dataDir = settings.get("data.dir", null);
             }
 
             if (dataDir == null) {
@@ -100,7 +100,7 @@ public class MynlpBuilder {
 
             File cacheDirFile;
             if (cacheDir == null) {
-                cacheDirFile = ensureDir(new File(System.getProperty("java.io.tmpdir"), "mynlp"));
+                cacheDirFile = ensureDir(new File(dataDirFile, "caches"));
             } else {
                 cacheDirFile = ensureDir(new File(cacheDir));
             }
