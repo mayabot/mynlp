@@ -18,7 +18,7 @@ class OffsetTest {
 
     @Test
     fun test() {
-        val wordTerms = MynlpTokenizers.coreTokenizer().parse(text).asWordList()
+        val wordTerms = Tokenizers.coreTokenizer().parse(text).asWordList()
 
 
         val count = wordTerms.stream().filter { it ->

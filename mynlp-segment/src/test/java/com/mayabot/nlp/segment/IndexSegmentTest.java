@@ -8,7 +8,7 @@ public class IndexSegmentTest {
     @Test
     public void test() {
 
-        MynlpTokenizer mynlpTokenizer = MynlpTokenizers.
+        MynlpTokenizer mynlpTokenizer = Tokenizers.
                 coreTokenizerBuilder()
                 .setEnableIndexModel(true)
                 .build();

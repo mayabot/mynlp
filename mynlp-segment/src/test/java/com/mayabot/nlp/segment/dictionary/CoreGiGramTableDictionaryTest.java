@@ -25,8 +25,8 @@ public class CoreGiGramTableDictionaryTest{
 
     @Test
     public void test() {
-        CoreBiGramTableDictionary table = Mynlps.getInstance(CoreBiGramTableDictionary.class);
-        CoreDictionary dic = Mynlps.getInstance(CoreDictionary.class);
+        CoreBiGramTableDictionary table = Mynlps.instanceOf(CoreBiGramTableDictionary.class);
+        CoreDictionary dic = Mynlps.instanceOf(CoreDictionary.class);
 
         int v1 = dic.getWordID("君主制");//48801
         int v2 = dic.getWordID("国家");//55157

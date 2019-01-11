@@ -25,23 +25,32 @@ import com.mayabot.nlp.segment.analyzer.WordTermGenerator;
  *
  * @author jimichan
  */
-public class MynlpAnalyzers {
+public class Analyzers {
 
     /**
      * 带停用词过滤和标点符号过滤的标准分词。
      *
      * @param tokenizer
-     * @return
+     * @return MynlpAnalyzer
      */
     public static MynlpAnalyzer standard(MynlpTokenizer tokenizer) {
         return new StandardMynlpAnalyzer(tokenizer);
     }
 
+    /**
+     * 默认采用Core分词器的MynlpAnalyzer
+     *
+     * @return MynlpAnalyzer
+     */
     public static MynlpAnalyzer standard() {
         return new StandardMynlpAnalyzer();
     }
 
 
+    /**
+     * 不做任何过滤操作
+     * @return MynlpAnalyzer
+     */
     public static MynlpAnalyzer base(MynlpTokenizer tokenizer) {
         return new BaseMynlpAnalyzer(tokenizer) {
             @Override
@@ -51,6 +60,10 @@ public class MynlpAnalyzers {
         };
     }
 
+    /**
+     * 只过滤标点符号
+     * @return MynlpAnalyzer
+     */
     public static MynlpAnalyzer noPunctuation(MynlpTokenizer tokenizer) {
         return new BaseMynlpAnalyzer(tokenizer) {
             @Override

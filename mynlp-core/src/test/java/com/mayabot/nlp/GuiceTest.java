@@ -103,7 +103,7 @@ public class GuiceTest {
 //            binder.bind(F.class).to(G.class);
 //        });
 //
-//        System.out.println(injector.getInstance(D.class));
+//        System.out.println(injector.instanceOf(D.class));
 //
 //        injector.getAllBindings().keySet().forEach(System.out::println);
 //    }

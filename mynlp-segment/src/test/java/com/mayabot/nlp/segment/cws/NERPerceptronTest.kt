@@ -2,7 +2,7 @@ package com.mayabot.nlp.segment.cws
 
 import com.mayabot.nlp.perceptron.solution.ner.NERPerceptron
 import com.mayabot.nlp.perceptron.solution.ner.NERPerceptronTrainer
-import com.mayabot.nlp.segment.MynlpTokenizers
+import com.mayabot.nlp.segment.Tokenizers
 import com.mayabot.nlp.segment.plugins.ner.PerceptronNerService
 import java.io.File
 
@@ -31,7 +31,7 @@ object NERPerceptronTest {
     fun test() {
 //        val evaluateFile = File("data/pku/199802.txt")
 
-        val tokenizer = MynlpTokenizers.coreTokenizer()
+        val tokenizer = Tokenizers.coreTokenizer()
         val text = "这是陈建国的快递,来自上海万行信息科技有限公司的报告"
 
         val termList = tokenizer.parse(text).asWordList()

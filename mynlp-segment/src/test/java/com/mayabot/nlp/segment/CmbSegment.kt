@@ -32,7 +32,7 @@ class CmbSegment {
         // 1. 自定义词库
         // 2. 人工纠错规则
 
-        val tokenizer = MynlpTokenizers.coreTokenizer()
+        val tokenizer = Tokenizers.coreTokenizer()
 
         for (line in text.split("\n".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()) {
             print(line + "\t")

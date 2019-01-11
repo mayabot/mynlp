@@ -11,7 +11,7 @@ public class CombineTest {
     @Test
     public void test() {
 
-        MynlpTokenizer tokenizer = MynlpTokenizers.coreTokenizer();
+        MynlpTokenizer tokenizer = Tokenizers.coreTokenizer();
 
         String test = "体重182kg\n" +
                 "五十八公斤\n" +

@@ -24,7 +24,7 @@ import java.util.List;
 
 public class CoreTokenizerTest {
 
-    MynlpTokenizer tokenizer = MynlpTokenizers.coreTokenizer();
+    MynlpTokenizer tokenizer = Tokenizers.coreTokenizer();
 
     @Test
     public void test3() {
@@ -78,7 +78,7 @@ public class CoreTokenizerTest {
      */
     @Test
     public void testEmail() {
-        MynlpTokenizer tokenizer = MynlpTokenizers.coreTokenizer();
+        MynlpTokenizer tokenizer = Tokenizers.coreTokenizer();
 
         String line = "这个|是|你|jimi@mayabot.com|邮箱|地址|么|2017-10-12";
 
@@ -88,7 +88,7 @@ public class CoreTokenizerTest {
 
     @Test
     public void testDate() {
-        MynlpTokenizer tokenizer = MynlpTokenizers.coreTokenizer();
+        MynlpTokenizer tokenizer = Tokenizers.coreTokenizer();
 
         String line = "2017年|的|第一|个|夏天|是|2017-10-12"; // 目标 是 第几套 房
 
@@ -99,7 +99,7 @@ public class CoreTokenizerTest {
 
     @Test
     public void testPersonName() {
-        MynlpTokenizer tokenizer = MynlpTokenizers.coreTokenizer();
+        MynlpTokenizer tokenizer = Tokenizers.coreTokenizer();
 
         String line = "这里有关天培的烈士.龚学平等领导, 邓颖超生前";
 
@@ -109,7 +109,7 @@ public class CoreTokenizerTest {
 
     @Test
     public void testOrgName() {
-        MynlpTokenizer tokenizer = MynlpTokenizers.coreTokenizerBuilder().setEnableNER(true).build();
+        MynlpTokenizer tokenizer = Tokenizers.coreTokenizerBuilder().setEnableNER(true).build();
 
         String line = "陈汝烨偶尔去开元地中海影城看电影。" +
                 "上海万行信息科技有限公司的招聘信息," +
@@ -121,7 +121,7 @@ public class CoreTokenizerTest {
 
     @Test
     public void test611() {
-        MynlpTokenizer tokenizer = MynlpTokenizers.coreTokenizer();
+        MynlpTokenizer tokenizer = Tokenizers.coreTokenizer();
 
         String line = "钱管家中怎么绑定网银"; // 目标 是 第几套 房
 
@@ -131,7 +131,7 @@ public class CoreTokenizerTest {
 
     @Test
     public void test612() {
-        MynlpTokenizer tokenizer = MynlpTokenizers.coreTokenizer();
+        MynlpTokenizer tokenizer = Tokenizers.coreTokenizer();
 
         String line = "查找一下2016年的电影,计划建立一个5万公顷面积的航天站"; // 目标 是 第几套 房
 
@@ -141,7 +141,7 @@ public class CoreTokenizerTest {
 
     @Test
     public void test613() {
-        MynlpTokenizer tokenizer = MynlpTokenizers.coreTokenizer();
+        MynlpTokenizer tokenizer = Tokenizers.coreTokenizer();
 
         String line = "非洲八冠王曾夺世界季军";
 

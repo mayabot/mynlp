@@ -18,7 +18,7 @@ public class TransformService {
      */
     public static Simplified2Traditional simplified2Traditional() {
         if (simplified2Traditional == null) {
-            simplified2Traditional = Mynlps.getInstance(Simplified2Traditional.class);
+            simplified2Traditional = Mynlps.instanceOf(Simplified2Traditional.class);
         }
         return simplified2Traditional;
     }
@@ -43,7 +43,7 @@ public class TransformService {
      */
     public static Traditional2Simplified traditional2Simplified() {
         if (traditional2Simplified == null) {
-            traditional2Simplified = Mynlps.getInstance(Traditional2Simplified.class);
+            traditional2Simplified = Mynlps.instanceOf(Traditional2Simplified.class);
         }
         return traditional2Simplified;
     }

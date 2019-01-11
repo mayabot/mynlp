@@ -3,8 +3,8 @@ package com.mayabot.nlp.summary;
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
+import com.mayabot.nlp.segment.Analyzers;
 import com.mayabot.nlp.segment.MynlpAnalyzer;
-import com.mayabot.nlp.segment.MynlpAnalyzers;
 
 import java.util.*;
 import java.util.regex.Pattern;
@@ -19,7 +19,7 @@ public class SentenceSummary {
     private static Splitter lineSplitter = Splitter.on(Pattern.compile("[\r\n]")).omitEmptyStrings().trimResults();
     private static Splitter sentenceSplitter = Splitter.on(Pattern.compile("[，,。:：“”？?！!；;]")).omitEmptyStrings().trimResults();
 
-    private MynlpAnalyzer analyzer = MynlpAnalyzers.standard();
+    private MynlpAnalyzer analyzer = Analyzers.standard();
 
     /**
      * 对文章进行摘要
