@@ -1,4 +1,4 @@
-package com.mayabot.nlp.segment.perceptron
+package com.mayabot.nlp.segment.cws
 
 import com.mayabot.nlp.segment.plugins.pos.POSPerceptronTrainer
 import com.mayabot.nlp.utils.CharNormUtils

@@ -308,9 +308,6 @@ class NRPerceptronTrainer {
         val trainer = PerceptronTrainer(featureSet, tagList.size, sampleList,
                 EvaluateRunner { _, it ->
                     val model = PersonNamePerceptron(it)
-//                    if (k in setOf(76,77,78,92,128,153,155)) {
-//                        model.save(File("data.work/nr-$k"))
-//                    }
                     NREvaluate.evaluate(evaluateSample, model)
                 }, maxIter, false)
 

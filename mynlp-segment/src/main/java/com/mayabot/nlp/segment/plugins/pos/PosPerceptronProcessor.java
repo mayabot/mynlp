@@ -54,7 +54,7 @@ public class PosPerceptronProcessor extends BaseSegmentComponent implements Word
 
         for (int i = 0; i < vertices.size(); i++) {
             Vertex vertex = vertices.get(i);
-            if (vertex.nature == null) {
+            if (vertex.nature == null || vertex.nature == Nature.newWord) {
                 vertex.nature = (posList.get(i));
             }
         }

@@ -50,6 +50,7 @@ task sourceJar(type: Jar,overwrite:true) {
     from project(":mynlp-segment").sourceSets.main.allSource
     from project(":mynlp-summary").sourceSets.main.allSource
     from project(":mynlp-transform").sourceSets.main.allJava
+    from project(":mynlp-classification").sourceSets.main.allJava
 }
 
 

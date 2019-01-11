@@ -231,7 +231,7 @@ public class Wordnet implements CharSequence {
     /**
      * 非空的行数
      *
-     * @return
+     * @return 非空的行数
      */
     public int notNullRowNums() {
         int count = 0;

@@ -1,12 +1,12 @@
 package com.mayabot.nlp.segment
 
 import com.mayabot.nlp.Mynlps
-import com.mayabot.nlp.segment.perceptron.PerceptronCwsService
+import com.mayabot.nlp.segment.cws.CwsService
 import org.junit.Test
 
 class CwsTest {
 
-    val cws = Mynlps.getInstance(PerceptronCwsService::class.java)
+    val cws = Mynlps.getInstance(CwsService::class.java)
 
     @Test
     fun testCwsService() {

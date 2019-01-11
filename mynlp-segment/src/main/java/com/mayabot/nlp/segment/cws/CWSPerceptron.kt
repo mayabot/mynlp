@@ -13,20 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.mayabot.nlp.segment.perceptron
+package com.mayabot.nlp.segment.cws
 
 import com.carrotsearch.hppc.IntArrayList
 import com.google.common.base.Splitter
 import com.mayabot.nlp.common.FastStringBuilder
 import com.mayabot.nlp.perceptron.*
-import com.mayabot.nlp.segment.perceptron.CWSPerceptron.Companion.B
-import com.mayabot.nlp.segment.perceptron.CWSPerceptron.Companion.E
-import com.mayabot.nlp.segment.perceptron.CWSPerceptron.Companion.M
-import com.mayabot.nlp.segment.perceptron.CWSPerceptron.Companion.S
-import com.mayabot.nlp.segment.perceptron.CWSPerceptron.Companion.tagList
-import com.mayabot.nlp.segment.perceptron.CWSPerceptronSample.forOnlineLearn
-import com.mayabot.nlp.segment.perceptron.CWSPerceptronSample.loadSamples
-import com.mayabot.nlp.segment.perceptron.CWSPerceptronSample.sentenceToSample
+import com.mayabot.nlp.segment.cws.CWSPerceptron.Companion.B
+import com.mayabot.nlp.segment.cws.CWSPerceptron.Companion.E
+import com.mayabot.nlp.segment.cws.CWSPerceptron.Companion.M
+import com.mayabot.nlp.segment.cws.CWSPerceptron.Companion.S
+import com.mayabot.nlp.segment.cws.CWSPerceptron.Companion.tagList
+import com.mayabot.nlp.segment.cws.CWSPerceptronSample.forOnlineLearn
+import com.mayabot.nlp.segment.cws.CWSPerceptronSample.loadSamples
+import com.mayabot.nlp.segment.cws.CWSPerceptronSample.sentenceToSample
 import com.mayabot.nlp.utils.CharNormUtils
 import java.io.File
 import java.io.InputStream
@@ -213,7 +213,7 @@ object CWSPerceptronSample {
 
         CharNormUtils.convert(sentence)
 
-        var max: Int = 0
+        var max = 0
         for (i in 0 until sentence.size) {
             CWSPerceptronFeature.extractFeature(sentence, sentence.size, i, Consumer { feature ->
                 var fid = featureSet.featureId(feature)
