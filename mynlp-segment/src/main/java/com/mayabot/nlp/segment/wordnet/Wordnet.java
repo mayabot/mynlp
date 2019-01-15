@@ -42,7 +42,7 @@ public class Wordnet implements CharSequence {
     /**
      * 节点，每一行都是前缀词，和 char数字一一对应
      */
-    final VertexRow[] slotList;
+    private final VertexRow[] slotList;
 
     /**
      * 启始行 下标 -1
@@ -135,7 +135,7 @@ public class Wordnet implements CharSequence {
      * 或者 根本不存在跳转到当前行的路径(前置条件是没有被路径覆盖)
      * 寻找 悬空行，会导致路径中断
      *
-     * @return bitset
+     * @return bitset 孤悬节点
      */
     public BitSet findDangling() {
         BitSet bitSet = new BitSet(charSize);
@@ -215,7 +215,7 @@ public class Wordnet implements CharSequence {
      * </pre>
      *
      * @param sindex SmartIndex -1表示Start
-     * @return
+     * @return VertexRow
      */
     private VertexRow indexAt(int sindex) {
 
@@ -268,9 +268,9 @@ public class Wordnet implements CharSequence {
     /**
      * put一个 ，但是返回的是一个最新的Vertext对象，然后可以继续设置属性
      *
-     * @param offset
-     * @param length
-     * @return
+     * @param offset 偏移量
+     * @param length 长度
+     * @return 返回的是一个最新的Vertex对象
      */
     public Vertex put(int offset, int length) {
         Vertex vertex = new Vertex(length);

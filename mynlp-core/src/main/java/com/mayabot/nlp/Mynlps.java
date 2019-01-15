@@ -19,6 +19,8 @@ package com.mayabot.nlp;
 import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
 
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 
@@ -55,7 +57,10 @@ public final class Mynlps {
      * @param dataDir 数据目录。默认在当前用户目录下.mynlp.data文件夹
      */
     public static void setDataDir(String dataDir) {
-        System.setProperty("mynlp.data.dir", dataDir);
+        AccessController.doPrivileged((PrivilegedAction<Void>) () -> {
+            System.setProperty("mynlp.data.dir", dataDir);
+            return null;
+        });
     }
 
     /**
@@ -74,7 +79,8 @@ public final class Mynlps {
     }
 
     private static Mynlp create(String s) {
-        return new MynlpBuilder().build();
+        return AccessController.doPrivileged(
+                (PrivilegedAction<Mynlp>) () -> new MynlpBuilder().build());
     }
 
     /**
@@ -92,7 +98,7 @@ public final class Mynlps {
      * @return 返回实例Bean
      */
     public static <T> T instanceOf(Class<T> clazz) {
-        return get().getInstance(clazz);
+        return AccessController.doPrivileged((PrivilegedAction<T>) () -> get().getInstance(clazz));
     }
 
 }

@@ -31,10 +31,12 @@ public abstract class FilterWordTermGenerator extends BaseWordTermGeneratorWrape
     @Override
     public WordTerm nextWord() {
 
-
+        int pos = 0;
         WordTerm next = base.nextWord();
         while (next != null) {
+            pos++;
             if (test(next)) {
+                next.setPosInc(pos);
                 return next;
             } else {
                 next = base.nextWord();

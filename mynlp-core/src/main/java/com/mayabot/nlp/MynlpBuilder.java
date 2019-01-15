@@ -67,6 +67,7 @@ public class MynlpBuilder {
 
 
     Mynlp build() throws RuntimeException {
+
         try {
             logger.info("Current Working Dir is " + new File(".").getAbsolutePath());
 
