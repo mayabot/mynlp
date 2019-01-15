@@ -43,6 +43,8 @@ public final class WordTerm implements Serializable, WordAndNature {
      */
     private int offset;
 
+    private int posInc = 1;
+
     /**
      * 索引分词，切分子词
      */
@@ -160,4 +162,12 @@ public final class WordTerm implements Serializable, WordAndNature {
         return sb.toString();
     }
 
+    public int getPosInc() {
+        return posInc;
+    }
+
+    public WordTerm setPosInc(int posInc) {
+        this.posInc = posInc;
+        return this;
+    }
 }

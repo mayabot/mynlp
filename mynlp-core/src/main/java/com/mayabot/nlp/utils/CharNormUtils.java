@@ -5,6 +5,8 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.common.io.Resources;
 
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 import java.util.List;
 import java.util.Set;
 
@@ -13,35 +15,41 @@ public class CharNormUtils {
     private static char[] table = new char[65535];
 
     static {
-        try {
-            List<String> lines = Resources.readLines(Resources.getResource("char_norm"), Charsets.UTF_8);
+        AccessController.doPrivileged((PrivilegedAction<Void>) () -> {
+            try {
+
+                List<String> lines = Resources.readLines(Resources.getResource(
+                        CharNormUtils.class, "char_norm"), Charsets.UTF_8);
 
 
-            Set<String> left = Sets.newHashSet();
-            List<String> right = Lists.newArrayList();
-            for (int i = 0; i < lines.size(); i++) {
-                String line = lines.get(i);
-                if (line.isEmpty() || !line.contains("=")) {
-                    continue;
+                Set<String> left = Sets.newHashSet();
+                List<String> right = Lists.newArrayList();
+                for (int i = 0; i < lines.size(); i++) {
+                    String line = lines.get(i);
+                    if (line.isEmpty() || !line.contains("=")) {
+                        continue;
+                    }
+                    int x = line.indexOf("=");
+                    if (x != 1 && line.length() != 3) {
+                        System.err.println("Error " + line);
+                        continue;
+                    }
+
+                    String first = line.substring(0, 1);
+                    String second = line.substring(2, 3);
+                    left.add(first);
+                    right.add(second);
+                    if (first.length() == 1 && second.length() == 1) {
+                        table[first.charAt(0)] = second.charAt(0);
+                    }
+
                 }
-                int x = line.indexOf("=");
-                if (x != 1 && line.length() != 3) {
-                    System.err.println("Error " + line);
-                    continue;
-                }
-
-                String first = line.substring(0, 1);
-                String second = line.substring(2, 3);
-                left.add(first);
-                right.add(second);
-                if (first.length() == 1 && second.length() == 1) {
-                    table[first.charAt(0)] = second.charAt(0);
-                }
-
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+            return null;
+        });
+
     }
 
     public static char convert(char input) {

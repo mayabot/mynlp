@@ -29,6 +29,8 @@ import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.Charset;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 import java.util.List;
 
 /**
@@ -109,32 +111,34 @@ public class MynlpEnv {
      * @param charset      字符集
      * @return NlpResource
      */
-    public NlpResource loadResource(String resourceName, Charset charset) {
+    public synchronized NlpResource loadResource(String resourceName, Charset charset) {
+        return AccessController.doPrivileged((PrivilegedAction<NlpResource>) () -> {
+            if (resourceName == null || resourceName.trim().isEmpty()) {
+                return null;
+            }
 
-        if (resourceName == null || resourceName.trim().isEmpty()) {
-            return null;
-        }
+            NlpResource resource = getNlpResource(resourceName, charset);
 
-        NlpResource resource = getNlpResource(resourceName, charset);
+            boolean ps = false;
 
-        boolean ps = false;
-
-        if (resource == null) {
-            for (ResoucesMissing missing : missingList) {
-                boolean r = missing.process(resourceName, this);
-                if (r) {
-                    ps = true;
-                    break;
+            if (resource == null) {
+                for (ResoucesMissing missing : missingList) {
+                    boolean r = missing.process(resourceName, this);
+                    if (r) {
+                        ps = true;
+                        break;
+                    }
                 }
             }
-        }
 
-        if (ps) {
-            // load again
-            resource = getNlpResource(resourceName, charset);
-        }
+            if (ps) {
+                // load again
+                resource = getNlpResource(resourceName, charset);
+            }
 
-        return resource;
+            return resource;
+        });
+
     }
 
     private NlpResource getNlpResource(String resourceName, Charset charset) {
@@ -161,11 +165,11 @@ public class MynlpEnv {
      * @param resourceName 资源路径名称 dict/abc.dict
      * @return NlpResource
      */
-    public NlpResource loadResource(String resourceName) {
+    public synchronized NlpResource loadResource(String resourceName) {
         return this.loadResource(resourceName, Charsets.UTF_8);
     }
 
-    public NlpResource loadResource(SettingItem<String> resourceNameSettting) {
+    public synchronized NlpResource loadResource(SettingItem<String> resourceNameSettting) {
         return this.loadResource(settings.get(resourceNameSettting), Charsets.UTF_8);
     }
 
@@ -182,45 +186,48 @@ public class MynlpEnv {
     /**
      * 从url地址下载jar文件，保存到data目录下
      */
-    public File download(String fileName) {
+    public synchronized File download(String fileName) {
+        return AccessController.doPrivileged((PrivilegedAction<File>) () -> {
 
-        // http://mayaasserts.oss-cn-shanghai.aliyuncs.com/mynlp/files/mynlp-resource-cws-hanlp-1.7.0.jar
-
-        File file = new File(dataDir, fileName);
-
-        if (file.exists()) {
-            return file;
-        }
-
-        try {
-            URL url = new URL(downloadBaseUrl + fileName);
-
-            URLConnection connection = url.openConnection();
-
-            connection.setConnectTimeout(5000);
-            connection.setReadTimeout(5000);
-            System.out.println("Downloading " + url);
-            connection.connect();
-
-            try (InputStream inputStream = new BufferedInputStream(connection.getInputStream());
-                 OutputStream out = new BufferedOutputStream(new FileOutputStream(file))
-            ) {
-                ByteStreams.copy(inputStream, out);
-            }
-
-            System.out.println("Downloaded " + url + " , to " + file);
+            File file = new File(dataDir, fileName);
 
             if (file.exists()) {
                 return file;
             }
 
-        } catch (Exception e) {
-            System.err.println("Download " + (downloadBaseUrl + fileName) + " error!!!");
-            //下载失败 退出系统
-            //System.exit(0);
-        }
+            try {
+                URL url = new URL(downloadBaseUrl + fileName);
 
-        return null;
+                URLConnection connection = url.openConnection();
+
+                connection.setConnectTimeout(5000);
+                connection.setReadTimeout(5000);
+                System.out.println("Downloading " + url);
+                connection.connect();
+
+                try (InputStream inputStream = new BufferedInputStream(connection.getInputStream());
+                     OutputStream out = new BufferedOutputStream(new FileOutputStream(file))
+                ) {
+                    ByteStreams.copy(inputStream, out);
+                }
+
+                System.out.println("Downloaded " + url + " , to " + file);
+
+                if (file.exists()) {
+                    return file;
+                }
+
+            } catch (Exception e) {
+                System.err.println("Download " + (downloadBaseUrl + fileName) + " error!!!\n");
+                e.printStackTrace();
+                //下载失败 退出系统
+                //System.exit(0);
+            }
+
+            return null;
+        });
+        // http://mayaasserts.oss-cn-shanghai.aliyuncs.com/mynlp/files/mynlp-resource-cws-hanlp-1.7.0.jar
+
 
     }
 }
