@@ -68,21 +68,11 @@ public class IntArrayBuilder {
         ensureCapacity(expectedElements);
     }
 
-
-    /**
-     * {@inheritDoc}
-     */
-    
     public void add(int e1) {
         ensureBufferSpace(1);
         buffer[elementsCount++] = e1;
     }
 
-    /**
-     * Appends two elements at the end of the list. To add more than two elements,
-     * use <code>add</code> (vararg-version) or access the buffer directly (tight
-     * loop).
-     */
     public void add(int e1, int e2) {
         ensureBufferSpace(2);
         buffer[elementsCount++] = e1;
@@ -188,6 +178,5 @@ public class IntArrayBuilder {
     {
         return Arrays.copyOf(buffer, elementsCount);
     }
-
 
 }

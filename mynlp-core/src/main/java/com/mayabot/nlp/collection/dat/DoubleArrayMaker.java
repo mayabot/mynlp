@@ -75,7 +75,6 @@ public class DoubleArrayMaker {
      * 唯一的构建方法
      * 构建完成后，调用getBase，getCheck返回结果
      *
-     * @return 是否出错
      */
     public void build() {
 
