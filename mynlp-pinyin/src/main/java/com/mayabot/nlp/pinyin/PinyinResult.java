@@ -111,9 +111,13 @@ public class PinyinResult {
                         String part = matcher.group();
                         matcher.appendReplacement(sb, fuzzyMap.get(part));
                     }
+                    matcher.appendTail(sb);
+                    list.add(sb.toString());
+                } else {
+                    list.add(withoutTone);
                 }
 
-                list.add(withoutTone);
+
             }
             ++i;
         }
