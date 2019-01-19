@@ -93,7 +93,7 @@ public class MynlpEnv {
      * 计算资源的hash值
      *
      * @param resourceName
-     * @return
+     * @return hash
      */
     public String hashResource(String resourceName) {
 

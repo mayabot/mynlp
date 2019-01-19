@@ -24,7 +24,7 @@ public class StringUtils {
      * 是否全是中文
      *
      * @param str
-     * @return
+     * @return isAllChinese
      */
     public static boolean isAllChinese(String str) {
         return str.matches("[\\u4E00-\\u9FA5]+");

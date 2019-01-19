@@ -16,8 +16,6 @@
 
 rootProject.name = 'mynlp'
 
-
-
 List projects = [
         'mynlp-core',
         'mynlp-segment',
@@ -28,7 +26,8 @@ List projects = [
         'mynlp-perceptron',
         'mynlp-example',
         'mynlp-summary',
-        'mynlp-all'
+        'mynlp-all',
+        'mynlp-lucene'
 ]
 
 

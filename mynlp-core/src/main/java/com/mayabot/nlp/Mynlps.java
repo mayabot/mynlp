@@ -72,7 +72,7 @@ public final class Mynlps {
 
     /**
      * 获取全局唯一的Mynlp实例。
-     * @return
+     * @return Mynlp
      */
     public static Mynlp get() {
         return map.computeIfAbsent("I", Mynlps::create);

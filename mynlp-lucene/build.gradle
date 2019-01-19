@@ -1,0 +1,9 @@
+
+description = 'mynlp for lucene plugin. compatible lucene version 5.0+'
+
+dependencies {
+    compileOnly 'org.apache.lucene:lucene-core:5.0.0'
+    compile project(':mynlp-segment')
+
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
