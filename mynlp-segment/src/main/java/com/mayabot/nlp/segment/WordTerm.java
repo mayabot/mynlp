@@ -41,7 +41,7 @@ public final class WordTerm implements Serializable, WordAndNature {
     /**
      * 在文本中的起始位置
      */
-    private int offset;
+    public int offset;
 
     private int posInc = 1;
 

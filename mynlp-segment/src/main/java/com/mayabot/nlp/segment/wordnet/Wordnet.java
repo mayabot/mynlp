@@ -282,7 +282,7 @@ public class Wordnet implements CharSequence {
      * 行首节点
      *
      * @param sindex
-     * @return
+     * @return Vertex
      */
     public Vertex getRowFirst(int sindex) {
         VertexRow row = row(sindex);
@@ -294,7 +294,7 @@ public class Wordnet implements CharSequence {
      *
      * @param sindex
      * @param length
-     * @return
+     * @return Vertex
      */
     public Vertex getVertex(int sindex, int length) {
         VertexRow row = row(sindex);
@@ -306,7 +306,7 @@ public class Wordnet implements CharSequence {
      *
      * @param sindex
      * @param length
-     * @return
+     * @return boolean true not contain
      */
     public boolean isNotContains(int sindex, int length) {
         VertexRow row = row(sindex);
@@ -317,7 +317,7 @@ public class Wordnet implements CharSequence {
      * 返回一行里面有几个节点
      *
      * @param sindex
-     * @return
+     * @return int size
      */
     public int sizeInRow(int sindex) {
         VertexRow row = row(sindex);
@@ -368,7 +368,7 @@ public class Wordnet implements CharSequence {
     /**
      * 比如字符串长度为5，那么这个length返回5
      *
-     * @return
+     * @return char size
      */
     public int getCharSizeLength() {
         return charSize;
@@ -376,8 +376,7 @@ public class Wordnet implements CharSequence {
 
     /**
      * 原始的
-     *
-     * @return
+     * @return chars
      */
     public @NotNull
     char[] getCharArray() {

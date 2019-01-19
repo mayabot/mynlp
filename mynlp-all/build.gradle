@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 plugins {
-    id 'com.github.johnrengelman.shadow' version '2.0.4'
+    id 'com.github.johnrengelman.shadow' version '4.0.3'
 }
 
 description = "mynlp-all 打包所有的组件到一个JAR包"
@@ -27,6 +27,8 @@ dependencies {
     compile project(":mynlp-transform")
     compile project(":mynlp-classification")
     compile project(":mynlp-summary")
+
+    shadow "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.3.11"
 
 }
 
@@ -61,7 +63,9 @@ shadowJar {
     classifier ''
     relocate 'com.google', 'com.mayabot.t.google'
     relocate 'com.carrotsearch', 'com.mayabot.t.carrotsearch'
-    relocate 'kotlin', 'com.mayabot.t.kotlin'
+
+    exclude 'kotlin/**'
+
 }
 
 

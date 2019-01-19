@@ -80,7 +80,7 @@ public class Settings {
      * 后面的覆盖前面的设置
      *
      * @param settings
-     * @return
+     * @return Settings
      */
     public static Settings merge(Settings... settings) {
         Map<String, String> all = Maps.newHashMap();
@@ -260,7 +260,7 @@ public class Settings {
      * 2. classpath:mynlp.properties
      * 3. ~/mynlp.properties
      *
-     * @return
+     * @return Settings
      */
     public static Settings defaultSystemSettings() {
         @SuppressWarnings("unchecked")
