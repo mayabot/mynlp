@@ -171,7 +171,7 @@ public class Wordpath {
     /**
      * 计算切分出，多个个词片断出来
      *
-     * @return
+     * @return word count
      */
     public int wordCount() {
         return bitSet.cardinality();

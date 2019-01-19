@@ -132,7 +132,7 @@ public class Vertex implements WordAndNature {
      *
      * @param nature
      * @param freq
-     * @return
+     * @return Vertex
      */
     public Vertex setAbsWordNatureAndFreq(Nature nature, int freq) {
         this.wordID = DictionaryAbsWords.nature2id(nature);
@@ -151,7 +151,7 @@ public class Vertex implements WordAndNature {
     /**
      * 是否抽象词
      *
-     * @return
+     * @return isAbsWord
      */
     public boolean isAbsWord() {
         return wordID >= 0 && wordID <= DictionaryAbsWords.MaxId;
@@ -160,7 +160,7 @@ public class Vertex implements WordAndNature {
     /**
      * 如果是抽象词的标签,不是返回null
      *
-     * @return
+     * @return String
      */
     public String absWordLabel() {
         if (isAbsWord()) {
@@ -178,7 +178,7 @@ public class Vertex implements WordAndNature {
     /**
      * 接续行.接续是End就返回null
      *
-     * @return
+     * @return VertexRow
      */
     public VertexRow follow() {
         if (length == 0) {

@@ -14,7 +14,7 @@ public class TransformService {
     /**
      * 简体转换为繁体
      *
-     * @return
+     * @return Simplified2Traditional
      */
     public static Simplified2Traditional simplified2Traditional() {
         if (simplified2Traditional == null) {
@@ -39,7 +39,7 @@ public class TransformService {
     /**
      * 简体转换为繁体
      *
-     * @return
+     * @return Traditional2Simplified
      */
     public static Traditional2Simplified traditional2Simplified() {
         if (traditional2Simplified == null) {

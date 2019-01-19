@@ -39,7 +39,6 @@ import java.io.Reader;
 /**
  * Utility class to write tokenizers or token filters.
  *
- * @lucene.internal
  */
 public final class CharacterUtils {
 

@@ -211,7 +211,7 @@ public class VertexRow implements Iterable<Vertex> {
     /**
      * 返回最长的那个词的长度
      *
-     * @return
+     * @return max word len
      */
     public int lastLen() {
         int len = 0;

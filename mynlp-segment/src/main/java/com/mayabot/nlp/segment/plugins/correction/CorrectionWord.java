@@ -30,7 +30,7 @@ public class CorrectionWord {
      * 第几套/房
      *
      * @param line
-     * @return
+     * @return CorrectionWord
      */
     public static CorrectionWord parse(String line) {
         CorrectionWord adjustWord = new CorrectionWord();

@@ -90,7 +90,7 @@ public final class ViterbiBestPathAlgorithm implements BestPathAlgorithm {
      * 2. 截断+合成
      *
      * @param wordnet
-     * @return
+     * @return Wordpath
      */
     @Override
     public Wordpath select(Wordnet wordnet) {

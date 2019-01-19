@@ -90,9 +90,8 @@ public class Characters {
      * 其他字符半角(33-126)与全角(65281-65374)的对应关系是：均相差65248
      * 为半角字符=>全角字符转换
      *
-     * @return
+     * @return String
      */
-//	private static final int re_cha = 'Ａ'-'A';
     public static String halfWidth2fullWidth(String input) {
         if (input == null || input.isEmpty()) {
             return input;
