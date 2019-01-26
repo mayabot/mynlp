@@ -17,7 +17,6 @@ package com.mayabot.nlp;
 
 import com.google.common.base.Charsets;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
 import com.google.common.io.ByteStreams;
 import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
@@ -32,6 +31,8 @@ import java.nio.charset.Charset;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Mynlp运行环境。
@@ -56,7 +57,7 @@ public class MynlpEnv {
 
     private Settings settings;
 
-    private List<ResoucesMissing> missingList = Lists.newArrayList();
+    private Map<String, ResoucesMissing> missingList = new ConcurrentHashMap<String, ResoucesMissing>();
 
     private String downloadBaseUrl = "http://cdn.mayabot.com/mynlp/files/";
 
@@ -75,8 +76,21 @@ public class MynlpEnv {
         settings = Settings.defaultSystemSettings();
     }
 
-    public void registeResourceMissing(ResoucesMissing missing) {
-        this.missingList.add(missing);
+    public void registeResourceMissing(String name, ResoucesMissing missing) {
+        this.missingList.put(name, missing);
+    }
+
+    public void registeResourceMissing(String name, String rsName, String jarName, String version) {
+        this.registeResourceMissing(name, (rsName2, env) -> {
+            if (rsName.equals(rsName2)) {
+                File file = env.download(jarName.replace(".jar", "-" + version + ".jar"));
+
+                if (file != null && file.exists()) {
+                    return true;
+                }
+            }
+            return false;
+        });
     }
 
 
@@ -122,7 +136,7 @@ public class MynlpEnv {
             boolean ps = false;
 
             if (resource == null) {
-                for (ResoucesMissing missing : missingList) {
+                for (ResoucesMissing missing : missingList.values()) {
                     boolean r = missing.process(resourceName, this);
                     if (r) {
                         ps = true;
@@ -211,7 +225,7 @@ public class MynlpEnv {
                     ByteStreams.copy(inputStream, out);
                 }
 
-                System.out.println("Downloaded " + url + " , to " + file);
+                System.out.println("Downloaded " + fileName + " , save to " + file);
 
                 if (file.exists()) {
                     return file;
@@ -220,14 +234,14 @@ public class MynlpEnv {
             } catch (Exception e) {
                 System.err.println("Download " + (downloadBaseUrl + fileName) + " error!!!\n");
                 e.printStackTrace();
+
+                file.delete();
                 //下载失败 退出系统
                 //System.exit(0);
             }
 
             return null;
         });
-        // http://mayaasserts.oss-cn-shanghai.aliyuncs.com/mynlp/files/mynlp-resource-cws-hanlp-1.7.0.jar
-
 
     }
 }

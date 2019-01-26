@@ -36,7 +36,6 @@ public class PunctuationFilter extends FilterWordTermGenerator implements
         if (term.word.length() == 1) {
             return !Characters.isPunctuation(term.word.charAt(0));
         } else if (term.word.length() == 2) {
-
             return !Characters.isPunctuation(term.word.charAt(0)) &&
                     !Characters.isPunctuation(term.word.charAt(1));
         } else {

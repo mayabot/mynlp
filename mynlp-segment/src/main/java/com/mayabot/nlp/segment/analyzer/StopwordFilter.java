@@ -16,10 +16,8 @@
 
 package com.mayabot.nlp.segment.analyzer;
 
-import com.mayabot.nlp.Mynlps;
 import com.mayabot.nlp.segment.WordTerm;
 
-import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Predicate;
 
@@ -35,20 +33,9 @@ public class StopwordFilter extends FilterWordTermGenerator implements Predicate
 
     public StopwordFilter(WordTermGenerator base, Set<String> stopwords) {
         super(base);
-
-        Set<String> defaultSet = Mynlps.instanceOf(StopWordDict.class).getSet();
-
-        stopWords = new HashSet<>();
-        if (stopwords == null) {
-            stopWords.addAll(defaultSet);
-        } else {
-            this.stopWords.addAll(stopwords);
-        }
+        stopWords = stopwords;
     }
 
-    public StopwordFilter(WordTermGenerator base) {
-        this(base, null);
-    }
 
     public Set<String> getStopWords() {
         return stopWords;
@@ -61,7 +48,6 @@ public class StopwordFilter extends FilterWordTermGenerator implements Predicate
     public void remove(String word) {
         stopWords.remove(word);
     }
-
 
     @Override
     public boolean apply(WordTerm term) {

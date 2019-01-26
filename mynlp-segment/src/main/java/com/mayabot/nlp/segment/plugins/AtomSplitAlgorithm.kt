@@ -1,8 +1,8 @@
 package com.mayabot.nlp.segment.plugins
 
-import com.carrotsearch.hppc.CharScatterSet
 import com.google.common.collect.Lists
 import com.mayabot.nlp.collection.dat.DoubleArrayTrieStringIntMap
+import com.mayabot.nlp.hppc.QuickCharset
 import com.mayabot.nlp.segment.Nature
 import com.mayabot.nlp.segment.SegmentComponentOrder
 import com.mayabot.nlp.segment.WordSplitAlgorithm
@@ -27,11 +27,24 @@ import kotlin.collections.ArrayList
 class AtomSplitAlgorithm : BaseSegmentComponent(), WordSplitAlgorithm {
 
     //CharScatterSet 5000万次查询耗时40ms
-    val chineseNumSet = CharScatterSet.from(
+    val chineseNumSet = QuickCharset(
             '零', '一', '二', '三', '四', '五', '六', '七', '八', '九', '两',
             '壹', '贰', '叁', '肆', '伍', '陆', '柒', '捌', '玖', '拾',
             '十', '百', '千', '万', '亿'
     )
+
+
+//    companion object {
+//        @JvmStatic
+//        fun main(args: Array<String>) {
+//            val wordnet = Wordnet("这个是你jimi@mayabot.com邮箱地址么2017-10-12".toCharArray())
+////            val wordnet = Wordnet("你的ipad3么 ,最近三天花了多少钱 a-ff  -102 @163.com,一万八千八百八十八,FM98.1，jimi@mayabot.com,周一下午九点钟,一九九八年三月，2018年2月2日,2013年,周一下午三点半有个重量为11225.6公斤,123234".toCharArray())
+//            val x = AtomSplitAlgorithm()
+//            x.fill(wordnet)
+//
+//            println(wordnet.toMoreString())
+//        }
+//    }
 
     val dat: DoubleArrayTrieStringIntMap
 
@@ -298,15 +311,4 @@ class AtomSplitAlgorithm : BaseSegmentComponent(), WordSplitAlgorithm {
         }
     }
 
-    companion object {
-        @JvmStatic
-        fun main(args: Array<String>) {
-            val wordnet = Wordnet("这个是你jimi@mayabot.com邮箱地址么2017-10-12".toCharArray())
-//            val wordnet = Wordnet("你的ipad3么 ,最近三天花了多少钱 a-ff  -102 @163.com,一万八千八百八十八,FM98.1，jimi@mayabot.com,周一下午九点钟,一九九八年三月，2018年2月2日,2013年,周一下午三点半有个重量为11225.6公斤,123234".toCharArray())
-            val x = AtomSplitAlgorithm()
-            x.fill(wordnet)
-
-            println(wordnet.toMoreString())
-        }
-    }
 }

@@ -1,7 +1,8 @@
 package segment;
 
+import com.mayabot.nlp.segment.Tokenizers;
 import com.mayabot.nlp.segment.WordTerm;
-import com.mayabot.nlp.segment.analyzer.StandardMynlpAnalyzer;
+import com.mayabot.nlp.segment.analyzer.DefaultMynlpAnalyzer;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -15,7 +16,7 @@ public class UseStreamApi {
 
     public static void main(String[] args) throws Exception {
 
-        StandardMynlpAnalyzer analyzer = new StandardMynlpAnalyzer();
+        DefaultMynlpAnalyzer analyzer = new DefaultMynlpAnalyzer(Tokenizers.coreTokenizer());
 
         List<String> lisk = analyzer.stream("").map(x -> x.word).collect(Collectors.toList());
 

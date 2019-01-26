@@ -11,11 +11,13 @@ import java.util.TreeMap;
 @Singleton
 public class Traditional2Simplified extends BaseTransformDictionary {
 
+    public static final String rsName = "ts-dict/t2s.txt";
+
     public Traditional2Simplified() {
     }
 
     @Override
     public TreeMap<String, String> loadDictionary() {
-        return loadFromResouce("ts-dict/t2s.txt");
+        return loadFromResouce(rsName);
     }
 }

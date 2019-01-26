@@ -168,6 +168,40 @@ public class DoubleArrayTrie {
         return result;
     }
 
+    /**
+     * 只查询一个char
+     *
+     * @param ch
+     * @return 位置 -1表示没有
+     */
+    public int indexOf(char ch) {
+
+        int result = -1;
+
+        int b = base[0];
+        int p;
+
+//        for (int i = 0; i < 1; i++) {
+        p = b + (int) (ch) + 1;
+        if (b == check[p]) {
+            b = base[p];
+        } else {
+            return result;
+        }
+//        }
+
+        p = b;
+        int n = base[p];
+        if (b == check[p] && n < 0) {
+            result = -n - 1;
+        }
+
+        return result;
+    }
+
+
+
+
 
     /**
      * 精确查询

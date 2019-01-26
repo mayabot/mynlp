@@ -267,6 +267,10 @@ public class DoubleArrayTrieStringIntMap {
         return dat.indexOf(keyChars, pos, len, nodePos);
     }
 
+    public int indexOf(char ch) {
+        return dat.indexOf(ch);
+    }
+
 
     /**
      * 精确查询
@@ -320,6 +324,10 @@ public class DoubleArrayTrieStringIntMap {
     }
 
     public boolean containsKey(String key) {
+        return indexOf(key) >= 0;
+    }
+
+    public boolean containsKey(char key) {
         return indexOf(key) >= 0;
     }
 

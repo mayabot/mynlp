@@ -1,6 +1,6 @@
 package com.mayabot.nlp.segment
 
-import com.mayabot.nlp.segment.analyzer.StandardMynlpAnalyzer
+import com.mayabot.nlp.segment.analyzer.DefaultMynlpAnalyzer
 import org.junit.Assert
 import org.junit.Test
 import java.io.StringReader
@@ -33,7 +33,7 @@ class OffsetTest {
 
     @Test
     fun test21() {
-        val wordTerms = StandardMynlpAnalyzer().stream(StringReader(text))
+        val wordTerms = DefaultMynlpAnalyzer(Tokenizers.coreTokenizer()).stream(StringReader(text))
 
 
         val count = wordTerms.filter { it ->
@@ -48,7 +48,7 @@ class OffsetTest {
 
     @Test
     fun test2() {
-        val wordTerms = StandardMynlpAnalyzer().stream(text)
+        val wordTerms = DefaultMynlpAnalyzer(Tokenizers.coreTokenizer()).stream(text)
 
 
         val count = wordTerms.filter { it ->
@@ -63,7 +63,7 @@ class OffsetTest {
 
     @Test
     fun test3() {
-        val wordTerms = StandardMynlpAnalyzer().stream("")
+        val wordTerms = DefaultMynlpAnalyzer(Tokenizers.coreTokenizer()).stream("")
 
         val count = wordTerms.count()
 

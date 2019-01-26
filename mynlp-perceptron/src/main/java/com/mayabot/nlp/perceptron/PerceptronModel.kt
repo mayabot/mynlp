@@ -15,8 +15,8 @@
  */
 package com.mayabot.nlp.perceptron
 
-import com.carrotsearch.hppc.IntArrayList
 import com.mayabot.nlp.collection.dat.DoubleArrayTrie
+import com.mayabot.nlp.hppc.IntArrayList
 import com.mayabot.nlp.utils.ByteArrayInputStreamMynlp
 import java.io.DataInputStream
 import java.io.DataOutputStream

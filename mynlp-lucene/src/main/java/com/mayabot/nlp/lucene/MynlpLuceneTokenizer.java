@@ -1,11 +1,13 @@
 package com.mayabot.nlp.lucene;
 
 import com.mayabot.nlp.segment.MynlpAnalyzer;
+import com.mayabot.nlp.segment.Nature;
 import com.mayabot.nlp.segment.WordTerm;
 import org.apache.lucene.analysis.Tokenizer;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.analysis.tokenattributes.OffsetAttribute;
 import org.apache.lucene.analysis.tokenattributes.PositionIncrementAttribute;
+import org.apache.lucene.analysis.tokenattributes.TypeAttribute;
 
 import java.io.IOException;
 import java.util.Iterator;
@@ -22,6 +24,8 @@ final public class MynlpLuceneTokenizer extends Tokenizer {
      * 当前词
      */
     private final CharTermAttribute termAtt = addAttribute(CharTermAttribute.class);
+
+    private final TypeAttribute typeAtt = addAttribute(TypeAttribute.class);
 
     /**
      * 偏移量
@@ -58,6 +62,10 @@ final public class MynlpLuceneTokenizer extends Tokenizer {
         if (iterator.hasNext()) {
             WordTerm next = iterator.next();
 
+            if (Nature.w == next.getNature()) {
+                typeAtt.setType("Punctuation");
+            }
+            
             positionAttr.setPositionIncrement(next.getPosInc());
             termAtt.setEmpty().append(next.word);
             offsetAtt.setOffset(next.offset, next.offset + next.length());

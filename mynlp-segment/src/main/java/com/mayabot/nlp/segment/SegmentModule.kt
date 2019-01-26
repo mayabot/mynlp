@@ -95,7 +95,7 @@ class SegmentModule(private val env: MynlpEnv) : Module {
     }
 
     override fun configure(binder: Binder?) {
-        env.registeResourceMissing { rsName, env -> this.processMiss(rsName, env) }
+        env.registeResourceMissing("segment") { rsName, env -> this.processMiss(rsName, env) }
         update()
     }
 

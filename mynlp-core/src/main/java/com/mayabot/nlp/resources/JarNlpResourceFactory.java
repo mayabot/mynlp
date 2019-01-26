@@ -33,11 +33,12 @@ public class JarNlpResourceFactory implements NlpResourceFactory {
 
     private File baseDir;
 
-    private Map<String, File> index = Maps.newHashMap();
-
     public JarNlpResourceFactory(File baseDir) {
         this.baseDir = baseDir;
+    }
 
+    private Map<String, File> doIndex() {
+        Map<String, File> index = Maps.newHashMap();
 
         //后面覆盖前面的. 1.0.9 1.0.10 保证顺序正确
         List<File> jarFiles = Ordering.<File>from(
@@ -66,24 +67,34 @@ public class JarNlpResourceFactory implements NlpResourceFactory {
 
         try {
             for (File jar : jarFiles) {
-                ZipFile f = new ZipFile(jar);
-                Enumeration<? extends ZipEntry> entries = f.entries();
-                while (entries.hasMoreElements()) {
-                    ZipEntry zipEntry = entries.nextElement();
-                    if (!zipEntry.isDirectory()) {
-                        String name = zipEntry.getName();
-                        index.put(name, jar);
+                try (ZipFile f = new ZipFile(jar)) {
+                    Enumeration<? extends ZipEntry> entries = f.entries();
+                    while (entries.hasMoreElements()) {
+                        ZipEntry zipEntry = entries.nextElement();
+                        if (!zipEntry.isDirectory()) {
+                            String name = zipEntry.getName();
+                            index.put(name, jar);
+                        }
                     }
                 }
+
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
 
+        long t2 = System.currentTimeMillis();
+
+
+        return index;
+
+
     }
 
     @Override
     public NlpResource load(String resourceName, Charset charset) {
+
+        Map<String, File> index = doIndex();
 
         if (!baseDir.exists() || baseDir.isFile()) {
             return null;

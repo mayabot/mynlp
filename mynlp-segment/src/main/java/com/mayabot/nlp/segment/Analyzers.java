@@ -15,10 +15,7 @@
  */
 package com.mayabot.nlp.segment;
 
-import com.mayabot.nlp.segment.analyzer.BaseMynlpAnalyzer;
-import com.mayabot.nlp.segment.analyzer.PunctuationFilter;
-import com.mayabot.nlp.segment.analyzer.StandardMynlpAnalyzer;
-import com.mayabot.nlp.segment.analyzer.WordTermGenerator;
+import com.mayabot.nlp.segment.analyzer.DefaultMynlpAnalyzer;
 
 /**
  * MynlpAnalyzers
@@ -34,7 +31,9 @@ public class Analyzers {
      * @return MynlpAnalyzer
      */
     public static MynlpAnalyzer standard(MynlpTokenizer tokenizer) {
-        return new StandardMynlpAnalyzer(tokenizer);
+        return new DefaultMynlpAnalyzer(tokenizer).
+                setFillStopWord(true).
+                setFilterPunctuaction(true);
     }
 
     /**
@@ -43,34 +42,29 @@ public class Analyzers {
      * @return MynlpAnalyzer
      */
     public static MynlpAnalyzer standard() {
-        return new StandardMynlpAnalyzer();
+        return standard(Tokenizers.coreTokenizer());
     }
 
 
     /**
      * 不做任何过滤操作
+     *
      * @return MynlpAnalyzer
      */
     public static MynlpAnalyzer base(MynlpTokenizer tokenizer) {
-        return new BaseMynlpAnalyzer(tokenizer) {
-            @Override
-            protected WordTermGenerator warp(WordTermGenerator base) {
-                return base;
-            }
-        };
+        return new DefaultMynlpAnalyzer(tokenizer).
+                setFillStopWord(false).
+                setFilterPunctuaction(false);
     }
 
     /**
      * 只过滤标点符号
+     *
      * @return MynlpAnalyzer
      */
     public static MynlpAnalyzer noPunctuation(MynlpTokenizer tokenizer) {
-        return new BaseMynlpAnalyzer(tokenizer) {
-            @Override
-            protected WordTermGenerator warp(WordTermGenerator base) {
-                base = new PunctuationFilter(base);
-                return base;
-            }
-        };
+        return new DefaultMynlpAnalyzer(tokenizer).
+                setFillStopWord(false).
+                setFilterPunctuaction(true);
     }
 }
