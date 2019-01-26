@@ -68,8 +68,6 @@ public class TokenWordTermGenerator implements WordTermGenerator {
         this.tokenizer = tokenizer;
     }
 
-    long time = 0;
-
     /**
      * 返回下一个词项，如果到达最后的结果，那么返回null
      *

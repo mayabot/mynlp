@@ -1,7 +1,7 @@
 package com.mayabot.nlp.segment.plugins.pos
 
-import com.carrotsearch.hppc.IntArrayList
 import com.mayabot.nlp.common.FastStringBuilder
+import com.mayabot.nlp.hppc.IntArrayList
 import com.mayabot.nlp.perceptron.*
 import com.mayabot.nlp.segment.Nature
 import com.mayabot.nlp.segment.common.PkuWord

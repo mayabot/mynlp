@@ -15,9 +15,9 @@
  */
 package com.mayabot.nlp.segment.cws
 
-import com.carrotsearch.hppc.IntArrayList
 import com.google.common.base.Splitter
 import com.mayabot.nlp.common.FastStringBuilder
+import com.mayabot.nlp.hppc.IntArrayList
 import com.mayabot.nlp.perceptron.*
 import com.mayabot.nlp.segment.cws.CWSPerceptron.Companion.B
 import com.mayabot.nlp.segment.cws.CWSPerceptron.Companion.E

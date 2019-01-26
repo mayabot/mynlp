@@ -15,7 +15,8 @@
  */
 package com.mayabot.nlp.perceptron;
 
-import com.carrotsearch.hppc.IntArrayList;
+
+import com.mayabot.nlp.hppc.IntArrayList;
 
 import java.io.File;
 import java.util.List;

@@ -18,6 +18,11 @@ import java.util.stream.Collectors;
  * <p>
  * Mynlp 分词 使用 612 ms
  * 速度 1464429字/秒
+ *
+ * 使用新的原子分词后，关闭词性和人名识别。
+ * 性能达到 438 ms
+ * 速度 2046189字/秒
+ *
  * <p>
  * Ansj 分词 使用 1296 ms
  * 速度  691536字/秒
@@ -32,6 +37,8 @@ public class HowFast {
         String text = Joiner.on("\n").join(lines);
 
         MynlpTokenizer tokenizer = new CoreTokenizerBuilder()
+                .setEnablePersonName(false)
+                .setEnablePOS(false)
 //                .disabledComponent(TimeSplitAlgorithm.class)
 //                .disabledComponent(CommonRuleWordpathProcessor.class)
 //                .disabledComponent(CustomDictionaryProcessor.class)

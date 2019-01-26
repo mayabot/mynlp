@@ -25,7 +25,6 @@ dependencies {
 
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
     compile "com.mayabot:maya-simple-blas:1.1.2"
-    compile group: 'com.carrotsearch', name: 'hppc', version: '0.8.1'
     compile project(':mynlp-core')
 
 }

@@ -18,6 +18,7 @@ package com.mayabot.nlp.segment;
 
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+import com.mayabot.nlp.segment.analyzer.DefaultMynlpAnalyzer;
 
 import java.io.Reader;
 import java.util.List;
@@ -30,7 +31,7 @@ import java.util.stream.Stream;
  *
  * @author jimichan jimichan@gmail.com
  * @see com.mayabot.nlp.segment.analyzer.BaseMynlpAnalyzer
- * @see com.mayabot.nlp.segment.analyzer.StandardMynlpAnalyzer
+ * @see DefaultMynlpAnalyzer
  */
 public interface MynlpAnalyzer {
 

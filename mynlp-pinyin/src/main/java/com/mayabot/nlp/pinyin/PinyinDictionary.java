@@ -38,6 +38,7 @@ import static com.mayabot.nlp.SettingItem.string;
 @Singleton
 public class PinyinDictionary extends BasePinyinDictionary {
 
+    public final static String version = "1.0.0";
 
     public final static SettingItem<String> pinyinSetting =
             string("pinyin.dict", "mynlp-pinyin.txt");
@@ -52,8 +53,10 @@ public class PinyinDictionary extends BasePinyinDictionary {
         super();
         this.mynlp = mynlp;
 
-        rebuild();
+        String rsName = mynlp.getSettings().get(pinyinSetting);
+        mynlp.registeResourceMissing("pinyin", rsName, "mynlp-resource-pinyin.jar", version);
 
+        rebuild();
     }
 
     @Override

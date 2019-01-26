@@ -1,8 +1,8 @@
 package com.mayabot.nlp.perceptron.solution.ner
 
-import com.carrotsearch.hppc.IntArrayList
 import com.google.common.collect.Lists
 import com.mayabot.nlp.common.FastStringBuilder
+import com.mayabot.nlp.hppc.IntArrayList
 import com.mayabot.nlp.perceptron.*
 import com.mayabot.nlp.segment.Nature
 import com.mayabot.nlp.segment.WordAndNature
