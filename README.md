@@ -5,43 +5,46 @@
 [![Latest release](https://img.shields.io/github/release/mayabot/mynlp/all.svg)](https://github.com/mayabot/mynlp/releases/latest)
 
 
-mynlp包含：中文分词、词性标注、文本分类（情感分析）、拼音转换、简繁体转换、文本摘要等常见NLP功能。
-依托灵活的架构设计、柔性API、高效数据结构，mynlp能在复杂环境中，满足业务需求。算法研究者也可以在mynlp基础上快速开发各种新分算法。
+MYNLP是一个高性能、模块化、可扩展的中文NLP工具包。包含中文分词、词性标注、文本分类、拼音转换、简繁体转换、文本摘要等常见NLP功能。
 
-环境需求：
+运行环境需求：
 - JRE 1.8+
-- Gradle or Maven
 
+## 一分钟教程
 
-## 项目中引入mynlp
-Mynlp的Maven gourp ID是 `com.mayabot.mynlp` ,不同的功能被分拆在各个artifact里面。
+引入依赖 
 
-- mynlp-segment 分词
-- mynlp-classification 文本分类
-- mynlp-pinyin 拼音转换
-- mynlp-summary 文本摘要
-- mynlp-transform 繁简体转换
-- mynlp-core 基本数据结构（被其他模块依赖）
-
-（Fasttext的Java版本实现迁移到独立的项目 [fastText4j](https://github.com/mayabot/fastText4j)）
-
-如需要分词功能就在Mavne中增加如下配置：
-
+GRADLE
+```
+    compile 'com.mayabot.mynlp:mynlp-all:2.0.0'
+```
+MAVEN
 ```xml
 <dependency>
   <groupId>com.mayabot.mynlp</groupId>
-  <artifactId>mynlp-segment</artifactId>
-  <version>2.0.0-BETA10</version>
+  <artifactId>mynlp-all</artifactId>
+  <version>2.0.0</version>
 </dependency>
 ```
 
-Gradle:
+中文分词示例：
 
-```gradle
-dependencies {
-  compile 'com.mayabot.mynlp:mynlp-segment:2.0.0-BETA10'
-}
+```java
+MynlpTokenizer tokenizer = Tokenizers.coreTokenizer();
+Sentence sentence = tokenizer.parse("mynlp是mayabot开源的中文NLP工具包。");
+System.out.println(sentence.asWordList());
 ```
+输出：
+```text
+[mynlp/x, 是/v, mayabot/x, 开源/v, 的/u, 中文/nz, nlp/x, 工具包/n, 。/w]
+```
+
+    mynlp的发行jar里面是不包含资源文件的，在运行时如果发现本地mynlp.data目录夹没有对应资源时会自动从cdn上下载资源JAR文件，
+    所以第一次运行需要您电脑可以访问互联网。
+    默认mynlp.data文件夹的位置在~/.mynlp.data，mac系统下为隐藏文件夹，可以通过Command+Shift+G访问。
+
+
+详细文档请移步[WIKI](https://github.com/mayabot/mynlp/wiki/Home)
 
 ## 文档目录
     
@@ -83,17 +86,15 @@ dependencies {
 * [如何贡献](https://github.com/mayabot/mynlp/wiki/HowToContribute)
 
 
-如果你对mynlp有任何疑问或建议请加入微信群一起来进行讨论，以帮助Mynlp改进。<br>
-<img src="https://cdn.mayabot.com/nlp/wiki-images/wechat.jpg" width="250">
+MYNLP建立了微信群方便大家及时交流，有需要的同学可以添加我微信`jimichan`,备注mynlp。
 
 
 ## 声明和致谢
 
-mynlp开发之初是对Hanlp和ansj的重构整理，通过多次迭代和项目需求驱动实践，逐渐发展为目前的架构体系。
+mynlp开发之初是对Hanlp和ansj项目的重构整理，通过多次迭代和项目需求驱动实践，逐渐发展为目前自有的架构体系。
 向HanLP和ansj在中文NLP开源中做出的贡献致敬！
 
-mynlp项目引用或参考了以下项目代码和资源：
+mynlp项目参考了以下项目：
 - [HanLP](https://github.com/hankcs/HanLP)
 - [ansj_seg](https://github.com/NLPchina/ansj_seg)
-- [trie4j](https://github.com/takawitter/trie4j)
 

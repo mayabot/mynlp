@@ -16,7 +16,7 @@
 plugins {
 //    id 'com.github.johnrengelman.shadow' version '2.0.4'
     id 'application'
-    id "org.jetbrains.kotlin.jvm" version "1.3.10"
+    id "org.jetbrains.kotlin.jvm" version "1.3.20"
 }
 
 description = "mynlp-cli,包含了命令行程序。该程序不发布到maven仓库中。"
