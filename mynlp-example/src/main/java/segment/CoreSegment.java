@@ -10,7 +10,13 @@ public class CoreSegment {
 
     public static void main(String[] args) {
         long t1 = System.currentTimeMillis();
+
         MynlpTokenizer tokenizer = Tokenizers.coreTokenizer();
+
+        Sentence sentence = tokenizer.parse("mynlp是mayabot开源的中文NLP工具包。");
+
+        System.out.println(sentence.asWordList());
+
 
         MynlpAnalyzer analyzer = Analyzers.standard(tokenizer);
 

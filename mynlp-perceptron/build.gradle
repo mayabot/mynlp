@@ -1,20 +1,9 @@
 
 plugins {
-    id "org.jetbrains.kotlin.jvm" version "1.3.10"
+    id "org.jetbrains.kotlin.jvm" version "1.3.20"
 }
 
 description = '感知机算法，包含训练和解码。'
-
-////暂时不发布到maven仓库
-//def publish_resource = false
-//
-//if(!publish_resource){
-//    project.afterEvaluate {
-//        project.tasks.withType(AbstractPublishToMaven.class){
-//            enabled = false
-//        }
-//    }
-//}
 
 sourceSets {
     main.kotlin.srcDirs = main.java.srcDirs
@@ -24,7 +13,6 @@ sourceSets {
 dependencies {
 
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
-    compile "com.mayabot:maya-simple-blas:1.1.2"
     compile project(':mynlp-core')
 
 }
