@@ -7,7 +7,8 @@ import com.google.common.collect.Ordering;
 import com.google.common.io.ByteSource;
 import com.google.common.io.ByteStreams;
 import com.google.common.io.CharSource;
-import com.mayabot.nlp.utils.ByteArrayInputStreamMynlp;
+import com.mayabot.nlp.logging.InternalLogger;
+import com.mayabot.nlp.logging.InternalLoggerFactory;
 import com.mayabot.nlp.utils.CharSourceLineReader;
 
 import java.io.BufferedInputStream;
@@ -24,12 +25,16 @@ import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * data 目录夹下存在Jar文件，那么从JAR里面加载
  *
  * @author jimichan
  */
 public class JarNlpResourceFactory implements NlpResourceFactory {
+
+    InternalLogger logger = InternalLoggerFactory.getInstance(JarNlpResourceFactory.class);
 
     private File baseDir;
 
@@ -80,6 +85,7 @@ public class JarNlpResourceFactory implements NlpResourceFactory {
 
             }
         } catch (Exception e) {
+            logger.error("", e);
             e.printStackTrace();
         }
 
@@ -115,56 +121,138 @@ public class JarNlpResourceFactory implements NlpResourceFactory {
                 return null;
             }
 
+            System.out.println("load " + resourceName);
+            zipFile.close();
+            return new ZipedMynlpResource(jar, charset, resourceName);
 
-            try (InputStream inputStream = new BufferedInputStream(zipFile.getInputStream(entry))) {
-                byte[] bytes = ByteStreams.toByteArray(inputStream);
-                return new BytesMynlpResource(jar.getAbsolutePath() + "!" + resourceName, bytes, charset,
-                        entry.getCrc() + "");
-            }
+//            try (InputStream inputStream = new BufferedInputStream(zipFile.getInputStream(entry))) {
+//                byte[] bytes = new byte[(int)entry.getSize()];
+//                copy(inputStream, bytes);
+//                zipFile.close();
+//
+//                return new BytesMynlpResource(jar.getAbsolutePath() + "!" + resourceName, bytes, charset,
+//                        entry.getCrc() + "");
+//            }
 
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("load resource " + resourceName, e);
         }
 
         return null;
     }
 
-    public static class BytesMynlpResource implements NlpResource {
+    private long copy(InputStream from, byte[] to)
+            throws IOException {
+        checkNotNull(from);
+        checkNotNull(to);
+        byte[] buf = new byte[8192];
+        long total = 0;
+        int last = 0;
+        while (true) {
+            int r = from.read(buf);
+            if (r == -1) {
+                break;
+            }
+            for (int i = 0; i < r; i++) {
+                to[last++] = buf[i];
+            }
+            total += r;
+        }
+        return total;
+    }
 
-        private final byte[] data;
-        private final String path;
+    public static class ZipedMynlpResource implements NlpResource {
+
+        private final String resourceName;
+        private final File file;
         private Charset charset;
 
-        private String hash;
+        public ZipedMynlpResource(File file, Charset charset, String resourceName) {
+            this.file = file;
 
-        public BytesMynlpResource(String path, byte[] data, Charset charset, String hash) {
-            this.data = data;
             this.charset = charset;
-            this.path = path;
-            this.hash = hash;
+            this.resourceName = resourceName;
+
         }
 
         @Override
         public String hash() {
-            return hash;
+            try (ZipFile zipFile = new ZipFile(file)) {
+                ZipEntry entry = zipFile.getEntry(resourceName);
+                return entry.getCrc() + "";
+            } catch (Exception e) {
+                e.printStackTrace();
+                return "-1";
+            }
         }
 
         @Override
         public InputStream openInputStream() throws IOException {
-            ByteArrayInputStreamMynlp stream = new ByteArrayInputStreamMynlp(data);
-            return stream;
+            ZipFile zipFile = new ZipFile(file);
+
+            ZipEntry entry = zipFile.getEntry(resourceName);
+            return new BufferedInputStream(zipFile.getInputStream(entry), 4 * 1024 * 4) {
+                @Override
+                public void close() throws IOException {
+                    super.close();
+                    zipFile.close();
+                }
+            };
         }
 
         @Override
-        public CharSourceLineReader openLineReader() {
-            ByteSource byteSource = ByteSource.wrap(data);
+        public CharSourceLineReader openLineReader() throws IOException {
+            byte[] bytes = null;
+            try (InputStream stream = openInputStream()) {
+                bytes = ByteStreams.toByteArray(openInputStream());
+            }
+            ByteSource byteSource = ByteSource.wrap(bytes);
             CharSource charSource = byteSource.asCharSource(charset);
             return new CharSourceLineReader(charSource);
         }
 
         @Override
         public String toString() {
-            return path;
+            return file + "@" + resourceName;
         }
     }
+//
+//    public static class BytesMynlpResource implements NlpResource {
+//
+//        private final byte[] data;
+//        private final String path;
+//        private Charset charset;
+//
+//        private String hash;
+//
+//        public BytesMynlpResource(String path, byte[] data, Charset charset, String hash) {
+//            this.data = data;
+//            this.charset = charset;
+//            this.path = path;
+//            this.hash = hash;
+//        }
+//
+//        @Override
+//        public String hash() {
+//            return hash;
+//        }
+//
+//        @Override
+//        public InputStream openInputStream() throws IOException {
+//            ByteArrayInputStreamMynlp stream = new ByteArrayInputStreamMynlp(data);
+//            return stream;
+//        }
+//
+//        @Override
+//        public CharSourceLineReader openLineReader() {
+//            ByteSource byteSource = ByteSource.wrap(data);
+//            CharSource charSource = byteSource.asCharSource(charset);
+//            return new CharSourceLineReader(charSource);
+//        }
+//
+//        @Override
+//        public String toString() {
+//            return path;
+//        }
+//    }
 }
