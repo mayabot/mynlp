@@ -4,12 +4,8 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Ordering;
-import com.google.common.io.ByteSource;
-import com.google.common.io.ByteStreams;
-import com.google.common.io.CharSource;
 import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
-import com.mayabot.nlp.utils.CharSourceLineReader;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -199,17 +195,11 @@ public class JarNlpResourceFactory implements NlpResourceFactory {
                 }
             };
         }
-
-        @Override
-        public CharSourceLineReader openLineReader() throws IOException {
-            byte[] bytes = null;
-            try (InputStream stream = openInputStream()) {
-                bytes = ByteStreams.toByteArray(openInputStream());
-            }
-            ByteSource byteSource = ByteSource.wrap(bytes);
-            CharSource charSource = byteSource.asCharSource(charset);
-            return new CharSourceLineReader(charSource);
-        }
+//
+//        @Override
+//        public CharSourceLineReader openLineReader() throws IOException {
+//            return new CharSourceLineReader(new BufferedReader(new InputStreamReader(openInputStream())));
+//        }
 
         @Override
         public String toString() {

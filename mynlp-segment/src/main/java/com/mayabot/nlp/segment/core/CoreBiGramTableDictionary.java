@@ -59,6 +59,8 @@ public class CoreBiGramTableDictionary extends NlpResouceExternalizable {
         this.coreDictionary = coreDictionary;
 
         this.restore(mynlp);
+
+
     }
 
     @Override
@@ -81,6 +83,7 @@ public class CoreBiGramTableDictionary extends NlpResouceExternalizable {
         Splitter splitter = Splitter.on(" ").omitEmptyStrings().trimResults();
 
         String firstWord = null;
+        int count = 0;
         try (CharSourceLineReader reader = source.openLineReader()) {
             while (reader.hasNext()) {
                 String line = reader.next();
@@ -100,6 +103,7 @@ public class CoreBiGramTableDictionary extends NlpResouceExternalizable {
                             int idB = coreDictionary.wordId(wordB);
                             if (idB >= 0) {
                                 table.put(idA, idB, num);
+                                count++;
                             }
                     }
 
@@ -109,7 +113,7 @@ public class CoreBiGramTableDictionary extends NlpResouceExternalizable {
 
             }
         }
-
+        logger.info("Core biGram pair size " + count);
         this.matrix = new CSRSparseMatrix(table, coreDictionary.size());
     }
 

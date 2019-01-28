@@ -20,8 +20,10 @@ import com.google.common.hash.Hashing;
 import com.google.common.io.ByteSource;
 import com.mayabot.nlp.utils.CharSourceLineReader;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 
 /**
  * 读取的模型是基于文本的。一般一行一个数据。
@@ -32,7 +34,11 @@ public interface NlpResource {
 
     InputStream openInputStream() throws IOException;
 
-    CharSourceLineReader openLineReader() throws IOException;
+//    CharSourceLineReader openLineReader() throws IOException;
+
+    default CharSourceLineReader openLineReader() throws IOException {
+        return new CharSourceLineReader(new BufferedReader(new InputStreamReader(openInputStream())));
+    }
 
     /**
      * 有很多实现办法。要么对文件或数据进行计算，还有他同名文件 abc.txt 对应一个文件 abc.txt.hash 进行记录

@@ -17,11 +17,9 @@
 package com.mayabot.nlp.resources;
 
 import com.google.common.io.ByteSource;
-import com.google.common.io.CharSource;
 import com.google.common.io.Resources;
 import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
-import com.mayabot.nlp.utils.CharSourceLineReader;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -48,16 +46,16 @@ public class URLNlpResource implements NlpResource {
         ByteSource byteSource = Resources.asByteSource(url);
         return byteSource.openBufferedStream();
     }
-
-    @Override
-    public CharSourceLineReader openLineReader() {
-        ByteSource byteSource = Resources.asByteSource(url);
-
-
-        CharSource charSource = byteSource.asCharSource(charset);
-
-        return new CharSourceLineReader(charSource);
-    }
+//
+//    @Override
+//    public CharSourceLineReader openLineReader() {
+//        ByteSource byteSource = Resources.asByteSource(url);
+//
+//
+//        CharSource charSource = byteSource.asCharSource(charset);
+//
+//        return new CharSourceLineReader(charSource);
+//    }
 
     @Override
     public String toString() {
