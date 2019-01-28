@@ -114,8 +114,9 @@ System.out.println(sentence.asWordList());
 
 详细文档请移步[WIKI](https://github.com/mayabot/mynlp/wiki/Home)
 
+## 联系和交流
 
-MYNLP建立了微信群方便大家及时交流，有需要的同学可以添加我微信`jimichan`,备注mynlp。
+MYNLP的发展和持续离不开大家的支持，所以建立了微信群方便大家及时沟通交流，有需要的同学可以添加我微信`jimichan`,备注mynlp。
 
 
 ## 声明和致谢
