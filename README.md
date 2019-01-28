@@ -4,21 +4,49 @@
 [![Maven Central](https://img.shields.io/maven-metadata/v/http/central.maven.org/maven2/com/mayabot/mynlp/mynlp-core/maven-metadata.xml.svg)](http://mvnrepository.com/artifact/com.mayabot.mynlp)
 [![Latest release](https://img.shields.io/github/release/mayabot/mynlp/all.svg)](https://github.com/mayabot/mynlp/releases/latest)
 
+## 一个高性能、模块化、可扩展的中文NLP工具包
 
-MYNLP是一个高性能、模块化、可扩展的中文NLP工具包。包含中文分词、词性标注、文本分类、拼音转换、简繁体转换、文本摘要等常见NLP功能。
+mynlp是一个高性能、模块化、可扩展的中文NLP工具包。内容如下：
+- 中文分词
+    - CORE分词
+        (二元语言模型 + viterbi解码算法 + 基础规则（数字、英文、日期..)
+    - CWS分词
+        基于感知机序列标注算法
+    - CRF分词
+        高性能CRF解码器
+    - 柔性API和PIPELINE设计模式
+        自由组合和扩展分词逻辑需求
+- 词性标注
+    基于感知机的词性标注
+- 新词发现
+    小内存在大数据集上完美超过性能
+- 拼音转换
+    文字转拼音
+- 文本分类
+    fastText Java原生实现
+- 简繁体转换
+- 感知机通用接口
+    提供一个通用的感知机基础API
+- 文本摘要
+    简单的文本摘要实现
 
-运行环境需求：
-- JRE 1.8+
 
-## 一分钟教程
+## Getting Started
+非常易用，只需要1分钟你就可以体验mynlp。没有配置，无需手动下载资源文件，只需要依赖添加依赖包，写两行代码。
 
-引入依赖 
+### Requirements
+您需要JRE1.8+的java运行环境
+
+### Installation
+
+
+依赖mynlp-all.jar最新版本。
 
 GRADLE
 ```
     compile 'com.mayabot.mynlp:mynlp-all:2.0.0'
 ```
-MAVEN
+或者MAVEN
 ```xml
 <dependency>
   <groupId>com.mayabot.mynlp</groupId>
@@ -27,7 +55,7 @@ MAVEN
 </dependency>
 ```
 
-中文分词示例：
+### 中文分词示例
 
 ```java
 MynlpTokenizer tokenizer = Tokenizers.coreTokenizer();
