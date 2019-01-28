@@ -39,9 +39,6 @@ public class HowFast {
         MynlpTokenizer tokenizer = new CoreTokenizerBuilder()
                 .setEnablePersonName(false)
                 .setEnablePOS(false)
-//                .disabledComponent(TimeSplitAlgorithm.class)
-//                .disabledComponent(CommonRuleWordpathProcessor.class)
-//                .disabledComponent(CustomDictionaryProcessor.class)
                 .build();
         MynlpAnalyzer analyzer = Analyzers.base(tokenizer);
 

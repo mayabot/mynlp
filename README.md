@@ -114,45 +114,6 @@ System.out.println(sentence.asWordList());
 
 详细文档请移步[WIKI](https://github.com/mayabot/mynlp/wiki/Home)
 
-## 文档目录
-    
-* [首页](https://github.com/mayabot/mynlp/wiki/Home)
-  * [项目结构](https://github.com/mayabot/mynlp/wiki/Home#项目结构)
-  * [Mynlp项目介绍](https://github.com/mayabot/mynlp/wiki/Home#Mynlp项目介绍)
-* [5分钟教程](https://github.com/mayabot/mynlp/wiki/QuickTutorial)
-  * [分词](https://github.com/mayabot/mynlp/wiki/QuickTutorial#分词)
-  * [文本分类](https://github.com/mayabot/mynlp/wiki/QuickTutorial#文本分类)
-  * [拼音](https://github.com/mayabot/mynlp/wiki/QuickTutorial#拼音)
-  * [简繁转换](https://github.com/mayabot/mynlp/wiki/QuickTutorial#简繁转换)
-  * [文本摘要](https://github.com/mayabot/mynlp/wiki/QuickTutorial#文本摘要)
-* [中文分词](https://github.com/mayabot/mynlp/wiki/segment)
-  * [开箱即用分词器](https://github.com/mayabot/mynlp/wiki/TokenizerBuilderList)
-    * [Core分词](https://github.com/mayabot/mynlp/wiki/TokenizerBuilderList#Core分词器)
-    * [CRF分词](https://github.com/mayabot/mynlp/wiki/TokenizerBuilderList#CRF分词)
-  * [索引分词](https://github.com/mayabot/mynlp/wiki/index)
-  * [MynlpAnalyzer](https://github.com/mayabot/mynlp/wiki/MynlpAnalyzer)
-  * [基于Wordnet的分词架构图](https://github.com/mayabot/mynlp/wiki/WordnetFramework)
-  * [Wordnet和wordpath](https://github.com/mayabot/mynlp/wiki/Wordnet)
-  * [分词器Builder API](https://github.com/mayabot/mynlp/wiki/WordnetTokenizerBuilder)
-  * [基础组件](https://github.com/mayabot/mynlp/wiki/Component)
-      * [CharNormalize](https://github.com/mayabot/mynlp/wiki/Component#CharNormalize)
-      * [WordnetInitializer](https://github.com/mayabot/mynlp/wiki/Component#WordnetInitializer)
-      * [WordpathProcessor](https://github.com/mayabot/mynlp/wiki/Component#WordpathProcessor)
-      * [OptimizeWordPathProcessor](https://github.com/mayabot/mynlp/wiki/Component#OptimizeWordPathProcessor)
-      * [WordTermCollector](https://github.com/mayabot/mynlp/wiki/Component#WordTermCollector)
-  * [常见案例和解决方案](https://github.com/mayabot/mynlp/wiki/Recipes)
-  * [感知机(开发中)](https://github.com/mayabot/mynlp/wiki/perceptron)
-* [文本分类](https://github.com/mayabot/mynlp/wiki/classification)
-  * [酒店评论情感分析实例](https://github.com/mayabot/mynlp/wiki/classification#酒店评论情感分析实例)
-* [词嵌入Fasttext](https://github.com/mayabot/mynlp/wiki/Fasttext)
-* [拼音转换](https://github.com/mayabot/mynlp/wiki/Pinyin)
-* [资源加载](https://github.com/mayabot/mynlp/wiki/Resouce)
-* [GUICE和系统设置](https://github.com/mayabot/mynlp/wiki/Guice)
-* [日志](https://github.com/mayabot/mynlp/wiki/Logger)
-* [mynlp-cli命令行工具(开发中)](https://github.com/mayabot/mynlp/wiki/CLI)
-* [性能对比](https://github.com/mayabot/mynlp/wiki/performance)
-* [如何贡献](https://github.com/mayabot/mynlp/wiki/HowToContribute)
-
 
 MYNLP建立了微信群方便大家及时交流，有需要的同学可以添加我微信`jimichan`,备注mynlp。
 
