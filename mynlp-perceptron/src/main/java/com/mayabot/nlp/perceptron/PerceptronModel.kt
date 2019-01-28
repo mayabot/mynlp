@@ -17,7 +17,6 @@ package com.mayabot.nlp.perceptron
 
 import com.mayabot.nlp.collection.dat.DoubleArrayTrie
 import com.mayabot.nlp.hppc.IntArrayList
-import com.mayabot.nlp.utils.ByteArrayInputStreamMynlp
 import java.io.DataInputStream
 import java.io.DataOutputStream
 import java.io.File
@@ -355,22 +354,21 @@ open class PerceptronModel(
             var labelCount = 0
             var parameter = FloatArray(0)
 
-            if (parameterBin is ByteArrayInputStreamMynlp) {
-                val buf = parameterBin.buf
-
-                val wrap = ByteBuffer.wrap(buf)
-
-                labelCount = wrap.int
-
-                val pSize = wrap.int
-                parameter = FloatArray(pSize)
-
-                for (i in 0 until pSize) {
-                    parameter[i] = wrap.float
-                }
-
-
-            } else {
+//            if (parameterBin is ByteArrayInputStreamMynlp) {
+//                val buf = parameterBin.buf
+//
+//                val wrap = ByteBuffer.wrap(buf)
+//
+//                labelCount = wrap.int
+//
+//                val pSize = wrap.int
+//                parameter = FloatArray(pSize)
+//
+//                for (i in 0 until pSize) {
+//                    parameter[i] = wrap.float
+//                }
+//
+//            } else {
                 parameterBin.use { x ->
 
                     val input = DataInputStream(x)
@@ -379,11 +377,32 @@ open class PerceptronModel(
                     val pSize = input.readInt()
                     parameter = FloatArray(pSize)
 
-                    for (i in 0 until pSize) {
-                        parameter[i] = input.readFloat()
+                    val buffer = ByteArray(4 * 1024 * 4)
+                    val wrap = ByteBuffer.wrap(buffer)
+                    var point = 0
+                    while (true) {
+                        val n = input.read(buffer)
+                        if (n == -1) {
+                            break
+                        }
+                        if (n % 4 != 0) {
+                            println("Error Size")
+                            System.exit(0)
+                        }
+
+                        wrap.flip()
+                        wrap.limit(n)
+
+                        for (x in 0 until n / 4) {
+                            parameter[point++] = wrap.float
+                        }
                     }
+
+//                    for (i in 0 until pSize) {
+//                        parameter[i] = input.readFloat()
+//                    }
                 }
-            }
+//            }
 
             val fs = if (featureBin != null) {
                 if (featureText != null) {
