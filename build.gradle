@@ -29,7 +29,7 @@ def buildVersion = "2.0.0"
 def snapShot = false
 
 subprojects {
-    if(project.path==":plugins" ){
+    if(project.path==":modules" ){
         return
     }
     description = "Maya Nlp subproject ${project.path}"

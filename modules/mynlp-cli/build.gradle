@@ -44,7 +44,7 @@ dependencies {
     compile project(":mynlp-segment")
     compile project(":mynlp-pinyin")
     compile project(":mynlp-transform")
-    compile project(":mynlp-classification")
+    compile project(":modules:mynlp-classification")
 
     testCompile group: 'junit', name: 'junit', version: '4.12'
 

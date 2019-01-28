@@ -24,7 +24,7 @@ project.afterEvaluate {
 
 dependencies {
     compile project(':mynlp-segment')
-    compile project(':mynlp-classification')
+    compile project(':modules:mynlp-classification')
     compile project(':mynlp-transform')
     compile project(':mynlp-pinyin')
     compile group: 'org.fusesource.jansi', name: 'jansi', version: '1.16'
