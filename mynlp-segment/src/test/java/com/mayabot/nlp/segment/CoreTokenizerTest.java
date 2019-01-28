@@ -31,7 +31,7 @@ public class CoreTokenizerTest {
         List<String> lines = Lists.newArrayList();
         lines.add("工信处|女|干事|每月|经过|下属|科室|都|要|亲口|交代|24口|交换机|等|技术性|器件|的|安装|工作");
         lines.add("计划|建立|一个|5|万|公顷|面积|的|航天站");
-        lines.add("不要|把|一星半点儿|的|酒|全部|都|喝掉|嘛");
+        lines.add("不要|把|一星半点|儿|的|酒|全部|都|喝掉|嘛");
         lines.add("商品|和|服务");
         lines.add("这个|是|你|第|几套|房|了");
         lines.add("这个|是|你|的|ipad3|么");

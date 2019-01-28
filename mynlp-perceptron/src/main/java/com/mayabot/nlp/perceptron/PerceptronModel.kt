@@ -393,7 +393,7 @@ open class PerceptronModel(
                         wrap.flip()
                         wrap.limit(n)
 
-                        for (x in 0 until n / 4) {
+                        for (i in 0 until n / 4) {
                             parameter[point++] = wrap.float
                         }
                     }

@@ -6,4 +6,5 @@ dependencies {
     compile project(':mynlp-segment')
 
     testCompile group: 'junit', name: 'junit', version: '4.12'
+    testCompile 'org.apache.lucene:lucene-core:5.0.0'
 }
