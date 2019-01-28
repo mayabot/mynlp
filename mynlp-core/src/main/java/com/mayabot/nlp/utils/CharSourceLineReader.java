@@ -17,22 +17,15 @@
 package com.mayabot.nlp.utils;
 
 import com.google.common.collect.AbstractIterator;
-import com.google.common.io.CharSource;
 
 import java.io.BufferedReader;
 
 public class CharSourceLineReader extends AbstractIterator<String> implements AutoCloseable {
 
     private final BufferedReader reader;
-//    private final LineReader lineReader;
 
-    public CharSourceLineReader(CharSource charSource) {
-        try {
-            reader = charSource.openBufferedStream();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-//        lineReader = new LineReader(reader);
+    public CharSourceLineReader(BufferedReader reader) {
+        this.reader = reader;
     }
 
     @Override

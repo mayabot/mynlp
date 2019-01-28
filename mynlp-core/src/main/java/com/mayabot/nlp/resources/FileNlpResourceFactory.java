@@ -1,9 +1,7 @@
 package com.mayabot.nlp.resources;
 
 import com.google.common.io.ByteSource;
-import com.google.common.io.CharSource;
 import com.google.common.io.Files;
-import com.mayabot.nlp.utils.CharSourceLineReader;
 
 import java.io.File;
 import java.io.IOException;
@@ -55,15 +53,14 @@ public class FileNlpResourceFactory implements NlpResourceFactory {
             return byteSource.openBufferedStream();
         }
 
-        @Override
-        public CharSourceLineReader openLineReader() {
-
-            ByteSource byteSource = Files.asByteSource(file);
-
-
-            CharSource charSource = byteSource.asCharSource(charset);
-            return new CharSourceLineReader(charSource);
-        }
+//        @Override
+//        public CharSourceLineReader openLineReader() {
+//
+//
+//
+//            CharSource charSource = byteSource.asCharSource(charset);
+//            return new CharSourceLineReader(charSource);
+//        }
 
         @Override
         public String toString() {
