@@ -1,6 +1,5 @@
 package com.mayabot.nlp.newword
 
-import com.google.common.base.Splitter
 import java.io.File
 import java.nio.charset.Charset
 import java.util.*
@@ -48,7 +47,7 @@ class FilesNewWordFind(
         var ac = 0
         val t1 = System.currentTimeMillis()
         if (verbose) print("0%")
-        val splitter = Splitter.on("\n").omitEmptyStrings().trimResults()
+//        val splitter = Splitter.on("\n").omitEmptyStrings().trimResults()
         files.forEach { file ->
             ac++
             if (verbose) print("\r${((ac * 100.0f) / fileCount).toInt()}%")
