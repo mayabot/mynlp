@@ -21,8 +21,8 @@ import com.google.common.collect.AbstractIterator;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import com.mayabot.nlp.collection.Trie;
-import com.mayabot.nlp.collection.utils.CharObjectHashMap;
-import com.mayabot.nlp.collection.utils.CharObjectMap;
+import com.mayabot.nlp.hppc.CharObjectHashMap;
+import com.mayabot.nlp.hppc.CharObjectMap;
 
 import java.util.*;
 import java.util.Map.Entry;

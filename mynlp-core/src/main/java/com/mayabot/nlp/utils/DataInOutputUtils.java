@@ -16,8 +16,6 @@
 
 package com.mayabot.nlp.utils;
 
-import com.mayabot.nlp.collection.utils.MyInts;
-
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;

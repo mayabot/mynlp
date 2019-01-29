@@ -2,7 +2,7 @@ package com.mayabot.nlp.segment.plugins
 
 import com.google.common.collect.Lists
 import com.mayabot.nlp.collection.dat.DoubleArrayTrieStringIntMap
-import com.mayabot.nlp.hppc.QuickCharset
+import com.mayabot.nlp.collection.dat.FastDatCharSet
 import com.mayabot.nlp.segment.Nature
 import com.mayabot.nlp.segment.SegmentComponentOrder
 import com.mayabot.nlp.segment.WordSplitAlgorithm
@@ -27,7 +27,7 @@ import kotlin.collections.ArrayList
 class AtomSplitAlgorithm : BaseSegmentComponent(), WordSplitAlgorithm {
 
     //CharScatterSet 5000万次查询耗时40ms
-    val chineseNumSet = QuickCharset(
+    val chineseNumSet = FastDatCharSet(
             '零', '一', '二', '三', '四', '五', '六', '七', '八', '九', '两',
             '壹', '贰', '叁', '肆', '伍', '陆', '柒', '捌', '玖', '拾',
             '十', '百', '千', '万', '亿'

@@ -69,7 +69,10 @@ shadowJar {
 
 publishJavaPublicationToMayaPrivateRepository.enabled = false
 publishJavaPublicationToMavenLocal.enabled = false
-publishJavaPublicationToOssPublicRepository.enabled = false
+
+if(publishJavaPublicationToOssPublicRepository) {
+    publishJavaPublicationToOssPublicRepository.enabled = false
+}
 
 publishing.publications {
 

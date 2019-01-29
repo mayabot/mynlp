@@ -29,7 +29,7 @@
  * the License.
  */
 
-package com.mayabot.nlp.collection.utils;
+package com.mayabot.nlp.hppc;
 
 import java.util.*;
 

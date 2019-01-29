@@ -28,7 +28,7 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.mayabot.nlp.collection.utils;
+package com.mayabot.nlp.hppc;
 
 import java.util.Map;
 
