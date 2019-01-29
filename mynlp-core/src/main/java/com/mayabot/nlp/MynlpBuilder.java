@@ -18,7 +18,6 @@ package com.mayabot.nlp;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.google.common.io.Files;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -39,6 +38,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Mynlp构建器
@@ -223,13 +224,32 @@ public class MynlpBuilder {
 
     private File ensureDir(File file) throws IOException {
         if (!file.exists()) {
-            Files.createParentDirs(file);
+            createParentDirs(file);
             file.mkdir();
         }
         if (!file.isDirectory()) {
             throw new IOException(file + " is not dir");
         }
         return file;
+    }
+
+    private void createParentDirs(File file) throws IOException {
+        checkNotNull(file);
+        File parent = file.getCanonicalFile().getParentFile();
+        if (parent == null) {
+            /*
+             * The given directory is a filesystem root. All zero of its ancestors
+             * exist. This doesn't mean that the root itself exists -- consider x:\ on
+             * a Windows machine without such a drive -- or even that the caller can
+             * create it, but this method makes no such guarantees even for non-root
+             * files.
+             */
+            return;
+        }
+        parent.mkdirs();
+        if (!parent.isDirectory()) {
+            throw new IOException("Unable to create parent directories of " + file);
+        }
     }
 
 //
