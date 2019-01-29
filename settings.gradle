@@ -14,23 +14,22 @@
  * limitations under the License.
  */
 
+rootProject.name = 'mynlp'
+
 List projects = [
         'mynlp-core',
         'mynlp-segment',
         'mynlp-pinyin',
         'mynlp-transform',
         'mynlp-perceptron',
-        'mynlp-lucene',
         'mynlp-all',
         'modules:mynlp-classification',
         'modules:mynlp-newword',
         'modules:mynlp-summary',
         'modules:mynlp-cli',
-        'modules:mynlp-example'
+        'modules:mynlp-example',
+        'modules:mynlp-lucene',
 ]
-rootProject.name = 'mynlp'
-
-
 
 include projects.toArray(new String[0])
 
