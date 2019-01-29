@@ -1,16 +1,17 @@
-package com.mayabot.nlp.hppc;
-
-import com.mayabot.nlp.collection.dat.DoubleArrayTrieStringIntMap;
+package com.mayabot.nlp.collection.dat;
 
 import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeMap;
 
-public class QuickCharset {
+/**
+ * 查询
+ */
+public class FastDatStringListIndex {
 
     private DoubleArrayTrieStringIntMap map;
 
-    public QuickCharset(char... chars) {
+    public FastDatStringListIndex(char... chars) {
         HashSet<Character> set = new HashSet<>();
         for (char aChar : chars) {
             set.add(aChar);
@@ -19,7 +20,7 @@ public class QuickCharset {
         set(set);
     }
 
-    public QuickCharset(Set<Character> characterSet) {
+    public FastDatStringListIndex(Set<Character> characterSet) {
         set(characterSet);
     }
 

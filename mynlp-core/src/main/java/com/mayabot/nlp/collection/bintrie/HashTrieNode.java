@@ -18,7 +18,7 @@ package com.mayabot.nlp.collection.bintrie;
 
 
 import com.google.common.collect.Lists;
-import com.mayabot.nlp.collection.utils.CharObjectHashMap;
+import com.mayabot.nlp.hppc.CharObjectHashMap;
 
 import java.util.List;
 
