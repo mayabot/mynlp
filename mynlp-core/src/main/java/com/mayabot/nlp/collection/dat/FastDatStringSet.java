@@ -2,11 +2,11 @@ package com.mayabot.nlp.collection.dat;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.TreeMap;
+import java.util.TreeSet;
 
 public class FastDatStringSet {
 
-    private DoubleArrayTrieStringIntMap map;
+    private DoubleArrayTrie map;
 
     public FastDatStringSet(String... list) {
         HashSet<String> set = new HashSet<>();
@@ -22,16 +22,16 @@ public class FastDatStringSet {
     }
 
     private void set(Set<String> set) {
-        TreeMap<String, Integer> treeMap = new TreeMap<>();
+        TreeSet<String> treeset = new TreeSet<>();
 
         for (String e : set) {
-            treeMap.put(e, 1);
+            treeset.add(e);
         }
 
-        this.map = new DoubleArrayTrieStringIntMap(treeMap);
+        this.map = new DoubleArrayTrie(treeset);
     }
 
-    public boolean contains(char ch) {
+    public boolean contains(String ch) {
         return map.containsKey(ch);
     }
 }

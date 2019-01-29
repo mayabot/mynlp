@@ -48,7 +48,7 @@ import static com.mayabot.nlp.utils.DataInOutputUtils.writeIntArray;
 /**
  * 双数组Trie树。
  *
- * 每个key对应其数值的下标（这个特性可以用来做List String 的索引）
+ * 每个key对应其数值的下标（这个特性可以用来做TreeSet String()的索引）
  *
  */
 public class DoubleArrayTrie {
@@ -67,6 +67,9 @@ public class DoubleArrayTrie {
         this(Lists.newArrayList(set));
     }
 
+    /**
+     * @param sortedKeys 有序且无重复
+     */
     public DoubleArrayTrie(List<String> sortedKeys) {
         DoubleArrayMaker datDoubleArrayMaker = new DoubleArrayMaker(sortedKeys);
         datDoubleArrayMaker.build();
