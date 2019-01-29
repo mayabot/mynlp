@@ -86,6 +86,30 @@ publishing.publications {
             artifact javadocJar {
                 classifier "javadoc"
             }
+
+            pom{
+                url = 'https://github.com/mayabot/mynlp'
+                licenses {
+                    license {
+                        name = 'The Apache License, Version 2.0'
+                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'jimichan'
+                        name = 'jimi chan'
+                        email = 'jimichan@gmail.com'
+                    }
+                }
+                scm {
+                    connection = 'scm:git:git@github.com:mayabot/mynlp.git'
+                    developerConnection = 'scm:git:git@github.com:mayabot/mynlp.git'
+                    url = 'git@github.com:mayabot/mynlp.git'
+                }
+
+            }
+
         }
 }
 
