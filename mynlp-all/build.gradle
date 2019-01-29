@@ -71,7 +71,7 @@ publishJavaPublicationToMayaPrivateRepository.enabled = false
 publishJavaPublicationToMavenLocal.enabled = false
 
 
-if(project.property("publishJavaPublicationToOssPublicRepository")!=null) {
+if(project.hasProperty("publishJavaPublicationToOssPublicRepository")) {
     publishJavaPublicationToOssPublicRepository.enabled = false
 }
 
