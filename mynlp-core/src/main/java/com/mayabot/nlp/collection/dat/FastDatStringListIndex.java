@@ -1,40 +1,43 @@
 package com.mayabot.nlp.collection.dat;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 import java.util.TreeMap;
 
 /**
- * 查询
+ * 给一个没有重复的字符串数组建立索引，可以快速查询字符串在数组中的位置
+ * @author jimichan
  */
 public class FastDatStringListIndex {
 
     private DoubleArrayTrieStringIntMap map;
 
-    public FastDatStringListIndex(char... chars) {
-        HashSet<Character> set = new HashSet<>();
-        for (char aChar : chars) {
-            set.add(aChar);
+    public FastDatStringListIndex(List<String> list) {
+        init(list);
+    }
+
+    private void init(List<String> list) {
+
+        TreeMap<String, Integer> treeMap = new TreeMap<>();
+        int c = 0;
+        for (String e : list) {
+            treeMap.put(e, c++);
         }
 
-        set(set);
-    }
-
-    public FastDatStringListIndex(Set<Character> characterSet) {
-        set(characterSet);
-    }
-
-    private void set(Set<Character> characterSet) {
-        TreeMap<String, Integer> treeMap = new TreeMap<>();
-
-        for (Character character : characterSet) {
-            treeMap.put(character.toString(), 1);
+        if (c != list.size()) {
+            throw new RuntimeException("list must has unique element");
         }
 
         this.map = new DoubleArrayTrieStringIntMap(treeMap);
     }
 
-    public boolean contains(char ch) {
-        return map.containsKey(ch);
+    /**
+     * 查询字符串的下班
+     *
+     * @param ch
+     * @return 返回-1表示不存在
+     */
+    public int indexOf(String ch) {
+        return map.indexOf(ch);
     }
+
 }

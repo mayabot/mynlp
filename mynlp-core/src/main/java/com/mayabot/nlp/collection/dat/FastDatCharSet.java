@@ -2,18 +2,17 @@ package com.mayabot.nlp.collection.dat;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.TreeMap;
+import java.util.TreeSet;
 
 public class FastDatCharSet {
 
-    private DoubleArrayTrieStringIntMap map;
+    private DoubleArrayTrie map;
 
     public FastDatCharSet(char... chars) {
         HashSet<Character> set = new HashSet<>();
         for (char aChar : chars) {
             set.add(aChar);
         }
-
         set(set);
     }
 
@@ -22,16 +21,17 @@ public class FastDatCharSet {
     }
 
     private void set(Set<Character> characterSet) {
-        TreeMap<String, Integer> treeMap = new TreeMap<>();
+        TreeSet<String> treeMap = new TreeSet<>();
 
         for (Character character : characterSet) {
-            treeMap.put(character.toString(), 1);
+            treeMap.add(character.toString());
         }
 
-        this.map = new DoubleArrayTrieStringIntMap(treeMap);
+        this.map = new DoubleArrayTrie(treeMap);
     }
 
     public boolean contains(char ch) {
-        return map.containsKey(ch);
+        return map.indexOf(ch) != -1;
     }
+
 }
