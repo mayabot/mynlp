@@ -89,6 +89,8 @@ publishing.publications {
 
             pom{
                 url = 'https://github.com/mayabot/mynlp'
+                name = "mynlp-all"
+                description  = "mynlp-all is a shadow jar"
                 licenses {
                     license {
                         name = 'The Apache License, Version 2.0'
