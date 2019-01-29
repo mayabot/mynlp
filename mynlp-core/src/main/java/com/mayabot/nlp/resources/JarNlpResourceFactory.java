@@ -117,18 +117,9 @@ public class JarNlpResourceFactory implements NlpResourceFactory {
                 return null;
             }
 
-            System.out.println("load " + resourceName);
             zipFile.close();
             return new ZipedMynlpResource(jar, charset, resourceName);
 
-//            try (InputStream inputStream = new BufferedInputStream(zipFile.getInputStream(entry))) {
-//                byte[] bytes = new byte[(int)entry.getSize()];
-//                copy(inputStream, bytes);
-//                zipFile.close();
-//
-//                return new BytesMynlpResource(jar.getAbsolutePath() + "!" + resourceName, bytes, charset,
-//                        entry.getCrc() + "");
-//            }
 
         } catch (IOException e) {
             logger.error("load resource " + resourceName, e);
