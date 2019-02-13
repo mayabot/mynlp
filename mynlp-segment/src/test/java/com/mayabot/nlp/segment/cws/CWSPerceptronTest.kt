@@ -32,6 +32,8 @@ object CWSPerceptronTest {
         println("After compress ...")
         CWSEvaluate.evaluate(evaluateFile.readLines(), cws)
         //单线程 正确率(P) 96.64 , 召回率(R) 96.32 , F1 96.48
+
+        cws.save(File("cws-model"))
     }
 
     fun test() {
