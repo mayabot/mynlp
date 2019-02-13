@@ -1,9 +1,6 @@
 package com.mayabot.nlp.segment.cws;
 
-import com.mayabot.nlp.Mynlps;
-import com.mayabot.nlp.segment.MynlpTokenizer;
 import com.mayabot.nlp.segment.PipelineTokenizerBuilder;
-import com.mayabot.nlp.segment.Sentence;
 import com.mayabot.nlp.segment.core.ViterbiBestPathAlgorithm;
 import com.mayabot.nlp.segment.plugins.AtomSplitAlgorithm;
 import com.mayabot.nlp.segment.plugins.Correction;
@@ -30,20 +27,6 @@ public class CWSTokenizerBuilder extends PipelineTokenizerBuilder
     private boolean enableCorrection = true;
     private boolean enableCustomDictionary = false;
 
-    public static void main(String[] args) {
-
-        Mynlps.install(mynlpBuilder -> {
-            mynlpBuilder.set(CwsService.cwsModelItem, CwsService.cswHanlpModel);
-        });
-
-        MynlpTokenizer tokenizer = CWSTokenizerBuilder.builder().build();
-
-        Sentence sentence = tokenizer.parse("经过长时间的感情探索和临时分居后");
-        System.out.println(sentence);
-        System.out.println(tokenizer.parse("央视网消息：2019年1月10日，外交部发言人陆慷主持例行记者会。\n" +
-                "\n" +
-                "　　记者问：中国驻加拿大大使卢沙野昨天（9日）发表的一篇文章引起了外界的关注。卢大使文章称，中方拘捕2名加拿大公民是对加方拘押孟晚舟的报复，称中方举措系自卫行为。这是否相当于承认了中方拘捕两名加拿大人是对加方的报复？"));
-    }
 
     /**
      * 在这里装配所需要的零件吧！！！
