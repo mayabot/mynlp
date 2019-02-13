@@ -6,6 +6,10 @@
 
 ## 一个高性能、模块化、可扩展的中文NLP工具包
 
+[**更多使用介绍阅读Wiki文档**](https://github.com/mayabot/mynlp/wiki/Home)
+
+>微信`jimichan`,备注mynlp，加入微信交流群。
+
 mynlp是一个高性能、模块化、可扩展的中文NLP工具包。内容如下：
 - 中文分词
     - CORE分词 
