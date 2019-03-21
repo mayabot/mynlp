@@ -11,28 +11,39 @@ public class FastStringBuilder implements CharSequence {
 
     private int length = 0;
 
+    private int max = 0;
 
     public FastStringBuilder(int max) {
         text = new char[max];
+        this.max = max;
     }
 
 
     public void append(String string) {
         for (int i = 0; i < string.length(); i++) {
+            //ISSUE-1 总有一些语料中单词的长度会导致溢出，那么拒绝这这情况的发生。
+            if (length >= max) {
+                return;
+            }
             text[length++] = string.charAt(i);
         }
     }
 
     public void append(char c) {
+        if (length >= max) {
+            return;
+        }
         text[length++] = c;
     }
 
     public final void append(char c1, char c2) {
+
         text[length++] = c1;
         text[length++] = c2;
     }
 
     public final void append(char c1, char c2, char c3, char c4) {
+
         text[length++] = c1;
         text[length++] = c2;
         text[length++] = c3;
