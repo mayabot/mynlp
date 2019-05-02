@@ -40,8 +40,8 @@ public class PinyinTest {
 
         PinyinResult result = Pinyins.convert("123aed,.你好朝朝暮暮,银行");
 
-        Assert.assertEquals("",result.asString(),"1 2 3 a e d ni hao zhao zhao mu mu yin hang");
-        Assert.assertEquals("",result.asHeadString(),"1 2 3 a e d n h z z m m y h");
+        Assert.assertEquals("", result.asString(), "1 2 3 a e d ni hao zhao zhao mu mu yin hang");
+        Assert.assertEquals("", result.asHeadString(), "1 2 3 a e d n h z z m m y h");
 
     }
 
@@ -102,7 +102,6 @@ public class PinyinTest {
 
 
     }
-
 
 
 }

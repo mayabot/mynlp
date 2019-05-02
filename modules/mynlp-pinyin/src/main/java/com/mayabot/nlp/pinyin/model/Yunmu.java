@@ -18,9 +18,9 @@
  * <summary></summary>
  * <author>He Han</author>
  * <email>hankcs.cn@gmail.com</email>
- * <create-date>2014/11/2 8:08</create-date>
+ * <create-date>2014/11/2 8:09</create-date>
  *
- * <copyright file="Shengmu.java" company="上海林原信息科技有限公司">
+ * <copyright file="Yunmu.java" company="上海林原信息科技有限公司">
  * Copyright (c) 2003-2014, 上海林原信息科技有限公司. All Right Reserved, http://www.linrunsoft.com/
  * This source is subject to the LinrunSpace License. Please contact 上海林原信息科技有限公司 to get more information.
  * </copyright>
@@ -28,36 +28,45 @@
 package com.mayabot.nlp.pinyin.model;
 
 /**
- * 声母
  * @author hankcs
  */
-public enum Shengmu
-{
-    b,
-    c,
-    ch,
-    d,
-    f,
-    g,
-    h,
-    j,
-    k,
-    l,
-    m,
-    n,
-    p,
-    q,
-    r,
-    s,
-    sh,
-    t,
-    w,
-    x,
-    y,
-    z,
-    zh,
+public enum Yunmu {
+    a,
+    ai,
+    an,
+    ang,
+    ao,
+    e,
+    ei,
+    en,
+    eng,
+    er,
+    i,
+    ia,
+    ian,
+    iang,
+    iao,
+    ie,
+    in,
+    ing,
+    iong,
+    iu,
+    o,
+    ong,
+    ou,
+    u,
+    ua,
+    uai,
+    uan,
+    uang,
+    ue,
+    ui,
+    un,
+    uo,
+    v,
+    ve,
     /**
-     * 零声母
+     * 仅用于null类型的拼音
      */
     none,
 }

@@ -25,8 +25,8 @@ project.afterEvaluate {
 dependencies {
     compile project(':mynlp-segment')
     compile project(':modules:mynlp-classification')
-    compile project(':mynlp-transform')
-    compile project(':mynlp-pinyin')
+    compile project(':modules:mynlp-transform')
+    compile project(':modules:mynlp-pinyin')
     compile group: 'org.fusesource.jansi', name: 'jansi', version: '1.16'
     compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
 
