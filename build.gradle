@@ -17,7 +17,6 @@
 apply plugin: 'idea'
 apply plugin: 'eclipse'
 
-
 description = "mynlp是mayabot开源的中文自然语言处理工具集"
 
 ext {
@@ -25,8 +24,8 @@ ext {
 }
 
 //def buildVersion = "2.0.x"
-def buildVersion = "2.0.1-SNAPSHOT"
-def snapShot = false
+def buildVersion = "2.1.0"
+def snapShot = true
 
 subprojects {
     if(project.path==":modules" ){

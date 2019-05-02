@@ -22,7 +22,6 @@ List projects = [
         'mynlp-pinyin',
         'mynlp-transform',
         'mynlp-perceptron',
-        'mynlp-all',
         'modules:mynlp-classification',
         'modules:mynlp-newword',
         'modules:mynlp-summary',
