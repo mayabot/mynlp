@@ -15,20 +15,20 @@
  */
 
 rootProject.name = 'mynlp'
-
 List projects = [
         'mynlp-core',
         'mynlp-segment',
-        'mynlp-pinyin',
-        'mynlp-transform',
         'mynlp-perceptron',
+        'modules:mynlp-cli',
+        'modules:mynlp-pinyin',
+        'modules:mynlp-transform',
         'modules:mynlp-classification',
         'modules:mynlp-newword',
         'modules:mynlp-summary',
-        'modules:mynlp-cli',
         'modules:mynlp-example',
-        'modules:mynlp-lucene',
+        'modules:mynlp-lucene'
 ]
+
 
 include projects.toArray(new String[0])
 

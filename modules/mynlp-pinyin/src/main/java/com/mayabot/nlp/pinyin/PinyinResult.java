@@ -76,19 +76,20 @@ public class PinyinResult {
     }
 
     private static Pattern pattern = Pattern.compile("(^zh|^ch|^sh|iang$|ang$|ing$|eng$|uang$)");
-    private static ImmutableMap<String,String> fuzzyMap = ImmutableMap.<String,String>builder()
-            .put("zh","z")
-            .put("ch","c")
-            .put("sh","s")
-            .put("eng","en")
-            .put("ang","an")
-            .put("ing","in")
-            .put("iang","ian")
-            .put("uang","uan").build();
+    private static ImmutableMap<String, String> fuzzyMap = ImmutableMap.<String, String>builder()
+            .put("zh", "z")
+            .put("ch", "c")
+            .put("sh", "s")
+            .put("eng", "en")
+            .put("ang", "an")
+            .put("ing", "in")
+            .put("iang", "ian")
+            .put("uang", "uan").build();
 
     public static void main(String[] args) {
 
     }
+
     public List<String> asList() {
         List<String> list = Lists.newArrayListWithCapacity(pinyinList.size());
         int i = 0;

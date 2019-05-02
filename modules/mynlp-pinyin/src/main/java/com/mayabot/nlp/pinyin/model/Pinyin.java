@@ -29,10 +29,10 @@ package com.mayabot.nlp.pinyin.model;
 
 /**
  * 拼音，组成部分=声母+韵母+声调12345
+ *
  * @author hankcs
  */
-public enum Pinyin
-{
+public enum Pinyin {
     a1(Shengmu.none, Yunmu.a, 1, "ā", "a", PinyinHead.a, 'a'),
     a2(Shengmu.none, Yunmu.a, 2, "á", "a", PinyinHead.a, 'a'),
     a3(Shengmu.none, Yunmu.a, 3, "ǎ", "a", PinyinHead.a, 'a'),
@@ -1497,14 +1497,14 @@ public enum Pinyin
 
     /**
      * 构造一个拼音
-     * @param shengmu 声母
-     * @param yunmu 韵母
-     * @param tone 音调
+     *
+     * @param shengmu            声母
+     * @param yunmu              韵母
+     * @param tone               音调
      * @param pinyinWithToneMark 包含音调的字符串形式
-     * @param pinyinWithoutTone 不含音调的字符串形式
+     * @param pinyinWithoutTone  不含音调的字符串形式
      */
-    Pinyin(Shengmu shengmu, Yunmu yunmu, int tone, String pinyinWithToneMark, String pinyinWithoutTone, PinyinHead head, char firstChar)
-    {
+    Pinyin(Shengmu shengmu, Yunmu yunmu, int tone, String pinyinWithToneMark, String pinyinWithoutTone, PinyinHead head, char firstChar) {
         this.shengmu = shengmu;
         this.yunmu = yunmu;
         this.tone = tone;
@@ -1550,73 +1550,73 @@ public enum Pinyin
 
     /**
      * 获取声母
+     *
      * @return
      */
-    public Shengmu getShengmu()
-    {
+    public Shengmu getShengmu() {
         return shengmu;
     }
 
     /**
      * 获取韵母
+     *
      * @return
      */
-    public Yunmu getYunmu()
-    {
+    public Yunmu getYunmu() {
         return yunmu;
     }
 
     /**
      * 获取声调
+     *
      * @return
      */
-    public int getTone()
-    {
+    public int getTone() {
         return tone;
     }
 
     /**
      * 获取带音调的拼音
+     *
      * @return
      */
-    public String getPinyinWithToneMark()
-    {
+    public String getPinyinWithToneMark() {
         return pinyinWithToneMark;
     }
 
     /**
      * 获取纯字母的拼音
+     *
      * @return
      */
-    public String getPinyinWithoutTone()
-    {
+    public String getPinyinWithoutTone() {
         return pinyinWithoutTone;
     }
 
     /**
      * 获取输入法头
+     *
      * @return
      */
-    public String getHeadString()
-    {
+    public String getHeadString() {
         return head.toString();
     }
 
     /**
      * 获取输入法头
+     *
      * @return
      */
-    public PinyinHead getHead()
-    {
+    public PinyinHead getHead() {
         return head;
     }
 
     /**
      * 获取首字母
+     *
      * @return
      */
-    public char getFirstChar()
-    {
+    public char getFirstChar() {
         return firstChar;
     }
 }

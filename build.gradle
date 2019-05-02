@@ -14,8 +14,12 @@
  * limitations under the License.
  */
 
+plugins {
+    id "org.jetbrains.kotlin.jvm" version "1.3.30" apply false
+}
 apply plugin: 'idea'
 apply plugin: 'eclipse'
+
 
 description = "mynlp是mayabot开源的中文自然语言处理工具集"
 
@@ -28,7 +32,7 @@ def buildVersion = "2.1.0"
 def snapShot = true
 
 subprojects {
-    if(project.path==":modules" ){
+    if (project.path == ":modules") {
         return
     }
     description = "Maya Nlp subproject ${project.path}"
@@ -36,16 +40,22 @@ subprojects {
     group = 'com.mayabot.mynlp'
     version = buildVersion
 
-    if(snapShot){
+    if (snapShot) {
         version += "-SNAPSHOT"
     }
 
     apply plugin: 'java'
+    apply plugin: 'kotlin'
     apply plugin: 'maven-publish'
     apply plugin: 'signing'
 
     sourceCompatibility = '1.8'
     targetCompatibility = '1.8'
+
+    sourceSets {
+        main.kotlin.srcDirs = main.java.srcDirs
+        test.kotlin.srcDirs = test.java.srcDirs
+    }
 
 
     task sourceJar(type: Jar) {
@@ -57,40 +67,78 @@ subprojects {
         from javadoc.destinationDir
     }
 
-    publishing {
-        publications {
-            java(MavenPublication) {
+    if (project.name != "mynlp-cli" && project.name != "mynlp-example") {
 
-                from components.java
+        publishing {
+            publications {
+                java(MavenPublication) {
 
-                artifact sourceJar {
-                    classifier "sources"
-                }
+                    from components.java
 
-                artifact javadocJar {
-                    classifier "javadoc"
-                }
-                pom {
-                    name = 'mynlp'
-                    description = project.description
-                    url = 'https://github.com/mayabot/mynlp'
-                    licenses {
-                        license {
-                            name = 'The Apache License, Version 2.0'
-                            url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    artifact sourceJar {
+                        classifier "sources"
+                    }
+
+                    artifact javadocJar {
+                        classifier "javadoc"
+                    }
+                    pom {
+                        name = 'mynlp'
+                        description = project.description
+                        url = 'https://github.com/mayabot/mynlp'
+                        licenses {
+                            license {
+                                name = 'The Apache License, Version 2.0'
+                                url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                            }
+                        }
+                        developers {
+                            developer {
+                                id = 'jimichan'
+                                name = 'Jimi chan'
+                                email = 'jimichan@gmail.com'
+                            }
+                        }
+                        scm {
+                            connection = 'scm:git:git@github.com:mayabot/mynlp.git'
+                            developerConnection = 'scm:git:git@github.com:mayabot/mynlp.git'
+                            url = 'git@github.com:mayabot/mynlp.git'
                         }
                     }
-                    developers {
-                        developer {
-                            id = 'jimichan'
-                            name = 'Jimi chan'
-                            email = 'jimichan@gmail.com'
+
+                }
+
+            }
+
+            repositories {
+
+                if (project.hasProperty("maya_pri_user")) {
+                    maven {
+                        name 'MayaPrivate'
+                        if (project.version.endsWith('-SNAPSHOT')) {
+                            url "${maya_pri_snapshot}"
+                        } else {
+                            url = "${maya_pri_release}"
+                        }
+                        credentials {
+                            username "${maya_pri_user}"
+                            password "${maya_pri_pass}"
                         }
                     }
-                    scm {
-                        connection = 'scm:git:git@github.com:mayabot/mynlp.git'
-                        developerConnection = 'scm:git:git@github.com:mayabot/mynlp.git'
-                        url = 'git@github.com:mayabot/mynlp.git'
+                }
+
+                if (!snapShot && project.hasProperty("oss_user")) {
+                    maven {
+                        name 'OssPublic'
+                        if (project.version.endsWith('-SNAPSHOT')) {
+                            url "https://oss.sonatype.org/content/repositories/snapshots/"
+                        } else {
+                            url = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+                        }
+                        credentials {
+                            username "${oss_user}"
+                            password "${oss_password}"
+                        }
                     }
                 }
 
@@ -98,44 +146,9 @@ subprojects {
 
         }
 
-        repositories {
-
-            if(project.hasProperty("maya_pri_user")){
-                maven {
-                    name 'MayaPrivate'
-                    if (project.version.endsWith('-SNAPSHOT')) {
-                        url "${maya_pri_snapshot}"
-                    } else {
-                        url = "${maya_pri_release}"
-                    }
-                    credentials{
-                        username "${maya_pri_user}"
-                        password "${maya_pri_pass}"
-                    }
-                }
-            }
-
-            if(!snapShot && project.hasProperty("oss_user")){
-                maven {
-                    name 'OssPublic'
-                    if (project.version.endsWith('-SNAPSHOT')) {
-                        url "https://oss.sonatype.org/content/repositories/snapshots/"
-                    } else {
-                        url = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
-                    }
-                    credentials{
-                        username "${oss_user}"
-                        password "${oss_password}"
-                    }
-                }
-            }
-
+        signing {
+            sign publishing.publications.java
         }
-
-    }
-
-    signing {
-        sign publishing.publications.java
     }
 }
 
@@ -146,7 +159,7 @@ idea {
 }
 
 allprojects {
-    repositories{
+    repositories {
         mavenCentral()
     }
 }
@@ -162,12 +175,9 @@ if (JavaVersion.current().isJava8Compatible()) {
             options.encoding = "UTF-8"
             options.compilerArgs += ["-Xdoclint:none", "-Xlint:none", "-nowarn"]
         }
-//        tasks.withType(Test){
-//            enabled = false
-//        }
 
         tasks.withType(Javadoc) {
-            options{
+            options {
                 encoding "UTF-8"
                 charSet 'UTF-8'
                 links "http://docs.oracle.com/javase/8/docs/api"
