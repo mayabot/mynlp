@@ -57,7 +57,7 @@ public class MynlpEnv {
 
     private Settings settings;
 
-    private Map<String, ResoucesMissing> missingList = new ConcurrentHashMap<String, ResoucesMissing>();
+    private Map<String, ResourceMissing> missingList = new ConcurrentHashMap<String, ResourceMissing>();
 
     private String downloadBaseUrl = "http://cdn.mayabot.com/mynlp/files/";
 
@@ -76,7 +76,7 @@ public class MynlpEnv {
         settings = Settings.defaultSystemSettings();
     }
 
-    public void registeResourceMissing(String name, ResoucesMissing missing) {
+    public void registeResourceMissing(String name, ResourceMissing missing) {
         this.missingList.put(name, missing);
     }
 
@@ -136,7 +136,7 @@ public class MynlpEnv {
             boolean ps = false;
 
             if (resource == null) {
-                for (ResoucesMissing missing : missingList.values()) {
+                for (ResourceMissing missing : missingList.values()) {
                     boolean r = missing.process(resourceName, this);
                     if (r) {
                         ps = true;

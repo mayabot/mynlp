@@ -13,13 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.mayabot.nlp.perceptron;
+package com.mayabot.nlp.perceptron
 
 
-import com.mayabot.nlp.hppc.IntArrayList;
+import com.mayabot.nlp.hppc.IntArrayList
 
-import java.io.File;
-import java.util.List;
+import java.io.File
+
+
+typealias FeatureVector = IntArrayList
+
+typealias FeatureVectorSequence = List<FeatureVector>
 
 /**
  * 感知机模型。
@@ -40,46 +44,38 @@ import java.util.List;
  *
  * @author jimichan
  */
-public interface Perceptron {
-    /**
-     * 保存感知机模型实例
-     *
-     * @param dir File
-     */
-    void save(File dir);
-
+interface Perceptron {
 
     /**
      * 特征集合
      *
      * @return 特征集合
      */
-    FeatureSet featureSet();
+    fun featureSet(): FeatureSet
 
 
-    void makeSureParameter(int featureId);
+    fun makeSureParameter(featureId: Int)
 
     /**
-     *
-     * @param data 样例
+     * 在线学习版本的update
+     * @param data
      */
-    void update(TrainSample data);
-
-    void updateForOnlineLearn(TrainSample data);
+    fun onlineLearn(data: TrainSample)
 
     /**
-     * 压缩
+     * 压缩模型大小。删除权重不重要的特征
      * @param ratio 压缩比，0.1表示压缩去掉10%的特征
-     * @param threshold 特征最小得分
+     * @param threshold 特征最小得分,得分小于这个阈值就删除。
      */
-    void compress(double ratio, double threshold);
+    fun compress(ratio: Double, threshold: Double)
 
     /**
      * 解码
      *
      * @param featureSequence FeatureSequence 为一个浓缩的特征向量，最后一位是留给转移特征。
+     * @param guessLabel 结构保存在这个数组里面去
      */
-    void decode(List<IntArrayList> featureSequence, int[] guessLabel);
+    fun decode(featureSequence: FeatureVectorSequence, guessLabel: IntArray)
 
     /**
      * 解码
@@ -87,15 +83,14 @@ public interface Perceptron {
      * @param featureSequence FeatureSequence 稀疏特征向量的简短表示，最后一位是留给转移特征。
      * @return label对应的ID数组
      */
-    default int[] decode(List<IntArrayList> featureSequence) {
-        int[] result = new int[featureSequence.size()];
 
-        if (result.length == 0) {
-            return result;
-        }
+    fun decode(featureSequence: FeatureVectorSequence): IntArray
 
-        decode(featureSequence, result);
+    /**
+     * 保存感知机模型实例到二进制文件。
+     * 模型讲
+     * @param dir File 一个空的文件夹
+     */
+    fun save(dir: File)
 
-        return result;
-    }
 }
