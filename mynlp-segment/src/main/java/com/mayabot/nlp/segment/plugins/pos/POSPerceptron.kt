@@ -499,7 +499,7 @@ class POSEvaluateRunner(private val sampleList: List<TrainSample>) : EvaluateRun
             // 抽样10%进行验证
 //                count++
             total += sample.label.size
-            val result = model.decode(sample.featureMatrix)
+            val result = model.decode(sample.featureSequence)
             for (x in 0 until result.size) {
                 if (sample.label[x] == result[x]) {
                     right++

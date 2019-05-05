@@ -23,6 +23,14 @@ import java.io.InputStream
 
 /**
  * 特征集。主要功能是查询feature对应的Id.
+ * 逻辑上类似
+ * ["f1","f2","f3]
+ * 那么 f1对应的Id是0，f2对应的Id=1
+ * 每个特征都对应数组下标。
+ * FeatureSet中每个特征都有一个唯一的Int编号。
+ * 所谓特征就是字符串构成的特征，具体特征是什么有应用层自己去定义。
+ * 在mynlp中为了计算性能，需要在第一遍扫描语料时，构建FeatureSet是要求对所有的feature进行排序，
+ * 然后采用压缩性能更好的DAT结构来存储这些信息。
  * @author jimichan
  */
 class FeatureSet(
@@ -140,30 +148,5 @@ class FeatureSet(
 
 }
 
-/**
- * DAT的特征集合构建器
- */
-class DATFeatureSetBuilder(labelCount: Int) {
-
-    val keys = HashSet<String>()
-
-
-    init {
-        // Hanlp需要从 0=< <= labelCount 上站位 占用labelCount+1个位置
-        // 我们要保证这个排在前面
-        for (i in 0..labelCount) {
-            keys.add("\u0000\u0001BL=$i")
-        }
-    }
-
-    fun put(feature: String) {
-        keys.add(feature)
-    }
-
-    fun build(): FeatureSet {
-        val list = keys.sorted()
-        return FeatureSet(DoubleArrayTrie(list), list)
-    }
-}
 
 

@@ -60,7 +60,7 @@ class CWSPerceptron(val model: Perceptron) {
         val id = forOnlineLearn(sentence, model.featureSet())
         model.makeSureParameter(id)
         val sample = sentenceToSample(sentence, model.featureSet())
-        model.updateForOnlineLearn(sample)
+        model.onlineLearn(sample)
     }
 
     fun decodeToWordList(sentence: String): List<String> {
