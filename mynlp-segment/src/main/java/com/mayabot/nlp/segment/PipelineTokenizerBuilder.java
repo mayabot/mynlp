@@ -37,7 +37,7 @@ import java.util.function.Consumer;
  *
  * @author jimichan
  */
-public class PipelineTokenizerBuilder implements MynlpTokenizerBuilder {
+public class PipelineTokenizerBuilder implements LexerBuilder {
 
     private final Mynlp mynlp;
 
@@ -91,7 +91,7 @@ public class PipelineTokenizerBuilder implements MynlpTokenizerBuilder {
     private boolean enableIndexModel = false;
 
     @Override
-    public MynlpTokenizer build() {
+    public Lexer build() {
 
         setUp();
 

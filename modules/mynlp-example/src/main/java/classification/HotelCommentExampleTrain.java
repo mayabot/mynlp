@@ -3,6 +3,7 @@ package classification;
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
 import com.mayabot.mynlp.fasttext.FastText;
+import com.mayabot.mynlp.fasttext.FloatStringPair;
 import com.mayabot.nlp.classification.FasttextClassification;
 import com.mayabot.nlp.utils.DownloadUtils;
 
@@ -65,11 +66,13 @@ public class HotelCommentExampleTrain {
                         label = part;
                     }
                 }
-                String result = FasttextClassification.predict(model, line);
 
-                if (label.equals(result)) {
-                    success++;
-                } else {
+                FloatStringPair result = FasttextClassification.predictOne(model, line);
+
+                if (result != null) {
+                    if (label.equals(result.second)) {
+                        success++;
+                    }
                 }
 
                 total++;

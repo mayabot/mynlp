@@ -40,7 +40,7 @@ class PersonnameTest {
 
         for (line in strings) {
             println(line + "\n")
-            println(tokenizer.parse(line))
+            println(tokenizer.scan(line))
             println("\n")
         }
     }

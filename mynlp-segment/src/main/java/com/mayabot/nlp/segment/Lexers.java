@@ -23,7 +23,7 @@ import com.mayabot.nlp.segment.cws.CWSTokenizerBuilder;
  *
  * @author jimichan
  */
-public class Tokenizers {
+public class Lexers {
 
     /**
      * 默认配置的CoreTokenizer分词器。
@@ -32,7 +32,7 @@ public class Tokenizers {
      *
      * @return MynlpTokenizer分词器实例，可多线程使用
      */
-    public static MynlpTokenizer coreTokenizer() {
+    public static Lexer core() {
         return new CoreTokenizerBuilder().build();
     }
 
@@ -54,7 +54,7 @@ public class Tokenizers {
      *
      * @return MynlpTokenizer分词器实例，可多线程使用
      */
-    public static MynlpTokenizer cwsTokenizer() {
+    public static Lexer cwsTokenizer() {
         return cwsTokenizerBuilder().build();
     }
 

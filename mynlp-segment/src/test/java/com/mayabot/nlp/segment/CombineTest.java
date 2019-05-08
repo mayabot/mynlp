@@ -11,7 +11,7 @@ public class CombineTest {
     @Test
     public void test() {
 
-        MynlpTokenizer tokenizer = Tokenizers.coreTokenizer();
+        Lexer tokenizer = Lexers.core();
 
         String test = "体重182kg\n" +
                 "五十八公斤\n" +
@@ -30,7 +30,7 @@ public class CombineTest {
 
         int i = 0;
         for (String text : test.split("\n")) {
-            String t = tokenizer.parse(text).toWordString();
+            String t = tokenizer.scan(text).toPlainString();
             Assert.assertTrue(t + "--->" + result[i], t.equals(result[i].toLowerCase()));
             i++;
         }

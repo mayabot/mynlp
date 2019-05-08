@@ -14,23 +14,36 @@
  * limitations under the License.
  */
 
-package com.mayabot.nlp.segment.analyzer;
+package com.mayabot.nlp.segment.reader;
 
+import com.mayabot.nlp.segment.LexerReader;
 import com.mayabot.nlp.segment.WordTerm;
 import com.mayabot.nlp.utils.Characters;
+
+import java.util.function.Predicate;
 
 /**
  * 过滤标点符号
  *
  * @author jimichan
  */
-public class PunctuationFilter extends FilterWordTermGenerator implements
-        com.google.common.base.Predicate<WordTerm> {
+public class PunctuationFilter extends FilterLexerReader implements Predicate<WordTerm> {
 
-    public PunctuationFilter(WordTermGenerator base) {
-        super(base);
+
+    public PunctuationFilter() {
+        super(null);
     }
 
+    public PunctuationFilter(LexerReader source) {
+        super(source);
+    }
+
+    /**
+     * 如果是标点符号，返回false，表示排除
+     *
+     * @param term
+     * @return
+     */
     @Override
     public boolean test(WordTerm term) {
         if (term.word.length() == 1) {
@@ -43,11 +56,6 @@ public class PunctuationFilter extends FilterWordTermGenerator implements
                     !Characters.isPunctuation(term.word.charAt(1)) &&
                     !Characters.isPunctuation(term.word.charAt(2));
         }
-
     }
 
-    @Override
-    public boolean apply(WordTerm term) {
-        return test(term);
-    }
 }

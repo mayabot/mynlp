@@ -1,9 +1,8 @@
 package segment;
 
 import com.google.common.base.Joiner;
-import com.mayabot.nlp.segment.Analyzers;
-import com.mayabot.nlp.segment.MynlpAnalyzer;
-import com.mayabot.nlp.segment.MynlpTokenizer;
+import com.mayabot.nlp.segment.Lexer;
+import com.mayabot.nlp.segment.LexerReader;
 import com.mayabot.nlp.segment.core.CoreTokenizerBuilder;
 
 import java.io.BufferedReader;
@@ -36,35 +35,32 @@ public class HowFast {
 
         String text = Joiner.on("\n").join(lines);
 
-        MynlpTokenizer tokenizer = new CoreTokenizerBuilder()
+        Lexer lexer = new CoreTokenizerBuilder()
                 .setEnablePersonName(false)
                 .setEnablePOS(false)
                 .build();
-        MynlpAnalyzer analyzer = Analyzers.base(tokenizer);
 
-//        MynlpTokenizer tokenizer = new SimpleDictTokenizerBuilder().build();
+        LexerReader analyzer = lexer.reader();
 
-        final int charNum = lines.stream().mapToInt(it -> it.length()).sum();
+//        MynlpTokenizer lexer = new SimpleDictTokenizerBuilder().build();
+
+        final int charNum = lines.stream().mapToInt(String::length).sum();
 
 
         // 充分的预热，JVM会把部分方法调用编译为机器码
         try (BufferedReader reader = new BufferedReader(new StringReader(text))) {
-            analyzer.stream(reader).forEach(x -> {
+            analyzer.scan(reader).forEach(x -> {
             });
         }
-        lines.forEach(line -> {
-            tokenizer.parse(line);
-        });
 
+        lines.forEach(lexer::scan);
 
         System.currentTimeMillis();
 
         {
             long t1 = System.currentTimeMillis();
 
-            lines.forEach(line -> {
-                tokenizer.parse(line);
-            });
+            lines.forEach(lexer::scan);
 
             long t2 = System.currentTimeMillis();
 
@@ -76,7 +72,7 @@ public class HowFast {
 
 //        System.out.println("--------Ansj----");
 //        lines.forEach(line -> {
-//            ToAnalysis.parse(line);
+//            ToAnalysis.scan(line);
 //
 //        });
 //
@@ -84,7 +80,7 @@ public class HowFast {
 //            long t1 = System.currentTimeMillis();
 //
 //            lines.forEach(line -> {
-//                ToAnalysis.parse(line);
+//                ToAnalysis.scan(line);
 //
 //            });
 //            long t2 = System.currentTimeMillis();

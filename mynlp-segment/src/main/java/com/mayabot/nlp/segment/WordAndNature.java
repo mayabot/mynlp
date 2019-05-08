@@ -19,6 +19,7 @@ package com.mayabot.nlp.segment;
  * 词和词性访问接口
  */
 public interface WordAndNature {
+
     String getWord();
 
     String getNatureName();

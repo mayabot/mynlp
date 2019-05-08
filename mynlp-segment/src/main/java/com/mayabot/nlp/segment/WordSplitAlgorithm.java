@@ -30,7 +30,11 @@ import org.jetbrains.annotations.NotNull;
  *
  * 在一个具体的分词器中，有可能综合同时使用多个分词算法。
  *
- *  @author jimichan
+ * @see com.mayabot.nlp.segment.plugins.AtomSplitAlgorithm
+ * @see com.mayabot.nlp.segment.cws.CWSSplitAlgorithm
+ * @see com.mayabot.nlp.segment.core.CoreDictionarySplitAlgorithm
+ * @see com.mayabot.nlp.segment.plugins.personname.PersonNameAlgorithm
+ * @author jimichan
  */
 public interface WordSplitAlgorithm extends SegmentComponent {
 

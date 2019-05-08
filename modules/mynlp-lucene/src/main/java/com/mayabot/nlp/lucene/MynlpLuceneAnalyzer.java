@@ -1,6 +1,6 @@
 package com.mayabot.nlp.lucene;
 
-import com.mayabot.nlp.segment.MynlpAnalyzer;
+import com.mayabot.nlp.segment.LexerReader;
 import org.apache.lucene.analysis.Analyzer;
 
 /**
@@ -8,19 +8,18 @@ import org.apache.lucene.analysis.Analyzer;
  */
 public class MynlpLuceneAnalyzer extends Analyzer {
 
-    private MynlpAnalyzer mynlpAnalyzer;
+    private LexerReader lexerReader;
 
-    public MynlpLuceneAnalyzer(MynlpAnalyzer mynlpAnalyzer) {
-        this.mynlpAnalyzer = mynlpAnalyzer;
+    public MynlpLuceneAnalyzer(LexerReader lexerReader) {
+        this.lexerReader = lexerReader;
     }
 
     @Override
     protected TokenStreamComponents createComponents(final String fieldName) {
 
-        final MynlpLuceneTokenizer src = new MynlpLuceneTokenizer(mynlpAnalyzer);
+        final MynlpLuceneTokenizer src = new MynlpLuceneTokenizer(lexerReader);
 
         return new TokenStreamComponents(src, src);
     }
-
 
 }

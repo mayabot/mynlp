@@ -23,25 +23,25 @@ import java.util.function.Consumer;
 
 /**
  * MynlpTokenizer分词器接口,只需要作用是把一句话或一小段有限长度的文本分词.
- *
+ * <p>
  * 切词器的实现类是个无状态，所以可以多线程安全，同一个配置只需要一个实例共享使用。
  * 所以一个固定的算法的切分,只需要一个实例。
  *
+ * @since 2.1.0
  * @author jimichan
  * @see PipelineTokenizer
- * @see MynlpTokenizerBuilder
+ * @see LexerBuilder
  * @see PipelineTokenizerBuilder
  */
-public interface MynlpTokenizer {
+public interface Lexer {
 
     /**
-     * 对text进行分词，结构保存在List<WordTerm>,
-     * token不会对target清空，只会add。
+     * 对text进行分词
      *
      * @param text     分词的文本
      * @param consumer 对WordTerm对象消费者
      */
-    void token(char[] text, Consumer<WordTerm> consumer);
+    void scan(char[] text, Consumer<WordTerm> consumer);
 
 
     /**
@@ -50,25 +50,34 @@ public interface MynlpTokenizer {
      * @param text     分词文本
      * @param consumer token消费者
      */
-    default void token(String text, Consumer<WordTerm> consumer) {
-        token(text.toCharArray(), consumer);
+    default void scan(String text, Consumer<WordTerm> consumer) {
+        scan(text.toCharArray(), consumer);
     }
 
     /**
      * 便捷方法。不适用于超大文本
+     *
      * @param text 需要分词的文本
      * @return Sentence 中文句子
      */
-    default Sentence parse(String text) {
+    default Sentence scan(String text) {
+
         if (text == null || text.isEmpty()) {
-            return new Sentence();
+            return Sentence.of();
         }
 
         List<WordTerm> target = Lists.newArrayListWithExpectedSize(Math.min(text.length() / 2, 4));
+        scan(text.toCharArray(), target::add);
 
-        token(text.toCharArray(), target::add);
+        return Sentence.of(target);
+    }
 
-        return new Sentence(target);
+    default LexerReader reader() {
+        return LexerReader.from(this);
+    }
+
+    default LexerReader filterReader(boolean punctuation, boolean stopWord) {
+        return LexerReader.filter(this, punctuation, stopWord);
     }
 
 }

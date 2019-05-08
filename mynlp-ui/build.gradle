@@ -1,0 +1,31 @@
+plugins {
+    id 'org.springframework.boot' version '2.1.3.RELEASE'
+    id 'org.jetbrains.kotlin.plugin.spring' version '1.3.31'
+}
+
+apply plugin: 'io.spring.dependency-management'
+
+description = "Mynlp UI"
+
+dependencies {
+    compile 'org.springframework.boot:spring-boot-starter-web'
+    compile 'com.fasterxml.jackson.module:jackson-module-kotlin'
+
+    // mynlp
+    compile project(":mynlp-segment")
+    compile project(":modules:mynlp-classification")
+    compile project(":modules:mynlp-pinyin")
+    compile project(":modules:mynlp-summary")
+    compile project(":modules:mynlp-transform")
+}
+
+compileKotlin {
+    kotlinOptions {
+        freeCompilerArgs = ['-Xjsr305=strict']
+        jvmTarget = '1.8'
+    }
+}
+
+bootJar {
+    launchScript()
+}

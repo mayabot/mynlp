@@ -39,7 +39,7 @@ import java.util.function.Consumer;
  */
 public class Wordpath {
 
-    static InternalLogger logger = InternalLoggerFactory.getInstance(Wordpath.class);
+    private static InternalLogger logger = InternalLoggerFactory.getInstance(Wordpath.class);
 
     private BitSet bitSet;
 
@@ -89,7 +89,7 @@ public class Wordpath {
 
                 boolean hasNext = pointer.next();
 
-                if (hasNext == false) {
+                if (!hasNext) {
                     return endOfData();
                 }
 

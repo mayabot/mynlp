@@ -1,9 +1,8 @@
 package com.mayabot.nlp.lucene;
 
-import com.mayabot.nlp.segment.MynlpAnalyzer;
-import com.mayabot.nlp.segment.MynlpTokenizer;
-import com.mayabot.nlp.segment.Tokenizers;
-import com.mayabot.nlp.segment.analyzer.DefaultMynlpAnalyzer;
+import com.mayabot.nlp.segment.Lexer;
+import com.mayabot.nlp.segment.LexerReader;
+import com.mayabot.nlp.segment.Lexers;
 import com.mayabot.nlp.segment.core.CoreTokenizerBuilder;
 import com.mayabot.nlp.segment.cws.CWSTokenizerBuilder;
 
@@ -12,9 +11,9 @@ import com.mayabot.nlp.segment.cws.CWSTokenizerBuilder;
  */
 public class MynlpAnalyzerFactory {
 
-    private boolean filterStopword = false;
-
     private boolean filterPunctuaction = true;
+
+    private boolean filterStopword = false;
 
     private String type = "core"; //  cws
 
@@ -26,23 +25,19 @@ public class MynlpAnalyzerFactory {
     private boolean correction = true;
 
 
-    public MynlpAnalyzer getObject() {
-        DefaultMynlpAnalyzer analyzer = new DefaultMynlpAnalyzer(buildTokenizer())
-                .setFilterPunctuaction(filterPunctuaction)
-                .setFillStopWord(filterStopword);
-        return analyzer;
+    public LexerReader getObject() {
+        return buildLexer().filterReader(filterPunctuaction, filterStopword);
     }
 
-    private MynlpTokenizer buildTokenizer() {
-        MynlpTokenizer tokenizer = null;
+    private Lexer buildLexer() {
+        Lexer tokenizer = null;
         if ("cws".equalsIgnoreCase(type)) {
-            CWSTokenizerBuilder builder = Tokenizers.cwsTokenizerBuilder();
+            CWSTokenizerBuilder builder = Lexers.cwsTokenizerBuilder();
             builder.setEnableCorrection(correction);
             builder.setEnableIndexModel(indexWordModel);
             tokenizer = builder.build();
-
         } else if ("core".equalsIgnoreCase(type)) {
-            CoreTokenizerBuilder builder = Tokenizers.coreTokenizerBuilder();
+            CoreTokenizerBuilder builder = Lexers.coreTokenizerBuilder();
             builder.setEnableCorrection(correction);
             builder.setEnableIndexModel(indexWordModel);
             tokenizer = builder.build();

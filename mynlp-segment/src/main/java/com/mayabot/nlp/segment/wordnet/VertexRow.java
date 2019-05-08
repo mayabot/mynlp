@@ -46,8 +46,7 @@ public class VertexRow implements Iterable<Vertex> {
     /**
      * 包含Vertex的数量
      */
-    int size;
-
+    private int size;
 
     VertexRow(int rowNum, Wordnet wordnet) {
         this.rowNum = rowNum;

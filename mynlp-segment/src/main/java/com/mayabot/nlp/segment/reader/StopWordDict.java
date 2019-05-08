@@ -1,4 +1,4 @@
-package com.mayabot.nlp.segment.analyzer;
+package com.mayabot.nlp.segment.reader;
 
 import com.google.common.collect.Sets;
 import com.google.inject.Inject;
@@ -7,20 +7,26 @@ import com.mayabot.nlp.MynlpEnv;
 import com.mayabot.nlp.resources.NlpResource;
 import com.mayabot.nlp.utils.CharSourceLineReader;
 
-import java.io.IOException;
 import java.util.Set;
 
+/**
+ * 停用词词典
+ *
+ * @author jimichan
+ */
 @Singleton
 public class StopWordDict {
 
-    Set<String> set;
+    private Set<String> stopWords;
+
 
     @Inject
-    public StopWordDict(MynlpEnv env) throws IOException {
+    public StopWordDict(MynlpEnv env) {
 
         Set<String> set = Sets.newHashSet();
 
         NlpResource resource = env.loadResource("stopword-dict/stopwords.txt");
+
         try (CharSourceLineReader reader = resource.openLineReader()) {
             while (reader.hasNext()) {
 
@@ -29,18 +35,18 @@ public class StopWordDict {
                 set.add(line.trim());
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
 
-        this.set = set;
+        this.stopWords = set;
     }
 
-    public Set<String> getSet() {
-        return set;
+    public Set<String> getStopWords() {
+        return stopWords;
     }
 
-    public StopWordDict setSet(Set<String> set) {
-        this.set = set;
+    public StopWordDict setStopWords(Set<String> stopWords) {
+        this.stopWords = stopWords;
         return this;
     }
 }

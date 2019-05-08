@@ -2,8 +2,8 @@ package com.mayabot.nlp.summary;
 
 import com.mayabot.nlp.algorithm.TopMaxK;
 import com.mayabot.nlp.common.Pair;
-import com.mayabot.nlp.segment.Analyzers;
-import com.mayabot.nlp.segment.MynlpAnalyzer;
+import com.mayabot.nlp.segment.LexerReader;
+import com.mayabot.nlp.segment.Lexers;
 
 import java.io.Reader;
 import java.io.StringReader;
@@ -32,7 +32,7 @@ public class KeywordSummary {
 
     private float minDiff = 0.001f;
 
-    private MynlpAnalyzer analyzer = Analyzers.standard();
+    private LexerReader lexerReader = Lexers.core().filterReader(true, true);
 
 
     public List<String> keyword(String text, int top) {
@@ -68,7 +68,7 @@ public class KeywordSummary {
         Map<String, Set<String>> words = new TreeMap<>();
         Queue<String> que = new LinkedList<>();
 
-        analyzer.stream(reader).map(it -> it.word).forEach(w -> {
+        lexerReader.scan(reader).stream().map(it -> it.word).forEach(w -> {
             if (!words.containsKey(w)) {
                 words.put(w, new TreeSet<>());
             }
@@ -125,18 +125,18 @@ public class KeywordSummary {
         return (float) (1d / (1d + Math.exp(-value)));
     }
 
-    public MynlpAnalyzer getAnalyzer() {
-        return analyzer;
+    public LexerReader getLexerReader() {
+        return lexerReader;
     }
 
     /**
      * 设置新的分词器。默认是去除停用词和标点符号的
      *
-     * @param analyzer
+     * @param lexerReader
      * @return
      */
-    public KeywordSummary setAnalyzer(MynlpAnalyzer analyzer) {
-        this.analyzer = analyzer;
+    public KeywordSummary setLexerReader(LexerReader lexerReader) {
+        this.lexerReader = lexerReader;
         return this;
     }
 

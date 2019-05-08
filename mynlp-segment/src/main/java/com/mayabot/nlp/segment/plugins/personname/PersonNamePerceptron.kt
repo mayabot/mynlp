@@ -42,7 +42,7 @@ data class PersonName(val name: String, val offset: Int)
  */
 class PersonNamePerceptron(val model: Perceptron) {
 
-    private val featureSet = model.featureSet()!!
+    private val featureSet = model.featureSet()
 
     /**
      * 保存分词模型

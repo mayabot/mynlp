@@ -8,14 +8,13 @@ public class IndexSegmentTest {
     @Test
     public void test() {
 
-        MynlpTokenizer mynlpTokenizer = Tokenizers.
+        Lexer mynlpTokenizer = Lexers.
                 coreTokenizerBuilder()
                 .setEnableIndexModel(true)
                 .build();
 
 
-        System.out.println(mynlpTokenizer.parse("中华人民共和国的利益"));
-
+        System.out.println(mynlpTokenizer.scan("中华人民共和国的利益"));
 
     }
 }
