@@ -16,17 +16,17 @@
 package com.mayabot.nlp.segment;
 
 /**
- * MynlpTokenizer构建器接口
+ * Lexer构建器接口
  *
  * @author jimichan
  */
-public interface MynlpTokenizerBuilder {
+public interface LexerBuilder {
 
     /**
      * 构建一个MynlpTokenizer
      *
      * @return MynlpTokenizer实例
      */
-    MynlpTokenizer build();
+    Lexer build();
 
 }

@@ -37,7 +37,7 @@ import java.util.stream.Collectors;
  *
  * @author jimichan
  */
-public class PipelineTokenizer implements MynlpTokenizer {
+public class PipelineTokenizer implements Lexer {
 
     private BestPathAlgorithm bestPathAlgorithm;
 
@@ -76,7 +76,7 @@ public class PipelineTokenizer implements MynlpTokenizer {
     }
 
     @Override
-    public void token(char[] text, Consumer<WordTerm> consumer) {
+    public void scan(char[] text, Consumer<WordTerm> consumer) {
 
         if (charNormalizes != null) {
             for (CharNormalize normalize : charNormalizes) {

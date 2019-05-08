@@ -323,7 +323,7 @@ public enum Nature {
     static Map<String, Nature> map;
 
     static {
-        //三倍空间，降低hash冲突
+        //五倍空间，降低hash冲突
         map = new HashMap<>(Nature.values().length * 5);
         for (Nature n : Nature.values()) {
             map.put(n.name(), n);

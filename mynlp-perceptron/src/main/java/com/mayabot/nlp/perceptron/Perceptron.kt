@@ -20,7 +20,6 @@ import com.mayabot.nlp.hppc.IntArrayList
 
 import java.io.File
 
-
 typealias FeatureVector = IntArrayList
 
 typealias FeatureVectorSequence = List<FeatureVector>

@@ -19,14 +19,16 @@ List projects = [
         'mynlp-core',
         'mynlp-segment',
         'mynlp-perceptron',
-        'modules:mynlp-cli',
+        'mynlp-ui',
+//        'modules:mynlp-cli',
         'modules:mynlp-pinyin',
         'modules:mynlp-transform',
         'modules:mynlp-classification',
         'modules:mynlp-newword',
         'modules:mynlp-summary',
         'modules:mynlp-example',
-        'modules:mynlp-lucene'
+        'modules:mynlp-lucene',
+        'modules:mynlp-elasticsearch6'
 ]
 
 

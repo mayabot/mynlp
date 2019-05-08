@@ -1,7 +1,6 @@
 package com.mayabot.nlp.lucene;
 
-import com.mayabot.nlp.segment.Analyzers;
-import com.mayabot.nlp.segment.Tokenizers;
+import com.mayabot.nlp.segment.Lexers;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.analysis.tokenattributes.OffsetAttribute;
@@ -9,12 +8,12 @@ import org.apache.lucene.analysis.tokenattributes.PositionIncrementAttribute;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class UseAnalyzer {
+public class LuceneAnalyzerTest {
 
     @Test
     public void test() throws Exception {
         MynlpLuceneAnalyzer analyzer = new MynlpLuceneAnalyzer(
-                Analyzers.standard(Tokenizers.coreTokenizer())
+                Lexers.core().filterReader(true, true)
         );
 
         TokenStream tokenStream = analyzer.tokenStream("title", "商品和服务，上海市副市长，Git有很多优势，其中之一就是远程操作非常简便。本文详细介绍5个Git命令，它们的概念和用法，理解了这些内容，你就会完全掌握Git远程操作。");

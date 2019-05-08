@@ -1,6 +1,5 @@
 package com.mayabot.nlp.segment
 
-import com.mayabot.nlp.segment.analyzer.DefaultMynlpAnalyzer
 import org.junit.Assert
 import org.junit.Test
 import java.io.StringReader
@@ -18,10 +17,9 @@ class OffsetTest {
 
     @Test
     fun test() {
-        val wordTerms = Tokenizers.coreTokenizer().parse(text).asWordList()
+        val stream = Lexers.core().scan(text).stream()
 
-
-        val count = wordTerms.stream().filter { it ->
+        val count = stream.filter { it ->
             text.substring(it.offset, it.offset + it.length())
                     .toLowerCase() != it.word
         }
@@ -33,8 +31,7 @@ class OffsetTest {
 
     @Test
     fun test21() {
-        val wordTerms = DefaultMynlpAnalyzer(Tokenizers.coreTokenizer()).stream(StringReader(text))
-
+        val wordTerms = Lexers.core().filterReader(true, false).scan(StringReader(text))
 
         val count = wordTerms.filter { it ->
             text.substring(it.offset, it.offset + it.length())
@@ -42,14 +39,12 @@ class OffsetTest {
         }
                 .count()
 
-        Assert.assertTrue(count == 0L)
-
+        Assert.assertTrue(count == 0)
     }
 
     @Test
-    fun test2() {
-        val wordTerms = DefaultMynlpAnalyzer(Tokenizers.coreTokenizer()).stream(text)
-
+    fun test22() {
+        val wordTerms = Lexers.core().filterReader(true, true).scan(StringReader(text))
 
         val count = wordTerms.filter { it ->
             text.substring(it.offset, it.offset + it.length())
@@ -57,17 +52,15 @@ class OffsetTest {
         }
                 .count()
 
-        Assert.assertTrue(count == 0L)
-
+        Assert.assertTrue(count == 0)
     }
 
     @Test
     fun test3() {
-        val wordTerms = DefaultMynlpAnalyzer(Tokenizers.coreTokenizer()).stream("")
-
+        val wordTerms = Lexers.core().filterReader(true, false).scan(StringReader(""))
         val count = wordTerms.count()
 
-        Assert.assertTrue(count == 0L)
+        Assert.assertTrue(count == 0)
 
     }
 }

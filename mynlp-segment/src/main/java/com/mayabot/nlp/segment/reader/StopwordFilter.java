@@ -14,28 +14,43 @@
  * limitations under the License.
  */
 
-package com.mayabot.nlp.segment.analyzer;
+package com.mayabot.nlp.segment.reader;
 
+import com.mayabot.nlp.Mynlps;
+import com.mayabot.nlp.segment.LexerReader;
 import com.mayabot.nlp.segment.WordTerm;
 
+import java.util.HashSet;
 import java.util.Set;
-import java.util.function.Predicate;
 
 /**
  * 过滤停用词
  *
  * @author jimichan
  */
-public class StopwordFilter extends FilterWordTermGenerator implements Predicate<WordTerm>,
-        com.google.common.base.Predicate<WordTerm> {
+public class StopwordFilter extends FilterLexerReader {
 
-    Set<String> stopWords;
+    Set<String> stopWords = new HashSet<String>();
 
-    public StopwordFilter(WordTermGenerator base, Set<String> stopwords) {
-        super(base);
-        stopWords = stopwords;
+    public StopwordFilter(LexerReader source, Set<String> stopWords) {
+        super(source);
+        this.stopWords = stopWords;
     }
 
+    /**
+     * 默认使用系统自带的停用词
+     *
+     * @param source
+     */
+    public StopwordFilter(LexerReader source) {
+        super(source);
+        Set<String> defaultSet = Mynlps.instanceOf(StopWordDict.class).getStopWords();
+        Set<String> words = new HashSet<>();
+        if (defaultSet != null) {
+            words.addAll(defaultSet);
+        }
+        this.stopWords = words;
+    }
 
     public Set<String> getStopWords() {
         return stopWords;
@@ -47,11 +62,6 @@ public class StopwordFilter extends FilterWordTermGenerator implements Predicate
 
     public void remove(String word) {
         stopWords.remove(word);
-    }
-
-    @Override
-    public boolean apply(WordTerm term) {
-        return !stopWords.contains(term.word);
     }
 
     @Override

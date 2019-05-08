@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 plugins {
     id "org.jetbrains.kotlin.jvm" version "1.3.31" apply false
 }
+
 apply plugin: 'idea'
 apply plugin: 'eclipse'
 
@@ -49,10 +49,19 @@ subprojects {
         version += "-SNAPSHOT"
     }
 
+    def toPublish = true
+
+    if(project.name == "mynlp-ui" || project.name == "mynlp-cli" || project.name == "mynlp-example"){
+        toPublish = false
+    }
+
     apply plugin: 'java'
     apply plugin: 'kotlin'
-    apply plugin: 'maven-publish'
-    apply plugin: 'signing'
+
+    if(toPublish){
+        apply plugin: 'maven-publish'
+        apply plugin: 'signing'
+    }
 
     sourceCompatibility = '1.8'
     targetCompatibility = '1.8'
@@ -63,16 +72,16 @@ subprojects {
     }
 
 
-    task sourceJar(type: Jar) {
-        from sourceSets.main.allSource
-    }
+    if (toPublish) {
 
-    task javadocJar(type: Jar, dependsOn: javadoc) {
-        classifier "javadoc"
-        from javadoc.destinationDir
-    }
+        task sourceJar(type: Jar) {
+            from sourceSets.main.allSource
+        }
 
-    if (project.name != "mynlp-cli" && project.name != "mynlp-example") {
+        task javadocJar(type: Jar, dependsOn: javadoc) {
+            classifier "javadoc"
+            from javadoc.destinationDir
+        }
 
         publishing {
             publications {
@@ -146,9 +155,7 @@ subprojects {
                         }
                     }
                 }
-
             }
-
         }
 
         signing {
@@ -162,9 +169,6 @@ idea {
         vcs = 'Git'
     }
 }
-
-
-
 
 if (JavaVersion.current().isJava8Compatible()) {
     allprojects {

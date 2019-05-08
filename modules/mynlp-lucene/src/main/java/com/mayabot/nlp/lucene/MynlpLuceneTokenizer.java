@@ -1,6 +1,7 @@
 package com.mayabot.nlp.lucene;
 
-import com.mayabot.nlp.segment.MynlpAnalyzer;
+import com.mayabot.nlp.segment.Lexer;
+import com.mayabot.nlp.segment.LexerReader;
 import com.mayabot.nlp.segment.Nature;
 import com.mayabot.nlp.segment.WordTerm;
 import org.apache.lucene.analysis.Tokenizer;
@@ -13,12 +14,20 @@ import java.io.IOException;
 import java.util.Iterator;
 
 /**
- * Tokenizer的实现依赖Mynlp的MynlpAnalyzer具体实现。
+ * Tokenizer的实现依赖Mynlp的LexerReader具体实现。
  * Tokenizer 接口兼容lucene5.0+，至少到7+还是兼容的。
  *
  * @author jimichan
  */
 final public class MynlpLuceneTokenizer extends Tokenizer {
+
+    public static Tokenizer fromLexer(LexerReader lexerReader) {
+        return new MynlpLuceneTokenizer(lexerReader);
+    }
+
+    public static Tokenizer fromLexer(Lexer lexer) {
+        return new MynlpLuceneTokenizer(lexer.reader());
+    }
 
     /**
      * 当前词
@@ -39,15 +48,15 @@ final public class MynlpLuceneTokenizer extends Tokenizer {
 
     private Iterator<WordTerm> iterator;
 
-    private MynlpAnalyzer mynlpAnalyzer;
+    private final LexerReader lexerReader;
 
     /**
      * Lucene Tokenizer的Mynlp插件实现
      *
-     * @param mynlpAnalyzer MynlpAnalyzer接口的实现
+     * @param lexerReader LexerReader
      */
-    public MynlpLuceneTokenizer(MynlpAnalyzer mynlpAnalyzer) {
-        this.mynlpAnalyzer = mynlpAnalyzer;
+    public MynlpLuceneTokenizer(LexerReader lexerReader) {
+        this.lexerReader = lexerReader;
     }
 
     /**
@@ -91,7 +100,7 @@ final public class MynlpLuceneTokenizer extends Tokenizer {
     @Override
     public void reset() throws IOException {
         super.reset();
-        iterator = mynlpAnalyzer.parse(this.input).iterator();
+        iterator = lexerReader.scan(this.input).iterator();
     }
 
 }
