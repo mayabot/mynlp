@@ -15,5 +15,5 @@ public class DefaultCharNormalize implements CharNormalize {
         CharNormUtils.convert(text);
     }
 
-    public static final DefaultCharNormalize instace = new DefaultCharNormalize();
+    public static final DefaultCharNormalize instance = new DefaultCharNormalize();
 }

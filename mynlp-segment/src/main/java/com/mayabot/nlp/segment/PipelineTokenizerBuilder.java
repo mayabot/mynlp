@@ -50,7 +50,7 @@ public class PipelineTokenizerBuilder implements LexerBuilder {
      * 字符处理器,默认就有最小化和全角半角化
      */
     private List<CharNormalize> charNormalizes = Lists.newArrayList(
-            DefaultCharNormalize.instace
+            DefaultCharNormalize.instance
     );
 
     /**

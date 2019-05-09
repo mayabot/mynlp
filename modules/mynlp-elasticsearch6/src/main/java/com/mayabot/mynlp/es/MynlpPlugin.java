@@ -17,23 +17,25 @@
 
 package com.mayabot.mynlp.es;
 
-import com.mayabot.nlp.Mynlps;
 import org.apache.lucene.analysis.Analyzer;
 import org.elasticsearch.SpecialPermission;
 import org.elasticsearch.common.settings.Settings;
-import org.elasticsearch.env.Environment;
 import org.elasticsearch.index.analysis.AnalyzerProvider;
 import org.elasticsearch.index.analysis.TokenizerFactory;
 import org.elasticsearch.indices.analysis.AnalysisModule;
 import org.elasticsearch.plugins.AnalysisPlugin;
 import org.elasticsearch.plugins.Plugin;
 
-import java.io.File;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 
 public class MynlpPlugin extends Plugin implements AnalysisPlugin {
+
+    /**
+     * cws模型比较重，默认不开启。
+     */
+    private boolean enableCws;
 
     public MynlpPlugin(Settings settings, Path configPath) {
 
@@ -42,11 +44,7 @@ public class MynlpPlugin extends Plugin implements AnalysisPlugin {
             sm.checkPermission(new SpecialPermission());
         }
 
-        Environment environment = new Environment(settings, configPath);
-
-        // 设定Mynlp的工作目录
-        Path path = environment.dataFiles()[0];
-        Mynlps.setDataDir(path.toString() + File.separator + "mynlp.data");
+        enableCws = settings.getAsBoolean("mynlp.cws", false);
     }
 
     @Override
@@ -55,7 +53,10 @@ public class MynlpPlugin extends Plugin implements AnalysisPlugin {
 
         extra.put("mynlp", MynlpTokenizerFactory::new);
         extra.put("mynlp-core", MynlpTokenizerFactory::new);
-        extra.put("mynlp-cws", MynlpTokenizerFactory::new);
+        if (enableCws) {
+            extra.put("mynlp-cws", MynlpTokenizerFactory::new);
+        }
+
         return extra;
     }
 
@@ -63,12 +64,15 @@ public class MynlpPlugin extends Plugin implements AnalysisPlugin {
     @Override
     public Map<String, AnalysisModule.AnalysisProvider<AnalyzerProvider<? extends Analyzer>>> getAnalyzers() {
 
+        //开启异步线程，先执行一个core的分词，试图去下载依赖的资源
+
         Map<String, AnalysisModule.AnalysisProvider<AnalyzerProvider<? extends Analyzer>>> map = new HashMap<>();
 
         map.put("mynlp", MynlpAnalyzerProvider::new);
         map.put("mynlp-core", MynlpAnalyzerProvider::new);
-        map.put("mynlp-cws", MynlpAnalyzerProvider::new);
-
+        if (enableCws) {
+            map.put("mynlp-cws", MynlpAnalyzerProvider::new);
+        }
 
         return map;
     }
