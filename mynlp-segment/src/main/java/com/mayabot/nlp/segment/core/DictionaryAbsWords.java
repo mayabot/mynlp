@@ -169,8 +169,4 @@ public class DictionaryAbsWords {
      */
     public final static String M_TAG = "\u00019Num";
 
-//    /**
-//     * 其它 XX
-//     */
-//    public final static String TAG_OTHER = "\u0001AOther";
 }

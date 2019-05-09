@@ -17,16 +17,14 @@ package com.mayabot.nlp;
 
 import com.google.common.base.Charsets;
 import com.google.common.collect.ImmutableList;
-import com.google.common.io.ByteStreams;
 import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
 import com.mayabot.nlp.resources.ClasspathNlpResourceFactory;
 import com.mayabot.nlp.resources.NlpResource;
 import com.mayabot.nlp.resources.NlpResourceFactory;
+import com.mayabot.nlp.utils.DownloadUtils;
 
-import java.io.*;
-import java.net.URL;
-import java.net.URLConnection;
+import java.io.File;
 import java.nio.charset.Charset;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
@@ -210,20 +208,9 @@ public class MynlpEnv {
             }
 
             try {
-                URL url = new URL(downloadBaseUrl + fileName);
+                String url = downloadBaseUrl + fileName;
 
-                URLConnection connection = url.openConnection();
-
-                connection.setConnectTimeout(5000);
-                connection.setReadTimeout(5000);
-                System.out.println("Downloading " + url);
-                connection.connect();
-
-                try (InputStream inputStream = new BufferedInputStream(connection.getInputStream());
-                     OutputStream out = new BufferedOutputStream(new FileOutputStream(file))
-                ) {
-                    ByteStreams.copy(inputStream, out);
-                }
+                DownloadUtils.download(url, file);
 
                 System.out.println("Downloaded " + fileName + " , save to " + file);
 

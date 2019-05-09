@@ -84,10 +84,4 @@ public class CharNormUtils {
         return new String(chars);
     }
 
-    public static void main(String[] args) throws Exception {
-
-        System.out.println(convert("今日/t 股价/n 指数/n ＝/w (/w 今日/t 市价/n 总值/n //w 基期/n 市价/n 总值/n )/w ×/w 100/nx 。/w 市价/n 总值/n 为/v 当天/t 全部/m 股票/n 的/u 收盘价/n 乘以/v 总/b 发行/vn 股数/n 。/w 这样/r ,/w 以/p \"/w 基期/n \"/w 为/v 参照系/n ,/w \"/w 今日/t \"/w 股价/n 的/u 涨涨落落/vn 也/d 就/d 一目了然/i 了/y 。/w"));
-
-    }
-
 }
