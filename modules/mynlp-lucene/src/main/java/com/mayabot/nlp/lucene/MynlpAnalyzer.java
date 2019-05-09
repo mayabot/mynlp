@@ -6,18 +6,18 @@ import org.apache.lucene.analysis.Analyzer;
 /**
  * @author jimichan
  */
-public class MynlpLuceneAnalyzer extends Analyzer {
+public class MynlpAnalyzer extends Analyzer {
 
     private LexerReader lexerReader;
 
-    public MynlpLuceneAnalyzer(LexerReader lexerReader) {
+    public MynlpAnalyzer(LexerReader lexerReader) {
         this.lexerReader = lexerReader;
     }
 
     @Override
     protected TokenStreamComponents createComponents(final String fieldName) {
 
-        final MynlpLuceneTokenizer src = new MynlpLuceneTokenizer(lexerReader);
+        final MynlpTokenizer src = new MynlpTokenizer(lexerReader);
 
         return new TokenStreamComponents(src, src);
     }
