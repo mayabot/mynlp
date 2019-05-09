@@ -12,7 +12,7 @@ public class LuceneAnalyzerTest {
 
     @Test
     public void test() throws Exception {
-        MynlpLuceneAnalyzer analyzer = new MynlpLuceneAnalyzer(
+        MynlpAnalyzer analyzer = new MynlpAnalyzer(
                 Lexers.core().filterReader(true, true)
         );
 

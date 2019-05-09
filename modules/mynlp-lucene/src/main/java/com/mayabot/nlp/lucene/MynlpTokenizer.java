@@ -19,14 +19,14 @@ import java.util.Iterator;
  *
  * @author jimichan
  */
-final public class MynlpLuceneTokenizer extends Tokenizer {
+final public class MynlpTokenizer extends Tokenizer {
 
     public static Tokenizer fromLexer(LexerReader lexerReader) {
-        return new MynlpLuceneTokenizer(lexerReader);
+        return new MynlpTokenizer(lexerReader);
     }
 
     public static Tokenizer fromLexer(Lexer lexer) {
-        return new MynlpLuceneTokenizer(lexer.reader());
+        return new MynlpTokenizer(lexer.reader());
     }
 
     /**
@@ -55,7 +55,7 @@ final public class MynlpLuceneTokenizer extends Tokenizer {
      *
      * @param lexerReader LexerReader
      */
-    public MynlpLuceneTokenizer(LexerReader lexerReader) {
+    public MynlpTokenizer(LexerReader lexerReader) {
         this.lexerReader = lexerReader;
     }
 
