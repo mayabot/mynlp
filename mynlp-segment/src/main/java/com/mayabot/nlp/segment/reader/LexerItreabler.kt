@@ -45,7 +45,13 @@ class LexerIterator(val lexer: Lexer, val paragraphReader: ParagraphReader) : Ab
                 val text = paragraph.toCharArray()
 
                 lexer.scan(text) { term -> this.buffer.add(term) }
+
             }
+        }
+
+        if (buffer.isEmpty()) {
+            done()
+            return
         }
 
         val term = buffer.pop()

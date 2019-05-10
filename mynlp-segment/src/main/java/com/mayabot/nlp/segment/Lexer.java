@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.mayabot.nlp.segment;
 
 import com.google.common.collect.Lists;
@@ -29,9 +28,9 @@ import java.util.function.Consumer;
  *
  * @since 2.1.0
  * @author jimichan
- * @see PipelineTokenizer
+ * @see PipelineLexer
  * @see LexerBuilder
- * @see PipelineTokenizerBuilder
+ * @see PipelineLexerBuilder
  */
 public interface Lexer {
 

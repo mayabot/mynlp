@@ -1,13 +1,13 @@
 package com.mayabot.nlp.segment.plugins
 
-import com.mayabot.nlp.segment.PipelineTokenizerBuilder
+import com.mayabot.nlp.segment.PipelineLexerBuilder
 
 /**
  * 人名识别
  * @author jimichan
  */
 interface PersonNameRecognition {
-    fun setEnablePersonName(enable: Boolean): PipelineTokenizerBuilder
+    fun setEnablePersonName(enable: Boolean): PipelineLexerBuilder
 }
 
 /**
@@ -15,7 +15,7 @@ interface PersonNameRecognition {
  * @author jimichan
  */
 interface NERRecognition {
-    fun setEnableNER(enable: Boolean): PipelineTokenizerBuilder
+    fun setEnableNER(enable: Boolean): PipelineLexerBuilder
 }
 
 
@@ -24,7 +24,7 @@ interface NERRecognition {
  * @author jimichan
  */
 interface CustomDictionaryRecognition {
-    fun setEnableCustomDictionary(enable: Boolean): PipelineTokenizerBuilder
+    fun setEnableCustomDictionary(enable: Boolean): PipelineLexerBuilder
 }
 
 /**
@@ -32,7 +32,7 @@ interface CustomDictionaryRecognition {
  * @author jimichan
  */
 interface PartOfSpeechTagging {
-    fun setEnablePOS(enable: Boolean): PipelineTokenizerBuilder
+    fun setEnablePOS(enable: Boolean): PipelineLexerBuilder
 }
 
 /**
@@ -40,5 +40,5 @@ interface PartOfSpeechTagging {
  * @author jimichan
  */
 interface Correction {
-    fun setEnableCorrection(enable: Boolean): PipelineTokenizerBuilder
+    fun setEnableCorrection(enable: Boolean): PipelineLexerBuilder
 }

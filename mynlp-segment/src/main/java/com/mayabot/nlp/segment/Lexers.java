@@ -15,7 +15,7 @@
  */
 package com.mayabot.nlp.segment;
 
-import com.mayabot.nlp.segment.core.CoreTokenizerBuilder;
+import com.mayabot.nlp.segment.core.CoreLexerBuilder;
 import com.mayabot.nlp.segment.cws.CWSTokenizerBuilder;
 
 /**
@@ -33,7 +33,7 @@ public class Lexers {
      * @return MynlpTokenizer分词器实例，可多线程使用
      */
     public static Lexer core() {
-        return new CoreTokenizerBuilder().build();
+        return new CoreLexerBuilder().build();
     }
 
     /**
@@ -43,8 +43,8 @@ public class Lexers {
      *
      * @return MynlpTokenizer分词器实例，可多线程使用
      */
-    public static CoreTokenizerBuilder coreTokenizerBuilder() {
-        return new CoreTokenizerBuilder();
+    public static CoreLexerBuilder coreTokenizerBuilder() {
+        return new CoreLexerBuilder();
     }
 
     /**

@@ -3,7 +3,7 @@ package segment;
 import com.google.common.base.Joiner;
 import com.mayabot.nlp.segment.Lexer;
 import com.mayabot.nlp.segment.LexerReader;
-import com.mayabot.nlp.segment.core.CoreTokenizerBuilder;
+import com.mayabot.nlp.segment.core.CoreLexerBuilder;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -35,7 +35,7 @@ public class HowFast {
 
         String text = Joiner.on("\n").join(lines);
 
-        Lexer lexer = new CoreTokenizerBuilder()
+        Lexer lexer = new CoreLexerBuilder()
                 .setEnablePersonName(false)
                 .setEnablePOS(false)
                 .build();

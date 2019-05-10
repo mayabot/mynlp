@@ -1,6 +1,6 @@
 package com.mayabot.nlp.segment.cws;
 
-import com.mayabot.nlp.segment.PipelineTokenizerBuilder;
+import com.mayabot.nlp.segment.PipelineLexerBuilder;
 import com.mayabot.nlp.segment.core.ViterbiBestPathAlgorithm;
 import com.mayabot.nlp.segment.plugins.AtomSplitAlgorithm;
 import com.mayabot.nlp.segment.plugins.Correction;
@@ -16,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
  *
  * @author jimichan
  */
-public class CWSTokenizerBuilder extends PipelineTokenizerBuilder
+public class CWSTokenizerBuilder extends PipelineLexerBuilder
         implements CustomDictionaryRecognition, PartOfSpeechTagging, Correction {
 
     public static CWSTokenizerBuilder builder() {

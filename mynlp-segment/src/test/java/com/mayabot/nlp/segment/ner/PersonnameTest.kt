@@ -1,6 +1,6 @@
 package com.mayabot.nlp.segment.ner
 
-import com.mayabot.nlp.segment.core.CoreTokenizerBuilder
+import com.mayabot.nlp.segment.core.CoreLexerBuilder
 import com.mayabot.nlp.segment.utils.TokenizerTestHelp
 import org.junit.Test
 
@@ -11,7 +11,7 @@ class PersonnameTest {
         run {
             val text = "这|是|陈|建国|的|快递"
 
-            val tokenizer = CoreTokenizerBuilder()
+            val tokenizer = CoreLexerBuilder()
                     .setEnablePersonName(false)
                     .build()
 
@@ -23,7 +23,7 @@ class PersonnameTest {
         run {
             val text = "这|是|陈建国|的|快递"
 
-            val tokenizer = CoreTokenizerBuilder()
+            val tokenizer = CoreLexerBuilder()
                     .setEnablePersonName(true)
                     .build()
             TokenizerTestHelp.test(tokenizer, text)
@@ -32,7 +32,7 @@ class PersonnameTest {
 
     @Test
     fun test2() {
-        val tokenizer = CoreTokenizerBuilder()
+        val tokenizer = CoreLexerBuilder()
                 .setEnablePersonName(true)
                 .build()
 

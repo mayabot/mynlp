@@ -36,11 +36,15 @@ class LexerFactory {
             val builder = Lexers.cwsTokenizerBuilder()
             builder.isEnableCorrection = isCorrection
             builder.isEnableIndexModel = isIndexWordModel
+            builder.isEnablePOS = false
+
             builder.build()
         } else {
             val builder = Lexers.coreTokenizerBuilder()
             builder.isEnableCorrection = isCorrection
             builder.isEnableIndexModel = isIndexWordModel
+            builder.isEnablePOS = false
+
             builder.build()
         }
     }

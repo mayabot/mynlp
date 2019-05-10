@@ -1,3 +1,18 @@
+/*
+ * Copyright 2018 mayabot.com authors. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.mayabot.nlp.segment
 
 import com.google.inject.Binder
@@ -7,92 +22,6 @@ import java.io.File
 import java.util.regex.Pattern
 
 class SegmentModule(private val env: MynlpEnv) : Module {
-
-    private val metaList = ArrayList<ResourceMeta>()
-
-    private val mapIndex = HashMap<String, ResourceMeta>()
-
-    private val lock = Any()
-
-    init {
-
-        metaList += ResourceMeta(
-                name = "CoreDict",
-                version = "1.0.0",
-                fileName = "mynlp-resource-coredict.jar",
-                content = listOf("core-dict/CoreDict.txt", "core-dict/CoreDict.bigram.txt")
-        )
-
-        metaList += ResourceMeta(
-                name = "POS",
-                version = "1.0.0",
-                fileName = "mynlp-resource-pos.jar",
-                content = listOf("pos-model/feature.txt", "pos-model/label.txt", "pos-model/parameter.bin")
-        )
-
-        metaList += ResourceMeta(
-                name = "NER",
-                version = "1.0.0",
-                fileName = "mynlp-resource-ner.jar",
-                content = listOf(
-                        "ner-model/feature.txt", "ner-model/label.txt", "ner-model/parameter.bin",
-                        "person-name-model/feature.txt",
-                        "person-name-model/parameter.bin"
-                )
-        )
-
-        metaList += ResourceMeta(
-                name = "CUSTOM",
-                version = "1.0.0",
-                fileName = "mynlp-resource-custom.jar",
-                content = listOf(
-                        "custom-dict/CustomDictionary.txt",
-                        "custom-dict/上海地名.txt",
-                        "custom-dict/人名词典.txt",
-                        "custom-dict/全国地名大全.txt",
-                        "custom-dict/机构名词典.txt",
-                        "custom-dict/机构名词典.txt",
-                        "custom-dict/现代汉语补充词库.txt"
-                )
-        )
-
-        metaList += ResourceMeta(
-                name = "STOPWORD",
-                version = "1.0.0",
-                fileName = "mynlp-resource-stopword.jar",
-                content = listOf(
-                        "stopword-dict/stopwords.txt"
-                )
-        )
-
-        metaList += ResourceMeta(
-                name = "CWS",
-                version = "1.0.0",
-                fileName = "mynlp-resource-cws.jar",
-                content = listOf(
-                        "cws-model/feature.dat",
-                        "cws-model/feature.txt",
-                        "cws-model/parameter.bin"
-                )
-        )
-
-        metaList += ResourceMeta(
-                name = "CWS-HANLP",
-                version = "1.0.0",
-                fileName = "mynlp-resource-cws-hanlp.jar",
-                content = listOf(
-                        "cws-hanlp-model/feature.dat",
-                        "cws-hanlp-model/feature.txt",
-                        "cws-hanlp-model/parameter.bin"
-                )
-        )
-
-        metaList.forEach { x ->
-            x.content.forEach { y ->
-                mapIndex[y] = x
-            }
-        }
-    }
 
     override fun configure(binder: Binder?) {
         env.registeResourceMissing("segment") { rsName, env -> this.processMiss(rsName, env) }
@@ -108,7 +37,6 @@ class SegmentModule(private val env: MynlpEnv) : Module {
         val pattern = Pattern.compile("^(.*?)-(\\d+[\\.\\d]+)\\.jar$")
         if (dataDir.exists() && dataDir.canRead()) {
 
-
             //已经存在的数据包的去除版本的名字
             val nameSet = dataDir.listFiles().filter { pattern.matcher(it.name).matches() }
                     .map {
@@ -123,17 +51,6 @@ class SegmentModule(private val env: MynlpEnv) : Module {
                         env.download(meta.fileNameWithVersion())
                     }
                 }
-            }
-        }
-    }
-
-    companion object {
-        @JvmStatic
-        fun main(args: Array<String>) {
-            val pattern = Pattern.compile("^(.*?)-(\\d+[\\.\\d]+)\\.jar$")
-            val matcher = pattern.matcher("mynlp-resource-cws-1.0.0.jar")
-            while (matcher.find()) {
-                println(matcher.group(1) + "   " + matcher.group(2))
             }
         }
     }
@@ -156,6 +73,85 @@ class SegmentModule(private val env: MynlpEnv) : Module {
         }
 
         return false
+    }
+
+    private val metaList: List<ResourceMeta> = listOf(
+            ResourceMeta(
+                    name = "CoreDict",
+                    version = "1.0.0",
+                    fileName = "mynlp-resource-coredict.jar",
+                    content = listOf("core-dict/CoreDict.txt", "core-dict/CoreDict.bigram.txt")
+            ),
+            ResourceMeta(
+                    name = "POS",
+                    version = "1.0.0",
+                    fileName = "mynlp-resource-pos.jar",
+                    content = listOf("pos-model/feature.txt", "pos-model/label.txt", "pos-model/parameter.bin")
+            ),
+            ResourceMeta(
+                    name = "NER",
+                    version = "1.0.0",
+                    fileName = "mynlp-resource-ner.jar",
+                    content = listOf(
+                            "ner-model/feature.txt", "ner-model/label.txt", "ner-model/parameter.bin",
+                            "person-name-model/feature.txt",
+                            "person-name-model/parameter.bin"
+                    )
+            ),
+            ResourceMeta(
+                    name = "CUSTOM",
+                    version = "1.0.0",
+                    fileName = "mynlp-resource-custom.jar",
+                    content = listOf(
+                            "custom-dict/CustomDictionary.txt",
+                            "custom-dict/上海地名.txt",
+                            "custom-dict/人名词典.txt",
+                            "custom-dict/全国地名大全.txt",
+                            "custom-dict/机构名词典.txt",
+                            "custom-dict/机构名词典.txt",
+                            "custom-dict/现代汉语补充词库.txt"
+                    )
+            ),
+            ResourceMeta(
+                    name = "STOPWORD",
+                    version = "1.0.0",
+                    fileName = "mynlp-resource-stopword.jar",
+                    content = listOf(
+                            "stopword-dict/stopwords.txt"
+                    )
+            ),
+            ResourceMeta(
+                    name = "CWS",
+                    version = "1.0.0",
+                    fileName = "mynlp-resource-cws.jar",
+                    content = listOf(
+                            "cws-model/feature.dat",
+                            "cws-model/feature.txt",
+                            "cws-model/parameter.bin"
+                    )
+            ),
+            ResourceMeta(
+                    name = "CWS-HANLP",
+                    version = "1.0.0",
+                    fileName = "mynlp-resource-cws-hanlp.jar",
+                    content = listOf(
+                            "cws-hanlp-model/feature.dat",
+                            "cws-hanlp-model/feature.txt",
+                            "cws-hanlp-model/parameter.bin"
+                    )
+            )
+    )
+
+    private val mapIndex = HashMap<String, ResourceMeta>()
+
+    private val lock = Any()
+
+    init {
+        metaList.forEach { x ->
+            x.content.forEach { y ->
+                mapIndex[y] = x
+            }
+        }
     }
 }
 

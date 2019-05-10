@@ -23,9 +23,9 @@ package com.mayabot.nlp.segment;
 public interface LexerBuilder {
 
     /**
-     * 构建一个MynlpTokenizer
+     * 构建一个Lexer
      *
-     * @return MynlpTokenizer实例
+     * @return Lexer
      */
     Lexer build();
 

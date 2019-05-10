@@ -18,6 +18,7 @@ package com.mayabot.nlp;
 
 import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
+import org.jetbrains.annotations.NotNull;
 
 import java.security.AccessController;
 import java.security.PrivilegedAction;
@@ -74,6 +75,7 @@ public final class Mynlps {
      * 获取全局唯一的Mynlp实例。
      * @return Mynlp
      */
+    @NotNull
     public static Mynlp get() {
         return map.computeIfAbsent("I", Mynlps::create);
     }
