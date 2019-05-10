@@ -1,6 +1,6 @@
 package com.mayabot.nlp.segment.core;
 
-import com.mayabot.nlp.segment.PipelineTokenizerBuilder;
+import com.mayabot.nlp.segment.PipelineLexerBuilder;
 import com.mayabot.nlp.segment.plugins.*;
 import com.mayabot.nlp.segment.plugins.correction.CorrectionWordpathProcessor;
 import com.mayabot.nlp.segment.plugins.customwords.CustomDictionaryProcessor;
@@ -13,12 +13,12 @@ import org.jetbrains.annotations.NotNull;
  * 基于HMM-BiGram的分词器.
  * @author jimichan
  */
-public class CoreTokenizerBuilder extends PipelineTokenizerBuilder
+public class CoreLexerBuilder extends PipelineLexerBuilder
         implements PersonNameRecognition, NERRecognition,
         CustomDictionaryRecognition, PartOfSpeechTagging, Correction {
 
-    public static CoreTokenizerBuilder builder() {
-        return new CoreTokenizerBuilder();
+    public static CoreLexerBuilder builder() {
+        return new CoreLexerBuilder();
     }
 
     private boolean enablePersonName = true;
@@ -26,6 +26,10 @@ public class CoreTokenizerBuilder extends PipelineTokenizerBuilder
     private boolean enableCorrection = true;
     private boolean enableNER = false;
     private boolean enableCustomDictionary = false;
+    // 启用小词典
+    private boolean atomDict = false;
+
+
 
     /**
      * 在这里装配所需要的零件吧！！！
@@ -37,7 +41,17 @@ public class CoreTokenizerBuilder extends PipelineTokenizerBuilder
         this.setBestPathComputer(ViterbiBestPathAlgorithm.class);
 
         //切词算法
-        this.addWordSplitAlgorithm(CoreDictionarySplitAlgorithm.class);
+        if (atomDict) {
+            this.addWordSplitAlgorithm(new CoreDictionarySplitAlgorithm(
+                    mynlp.getInstance(CoreDictionary.class)
+            ));
+        } else {
+            this.addWordSplitAlgorithm(new CoreDictionarySplitAlgorithm(
+                    mynlp.getInstance(CoreDictionary.class)
+            ));
+        }
+
+
         this.addWordSplitAlgorithm(AtomSplitAlgorithm.class);
 
 
@@ -73,7 +87,7 @@ public class CoreTokenizerBuilder extends PipelineTokenizerBuilder
 
     @NotNull
     @Override
-    public CoreTokenizerBuilder setEnablePersonName(boolean enablePersonName) {
+    public CoreLexerBuilder setEnablePersonName(boolean enablePersonName) {
         this.enablePersonName = enablePersonName;
         return this;
     }
@@ -84,7 +98,7 @@ public class CoreTokenizerBuilder extends PipelineTokenizerBuilder
 
     @NotNull
     @Override
-    public CoreTokenizerBuilder setEnableNER(boolean enableNER) {
+    public CoreLexerBuilder setEnableNER(boolean enableNER) {
         this.enableNER = enableNER;
         return this;
     }
@@ -95,7 +109,7 @@ public class CoreTokenizerBuilder extends PipelineTokenizerBuilder
 
     @NotNull
     @Override
-    public CoreTokenizerBuilder setEnableCustomDictionary(boolean enableCustomDictionary) {
+    public CoreLexerBuilder setEnableCustomDictionary(boolean enableCustomDictionary) {
         this.enableCustomDictionary = enableCustomDictionary;
         return this;
     }
@@ -106,7 +120,7 @@ public class CoreTokenizerBuilder extends PipelineTokenizerBuilder
 
     @NotNull
     @Override
-    public CoreTokenizerBuilder setEnablePOS(boolean enablePOS) {
+    public CoreLexerBuilder setEnablePOS(boolean enablePOS) {
         this.enablePOS = enablePOS;
         return this;
     }
@@ -117,7 +131,7 @@ public class CoreTokenizerBuilder extends PipelineTokenizerBuilder
 
     @NotNull
     @Override
-    public CoreTokenizerBuilder setEnableCorrection(boolean enableCorrection) {
+    public CoreLexerBuilder setEnableCorrection(boolean enableCorrection) {
         this.enableCorrection = enableCorrection;
         return this;
     }

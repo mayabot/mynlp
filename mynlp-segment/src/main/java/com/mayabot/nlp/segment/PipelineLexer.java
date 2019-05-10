@@ -37,7 +37,7 @@ import java.util.stream.Collectors;
  *
  * @author jimichan
  */
-public class PipelineTokenizer implements Lexer {
+public class PipelineLexer implements Lexer {
 
     private BestPathAlgorithm bestPathAlgorithm;
 
@@ -55,15 +55,15 @@ public class PipelineTokenizer implements Lexer {
      */
     private WordpathProcessor[] pipeline;
 
-    public static PipelineTokenizerBuilder builder() {
-        return new PipelineTokenizerBuilder();
+    public static PipelineLexerBuilder builder() {
+        return new PipelineLexerBuilder();
     }
 
-    PipelineTokenizer(List<WordSplitAlgorithm> initer,
-                      WordpathProcessor[] pipeline,
-                      BestPathAlgorithm bestPathAlgorithm,
-                      WordTermCollector termCollector,
-                      List<CharNormalize> charNormalizes) {
+    PipelineLexer(List<WordSplitAlgorithm> initer,
+                  WordpathProcessor[] pipeline,
+                  BestPathAlgorithm bestPathAlgorithm,
+                  WordTermCollector termCollector,
+                  List<CharNormalize> charNormalizes) {
         this.initer = initer.toArray(new WordSplitAlgorithm[0]);
         this.pipeline = pipeline;
         this.bestPathAlgorithm = bestPathAlgorithm;

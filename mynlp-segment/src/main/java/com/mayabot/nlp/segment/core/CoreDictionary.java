@@ -15,7 +15,9 @@
  */
 package com.mayabot.nlp.segment.core;
 
+import com.google.common.base.CharMatcher;
 import com.google.common.base.Charsets;
+import com.google.common.base.Splitter;
 import com.google.common.hash.Hashing;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -30,17 +32,21 @@ import com.mayabot.nlp.utils.CharSourceLineReader;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
+import java.util.List;
 import java.util.TreeMap;
 
 /**
  * 内置的核心词典，词数大约20+万
  * key 存储 word
  * value 存储 词频
- *
+ * 词典的文件格式：
+ * word1 freq
+ * word2 freq
+ * 缓存为DAT格式
  * @author jimichan
  */
 @Singleton
-public class CoreDictionary extends NlpResouceExternalizable {
+public class CoreDictionary extends NlpResouceExternalizable implements DictionaryMatcher {
 
     private InternalLogger logger = InternalLoggerFactory.getInstance(CoreDictionary.class);
 
@@ -68,15 +74,18 @@ public class CoreDictionary extends NlpResouceExternalizable {
 
         int maxFreq = 0;
 
+        Splitter splitter = Splitter.on(CharMatcher.breakingWhitespace()).omitEmptyStrings().trimResults();
+
         try (CharSourceLineReader reader = dictResource.openLineReader()) {
             while (reader.hasNext()) {
                 String line = reader.next();
 
-                String[] param = line.split("\\s");
-
-                Integer count = Integer.valueOf(param[1]);
-                map.put(param[0], count);
-                maxFreq += count;
+                List<String> param = splitter.splitToList(line);
+                if (param.size() == 2) {
+                    Integer count = Integer.valueOf(param.get(1));
+                    map.put(param.get(0), count);
+                    maxFreq += count;
+                }
             }
         }
 

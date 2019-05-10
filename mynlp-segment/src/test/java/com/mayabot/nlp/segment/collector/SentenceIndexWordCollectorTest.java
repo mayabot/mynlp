@@ -1,7 +1,7 @@
 package com.mayabot.nlp.segment.collector;
 
 import com.mayabot.nlp.segment.Lexer;
-import com.mayabot.nlp.segment.core.CoreTokenizerBuilder;
+import com.mayabot.nlp.segment.core.CoreLexerBuilder;
 import com.mayabot.nlp.segment.plugins.collector.SentenceIndexWordCollector;
 import org.junit.Assert;
 import org.junit.Test;
@@ -15,7 +15,7 @@ public class SentenceIndexWordCollectorTest {
         SentenceIndexWordCollector collector = new SentenceIndexWordCollector();
         collector.setFolded(true);
 
-        Lexer tokenizer = CoreTokenizerBuilder.builder().setTermCollector(
+        Lexer tokenizer = CoreLexerBuilder.builder().setTermCollector(
                 collector
         ).build();
 
@@ -32,7 +32,7 @@ public class SentenceIndexWordCollectorTest {
         SentenceIndexWordCollector collector = new SentenceIndexWordCollector();
         collector.setFolded(false);
 
-        Lexer tokenizer = CoreTokenizerBuilder.builder().setTermCollector(
+        Lexer tokenizer = CoreLexerBuilder.builder().setTermCollector(
                 collector
         ).build();
 
@@ -55,7 +55,7 @@ public class SentenceIndexWordCollectorTest {
         collector.setExcludeDict(exclude);
 
 
-        Lexer tokenizer = CoreTokenizerBuilder.builder().setTermCollector(
+        Lexer tokenizer = CoreLexerBuilder.builder().setTermCollector(
                 collector
         ).build();
 

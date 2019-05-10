@@ -31,15 +31,14 @@ import java.util.List;
 import java.util.function.Consumer;
 
 /**
- * WordnetTokenizer构建器
- * <p>
- * 调用WordnetTokenizer.builder()来创建WordnetTokenizerBuilder对象
+ * Pipeline based Lexer Builder
+ *
  *
  * @author jimichan
  */
-public class PipelineTokenizerBuilder implements LexerBuilder {
+public class PipelineLexerBuilder implements LexerBuilder {
 
-    private final Mynlp mynlp;
+    protected final Mynlp mynlp;
 
     /**
      * 词图最优路径选择器
@@ -76,7 +75,7 @@ public class PipelineTokenizerBuilder implements LexerBuilder {
     /**
      * 默认构造函数
      */
-    public PipelineTokenizerBuilder() {
+    public PipelineLexerBuilder() {
         this.mynlp = Mynlps.get();
     }
 
@@ -116,7 +115,7 @@ public class PipelineTokenizerBuilder implements LexerBuilder {
         Collections.sort(wordSplitAlgorithm);
         Collections.sort(pipeLine);
 
-        return new PipelineTokenizer(
+        return new PipelineLexer(
                 Lists.newArrayList(wordSplitAlgorithm),
                 pipeLine.toArray(new WordpathProcessor[0]),
                 bestPathAlgorithm
@@ -168,7 +167,7 @@ public class PipelineTokenizerBuilder implements LexerBuilder {
      * @param <T>
      * @return
      */
-    public <T> PipelineTokenizerBuilder config(Class<T> clazz, Consumer<T> listener) {
+    public <T> PipelineLexerBuilder config(Class<T> clazz, Consumer<T> listener) {
         configListener.add(new ConsumerPair(clazz, listener));
         return this;
     }
@@ -179,7 +178,7 @@ public class PipelineTokenizerBuilder implements LexerBuilder {
      * @param clazz
      * @return
      */
-    public PipelineTokenizerBuilder disabledComponent(Class<? extends SegmentComponent> clazz) {
+    public PipelineLexerBuilder disabledComponent(Class<? extends SegmentComponent> clazz) {
         config(clazz, x -> x.disable());
         return this;
     }
@@ -190,7 +189,7 @@ public class PipelineTokenizerBuilder implements LexerBuilder {
      * @param clazz
      * @return
      */
-    public PipelineTokenizerBuilder enableComponent(Class<? extends SegmentComponent> clazz) {
+    public PipelineLexerBuilder enableComponent(Class<? extends SegmentComponent> clazz) {
         config(clazz, x -> x.enable());
         return this;
     }
@@ -202,7 +201,7 @@ public class PipelineTokenizerBuilder implements LexerBuilder {
      * @param charNormalizeClass 通过Guice来初始化该对象
      * @return self
      */
-    public PipelineTokenizerBuilder addCharNormalize(Class<? extends CharNormalize> charNormalizeClass) {
+    public PipelineLexerBuilder addCharNormalize(Class<? extends CharNormalize> charNormalizeClass) {
         this.charNormalizes.add(mynlp.getInstance(charNormalizeClass));
         return this;
     }
@@ -213,7 +212,7 @@ public class PipelineTokenizerBuilder implements LexerBuilder {
      * @param charNormalize
      * @return self
      */
-    public PipelineTokenizerBuilder addCharNormalize(CharNormalize charNormalize) {
+    public PipelineLexerBuilder addCharNormalize(CharNormalize charNormalize) {
         this.charNormalizes.add(charNormalize);
         return this;
     }
@@ -224,7 +223,7 @@ public class PipelineTokenizerBuilder implements LexerBuilder {
      * @param clazz
      * @return
      */
-    public PipelineTokenizerBuilder removeCharNormalize(Class<? extends CharNormalize> clazz) {
+    public PipelineLexerBuilder removeCharNormalize(Class<? extends CharNormalize> clazz) {
         this.charNormalizes.removeIf(obj -> clazz.isAssignableFrom(obj.getClass()) || obj.getClass().equals(clazz));
         return this;
     }
@@ -235,7 +234,7 @@ public class PipelineTokenizerBuilder implements LexerBuilder {
      * @param bestPathAlgorithm
      * @return
      */
-    public PipelineTokenizerBuilder setBestPathAlgorithm(BestPathAlgorithm bestPathAlgorithm) {
+    public PipelineLexerBuilder setBestPathAlgorithm(BestPathAlgorithm bestPathAlgorithm) {
         this.bestPathAlgorithm = bestPathAlgorithm;
         return this;
     }
@@ -246,7 +245,7 @@ public class PipelineTokenizerBuilder implements LexerBuilder {
      * @param clazz
      * @return
      */
-    public PipelineTokenizerBuilder setBestPathComputer(Class<? extends BestPathAlgorithm> clazz) {
+    public PipelineLexerBuilder setBestPathComputer(Class<? extends BestPathAlgorithm> clazz) {
         this.bestPathAlgorithm = mynlp.getInstance(clazz);
         return this;
     }
@@ -257,7 +256,7 @@ public class PipelineTokenizerBuilder implements LexerBuilder {
      * @param processor
      * @return
      */
-    public PipelineTokenizerBuilder addProcessor(WordpathProcessor processor) {
+    public PipelineLexerBuilder addProcessor(WordpathProcessor processor) {
         pipeLine.add(processor);
         Collections.sort(pipeLine);
         return this;
@@ -270,7 +269,7 @@ public class PipelineTokenizerBuilder implements LexerBuilder {
      * @param clazz
      * @return
      */
-    public PipelineTokenizerBuilder addProcessor(Class<? extends WordpathProcessor> clazz) {
+    public PipelineLexerBuilder addProcessor(Class<? extends WordpathProcessor> clazz) {
         addProcessor(mynlp.getInstance(clazz));
         return this;
     }
@@ -282,7 +281,7 @@ public class PipelineTokenizerBuilder implements LexerBuilder {
      * @param algorithm
      * @return
      */
-    public PipelineTokenizerBuilder addWordSplitAlgorithm(WordSplitAlgorithm algorithm) {
+    public PipelineLexerBuilder addWordSplitAlgorithm(WordSplitAlgorithm algorithm) {
 
         this.wordSplitAlgorithm.add(algorithm);
 
@@ -296,7 +295,7 @@ public class PipelineTokenizerBuilder implements LexerBuilder {
      * @param algorithm Class
      * @return
      */
-    public PipelineTokenizerBuilder addWordSplitAlgorithm(Class<? extends WordSplitAlgorithm> algorithm) {
+    public PipelineLexerBuilder addWordSplitAlgorithm(Class<? extends WordSplitAlgorithm> algorithm) {
         addWordSplitAlgorithm(mynlp.getInstance(algorithm));
         return this;
     }
@@ -307,7 +306,7 @@ public class PipelineTokenizerBuilder implements LexerBuilder {
      * @param termCollector
      * @return
      */
-    public PipelineTokenizerBuilder setTermCollector(WordTermCollector termCollector) {
+    public PipelineLexerBuilder setTermCollector(WordTermCollector termCollector) {
         this.termCollector = termCollector;
         return this;
     }
@@ -318,7 +317,7 @@ public class PipelineTokenizerBuilder implements LexerBuilder {
      * @param termCollectorClass
      * @return
      */
-    public PipelineTokenizerBuilder setTermCollector(Class<? extends WordTermCollector> termCollectorClass) {
+    public PipelineLexerBuilder setTermCollector(Class<? extends WordTermCollector> termCollectorClass) {
         this.termCollector = mynlp.getInstance(termCollectorClass);
         return this;
     }
@@ -345,7 +344,7 @@ public class PipelineTokenizerBuilder implements LexerBuilder {
         return enableIndexModel;
     }
 
-    public PipelineTokenizerBuilder setEnableIndexModel(boolean enableIndexModel) {
+    public PipelineLexerBuilder setEnableIndexModel(boolean enableIndexModel) {
         this.enableIndexModel = enableIndexModel;
         return this;
     }
