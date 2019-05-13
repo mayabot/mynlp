@@ -71,10 +71,23 @@ public interface Lexer {
         return Sentence.of(target);
     }
 
+    /**
+     * 返回分析器对应的LexerReader对象
+     *
+     * @return LexerReader
+     */
     default LexerReader reader() {
         return LexerReader.from(this);
     }
 
+    /**
+     * 返回分析器对应的LexerReader对象,这个LexerReader可以提供过滤标点符号和停用词的功能，
+     * filter过自动处理posInc的值。
+     *
+     * @param punctuation
+     * @param stopWord
+     * @return
+     */
     default LexerReader filterReader(boolean punctuation, boolean stopWord) {
         return LexerReader.filter(this, punctuation, stopWord);
     }

@@ -1,6 +1,6 @@
 package com.mayabot.nlp.common;
 
-public class Pair<T, R> {
+public final class Pair<T, R> {
 
     public T first;
     public R second;

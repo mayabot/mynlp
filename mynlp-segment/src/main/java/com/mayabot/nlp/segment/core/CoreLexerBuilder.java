@@ -2,6 +2,7 @@ package com.mayabot.nlp.segment.core;
 
 import com.mayabot.nlp.segment.PipelineLexerBuilder;
 import com.mayabot.nlp.segment.plugins.*;
+import com.mayabot.nlp.segment.plugins.atom.AtomSplitAlgorithm;
 import com.mayabot.nlp.segment.plugins.correction.CorrectionWordpathProcessor;
 import com.mayabot.nlp.segment.plugins.customwords.CustomDictionaryProcessor;
 import com.mayabot.nlp.segment.plugins.ner.NerProcessor;
@@ -26,7 +27,10 @@ public class CoreLexerBuilder extends PipelineLexerBuilder
     private boolean enableCorrection = true;
     private boolean enableNER = false;
     private boolean enableCustomDictionary = false;
-    // 启用小词典
+
+    /**
+     * 启用小词典
+     */
     private boolean atomDict = false;
 
 

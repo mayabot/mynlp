@@ -8,11 +8,11 @@ import java.io.Reader;
 import java.util.Iterator;
 import java.util.function.Predicate;
 
-public abstract class FilterLexerReader implements LexerReader, Predicate<WordTerm> {
+public abstract class BaseFilterLexerReader implements LexerReader, Predicate<WordTerm> {
 
     private final LexerReader source;
 
-    public FilterLexerReader(LexerReader source) {
+    public BaseFilterLexerReader(LexerReader source) {
         this.source = source;
     }
 

@@ -1,4 +1,4 @@
-package com.mayabot.nlp.segment.common
+package com.mayabot.nlp.perceptron
 
 
 import com.google.common.base.Splitter
@@ -39,7 +39,8 @@ fun File.allFiles(): List<File> {
 
 //陈/nr 汝烨/nr 压题/vn 照片/n ：/w [绵阳/ns 高新技术/n 产业/n 开发区/n]nt 内/f [长虹/nz 家电城/n]ns 一角/n 。/w
 
-val splitter = Splitter.on(" ").omitEmptyStrings().trimResults()
+val splitter = Splitter.on(" ").omitEmptyStrings().trimResults()!!
+
 fun String.parseToWords(): List<PkuWord> {
     if (this.isEmpty()) {
         return listOf()

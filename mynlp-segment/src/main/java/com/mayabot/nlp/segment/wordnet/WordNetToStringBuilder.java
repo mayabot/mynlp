@@ -49,18 +49,18 @@ class WordNetToStringBuilder {
 
             VertexRow row = wordnet.row(i);
 
-            char _char = 0;
+            char char_ = 0;
             if (i >= 0 && i < text.length) {
-                _char = text[i];
+                char_ = text[i];
             } else {
                 if (i == -1) {
-                    _char = '¤';
+                    char_ = '¤';
                 } else {
-                    _char = '¶';
+                    char_ = '¶';
                 }
             }
 
-            line.append(String.format("@|cyan %d|@\t@|green %c |@", i, _char));
+            line.append(String.format("@|cyan %d|@\t@|green %c |@", i, char_));
 
 
             line.append("\t@|yellow ||@\t");

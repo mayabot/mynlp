@@ -2,10 +2,10 @@ package com.mayabot.nlp.segment.cws;
 
 import com.mayabot.nlp.segment.PipelineLexerBuilder;
 import com.mayabot.nlp.segment.core.ViterbiBestPathAlgorithm;
-import com.mayabot.nlp.segment.plugins.AtomSplitAlgorithm;
 import com.mayabot.nlp.segment.plugins.Correction;
 import com.mayabot.nlp.segment.plugins.CustomDictionaryRecognition;
 import com.mayabot.nlp.segment.plugins.PartOfSpeechTagging;
+import com.mayabot.nlp.segment.plugins.atom.AtomSplitAlgorithm;
 import com.mayabot.nlp.segment.plugins.correction.CorrectionWordpathProcessor;
 import com.mayabot.nlp.segment.plugins.customwords.CustomDictionaryProcessor;
 import com.mayabot.nlp.segment.plugins.pos.PosPerceptronProcessor;

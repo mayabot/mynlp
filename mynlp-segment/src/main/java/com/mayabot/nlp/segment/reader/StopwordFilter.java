@@ -28,7 +28,7 @@ import java.util.Set;
  *
  * @author jimichan
  */
-public class StopwordFilter extends FilterLexerReader {
+public class StopwordFilter extends BaseFilterLexerReader {
 
     Set<String> stopWords = new HashSet<String>();
 

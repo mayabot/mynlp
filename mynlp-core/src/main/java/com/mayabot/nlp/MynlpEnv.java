@@ -23,6 +23,7 @@ import com.mayabot.nlp.resources.ClasspathNlpResourceFactory;
 import com.mayabot.nlp.resources.NlpResource;
 import com.mayabot.nlp.resources.NlpResourceFactory;
 import com.mayabot.nlp.utils.DownloadUtils;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.nio.charset.Charset;
@@ -73,6 +74,7 @@ public class MynlpEnv {
         resourceFactory = ImmutableList.of(new ClasspathNlpResourceFactory(Mynlps.class.getClassLoader()));
         settings = Settings.defaultSystemSettings();
     }
+
 
     public void registeResourceMissing(String name, ResourceMissing missing) {
         this.missingList.put(name, missing);
@@ -177,6 +179,7 @@ public class MynlpEnv {
      * @param resourceName 资源路径名称 dict/abc.dict
      * @return NlpResource
      */
+    @Nullable
     public synchronized NlpResource loadResource(String resourceName) {
         return this.loadResource(resourceName, Charsets.UTF_8);
     }

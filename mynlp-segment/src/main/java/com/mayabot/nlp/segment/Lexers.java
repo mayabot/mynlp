@@ -19,7 +19,7 @@ import com.mayabot.nlp.segment.core.CoreLexerBuilder;
 import com.mayabot.nlp.segment.cws.CWSTokenizerBuilder;
 
 /**
- * 各种版本的Tokenizer的工厂
+ * Lexer系列便捷方法。
  *
  * @author jimichan
  */

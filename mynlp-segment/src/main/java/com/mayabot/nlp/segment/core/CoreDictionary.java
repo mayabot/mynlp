@@ -188,6 +188,7 @@ public class CoreDictionary extends NlpResouceExternalizable implements Dictiona
         return trie.indexOf(word);
     }
 
+    @Override
     public DoubleArrayTrieStringIntMap.DATMapMatcherInt match(char[] text, int offset) {
         return trie.match(text, offset);
     }
