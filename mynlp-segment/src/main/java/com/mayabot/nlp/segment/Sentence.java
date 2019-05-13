@@ -64,6 +64,7 @@ public final class Sentence implements Iterable<WordTerm> {
         return toString();
     }
 
+    @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
 
@@ -89,7 +90,9 @@ public final class Sentence implements Iterable<WordTerm> {
                     sb.append(term.getNature());
                 }
 
-                if (i < last) sb.append(" ");
+                if (i < last) {
+                    sb.append(" ");
+                }
             }
         }
 

@@ -1,4 +1,4 @@
-package com.mayabot.nlp.segment.plugins
+package com.mayabot.nlp.segment.plugins.atom
 
 import com.google.common.collect.Lists
 import com.mayabot.nlp.collection.dat.DoubleArrayTrieStringIntMap
@@ -15,19 +15,23 @@ import kotlin.collections.ArrayList
 
 /**
  * 高性能多模式识别。
+ *
+ * 解决了性能难题，如何只扫描文本一遍的情况下，识别多种字符串模式？
+ *
  * 利用DAT的模式识别，从文本中一次性识别出多种模式。性能非常划算，避免了使用多个正则表达式。
  * 数字
  * 英文单词
  * 中文数字
  * 时间短语
  * Email
+ * 在泰国时突然想到这个模式!
  *
  * @author jimichan
  */
 class AtomSplitAlgorithm : BaseSegmentComponent(), WordSplitAlgorithm {
 
     //CharScatterSet 5000万次查询耗时40ms
-    val chineseNumSet = FastDatCharSet(
+    private val chineseNumSet = FastDatCharSet(
             '零', '一', '二', '三', '四', '五', '六', '七', '八', '九', '两',
             '壹', '贰', '叁', '肆', '伍', '陆', '柒', '捌', '玖', '拾',
             '十', '百', '千', '万', '亿'

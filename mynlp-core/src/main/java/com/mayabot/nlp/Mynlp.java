@@ -24,7 +24,7 @@ import com.mayabot.nlp.logging.InternalLoggerFactory;
  * 包含了执行环境和Guice IOC容器
  * @author jimichan
  */
-public class Mynlp {
+public final class Mynlp {
 
     public static InternalLogger logger = InternalLoggerFactory.getInstance(Mynlp.class);
 

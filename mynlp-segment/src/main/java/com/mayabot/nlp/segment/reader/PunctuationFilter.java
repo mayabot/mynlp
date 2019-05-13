@@ -27,7 +27,7 @@ import java.util.function.Predicate;
  *
  * @author jimichan
  */
-public class PunctuationFilter extends FilterLexerReader implements Predicate<WordTerm> {
+public class PunctuationFilter extends BaseFilterLexerReader implements Predicate<WordTerm> {
 
 
     public PunctuationFilter() {

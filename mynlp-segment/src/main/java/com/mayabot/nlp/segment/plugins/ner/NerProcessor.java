@@ -52,10 +52,10 @@ public class NerProcessor extends BaseSegmentComponent implements WordpathProces
                 if (from != -1) {
                     Vertex x = wordPath.combine(from, lenght);
 
-                    if (tag.equals("E-nt")) {
+                    if ("E-nt".equals(tag)) {
                         x.nature = Nature.nt;
                     }
-                    if (tag.equals("E-ns")) {
+                    if ("E-ns".equals(tag)) {
                         x.nature = Nature.ns;
                     }
                 }

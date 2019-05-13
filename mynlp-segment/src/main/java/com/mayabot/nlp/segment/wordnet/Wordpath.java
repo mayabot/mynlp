@@ -33,7 +33,7 @@ import java.util.function.Consumer;
  * true 表示在1 后面插入分割,0表示不分割
  * <p>
  * 使用切分符号来表达单词路径的切分，而不是采用List。
- * 这个数据结构具有非常好的性质,随时合并、分裂、拆分，而且性能和空间优越
+ * 这个数据结构具有非常好的性质,随时合并、分裂、拆分，而且性能和空间优越。
  *
  * @author jimichan jimichan@gmail.com
  */

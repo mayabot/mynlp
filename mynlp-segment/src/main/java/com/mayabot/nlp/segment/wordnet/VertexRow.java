@@ -19,6 +19,7 @@ package com.mayabot.nlp.segment.wordnet;
 import com.google.common.collect.AbstractIterator;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Iterator;
 import java.util.List;
@@ -30,10 +31,10 @@ import java.util.Set;
  *
  * @author jimichan
  */
-public class VertexRow implements Iterable<Vertex> {
+public final class VertexRow implements Iterable<Vertex> {
 
     /**
-     * 和sindex一样，-1表示#start
+     * 和sIndex一样，-1表示#start
      */
     int rowNum;
 
@@ -83,6 +84,7 @@ public class VertexRow implements Iterable<Vertex> {
      * @param length
      * @return may be null if not exits
      */
+    @Nullable
     public Vertex get(int length) {
         //优化空
         if (first == null) {
@@ -115,6 +117,7 @@ public class VertexRow implements Iterable<Vertex> {
      * @param length 词的长度
      * @return 被删除的节点，null表示没有节点被删除
      */
+    @Nullable
     public Vertex remove(short length) {
         Vertex v = get(length);
         if (v != null) {
@@ -131,12 +134,6 @@ public class VertexRow implements Iterable<Vertex> {
      * @return 被替换的节点对象，null表示这是新增的Vertex
      */
     public Vertex put(Vertex v) {
-
-        //如果当期是优化网络模式，那么节点也是优化网络的节点模式
-//        if (this.wordnet.isOptimizeNet()) {
-//            v.setOptimize(true);
-//            v.setOptimizeNewNode(true);
-//        }
 
         int key = v.length;
         //两种操作要么，要么替换、要么插入

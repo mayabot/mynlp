@@ -2,8 +2,7 @@ package com.mayabot.nlp.segment.common;
 
 import org.jetbrains.annotations.NotNull;
 
-public class String2 implements CharSequence {
-
+final public class String2 implements CharSequence {
 
     @NotNull
     private char[] chars;
@@ -12,7 +11,6 @@ public class String2 implements CharSequence {
     private int end = 0;
 
     private int len = 0;
-
 
     public String2(@NotNull char[] chars) {
         this.chars = chars;

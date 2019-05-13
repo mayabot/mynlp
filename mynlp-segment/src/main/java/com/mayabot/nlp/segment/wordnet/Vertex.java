@@ -37,7 +37,9 @@ public class Vertex implements WordAndNature {
      */
     VertexRow vertexRow;
 
-    // 链表使用的相关属性
+    /**
+     * 链表使用的相关属性
+     */
     Vertex next;
     Vertex prev;
 

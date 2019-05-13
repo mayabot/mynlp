@@ -4,9 +4,6 @@ import com.mayabot.nlp.common.FastStringBuilder
 import com.mayabot.nlp.hppc.IntArrayList
 import com.mayabot.nlp.perceptron.*
 import com.mayabot.nlp.segment.Nature
-import com.mayabot.nlp.segment.common.PkuWord
-import com.mayabot.nlp.segment.common.allFiles
-import com.mayabot.nlp.segment.common.parseToFlatWords
 import com.mayabot.nlp.segment.plugins.pos.POSPerceptronFeature.extractFeature
 import com.mayabot.nlp.segment.plugins.pos.POSPerceptronFeature.extractFeatureVector
 import com.mayabot.nlp.segment.plugins.pos.POSPerceptronFeature.extractFeatureVector2

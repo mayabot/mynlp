@@ -1,4 +1,4 @@
-package com.mayabot.nlp.perceptron.utils
+package com.mayabot.nlp.algorithm
 
 /**
  * Top K 最小值。

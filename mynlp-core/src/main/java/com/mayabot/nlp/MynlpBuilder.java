@@ -251,48 +251,4 @@ public class MynlpBuilder {
             throw new IOException("Unable to create parent directories of " + file);
         }
     }
-
-//
-//    /**
-//     * 启动的时候检查缓存文件
-//     * <p>
-//     * CoreDictionary_d65f2.bin
-//     *
-//     * @param cacheDirFile
-//     */
-//    private void cleanCacheFile(File cacheDirFile) {
-//        File[] files = cacheDirFile.listFiles((dir, name) -> name.endsWith(".bin"));
-//
-//        Pattern pattern = Pattern.compile("^(.*?)_(.*?)\\.bin$");
-//
-//        HashMultimap<String, File> xx = HashMultimap.create();
-//        for (int i = 0; i < files.length; i++) {
-//            File file = files[i];
-//
-//            Matcher matcher = pattern.matcher(file.getName());
-//
-//            if (matcher.find()) {
-//                String name = matcher.group(1);
-//                String version = matcher.group(2);
-//                xx.put(name, file);
-//            }
-//        }
-//
-//        //简单处理，只有存在版本冲突，就删除之
-//        List<File> delete = Lists.newArrayList();
-//        for (String name : xx.keys()) {
-//            if (xx.get(name).size() > 1) {
-//                delete.addAll(xx.get(name));
-//            }
-//        }
-//
-//        for (int i = 0; i < delete.size(); i++) {
-//            try {
-//                java.nio.file.Files.delete(delete.get(i).toPath());
-//            } catch (IOException e) {
-//                //e.printStackTrace();
-//            }
-//        }
-//
-//    }
 }

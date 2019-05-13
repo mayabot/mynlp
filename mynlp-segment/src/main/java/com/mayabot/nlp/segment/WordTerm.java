@@ -111,6 +111,7 @@ public final class WordTerm implements Serializable, WordAndNature {
         return subword != null && !subword.isEmpty();
     }
 
+    @Override
     public String getWord() {
         return word;
     }
