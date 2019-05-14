@@ -25,7 +25,6 @@ class LexerFactory {
     constructor(settings: Settings) {
         filterPunctuaction = settings.getAsBoolean("punctuation", true)
         filterStopword = settings.getAsBoolean("stopword", false)
-        isCorrection = settings.getAsBoolean("correction", false)
         isIndexWordModel = settings.getAsBoolean("index-model", false)
     }
 
@@ -36,7 +35,6 @@ class LexerFactory {
             val builder = Lexers.coreLexerBuilder { b ->
                 if (isIndexWordModel) b.enableIndexModel()
             }
-            builder.isEnableCorrection = isCorrection
             builder.isEnablePOS = false
 
             builder.build()
@@ -44,7 +42,6 @@ class LexerFactory {
             val builder = Lexers.coreLexerBuilder { b ->
                 if (isIndexWordModel) b.enableIndexModel()
             }
-            builder.isEnableCorrection = isCorrection
             builder.isEnablePOS = false
 
             builder.build()
