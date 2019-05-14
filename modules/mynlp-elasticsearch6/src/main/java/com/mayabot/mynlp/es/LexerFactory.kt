@@ -33,16 +33,18 @@ class LexerFactory {
 
     private fun buildLexer(): Lexer {
         return if ("cws".equals(type, ignoreCase = true)) {
-            val builder = Lexers.cwsTokenizerBuilder()
+            val builder = Lexers.coreLexerBuilder { b ->
+                if (isIndexWordModel) b.enableIndexModel()
+            }
             builder.isEnableCorrection = isCorrection
-            builder.isEnableIndexModel = isIndexWordModel
             builder.isEnablePOS = false
 
             builder.build()
         } else {
-            val builder = Lexers.coreTokenizerBuilder()
+            val builder = Lexers.coreLexerBuilder { b ->
+                if (isIndexWordModel) b.enableIndexModel()
+            }
             builder.isEnableCorrection = isCorrection
-            builder.isEnableIndexModel = isIndexWordModel
             builder.isEnablePOS = false
 
             builder.build()

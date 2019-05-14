@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-package com.mayabot.nlp.segment;
+package com.mayabot.nlp.segment.pipeline;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
+import com.mayabot.nlp.segment.*;
 import com.mayabot.nlp.segment.wordnet.BestPathAlgorithm;
 import com.mayabot.nlp.segment.wordnet.Wordnet;
 import com.mayabot.nlp.segment.wordnet.Wordpath;

@@ -1,6 +1,5 @@
 package com.mayabot.nlp.segment.reader
 
-import com.google.common.collect.Sets
 import com.google.inject.Inject
 import com.google.inject.Singleton
 import com.mayabot.nlp.MynlpEnv
@@ -19,8 +18,6 @@ class StopWordDict
     private val stopWords: Set<String>
 
     init {
-
-        val set = Sets.newHashSet<String>()
 
         val resource = env.loadResource(StopWordDictPath)
                 ?: throw RuntimeException("Not found $StopWordDictPath Resource")

@@ -17,14 +17,14 @@ import static com.mayabot.nlp.segment.cws.CWSPerceptron.S;
  *
  * @author jimichan
  */
-public class CWSSplitAlgorithm extends BaseSegmentComponent implements WordSplitAlgorithm {
+public class CwsSplitAlgorithm extends BaseSegmentComponent implements WordSplitAlgorithm {
 
     private final CWSPerceptron perceptron;
     private CwsService service;
     private CoreDictionary coreDictionary;
 
     @Inject
-    public CWSSplitAlgorithm(CwsService service, CoreDictionary coreDictionary) {
+    public CwsSplitAlgorithm(CwsService service, CoreDictionary coreDictionary) {
         this.service = service;
         this.coreDictionary = coreDictionary;
         perceptron = service.getPerceptron();

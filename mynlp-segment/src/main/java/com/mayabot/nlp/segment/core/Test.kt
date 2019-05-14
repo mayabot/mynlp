@@ -15,7 +15,7 @@ fun main() {
 
     var total = 0
     var count = 0
-    loadResource.openInputStream().bufferedReader().useLines {
+    loadResource!!.openInputStream().bufferedReader().useLines {
 
         it.forEach { line ->
             total++

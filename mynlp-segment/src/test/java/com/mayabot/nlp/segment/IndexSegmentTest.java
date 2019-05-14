@@ -1,5 +1,6 @@
 package com.mayabot.nlp.segment;
 
+import com.mayabot.nlp.segment.pipeline.PipelineLexerBuilder;
 import org.junit.Test;
 
 public class IndexSegmentTest {
@@ -9,8 +10,8 @@ public class IndexSegmentTest {
     public void test() {
 
         Lexer mynlpTokenizer = Lexers.
-                coreTokenizerBuilder()
-                .setEnableIndexModel(true)
+                coreLexerBuilder(
+                        PipelineLexerBuilder::enableIndexModel)
                 .build();
 
 

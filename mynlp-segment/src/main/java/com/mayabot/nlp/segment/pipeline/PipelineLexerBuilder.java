@@ -14,17 +14,22 @@
  * limitations under the License.
  */
 
-package com.mayabot.nlp.segment;
+package com.mayabot.nlp.segment.pipeline;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.mayabot.nlp.Mynlp;
 import com.mayabot.nlp.Mynlps;
+import com.mayabot.nlp.segment.*;
 import com.mayabot.nlp.segment.common.DefaultCharNormalize;
+import com.mayabot.nlp.segment.core.ViterbiBestPathAlgorithm;
 import com.mayabot.nlp.segment.plugins.collector.SentenceCollector;
 import com.mayabot.nlp.segment.plugins.collector.SentenceIndexWordCollector;
 import com.mayabot.nlp.segment.wordnet.BestPathAlgorithm;
+import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -33,16 +38,17 @@ import java.util.function.Consumer;
 /**
  * Pipeline based Lexer Builder
  *
- *
  * @author jimichan
  */
 public class PipelineLexerBuilder implements LexerBuilder {
 
+    @NotNull
     protected final Mynlp mynlp;
 
     /**
      * 词图最优路径选择器
      */
+    @NotNull
     private BestPathAlgorithm bestPathAlgorithm;
 
     /**
@@ -58,7 +64,7 @@ public class PipelineLexerBuilder implements LexerBuilder {
     private LinkedList<WordSplitAlgorithm> wordSplitAlgorithm = Lists.newLinkedList();
 
     /**
-     * 逻辑管线
+     * 逻辑Pipeline
      */
     private LinkedList<WordpathProcessor> pipeLine = Lists.newLinkedList();
 
@@ -72,89 +78,89 @@ public class PipelineLexerBuilder implements LexerBuilder {
      */
     private WordTermCollector termCollector;
 
-    /**
-     * 默认构造函数
-     */
+
+    public static PipelineLexerBuilder builder() {
+        return new PipelineLexerBuilder();
+    }
+
     public PipelineLexerBuilder() {
-        this.mynlp = Mynlps.get();
+        this(Mynlps.get());
     }
 
-    protected void setUp() {
+    public PipelineLexerBuilder(Mynlp mynlp) {
+        this.mynlp = mynlp;
+        this.bestPathAlgorithm = mynlp.getInstance(ViterbiBestPathAlgorithm.class);
 
+        termCollector = mynlp.getInstance(SentenceCollector.class);
     }
 
 
-    /**
-     * 默认情况下，是否开启字词模式
-     */
-    private boolean enableIndexModel = false;
+    public final void install(
+            @NotNull PipelineLexerPlugin module) {
+        Preconditions.checkNotNull(module);
+        module.install(this);
+    }
+
+    public final void installs(
+            @NotNull
+                    PipelineLexerPlugin... modules) {
+        for (PipelineLexerPlugin module : modules) {
+            module.install(this);
+        }
+    }
 
     @Override
     public Lexer build() {
 
-        setUp();
-
-        // 1. bestPathAlgorithm
-        Preconditions.checkNotNull(bestPathAlgorithm);
-
-        // 2. WordSplitAlgorithm
         Preconditions.checkState(!wordSplitAlgorithm.isEmpty());
 
-        // 3.termCollector
-        if (termCollector == null) {
-            if (enableIndexModel) {
-                termCollector = mynlp.getInstance(SentenceIndexWordCollector.class);
-            } else {
-                termCollector = mynlp.getInstance(SentenceCollector.class);
-            }
-        }
-
-        // 4
         callListener();
 
-        Collections.sort(wordSplitAlgorithm);
-        Collections.sort(pipeLine);
+        final ArrayList<WordSplitAlgorithm> splitAlgorithms = Lists.newArrayList(wordSplitAlgorithm);
+        final ArrayList<WordpathProcessor> wordpathProcessors = Lists.newArrayList(pipeLine);
+
+        Collections.sort(splitAlgorithms);
+        Collections.sort(wordpathProcessors);
 
         return new PipelineLexer(
-                Lists.newArrayList(wordSplitAlgorithm),
-                pipeLine.toArray(new WordpathProcessor[0]),
-                bestPathAlgorithm
-                , termCollector,
-                this.charNormalizes);
+                Lists.newArrayList(splitAlgorithms),
+                wordpathProcessors.toArray(new WordpathProcessor[0]),
+                bestPathAlgorithm,
+                termCollector,
+                Lists.newArrayList(this.charNormalizes));
+    }
+
+    private boolean instanceOf(Object subObj, Class parent) {
+        Class sub = subObj.getClass();
+        return parent.equals(sub) ||
+                parent.isAssignableFrom(sub);
     }
 
     /**
      * 调用后置监听器
      */
     private void callListener() {
-
-        //WordTermCollector
-        configListener.forEach(pair -> {
-            if (pair.clazz.equals(termCollector.getClass()) ||
-                    pair.clazz.isAssignableFrom(termCollector.getClass())) {
+        for (ConsumerPair pair : configListener) {
+            //WordTermCollector
+            if (instanceOf(termCollector, pair.clazz)) {
                 pair.consumer.accept(termCollector);
             }
-        });
 
-        //wordSplitAlgorithm
-        configListener.forEach(pair -> {
-            wordSplitAlgorithm.forEach(wf -> {
-                if (pair.clazz.equals(wf.getClass()) ||
-                        pair.clazz.isAssignableFrom(wf.getClass())) {
-                    pair.consumer.accept(wf);
-                }
-            });
-
-        });
-
-        // pipeLine
-        configListener.forEach(pair -> {
-            pipeLine.forEach(it -> {
-                if (pair.clazz.equals(it.getClass()) || pair.clazz.isAssignableFrom(it.getClass())) {
+            //wordSplitAlgorithm
+            wordSplitAlgorithm.forEach(it -> {
+                if (instanceOf(it, pair.clazz)) {
                     pair.consumer.accept(it);
                 }
             });
-        });
+
+            //Pipeline WordProcessor
+            pipeLine.forEach(it -> {
+                if (instanceOf(it, pair.clazz)) {
+                    pair.consumer.accept(it);
+                }
+            });
+
+        }
 
     }
 
@@ -202,7 +208,7 @@ public class PipelineLexerBuilder implements LexerBuilder {
      * @return self
      */
     public PipelineLexerBuilder addCharNormalize(Class<? extends CharNormalize> charNormalizeClass) {
-        this.charNormalizes.add(mynlp.getInstance(charNormalizeClass));
+        addCharNormalize(mynlp.getInstance(charNormalizeClass));
         return this;
     }
 
@@ -213,7 +219,13 @@ public class PipelineLexerBuilder implements LexerBuilder {
      * @return self
      */
     public PipelineLexerBuilder addCharNormalize(CharNormalize charNormalize) {
+
+        if (this.charNormalizes.contains(charNormalize)) {
+            return this;
+        }
+
         this.charNormalizes.add(charNormalize);
+
         return this;
     }
 
@@ -235,7 +247,7 @@ public class PipelineLexerBuilder implements LexerBuilder {
      * @return
      */
     public PipelineLexerBuilder setBestPathAlgorithm(BestPathAlgorithm bestPathAlgorithm) {
-        this.bestPathAlgorithm = bestPathAlgorithm;
+        this.bestPathAlgorithm = Preconditions.checkNotNull(bestPathAlgorithm);
         return this;
     }
 
@@ -246,7 +258,7 @@ public class PipelineLexerBuilder implements LexerBuilder {
      * @return
      */
     public PipelineLexerBuilder setBestPathComputer(Class<? extends BestPathAlgorithm> clazz) {
-        this.bestPathAlgorithm = mynlp.getInstance(clazz);
+        setBestPathAlgorithm(mynlp.getInstance(clazz));
         return this;
     }
 
@@ -257,6 +269,10 @@ public class PipelineLexerBuilder implements LexerBuilder {
      * @return
      */
     public PipelineLexerBuilder addProcessor(WordpathProcessor processor) {
+        if (pipeLine.contains(processor)) {
+            return this;
+        }
+
         pipeLine.add(processor);
         Collections.sort(pipeLine);
         return this;
@@ -274,6 +290,15 @@ public class PipelineLexerBuilder implements LexerBuilder {
         return this;
     }
 
+    /**
+     * 是没有指定class的实例存在
+     *
+     * @return
+     */
+    public boolean existWordPathProcessor(Class clazz) {
+        return Iterables.any(pipeLine, x -> instanceOf(x.getClass(), clazz));
+    }
+
 
     /**
      * 增加WordnetInitializer对象
@@ -282,6 +307,9 @@ public class PipelineLexerBuilder implements LexerBuilder {
      * @return
      */
     public PipelineLexerBuilder addWordSplitAlgorithm(WordSplitAlgorithm algorithm) {
+        if (wordSplitAlgorithm.contains(algorithm)) {
+            return this;
+        }
 
         this.wordSplitAlgorithm.add(algorithm);
 
@@ -300,6 +328,7 @@ public class PipelineLexerBuilder implements LexerBuilder {
         return this;
     }
 
+
     /**
      * 设置分词结果收集器
      *
@@ -315,19 +344,25 @@ public class PipelineLexerBuilder implements LexerBuilder {
      * 设置分词结果收集器
      *
      * @param termCollectorClass
-     * @return
+     * @return PipelineLexerBuilder
      */
     public PipelineLexerBuilder setTermCollector(Class<? extends WordTermCollector> termCollectorClass) {
         this.termCollector = mynlp.getInstance(termCollectorClass);
         return this;
     }
 
-    public WordTermCollector getTermCollector() {
-        return termCollector;
+    /**
+     * 启用索引分词的收集方式
+     *
+     * @return PipelineLexerBuilder
+     */
+    public PipelineLexerBuilder enableIndexModel() {
+        this.termCollector = mynlp.getInstance(SentenceIndexWordCollector.class);
+        return this;
     }
 
-    public SentenceIndexWordCollector getIndexTermCollector() {
-        return (SentenceIndexWordCollector) termCollector;
+    public WordTermCollector getTermCollector() {
+        return termCollector;
     }
 
     private static class ConsumerPair {
@@ -338,15 +373,6 @@ public class PipelineLexerBuilder implements LexerBuilder {
             this.clazz = clazz;
             this.consumer = consumer;
         }
-    }
-
-    public boolean isEnableIndexModel() {
-        return enableIndexModel;
-    }
-
-    public PipelineLexerBuilder setEnableIndexModel(boolean enableIndexModel) {
-        this.enableIndexModel = enableIndexModel;
-        return this;
     }
 
 }
