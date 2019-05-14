@@ -109,7 +109,7 @@ public class CoreTokenizerTest {
 
     @Test
     public void testOrgName() {
-        Lexer tokenizer = Lexers.coreTokenizerBuilder().setEnableNER(true).build();
+        Lexer tokenizer = Lexers.coreLexerBuilder().setEnableNER(true).build();
 
         String line = "陈汝烨偶尔去开元地中海影城看电影。" +
                 "上海万行信息科技有限公司的招聘信息," +

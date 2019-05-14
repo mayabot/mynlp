@@ -7,6 +7,8 @@ import com.mayabot.nlp.segment.Nature;
 import com.mayabot.nlp.segment.SegmentComponentOrder;
 import com.mayabot.nlp.segment.WordpathProcessor;
 import com.mayabot.nlp.segment.common.BaseSegmentComponent;
+import com.mayabot.nlp.segment.pipeline.PipelineLexerBuilder;
+import com.mayabot.nlp.segment.pipeline.PipelineLexerPlugin;
 import com.mayabot.nlp.segment.wordnet.Vertex;
 import com.mayabot.nlp.segment.wordnet.Wordpath;
 
@@ -14,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Singleton
-public class NerProcessor extends BaseSegmentComponent implements WordpathProcessor {
+public class NerProcessor extends BaseSegmentComponent implements WordpathProcessor, PipelineLexerPlugin {
 
     private final PerceptronNerService service;
 
@@ -24,6 +26,11 @@ public class NerProcessor extends BaseSegmentComponent implements WordpathProces
     ) {
         setOrder(SegmentComponentOrder.LASTEST);
         this.service = perceptronPosService;
+    }
+
+    @Override
+    public void install(PipelineLexerBuilder pipelineLexerBuilder) {
+        pipelineLexerBuilder.addProcessor(this);
     }
 
     @Override

@@ -1,98 +1,99 @@
 package com.mayabot.nlp.segment.core;
 
-import com.mayabot.nlp.segment.PipelineLexerBuilder;
-import com.mayabot.nlp.segment.plugins.*;
-import com.mayabot.nlp.segment.plugins.atom.AtomSplitAlgorithm;
-import com.mayabot.nlp.segment.plugins.correction.CorrectionWordpathProcessor;
-import com.mayabot.nlp.segment.plugins.customwords.CustomDictionaryProcessor;
-import com.mayabot.nlp.segment.plugins.ner.NerProcessor;
-import com.mayabot.nlp.segment.plugins.personname.PersonNameAlgorithm;
-import com.mayabot.nlp.segment.plugins.pos.PosPerceptronProcessor;
-import org.jetbrains.annotations.NotNull;
+import com.mayabot.nlp.segment.Lexer;
+import com.mayabot.nlp.segment.LexerBuilder;
+import com.mayabot.nlp.segment.pipeline.PipelineLexerBuilder;
+import com.mayabot.nlp.segment.pipeline.PipelineLexerPlugin;
+import com.mayabot.nlp.segment.plugins.customwords.CustomDictionaryPlugin;
+import com.mayabot.nlp.segment.plugins.ner.NerPlugin;
+import com.mayabot.nlp.segment.plugins.personname.PersonNamePlugin;
+import com.mayabot.nlp.segment.plugins.pos.PosPlugin;
 
 /**
- * 基于HMM-BiGram的分词器.
+ * Core分析器,基于HMM-BiGram的分词器.
+ *
  * @author jimichan
  */
-public class CoreLexerBuilder extends PipelineLexerBuilder
-        implements PersonNameRecognition, NERRecognition,
-        CustomDictionaryRecognition, PartOfSpeechTagging, Correction {
+public class CoreLexerBuilder implements LexerBuilder {
+
+    private final PipelineLexerPlugin custom;
+
+    private boolean enablePersonName = true;
+
+    private boolean enablePOS = true;
+
+//    private boolean enableCorrection = true;
+
+    private boolean enableNER = false;
+    private boolean enableCustomDictionary = false;
 
     public static CoreLexerBuilder builder() {
         return new CoreLexerBuilder();
     }
 
-    private boolean enablePersonName = true;
-    private boolean enablePOS = true;
-    private boolean enableCorrection = true;
-    private boolean enableNER = false;
-    private boolean enableCustomDictionary = false;
+    public static CoreLexerBuilder builder(PipelineLexerPlugin custom) {
+        return new CoreLexerBuilder(custom);
+    }
 
-    /**
-     * 启用小词典
-     */
-    private boolean atomDict = false;
+    public CoreLexerBuilder() {
+        this.custom = null;
+    }
 
+    public CoreLexerBuilder(PipelineLexerPlugin custom) {
+        this.custom = custom;
+    }
 
-
-    /**
-     * 在这里装配所需要的零件吧！！！
-     */
     @Override
-    protected void setUp() {
+    public Lexer build() {
+        PipelineLexerBuilder builder = PipelineLexerBuilder.builder();
 
-        //最优路径算法
-        this.setBestPathComputer(ViterbiBestPathAlgorithm.class);
-
-        //切词算法
-        if (atomDict) {
-            this.addWordSplitAlgorithm(new CoreDictionarySplitAlgorithm(
-                    mynlp.getInstance(CoreDictionary.class)
-            ));
-        } else {
-            this.addWordSplitAlgorithm(new CoreDictionarySplitAlgorithm(
-                    mynlp.getInstance(CoreDictionary.class)
-            ));
-        }
-
-
-        this.addWordSplitAlgorithm(AtomSplitAlgorithm.class);
-
+        builder.install(new CoreLexerPlugin());
 
         if (enablePersonName) {
-            addWordSplitAlgorithm(PersonNameAlgorithm.class);
+            builder.install(new PersonNamePlugin());
         }
 
-
-        // Pipeline处理器
         if (enableCustomDictionary) {
-            addProcessor(CustomDictionaryProcessor.class);
+            builder.install(new CustomDictionaryPlugin());
         }
 
         //分词纠错
-        if (enableCorrection) {
-            addProcessor(CorrectionWordpathProcessor.class);
+//        if (enableCorrection) {
+//            builder.install(new CorrectionPlugin());
+//        }
+
+        //词性标注
+        if (enablePOS) {
+            builder.install(new PosPlugin());
         }
 
-        //词性标注(NER时强制开启)
-        if (enablePOS || enableNER) {
-            addProcessor(PosPerceptronProcessor.class);
-        }
-
+        //命名实体识别模块
         if (enableNER) {
-            addProcessor(NerProcessor.class);
+            builder.install(new NerPlugin());
         }
 
+        if (custom != null) {
+            builder.install(custom);
+        }
+
+        return builder.build();
     }
 
     public boolean isEnablePersonName() {
         return enablePersonName;
     }
 
-    @NotNull
-    @Override
     public CoreLexerBuilder setEnablePersonName(boolean enablePersonName) {
         this.enablePersonName = enablePersonName;
+        return this;
+    }
+
+    public boolean isEnablePOS() {
+        return enablePOS;
+    }
+
+    public CoreLexerBuilder setEnablePOS(boolean enablePOS) {
+        this.enablePOS = enablePOS;
         return this;
     }
 
@@ -100,8 +101,6 @@ public class CoreLexerBuilder extends PipelineLexerBuilder
         return enableNER;
     }
 
-    @NotNull
-    @Override
     public CoreLexerBuilder setEnableNER(boolean enableNER) {
         this.enableNER = enableNER;
         return this;
@@ -111,32 +110,8 @@ public class CoreLexerBuilder extends PipelineLexerBuilder
         return enableCustomDictionary;
     }
 
-    @NotNull
-    @Override
     public CoreLexerBuilder setEnableCustomDictionary(boolean enableCustomDictionary) {
         this.enableCustomDictionary = enableCustomDictionary;
-        return this;
-    }
-
-    public boolean isEnablePOS() {
-        return enablePOS;
-    }
-
-    @NotNull
-    @Override
-    public CoreLexerBuilder setEnablePOS(boolean enablePOS) {
-        this.enablePOS = enablePOS;
-        return this;
-    }
-
-    public boolean isEnableCorrection() {
-        return enableCorrection;
-    }
-
-    @NotNull
-    @Override
-    public CoreLexerBuilder setEnableCorrection(boolean enableCorrection) {
-        this.enableCorrection = enableCorrection;
         return this;
     }
 }

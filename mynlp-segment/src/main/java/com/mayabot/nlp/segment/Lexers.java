@@ -16,7 +16,8 @@
 package com.mayabot.nlp.segment;
 
 import com.mayabot.nlp.segment.core.CoreLexerBuilder;
-import com.mayabot.nlp.segment.cws.CWSTokenizerBuilder;
+import com.mayabot.nlp.segment.cws.CwsLexerBuilder;
+import com.mayabot.nlp.segment.pipeline.PipelineLexerPlugin;
 
 /**
  * Lexer系列便捷方法。
@@ -43,8 +44,13 @@ public class Lexers {
      *
      * @return MynlpTokenizer分词器实例，可多线程使用
      */
-    public static CoreLexerBuilder coreTokenizerBuilder() {
+    public static CoreLexerBuilder coreLexerBuilder() {
         return new CoreLexerBuilder();
+    }
+
+
+    public static CoreLexerBuilder coreLexerBuilder(PipelineLexerPlugin plugin) {
+        return new CoreLexerBuilder(plugin);
     }
 
     /**
@@ -54,8 +60,8 @@ public class Lexers {
      *
      * @return MynlpTokenizer分词器实例，可多线程使用
      */
-    public static Lexer cwsTokenizer() {
-        return cwsTokenizerBuilder().build();
+    public static Lexer cws() {
+        return cwsLexerBuilder().build();
     }
 
     /**
@@ -66,8 +72,12 @@ public class Lexers {
      *
      * @return MynlpTokenizer分词器实例，可多线程使用
      */
-    public static CWSTokenizerBuilder cwsTokenizerBuilder() {
-        return new CWSTokenizerBuilder();
+    public static CwsLexerBuilder cwsLexerBuilder() {
+        return new CwsLexerBuilder();
+    }
+
+    public static CwsLexerBuilder cwsLexerBuilder(PipelineLexerPlugin plugin) {
+        return new CwsLexerBuilder(plugin);
     }
 
 }

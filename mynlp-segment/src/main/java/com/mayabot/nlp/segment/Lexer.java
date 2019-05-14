@@ -16,6 +16,8 @@
 package com.mayabot.nlp.segment;
 
 import com.google.common.collect.Lists;
+import com.mayabot.nlp.segment.pipeline.PipelineLexer;
+import com.mayabot.nlp.segment.pipeline.PipelineLexerBuilder;
 
 import java.util.List;
 import java.util.function.Consumer;
