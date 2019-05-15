@@ -5,7 +5,7 @@ package com.mayabot.nlp.segment.plugins.collector;
  *
  * @author jimichan
  */
-public enum TermCollectorModel {
+public enum TermCollectorMode {
     /**
      * 输出第一层的大词汇。"北京大学排名" => [北京大学] [排名]
      */

@@ -37,7 +37,7 @@ public class IndexCollector extends AbstractWordTermCollector {
     private boolean folded = false;
 
 
-    public IndexCollector(TermCollectorModel model) {
+    public IndexCollector(TermCollectorMode model) {
         super(model);
         setComputeSubword(true);
     }

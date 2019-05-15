@@ -9,11 +9,11 @@ import com.mayabot.nlp.segment.pipeline.PipelineLexerPlugin;
  */
 public class IndexCollectorPlugin implements PipelineLexerPlugin {
 
-    private TermCollectorModel model = TermCollectorModel.MIXED;
+    private TermCollectorMode model = TermCollectorMode.MIXED;
 
     private DictionaryMatcher subwordDictionary = null;
 
-    public IndexCollectorPlugin(TermCollectorModel model) {
+    public IndexCollectorPlugin(TermCollectorMode model) {
         this.model = model;
     }
 
@@ -28,11 +28,11 @@ public class IndexCollectorPlugin implements PipelineLexerPlugin {
         builder.setTermCollector(ic);
     }
 
-    public TermCollectorModel getModel() {
+    public TermCollectorMode getModel() {
         return model;
     }
 
-    public IndexCollectorPlugin setModel(TermCollectorModel model) {
+    public IndexCollectorPlugin setModel(TermCollectorMode model) {
         this.model = model;
         return this;
     }
