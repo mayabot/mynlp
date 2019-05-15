@@ -15,6 +15,8 @@ public class CoreLexerPlugin implements PipelineLexerPlugin {
 
     private DictionaryMatcher dictionaryMatcher;
 
+    private AtomSplitAlgorithm atomSplitAlgorithm;
+
     public CoreLexerPlugin(DictionaryMatcher dictionaryMatcher) {
         this.dictionaryMatcher = dictionaryMatcher;
     }
@@ -35,9 +37,22 @@ public class CoreLexerPlugin implements PipelineLexerPlugin {
                 dictionaryMatcher
         ));
 
-        builder.addWordSplitAlgorithm(AtomSplitAlgorithm.class);
+        if (atomSplitAlgorithm != null) {
+            builder.addWordSplitAlgorithm(atomSplitAlgorithm);
+        } else {
+            builder.addWordSplitAlgorithm(new AtomSplitAlgorithm());
+        }
 
 
         builder.install(new SentenceCollectorPlugin(TermCollectorMode.TOP));
+    }
+
+    public AtomSplitAlgorithm getAtomSplitAlgorithm() {
+        return atomSplitAlgorithm;
+    }
+
+    public CoreLexerPlugin setAtomSplitAlgorithm(AtomSplitAlgorithm atomSplitAlgorithm) {
+        this.atomSplitAlgorithm = atomSplitAlgorithm;
+        return this;
     }
 }
