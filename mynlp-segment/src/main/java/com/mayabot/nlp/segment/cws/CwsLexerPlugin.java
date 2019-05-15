@@ -5,7 +5,7 @@ import com.mayabot.nlp.segment.pipeline.PipelineLexerBuilder;
 import com.mayabot.nlp.segment.pipeline.PipelineLexerPlugin;
 import com.mayabot.nlp.segment.plugins.atom.AtomSplitAlgorithm;
 import com.mayabot.nlp.segment.plugins.collector.SentenceCollectorPlugin;
-import com.mayabot.nlp.segment.plugins.collector.TermCollectorModel;
+import com.mayabot.nlp.segment.plugins.collector.TermCollectorMode;
 
 public class CwsLexerPlugin implements PipelineLexerPlugin {
     @Override
@@ -19,6 +19,6 @@ public class CwsLexerPlugin implements PipelineLexerPlugin {
         //最优路径算法
         builder.setBestPathComputer(ViterbiBestPathAlgorithm.class);
 
-        builder.install(new SentenceCollectorPlugin(TermCollectorModel.TOP));
+        builder.install(new SentenceCollectorPlugin(TermCollectorMode.TOP));
     }
 }

@@ -7,7 +7,7 @@ import com.mayabot.nlp.segment.pipeline.PipelineLexerBuilder
 import com.mayabot.nlp.segment.pipeline.PipelineLexerPlugin
 import com.mayabot.nlp.segment.plugins.collector.IndexCollectorPlugin
 import com.mayabot.nlp.segment.plugins.collector.SentenceCollectorPlugin
-import com.mayabot.nlp.segment.plugins.collector.TermCollectorModel
+import com.mayabot.nlp.segment.plugins.collector.TermCollectorMode
 import com.mayabot.nlp.segment.plugins.customwords.CustomDictionaryPlugin
 import com.mayabot.nlp.segment.plugins.ner.NerPlugin
 import com.mayabot.nlp.segment.plugins.personname.PersonNamePlugin
@@ -77,15 +77,15 @@ class FluentLexerBuilder : LexerBuilder {
 
     inner class Collector {
         @JvmOverloads
-        fun collectorSentence(model: TermCollectorModel = TermCollectorModel.TOP): FluentLexerBuilder {
-            builder.install(SentenceCollectorPlugin(model))
+        fun collectorSentence(mode: TermCollectorMode = TermCollectorMode.TOP): FluentLexerBuilder {
+            builder.install(SentenceCollectorPlugin(mode))
             return this@FluentLexerBuilder
         }
 
         @JvmOverloads
-        fun collectorIndex(model: TermCollectorModel = TermCollectorModel.TOP,
+        fun collectorIndex(mode: TermCollectorMode = TermCollectorMode.TOP,
                            subDict: DictionaryMatcher? = null): FluentLexerBuilder {
-            builder.install(IndexCollectorPlugin(model).apply { subwordDictionary = subDict })
+            builder.install(IndexCollectorPlugin(mode).apply { subwordDictionary = subDict })
             return this@FluentLexerBuilder
         }
     }

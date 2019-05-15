@@ -14,12 +14,12 @@ import java.util.function.Consumer;
 
 public abstract class AbstractWordTermCollector implements WordTermCollector {
 
-    private TermCollectorModel model;
+    private TermCollectorMode model;
     private boolean computeSubword = false;
 
     private DictionaryMatcher subwordDictionary = null;
 
-    public AbstractWordTermCollector(TermCollectorModel model) {
+    public AbstractWordTermCollector(TermCollectorMode model) {
         this.model = model;
     }
 

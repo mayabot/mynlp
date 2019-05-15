@@ -12,7 +12,7 @@ import com.mayabot.nlp.segment.wordnet.Wordpath;
  */
 public class SentenceCollector extends AbstractWordTermCollector {
 
-    public SentenceCollector(TermCollectorModel model) {
+    public SentenceCollector(TermCollectorMode model) {
         super(model);
     }
 
