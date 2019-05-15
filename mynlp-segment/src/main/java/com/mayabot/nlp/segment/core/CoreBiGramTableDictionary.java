@@ -59,8 +59,6 @@ public class CoreBiGramTableDictionary extends NlpResouceExternalizable {
         this.coreDictionary = coreDictionary;
 
         this.restore(mynlp);
-
-
     }
 
     @Override

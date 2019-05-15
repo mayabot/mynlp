@@ -1,8 +1,9 @@
 package segment;
 
+import com.mayabot.nlp.segment.FluentLexerBuilder;
 import com.mayabot.nlp.segment.Lexer;
-import com.mayabot.nlp.segment.core.CoreLexerBuilder;
-import com.mayabot.nlp.segment.plugins.customwords.CustomDictionaryProcessor;
+import com.mayabot.nlp.segment.Lexers;
+import com.mayabot.nlp.segment.plugins.customwords.CustomDictionaryPlugin;
 import com.mayabot.nlp.segment.plugins.customwords.MemCustomDictionary;
 
 public class CustomSegment {
@@ -11,10 +12,9 @@ public class CustomSegment {
 
         MemCustomDictionary memCustomDictionary = new MemCustomDictionary();
 
-        CoreLexerBuilder builder = new CoreLexerBuilder();
+        FluentLexerBuilder builder = Lexers.coreBuilder();
 
-        builder.addProcessor(
-                new CustomDictionaryProcessor(memCustomDictionary));
+        builder.with(new CustomDictionaryPlugin(memCustomDictionary));
 
         Lexer tokenizer = builder.build();
 

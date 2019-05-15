@@ -15,10 +15,6 @@
  */
 package com.mayabot.nlp.segment;
 
-import com.mayabot.nlp.segment.core.CoreLexerBuilder;
-import com.mayabot.nlp.segment.cws.CwsLexerBuilder;
-import com.mayabot.nlp.segment.pipeline.PipelineLexerPlugin;
-
 /**
  * Lexer系列便捷方法。
  *
@@ -26,58 +22,28 @@ import com.mayabot.nlp.segment.pipeline.PipelineLexerPlugin;
  */
 public class Lexers {
 
-    /**
-     * 默认配置的CoreTokenizer分词器。
-     * 默认开启了【人名识别】【词性分析】【分词纠错】
-     * 默认未开启 【自定义词典】【NER命名实体识别】
-     *
-     * @return MynlpTokenizer分词器实例，可多线程使用
-     */
+    public static FluentLexerBuilder fluent() {
+        return FluentLexerBuilder.builder();
+    }
+
     public static Lexer core() {
-        return new CoreLexerBuilder().build();
+        return coreBuilder()
+                .withPos()
+                .withPersonName().build();
     }
 
-    /**
-     * 默认配置的CoreTokenizer分词器构建器。
-     * 默认开启了【人名识别】【词性分析】【分词纠错】
-     * 默认未开启 【自定义词典】【NER命名实体识别】
-     *
-     * @return MynlpTokenizer分词器实例，可多线程使用
-     */
-    public static CoreLexerBuilder coreLexerBuilder() {
-        return new CoreLexerBuilder();
+    public static FluentLexerBuilder coreBuilder() {
+        return FluentLexerBuilder.builder()
+                .basic().core();
     }
 
-
-    public static CoreLexerBuilder coreLexerBuilder(PipelineLexerPlugin plugin) {
-        return new CoreLexerBuilder(plugin);
-    }
-
-    /**
-     * 默认配置的CoreTokenizer分词器。
-     * 默认开启了【人名识别】【词性分析】【分词纠错】
-     * 默认未开启 【自定义词典】【NER命名实体识别】
-     *
-     * @return MynlpTokenizer分词器实例，可多线程使用
-     */
     public static Lexer cws() {
-        return cwsLexerBuilder().build();
+        return cwsBuilder().withPos().build();
     }
 
-    /**
-     * 默认配置的CwsTokenizer分词器构建器
-     * CwsTokenizer是采用
-     * 默认开启了【人名识别】【词性分析】【分词纠错】
-     * 默认未开启 【自定义词典】【NER命名实体识别】
-     *
-     * @return MynlpTokenizer分词器实例，可多线程使用
-     */
-    public static CwsLexerBuilder cwsLexerBuilder() {
-        return new CwsLexerBuilder();
-    }
-
-    public static CwsLexerBuilder cwsLexerBuilder(PipelineLexerPlugin plugin) {
-        return new CwsLexerBuilder(plugin);
+    public static FluentLexerBuilder cwsBuilder() {
+        return FluentLexerBuilder.builder()
+                .basic().cws();
     }
 
 }

@@ -23,10 +23,6 @@ class PipelineLexerBuilderDsl(val builder: PipelineLexerBuilder) {
         builder.install(Plugins.posPlugin())
     }
 
-    fun installCorrection() {
-        builder.install(Plugins.correctionPlugin())
-    }
-
     fun installCustomDictionaryPlugin() {
         builder.install(Plugins.customDictionaryPlugin())
     }
@@ -41,10 +37,12 @@ class PipelineLexerBuilderDsl(val builder: PipelineLexerBuilder) {
 }
 
 fun main() {
+
     val builder = pipelineLexerBuilder {
         installCore()
         installPos()
     }
+
     val lexer = builder.build()
 
     println(lexer.scan("你好中文世界"))

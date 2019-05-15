@@ -20,7 +20,7 @@ public class CoreDictionarySplitAlgorithm extends BaseSegmentComponent implement
     /**
      * 切分字词模式。传入的是一个词。那么排除词典中已有的这个大词
      */
-    private final boolean subWordModel;
+//    private final boolean subWordModel;
 
     public CoreDictionarySplitAlgorithm(DictionaryMatcher coreDictionary) {
         this(coreDictionary, false);
@@ -29,7 +29,7 @@ public class CoreDictionarySplitAlgorithm extends BaseSegmentComponent implement
     public CoreDictionarySplitAlgorithm(DictionaryMatcher coreDictionary,
                                         boolean subWordModel) {
         this.coreDictionary = coreDictionary;
-        this.subWordModel = subWordModel;
+//        this.subWordModel = subWordModel;
         setOrder(SegmentComponentOrder.FIRST);
     }
 
@@ -46,9 +46,9 @@ public class CoreDictionarySplitAlgorithm extends BaseSegmentComponent implement
             int length = searcher.getLength();
             int wordId = searcher.getIndex();
 
-            if (subWordModel && length == text.length) {
-                continue;
-            }
+//            if (subWordModel && length == text.length) {
+//                continue;
+//            }
 
             Vertex v = new Vertex(length, wordId, searcher.getValue());
 
