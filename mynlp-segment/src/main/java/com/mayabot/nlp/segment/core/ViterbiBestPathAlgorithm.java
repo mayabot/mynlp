@@ -32,7 +32,6 @@ public final class ViterbiBestPathAlgorithm implements BestPathAlgorithm {
 
     private CoreBiGramTableDictionary coreBiGramTableDictionary;
 
-
     /**
      * 平滑参数
      */
@@ -72,10 +71,9 @@ public final class ViterbiBestPathAlgorithm implements BestPathAlgorithm {
         PartZ = dSmoothingPara / coreDictionary.totalFreq;
 
         for (int i = 0; i < 21; i++) {
-            values[i] = Math.abs(-Math
-                    .log(PartZ * i + PARTTA_Dtemp
-                    ));
+            values[i] = Math.abs(-Math.log(PartZ * i + PARTTA_Dtemp));
         }
+
         value1 = values[1];
         value2 = values[2];
         value3 = values[3];
@@ -100,13 +98,11 @@ public final class ViterbiBestPathAlgorithm implements BestPathAlgorithm {
         //从第二个字符节点开始，一直到最后一个字符
         final int charSize = wordnet.getCharSizeLength();
 
-
         // 第一行的From肯定来自Start节点
 
         for (Vertex v = wordnet.getRow(0).first(); v != null; v = v.next()) {
-            updateFrom(wordnet, v, wordnet.getBeginRow().getFirst());
+            updateFrom(v, wordnet.getBeginRow().getFirst());
         }
-
 
         for (int i = 0; i < charSize; i++) {
 
@@ -126,7 +122,7 @@ public final class ViterbiBestPathAlgorithm implements BestPathAlgorithm {
 
                 if (toRow.first() != null) {
                     for (Vertex to = toRow.first(); to != null; to = to.next()) {
-                        updateFrom(wordnet, to, node);
+                        updateFrom(to, node);
                     }
                 }
             }
@@ -137,7 +133,7 @@ public final class ViterbiBestPathAlgorithm implements BestPathAlgorithm {
     }
 
 
-    private void updateFrom(Wordnet wordnet, Vertex the, Vertex from) {
+    private void updateFrom(Vertex the, Vertex from) {
 
         //是权重越小越好 距离越短
         double weight = from.weight + calculateWeight(from, the);

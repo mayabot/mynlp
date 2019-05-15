@@ -20,6 +20,7 @@ import com.mayabot.nlp.segment.common.VertexHelper;
 import com.mayabot.nlp.utils.CustomCharSequence;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Arrays;
 import java.util.BitSet;
 import java.util.function.Consumer;
 
@@ -64,6 +65,27 @@ public final class Wordnet implements CharSequence {
      */
     private final int charSize;
 
+
+    private Wordnet(Wordnet parent, int from, int length) {
+        this.charArray = Arrays.copyOfRange(parent.charArray, from, from + length);
+        this.charSize = length;
+
+        this.begin = new VertexRow(-1, this);
+        this.end = new VertexRow(charSize, this);
+
+        slotList = new VertexRow[charSize];
+        for (int i = 0; i < length; i++) {
+            VertexRow row = new VertexRow(i, this);
+            for (Vertex v : parent.slotList[from + i]) {
+                row.getOrCrete(v.length);
+            }
+            slotList[i] = row;
+        }
+
+        getBeginRow().put(VertexHelper.newBegin());
+        getEndRow().put(VertexHelper.newEnd());
+    }
+
     /**
      * 构建一个空的网，槽的数量是charArray.length
      *
@@ -87,6 +109,10 @@ public final class Wordnet implements CharSequence {
 
         getBeginRow().put(VertexHelper.newBegin());
         getEndRow().put(VertexHelper.newEnd());
+    }
+
+    public Wordnet subWordnet(int from, int length) {
+        return new Wordnet(this, from, length);
     }
 
     /**

@@ -24,8 +24,6 @@ import com.mayabot.nlp.Mynlps;
 import com.mayabot.nlp.segment.*;
 import com.mayabot.nlp.segment.common.DefaultCharNormalize;
 import com.mayabot.nlp.segment.core.ViterbiBestPathAlgorithm;
-import com.mayabot.nlp.segment.plugins.collector.SentenceCollector;
-import com.mayabot.nlp.segment.plugins.collector.SentenceIndexWordCollector;
 import com.mayabot.nlp.segment.wordnet.BestPathAlgorithm;
 import org.jetbrains.annotations.NotNull;
 
@@ -90,8 +88,6 @@ public class PipelineLexerBuilder implements LexerBuilder {
     public PipelineLexerBuilder(Mynlp mynlp) {
         this.mynlp = mynlp;
         this.bestPathAlgorithm = mynlp.getInstance(ViterbiBestPathAlgorithm.class);
-
-        termCollector = mynlp.getInstance(SentenceCollector.class);
     }
 
 
@@ -113,6 +109,7 @@ public class PipelineLexerBuilder implements LexerBuilder {
     public Lexer build() {
 
         Preconditions.checkState(!wordSplitAlgorithm.isEmpty());
+        Preconditions.checkNotNull(termCollector);
 
         callListener();
 
@@ -185,7 +182,7 @@ public class PipelineLexerBuilder implements LexerBuilder {
      * @return
      */
     public PipelineLexerBuilder disabledComponent(Class<? extends SegmentComponent> clazz) {
-        config(clazz, x -> x.disable());
+        config(clazz, SegmentComponent::disable);
         return this;
     }
 
@@ -196,7 +193,7 @@ public class PipelineLexerBuilder implements LexerBuilder {
      * @return
      */
     public PipelineLexerBuilder enableComponent(Class<? extends SegmentComponent> clazz) {
-        config(clazz, x -> x.enable());
+        config(clazz, SegmentComponent::enable);
         return this;
     }
 
@@ -348,16 +345,6 @@ public class PipelineLexerBuilder implements LexerBuilder {
      */
     public PipelineLexerBuilder setTermCollector(Class<? extends WordTermCollector> termCollectorClass) {
         this.termCollector = mynlp.getInstance(termCollectorClass);
-        return this;
-    }
-
-    /**
-     * 启用索引分词的收集方式
-     *
-     * @return PipelineLexerBuilder
-     */
-    public PipelineLexerBuilder enableIndexModel() {
-        this.termCollector = mynlp.getInstance(SentenceIndexWordCollector.class);
         return this;
     }
 

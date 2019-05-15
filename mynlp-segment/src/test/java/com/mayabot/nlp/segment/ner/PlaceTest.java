@@ -1,7 +1,7 @@
 package com.mayabot.nlp.segment.ner;
 
 import com.mayabot.nlp.segment.Lexer;
-import com.mayabot.nlp.segment.core.CoreLexerBuilder;
+import com.mayabot.nlp.segment.Lexers;
 import com.mayabot.nlp.segment.utils.TokenizerTestHelp;
 import org.junit.Test;
 
@@ -14,8 +14,8 @@ public class PlaceTest {
         {
             String text = "中央|大街|浪漫|永|存";
 
-            Lexer tokenizer = new CoreLexerBuilder()
-                    .setEnableNER(false)
+            Lexer tokenizer = Lexers.coreBuilder()
+
                     .build();
 
             TokenizerTestHelp.test(tokenizer, text);
@@ -25,8 +25,8 @@ public class PlaceTest {
         {
             String text = "中央大街|浪漫|永|存";
 
-            Lexer tokenizer = new CoreLexerBuilder()
-                    .setEnableNER(true)
+            Lexer tokenizer = Lexers.coreBuilder()
+                    .withNer()
                     .build();
 
 

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.mayabot.nlp.segment.plugins;
+package com.mayabot.nlp.segment.plugins.pattern;
 
 import com.mayabot.nlp.segment.Nature;
 import com.mayabot.nlp.segment.WordpathProcessor;
@@ -22,6 +22,7 @@ import com.mayabot.nlp.segment.common.BaseSegmentComponent;
 import com.mayabot.nlp.segment.wordnet.Vertex;
 import com.mayabot.nlp.segment.wordnet.Wordnet;
 import com.mayabot.nlp.segment.wordnet.Wordpath;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -36,8 +37,7 @@ public class PatternWordpathProcessor extends BaseSegmentComponent implements Wo
 
     private Pattern pattern;
 
-    public PatternWordpathProcessor(Pattern pattern) {
-
+    public PatternWordpathProcessor(@NotNull Pattern pattern) {
         this.pattern = pattern;
     }
 
@@ -61,4 +61,19 @@ public class PatternWordpathProcessor extends BaseSegmentComponent implements Wo
         return wordPath;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        PatternWordpathProcessor that = (PatternWordpathProcessor) o;
+
+        return pattern.equals(that.pattern);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return pattern.hashCode();
+    }
 }

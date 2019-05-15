@@ -29,7 +29,7 @@ public abstract class BaseSegmentComponent implements SegmentComponent {
 
     @Override
     public String getName() {
-        return this.getClass().getSimpleName().replace("XProcess", "");
+        return this.getClass().getSimpleName();
     }
 
     @Override
