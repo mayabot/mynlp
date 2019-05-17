@@ -42,7 +42,7 @@ public class PunctuationFilter extends BaseFilterLexerReader implements Predicat
      * 如果是标点符号，返回false，表示排除
      *
      * @param term
-     * @return
+     * @return boolean
      */
     @Override
     public boolean test(WordTerm term) {

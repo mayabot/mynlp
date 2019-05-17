@@ -313,7 +313,7 @@ public enum Nature {
     /**
      * 是否名词
      *
-     * @return
+     * @return 是否名词
      */
     public boolean isN() {
         return (this.name().charAt(0) == 'n' || this == Ng) && this != nx;

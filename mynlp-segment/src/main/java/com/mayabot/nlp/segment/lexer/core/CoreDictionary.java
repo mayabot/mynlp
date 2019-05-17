@@ -131,7 +131,7 @@ public class CoreDictionary extends NlpResouceExternalizable implements Dictiona
      * 获取条目
      *
      * @param key
-     * @return
+     * @return 词频
      */
     public int wordFreq(String key) {
         int c = trie.get(key);
@@ -145,7 +145,7 @@ public class CoreDictionary extends NlpResouceExternalizable implements Dictiona
      * 获取条目
      *
      * @param wordID
-     * @return
+     * @return 词频
      */
     public int wordFreq(int wordID) {
         return trie.get(wordID);
@@ -173,7 +173,7 @@ public class CoreDictionary extends NlpResouceExternalizable implements Dictiona
      * 是否包含词语
      *
      * @param key
-     * @return
+     * @return 是否包含
      */
     public boolean contains(String key) {
         return trie.indexOf(key) >= 0;
@@ -183,7 +183,7 @@ public class CoreDictionary extends NlpResouceExternalizable implements Dictiona
      * 获取词语的ID
      *
      * @param word
-     * @return
+     * @return 下标Id
      */
     public int getWordID(String word) {
         return trie.indexOf(word);

@@ -171,7 +171,7 @@ public class PipelineLexerBuilder implements LexerBuilder {
      * @param clazz
      * @param listener
      * @param <T>
-     * @return
+     * @return PipelineLexerBuilder
      */
     public <T> PipelineLexerBuilder config(Class<T> clazz, Consumer<T> listener) {
         configListener.add(new ConsumerPair(clazz, listener));
@@ -182,7 +182,7 @@ public class PipelineLexerBuilder implements LexerBuilder {
      * 关闭组件
      *
      * @param clazz
-     * @return
+     * @return PipelineLexerBuilder
      */
     public PipelineLexerBuilder disabledComponent(Class<? extends SegmentComponent> clazz) {
         config(clazz, SegmentComponent::disable);
@@ -193,7 +193,7 @@ public class PipelineLexerBuilder implements LexerBuilder {
      * 启用组件
      *
      * @param clazz
-     * @return
+     * @return PipelineLexerBuilder
      */
     public PipelineLexerBuilder enableComponent(Class<? extends SegmentComponent> clazz) {
         config(clazz, SegmentComponent::enable);
@@ -205,7 +205,7 @@ public class PipelineLexerBuilder implements LexerBuilder {
      * 添加CharNormalize
      *
      * @param charNormalizeClass 通过Guice来初始化该对象
-     * @return self
+     * @return PipelineLexerBuilder self
      */
     public PipelineLexerBuilder addCharNormalize(Class<? extends CharNormalize> charNormalizeClass) {
         addCharNormalize(mynlp.getInstance(charNormalizeClass));
@@ -216,7 +216,7 @@ public class PipelineLexerBuilder implements LexerBuilder {
      * 添加CharNormalize
      *
      * @param charNormalize
-     * @return self
+     * @return PipelineLexerBuilder self
      */
     public PipelineLexerBuilder addCharNormalize(CharNormalize charNormalize) {
 
@@ -233,7 +233,7 @@ public class PipelineLexerBuilder implements LexerBuilder {
      * 移除CharNormalize
      *
      * @param clazz
-     * @return
+     * @return PipelineLexerBuilder
      */
     public PipelineLexerBuilder removeCharNormalize(Class<? extends CharNormalize> clazz) {
         this.charNormalizes.removeIf(obj -> clazz.isAssignableFrom(obj.getClass()) || obj.getClass().equals(clazz));
@@ -244,7 +244,7 @@ public class PipelineLexerBuilder implements LexerBuilder {
      * 设置BestPathComputer的实现对象
      *
      * @param bestPathAlgorithm
-     * @return
+     * @return PipelineLexerBuilder
      */
     public PipelineLexerBuilder setBestPathAlgorithm(BestPathAlgorithm bestPathAlgorithm) {
         this.bestPathAlgorithm = Preconditions.checkNotNull(bestPathAlgorithm);
@@ -255,7 +255,7 @@ public class PipelineLexerBuilder implements LexerBuilder {
      * 设置BestPathComputer的实现类，有Guice创建对象
      *
      * @param clazz
-     * @return
+     * @return PipelineLexerBuilder
      */
     public PipelineLexerBuilder setBestPathComputer(Class<? extends BestPathAlgorithm> clazz) {
         setBestPathAlgorithm(mynlp.getInstance(clazz));
@@ -266,7 +266,7 @@ public class PipelineLexerBuilder implements LexerBuilder {
      * 增加一个WordpathProcessor实现对象
      *
      * @param processor
-     * @return
+     * @return PipelineLexerBuilder
      */
     public PipelineLexerBuilder addProcessor(WordpathProcessor processor) {
         if (pipeLine.contains(processor)) {
@@ -283,7 +283,7 @@ public class PipelineLexerBuilder implements LexerBuilder {
      * 增加一个WordpathProcessor实现类
      *
      * @param clazz
-     * @return
+     * @return PipelineLexerBuilder
      */
     public PipelineLexerBuilder addProcessor(Class<? extends WordpathProcessor> clazz) {
         addProcessor(mynlp.getInstance(clazz));
@@ -293,7 +293,7 @@ public class PipelineLexerBuilder implements LexerBuilder {
     /**
      * 是没有指定class的实例存在
      *
-     * @return
+     * @return PipelineLexerBuilder
      */
     public boolean existWordPathProcessor(Class clazz) {
         return Iterables.any(pipeLine, x -> instanceOf(x.getClass(), clazz));
@@ -304,7 +304,7 @@ public class PipelineLexerBuilder implements LexerBuilder {
      * 增加WordnetInitializer对象
      *
      * @param algorithm
-     * @return
+     * @return PipelineLexerBuilder
      */
     public PipelineLexerBuilder addWordSplitAlgorithm(WordSplitAlgorithm algorithm) {
         if (wordSplitAlgorithmList.contains(algorithm)) {
@@ -321,7 +321,7 @@ public class PipelineLexerBuilder implements LexerBuilder {
      * 增加WordnetInitializer
      *
      * @param algorithm Class
-     * @return
+     * @return PipelineLexerBuilder
      */
     public PipelineLexerBuilder addWordSplitAlgorithm(Class<? extends WordSplitAlgorithm> algorithm) {
         addWordSplitAlgorithm(mynlp.getInstance(algorithm));
@@ -333,7 +333,7 @@ public class PipelineLexerBuilder implements LexerBuilder {
      * 设置分词结果收集器
      *
      * @param termCollector
-     * @return
+     * @return PipelineLexerBuilder
      */
     public PipelineLexerBuilder setTermCollector(WordTermCollector termCollector) {
         this.termCollector = termCollector;
@@ -344,7 +344,7 @@ public class PipelineLexerBuilder implements LexerBuilder {
      * 设置分词结果收集器
      *
      * @param termCollectorClass
-     * @return PipelineLexerBuilder
+     * @return PipelineLexerBuilder PipelineLexerBuilder
      */
     public PipelineLexerBuilder setTermCollector(Class<? extends WordTermCollector> termCollectorClass) {
         this.termCollector = mynlp.getInstance(termCollectorClass);

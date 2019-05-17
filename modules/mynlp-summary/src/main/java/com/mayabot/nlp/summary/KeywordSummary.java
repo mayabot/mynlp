@@ -133,7 +133,7 @@ public class KeywordSummary {
      * 设置新的分词器。默认是去除停用词和标点符号的
      *
      * @param lexerReader
-     * @return
+     * @return KeywordSummary
      */
     public KeywordSummary setLexerReader(LexerReader lexerReader) {
         this.lexerReader = lexerReader;

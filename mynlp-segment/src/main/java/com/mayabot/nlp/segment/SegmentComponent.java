@@ -30,14 +30,15 @@ public interface SegmentComponent extends Comparable<SegmentComponent> {
 
 
     /**
-     * @return
+     * return component name
+     * @return name
      */
     String getName();
 
     /**
      * 组件是否启用。默认返回true，启用
      *
-     * @return
+     * @return enabled
      */
     boolean isEnabled();
 
