@@ -38,6 +38,7 @@ public class CustomDictionaryProcessor extends BaseSegmentComponent implements W
 
     @Inject
     public CustomDictionaryProcessor(CustomDictionary dictionary) {
+        super(LEVEL2);
         this.dictionary = dictionary;
     }
 
@@ -72,7 +73,6 @@ public class CustomDictionaryProcessor extends BaseSegmentComponent implements W
                     } else {
                         // 也就是自定义词典里面包含了重复的词汇
                     }
-
                 }
             }
         }

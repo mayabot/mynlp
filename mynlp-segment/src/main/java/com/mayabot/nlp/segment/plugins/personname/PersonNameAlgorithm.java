@@ -22,7 +22,9 @@ public class PersonNameAlgorithm extends BaseSegmentComponent implements WordSpl
     private final PerceptronPersonNameService service;
 
     @Inject
-    public PersonNameAlgorithm(PerceptronPersonNameService service) {
+    public PersonNameAlgorithm(
+            PerceptronPersonNameService service) {
+        super(LEVEL3);
         this.service = service;
     }
 
@@ -35,6 +37,11 @@ public class PersonNameAlgorithm extends BaseSegmentComponent implements WordSpl
 
         if (!names.isEmpty()) {
             for (PersonName name : names) {
+                //如果已经存在
+                if (wordnet.row(name.getOffset()).contains(name.getName().length())) {
+                    continue;
+                }
+
                 Vertex v = new Vertex(name.getName().length());
                 v.setAbsWordNatureAndFreq(Nature.nr);
                 wordnet.put(name.getOffset(), v);

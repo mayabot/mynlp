@@ -1,17 +1,17 @@
 package com.mayabot.nlp.segment
 
-import com.mayabot.nlp.segment.core.CoreLexerPlugin
-import com.mayabot.nlp.segment.core.DictionaryMatcher
-import com.mayabot.nlp.segment.cwsperceptron.CwsLexerPlugin
+import com.mayabot.nlp.segment.lexer.core.CoreLexerPlugin
+import com.mayabot.nlp.segment.lexer.core.DictionaryMatcher
+import com.mayabot.nlp.segment.lexer.perceptron.CwsLexerPlugin
 import com.mayabot.nlp.segment.pipeline.PipelineLexerBuilder
 import com.mayabot.nlp.segment.pipeline.PipelineLexerPlugin
-import com.mayabot.nlp.segment.plugins.collector.IndexCollectorPlugin
 import com.mayabot.nlp.segment.plugins.collector.SentenceCollectorPlugin
 import com.mayabot.nlp.segment.plugins.collector.TermCollectorMode
 import com.mayabot.nlp.segment.plugins.customwords.CustomDictionaryPlugin
 import com.mayabot.nlp.segment.plugins.ner.NerPlugin
 import com.mayabot.nlp.segment.plugins.personname.PersonNamePlugin
 import com.mayabot.nlp.segment.plugins.pos.PosPlugin
+import java.util.function.Consumer
 
 /**
  * Fluent style
@@ -56,7 +56,24 @@ class FluentLexerBuilder : LexerBuilder {
         builder.install(plugin)
     }
 
-    fun collector(): Collector = Collector()
+    fun collector(consumer: Consumer<SentenceCollectorPlugin>): FluentLexerBuilder {
+        val scPlugin = SentenceCollectorPlugin()
+        consumer.accept(scPlugin)
+        builder.install(scPlugin)
+        return this
+    }
+
+    fun collector(block: SentenceCollectorPlugin.()->Unit): FluentLexerBuilder {
+        val scPlugin = SentenceCollectorPlugin()
+        scPlugin.block()
+        builder.install(scPlugin)
+        return this
+    }
+
+    fun collector(collector: WordTermCollector): FluentLexerBuilder {
+        builder.termCollector = collector
+        return this
+    }
 
     inner class Basic {
         fun core(): FluentLexerBuilder {
@@ -74,22 +91,6 @@ class FluentLexerBuilder : LexerBuilder {
             return this@FluentLexerBuilder
         }
     }
-
-    inner class Collector {
-        @JvmOverloads
-        fun collectorSentence(mode: TermCollectorMode = TermCollectorMode.TOP): FluentLexerBuilder {
-            builder.install(SentenceCollectorPlugin(mode))
-            return this@FluentLexerBuilder
-        }
-
-        @JvmOverloads
-        fun collectorIndex(mode: TermCollectorMode = TermCollectorMode.TOP,
-                           subDict: DictionaryMatcher? = null): FluentLexerBuilder {
-            builder.install(IndexCollectorPlugin(mode).apply { subwordDictionary = subDict })
-            return this@FluentLexerBuilder
-        }
-    }
-
 }
 
 

@@ -20,7 +20,6 @@ import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.mayabot.nlp.segment.Nature;
-import com.mayabot.nlp.segment.SegmentComponentOrder;
 import com.mayabot.nlp.segment.WordpathProcessor;
 import com.mayabot.nlp.segment.common.BaseSegmentComponent;
 import com.mayabot.nlp.segment.wordnet.Vertex;
@@ -43,7 +42,7 @@ public class PosPerceptronProcessor extends BaseSegmentComponent implements Word
     PosPerceptronProcessor(
             PerceptronPosService perceptronPosService
     ) {
-        setOrder(SegmentComponentOrder.LASTEST);
+        super(LEVEL4);
         this.perceptronPosService = perceptronPosService;
     }
 
@@ -54,7 +53,10 @@ public class PosPerceptronProcessor extends BaseSegmentComponent implements Word
 
         for (int i = 0; i < vertices.size(); i++) {
             Vertex vertex = vertices.get(i);
-            if (vertex.nature == null || vertex.nature == Nature.newWord) {
+            //人名识别，的优先级不能高于词性分析器
+            if (vertex.nature == null
+                    || vertex.nature == Nature.newWord ||
+                    vertex.nature == Nature.nr) {
                 vertex.nature = (posList.get(i));
             }
         }
