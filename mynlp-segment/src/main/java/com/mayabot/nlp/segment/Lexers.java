@@ -37,11 +37,11 @@ public class Lexers {
                 .basic().core();
     }
 
-    public static Lexer cws() {
-        return cwsBuilder().withPos().build();
+    public static Lexer perceptron() {
+        return perceptronBuilder().withPos().build();
     }
 
-    public static FluentLexerBuilder cwsBuilder() {
+    public static FluentLexerBuilder perceptronBuilder() {
         return FluentLexerBuilder.builder()
                 .basic().cws();
     }

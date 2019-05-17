@@ -1,7 +1,7 @@
 package com.mayabot.nlp.segment
 
 import com.mayabot.nlp.Mynlps
-import com.mayabot.nlp.segment.cws.CwsService
+import com.mayabot.nlp.segment.cwsperceptron.CwsService
 import org.junit.Test
 
 class CwsTest {

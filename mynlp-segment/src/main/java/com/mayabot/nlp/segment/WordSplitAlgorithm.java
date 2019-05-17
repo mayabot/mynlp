@@ -16,7 +16,7 @@
 
 package com.mayabot.nlp.segment;
 
-import com.mayabot.nlp.segment.cws.CwsSplitAlgorithm;
+import com.mayabot.nlp.segment.cwsperceptron.CwsSplitAlgorithm;
 import com.mayabot.nlp.segment.plugins.atom.AtomSplitAlgorithm;
 import com.mayabot.nlp.segment.wordnet.Wordnet;
 import org.jetbrains.annotations.NotNull;

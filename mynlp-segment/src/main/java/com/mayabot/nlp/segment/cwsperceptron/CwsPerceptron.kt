@@ -13,20 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.mayabot.nlp.segment.cws
+package com.mayabot.nlp.segment.cwsperceptron
 
 import com.google.common.base.Splitter
 import com.mayabot.nlp.common.FastStringBuilder
 import com.mayabot.nlp.hppc.IntArrayList
 import com.mayabot.nlp.perceptron.*
-import com.mayabot.nlp.segment.cws.CWSPerceptron.Companion.B
-import com.mayabot.nlp.segment.cws.CWSPerceptron.Companion.E
-import com.mayabot.nlp.segment.cws.CWSPerceptron.Companion.M
-import com.mayabot.nlp.segment.cws.CWSPerceptron.Companion.S
-import com.mayabot.nlp.segment.cws.CWSPerceptron.Companion.tagList
-import com.mayabot.nlp.segment.cws.CWSPerceptronSample.forOnlineLearn
-import com.mayabot.nlp.segment.cws.CWSPerceptronSample.loadSamples
-import com.mayabot.nlp.segment.cws.CWSPerceptronSample.sentenceToSample
+import com.mayabot.nlp.segment.cwsperceptron.CWSPerceptron.Companion.B
+import com.mayabot.nlp.segment.cwsperceptron.CWSPerceptron.Companion.E
+import com.mayabot.nlp.segment.cwsperceptron.CWSPerceptron.Companion.M
+import com.mayabot.nlp.segment.cwsperceptron.CWSPerceptron.Companion.S
+import com.mayabot.nlp.segment.cwsperceptron.CWSPerceptron.Companion.tagList
+import com.mayabot.nlp.segment.cwsperceptron.CWSPerceptronSample.forOnlineLearn
+import com.mayabot.nlp.segment.cwsperceptron.CWSPerceptronSample.loadSamples
+import com.mayabot.nlp.segment.cwsperceptron.CWSPerceptronSample.sentenceToSample
 import com.mayabot.nlp.utils.CharNormUtils
 import java.io.File
 import java.io.InputStream

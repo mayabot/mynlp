@@ -2,7 +2,7 @@ package com.mayabot.nlp.segment
 
 import com.mayabot.nlp.segment.core.CoreLexerPlugin
 import com.mayabot.nlp.segment.core.DictionaryMatcher
-import com.mayabot.nlp.segment.cws.CwsLexerPlugin
+import com.mayabot.nlp.segment.cwsperceptron.CwsLexerPlugin
 import com.mayabot.nlp.segment.pipeline.PipelineLexerBuilder
 import com.mayabot.nlp.segment.pipeline.PipelineLexerPlugin
 import com.mayabot.nlp.segment.plugins.collector.IndexCollectorPlugin

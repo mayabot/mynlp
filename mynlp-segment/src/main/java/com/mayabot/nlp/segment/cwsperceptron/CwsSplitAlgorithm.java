@@ -1,4 +1,4 @@
-package com.mayabot.nlp.segment.cws;
+package com.mayabot.nlp.segment.cwsperceptron;
 
 import com.google.inject.Inject;
 import com.mayabot.nlp.segment.Nature;
@@ -9,8 +9,8 @@ import com.mayabot.nlp.segment.core.CoreDictionary;
 import com.mayabot.nlp.segment.wordnet.Vertex;
 import com.mayabot.nlp.segment.wordnet.Wordnet;
 
-import static com.mayabot.nlp.segment.cws.CWSPerceptron.E;
-import static com.mayabot.nlp.segment.cws.CWSPerceptron.S;
+import static com.mayabot.nlp.segment.cwsperceptron.CWSPerceptron.E;
+import static com.mayabot.nlp.segment.cwsperceptron.CWSPerceptron.S;
 
 /**
  * 基于核心词典的基础切词器
