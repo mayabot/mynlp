@@ -1,5 +1,6 @@
 package com.mayabot.nlp.segment;
 
+import com.mayabot.nlp.segment.plugins.collector.SentenceCollectorPlugin;
 import com.mayabot.nlp.segment.plugins.collector.TermCollectorMode;
 import org.junit.Test;
 
@@ -11,7 +12,7 @@ public class IndexSegmentTest {
 
         Lexer mynlpTokenizer = Lexers.
                 coreBuilder()
-                .collector().collectorIndex(TermCollectorMode.ATOM)
+                .collector(SentenceCollectorPlugin::atom)
                 .build();
 
 

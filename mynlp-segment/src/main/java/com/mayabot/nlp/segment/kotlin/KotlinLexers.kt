@@ -12,7 +12,6 @@ fun String.lexer(): Sentence = defaultLexer.scan(this)
 
 
 /**
- * 对文本文件进行分词，输出到另外一个文件
  */
 fun File.segment(outPath: String) {
     val lexerReader = defaultLexer.reader()
