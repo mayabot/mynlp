@@ -80,4 +80,21 @@ public class SentenceCollectorPlugin implements PipelineLexerPlugin {
         return this;
     }
 
+    public SubwordCollector getSubwordCollector() {
+        return subwordCollector;
+    }
+
+    public SentenceCollectorPlugin setSubwordCollector(SubwordCollector subwordCollector) {
+        this.subwordCollector = subwordCollector;
+        return this;
+    }
+
+    public ComputeMoreSubword getComputeMoreSubword() {
+        return computeMoreSubword;
+    }
+
+    public SentenceCollectorPlugin setComputeMoreSubword(ComputeMoreSubword computeMoreSubword) {
+        this.computeMoreSubword = computeMoreSubword;
+        return this;
+    }
 }
