@@ -43,7 +43,6 @@ public class CoreLexerPlugin implements PipelineLexerPlugin {
             builder.addWordSplitAlgorithm(new AtomSplitAlgorithm());
         }
 
-
         builder.install(new SentenceCollectorPlugin(TermCollectorMode.TOP));
     }
 
