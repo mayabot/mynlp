@@ -71,7 +71,7 @@ public class FasttextClassification {
      * 使用乘积量化压缩Fasttext模型，稍微损失一些精度.
      *
      * @param fastText
-     * @return
+     * @return FastText
      * @throws Exception
      */
     public static FastText compress(FastText fastText) throws Exception {
@@ -101,7 +101,7 @@ public class FasttextClassification {
      * @param model
      * @param tokenizer
      * @param text
-     * @return
+     * @return FloatStringPair
      */
     public static FloatStringPair predictOne(FastText model, LexerReader tokenizer, String text) {
         List<String> inputList = Lists.newArrayList(tokenizer.scan(text).toWordSequence());

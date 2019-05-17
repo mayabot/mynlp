@@ -1,4 +1,4 @@
-package com.mayabot.nlp.perceptron.solution.ner
+package com.mayabot.nlp.segment.plugins.ner
 
 import com.google.common.collect.Lists
 import com.mayabot.nlp.common.FastStringBuilder

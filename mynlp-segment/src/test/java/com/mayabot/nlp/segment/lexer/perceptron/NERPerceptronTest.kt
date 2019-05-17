@@ -1,7 +1,7 @@
 package com.mayabot.nlp.segment.lexer.perceptron
 
-import com.mayabot.nlp.perceptron.solution.ner.NERPerceptron
-import com.mayabot.nlp.perceptron.solution.ner.NERPerceptronTrainer
+import com.mayabot.nlp.segment.plugins.ner.NERPerceptron
+import com.mayabot.nlp.segment.plugins.ner.NERPerceptronTrainer
 import com.mayabot.nlp.segment.Lexers
 import com.mayabot.nlp.segment.plugins.ner.PerceptronNerService
 import java.io.File

@@ -140,7 +140,7 @@ public final class WordTerm implements Serializable, WordAndNature {
     /**
      * 长度
      *
-     * @return
+     * @return 长度
      */
     public int length() {
         return word.length();

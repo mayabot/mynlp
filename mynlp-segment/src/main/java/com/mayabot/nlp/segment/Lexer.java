@@ -88,7 +88,7 @@ public interface Lexer {
      *
      * @param punctuation
      * @param stopWord
-     * @return
+     * @return LexerReader
      */
     default LexerReader filterReader(boolean punctuation, boolean stopWord) {
         return LexerReader.filter(this, punctuation, stopWord);

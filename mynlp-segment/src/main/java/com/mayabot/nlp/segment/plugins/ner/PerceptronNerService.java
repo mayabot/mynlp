@@ -8,7 +8,6 @@ import com.mayabot.nlp.Mynlps;
 import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
 import com.mayabot.nlp.perceptron.FeatureSet;
-import com.mayabot.nlp.perceptron.solution.ner.NERPerceptron;
 import com.mayabot.nlp.resources.NlpResource;
 import com.mayabot.nlp.segment.Nature;
 import com.mayabot.nlp.segment.Sentence;
@@ -57,7 +56,7 @@ public class PerceptronNerService {
     /**
      * 返回双层嵌套结构的句子列表
      * @param list
-     * @return
+     * @return List[WordTerm]
      */
     public static List<WordTerm> toNerComposite(List<WordTerm> list) {
 
