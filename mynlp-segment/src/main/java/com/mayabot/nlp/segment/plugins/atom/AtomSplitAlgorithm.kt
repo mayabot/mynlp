@@ -3,7 +3,6 @@ package com.mayabot.nlp.segment.plugins.atom
 import com.mayabot.nlp.collection.dat.DoubleArrayTrieStringIntMap
 import com.mayabot.nlp.collection.dat.FastDatCharSet
 import com.mayabot.nlp.segment.Nature
-import com.mayabot.nlp.segment.SegmentComponentOrder
 import com.mayabot.nlp.segment.WordSplitAlgorithm
 import com.mayabot.nlp.segment.common.BaseSegmentComponent
 import com.mayabot.nlp.segment.common.String2
@@ -20,7 +19,7 @@ import java.util.regex.Pattern
  */
 class AtomSplitAlgorithm
 (val dat: DoubleArrayTrieStringIntMap = defaultTemplates())
-    : BaseSegmentComponent(), WordSplitAlgorithm {
+    : BaseSegmentComponent(LEVEL2), WordSplitAlgorithm {
 
     //CharScatterSet 5000万次查询耗时40ms
     private val chineseNumSet = FastDatCharSet(
@@ -33,10 +32,6 @@ class AtomSplitAlgorithm
 
     //fm101.1 iphone7 fm-981 a-b-c
     private val xPattern = Pattern.compile("A+[N\\-][N\\-A]*")
-
-    init {
-        this.order = SegmentComponentOrder.DEFAULT
-    }
 
     override fun fill(wordnet: Wordnet) {
         val chars = wordnet.charArray

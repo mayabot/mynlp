@@ -4,7 +4,6 @@ import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.mayabot.nlp.segment.Nature;
-import com.mayabot.nlp.segment.SegmentComponentOrder;
 import com.mayabot.nlp.segment.WordpathProcessor;
 import com.mayabot.nlp.segment.common.BaseSegmentComponent;
 import com.mayabot.nlp.segment.pipeline.PipelineLexerBuilder;
@@ -15,6 +14,9 @@ import com.mayabot.nlp.segment.wordnet.Wordpath;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author jimichan
+ */
 @Singleton
 public class NerProcessor extends BaseSegmentComponent implements WordpathProcessor, PipelineLexerPlugin {
 
@@ -24,7 +26,7 @@ public class NerProcessor extends BaseSegmentComponent implements WordpathProces
     NerProcessor(
             PerceptronNerService perceptronPosService
     ) {
-        setOrder(SegmentComponentOrder.LASTEST);
+        super(LEVEL5);
         this.service = perceptronPosService;
     }
 

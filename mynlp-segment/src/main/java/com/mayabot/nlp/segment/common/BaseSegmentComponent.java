@@ -16,7 +16,6 @@
 package com.mayabot.nlp.segment.common;
 
 import com.mayabot.nlp.segment.SegmentComponent;
-import com.mayabot.nlp.segment.SegmentComponentOrder;
 
 /**
  * @author jimichan
@@ -25,7 +24,21 @@ public abstract class BaseSegmentComponent implements SegmentComponent {
 
     private boolean enabled = true;
 
-    private int order = SegmentComponentOrder.DEFAULT;
+    public static final int LEVEL1 = -1000;
+
+    public static final int LEVEL2 = -500;
+
+    public static final int LEVEL3 = 0;
+
+    public static final int LEVEL4 = 500;
+
+    public static final int LEVEL5 = 1000;
+
+    private int order = LEVEL3;
+
+    public BaseSegmentComponent(int order){
+        this.order = order;
+    }
 
     @Override
     public String getName() {

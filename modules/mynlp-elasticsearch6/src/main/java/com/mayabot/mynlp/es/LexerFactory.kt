@@ -1,9 +1,7 @@
 package com.mayabot.mynlp.es
 
-import com.mayabot.nlp.Mynlps
 import com.mayabot.nlp.segment.FluentLexerBuilder
 import com.mayabot.nlp.segment.Lexer
-import com.mayabot.nlp.segment.core.CoreDictionary
 import com.mayabot.nlp.segment.plugins.collector.TermCollectorMode
 import org.elasticsearch.common.settings.Settings
 
@@ -20,10 +18,6 @@ class LexerFactory {
 
     var isIndexWordModel = false
 
-    /**
-     * 分词纠错
-     */
-    var isCorrection = true
 
     constructor(settings: Settings) {
         filterPunctuaction = settings.getAsBoolean("punctuation", true)
@@ -35,25 +29,30 @@ class LexerFactory {
 
     private fun buildLexer(): Lexer {
         return if ("cws".equals(type, ignoreCase = true)) {
-            val builder2 = FluentLexerBuilder.builder()
+            val builder = FluentLexerBuilder.builder()
                     .basic().cws()
 
             if (isIndexWordModel) {
-                builder2.collector().collectorIndex(
-                        TermCollectorMode.MIXED,
-                        Mynlps.instanceOf(CoreDictionary::class.java))
+                builder.collector {
+                    model = TermCollectorMode.MIXED
+                    dictMoreSubword()
+                    indexedSubword(2)
+                }
             }
 
-            builder2.build()
+            builder.build()
         } else {
-            val builder2 = FluentLexerBuilder.builder()
+            val builder = FluentLexerBuilder.builder()
                     .basic().core()
 
             if (isIndexWordModel) {
-                builder2.collector().collectorIndex(TermCollectorMode.MIXED)
+                builder.collector {
+                    model = TermCollectorMode.MIXED
+                    indexedSubword(2)
+                }
             }
 
-            builder2.build()
+            builder.build()
         }
     }
 

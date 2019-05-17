@@ -23,7 +23,11 @@ import com.mayabot.nlp.Mynlp;
 import com.mayabot.nlp.Mynlps;
 import com.mayabot.nlp.segment.*;
 import com.mayabot.nlp.segment.common.DefaultCharNormalize;
-import com.mayabot.nlp.segment.core.ViterbiBestPathAlgorithm;
+import com.mayabot.nlp.segment.lexer.core.CoreLexerPlugin;
+import com.mayabot.nlp.segment.lexer.core.ViterbiBestPathAlgorithm;
+import com.mayabot.nlp.segment.plugins.collector.SentenceCollector;
+import com.mayabot.nlp.segment.plugins.collector.SentenceCollectorPlugin;
+import com.mayabot.nlp.segment.plugins.collector.TermCollectorMode;
 import com.mayabot.nlp.segment.wordnet.BestPathAlgorithm;
 import org.jetbrains.annotations.NotNull;
 
@@ -59,7 +63,7 @@ public class PipelineLexerBuilder implements LexerBuilder {
     /**
      * 切词器管线
      */
-    private LinkedList<WordSplitAlgorithm> wordSplitAlgorithm = Lists.newLinkedList();
+    private LinkedList<WordSplitAlgorithm> wordSplitAlgorithmList = Lists.newLinkedList();
 
     /**
      * 逻辑Pipeline
@@ -76,7 +80,7 @@ public class PipelineLexerBuilder implements LexerBuilder {
      */
     private WordTermCollector termCollector;
 
-
+    @NotNull
     public static PipelineLexerBuilder builder() {
         return new PipelineLexerBuilder();
     }
@@ -97,23 +101,22 @@ public class PipelineLexerBuilder implements LexerBuilder {
         module.install(this);
     }
 
-    public final void installs(
-            @NotNull
-                    PipelineLexerPlugin... modules) {
-        for (PipelineLexerPlugin module : modules) {
-            module.install(this);
-        }
-    }
-
     @Override
     public Lexer build() {
 
-        Preconditions.checkState(!wordSplitAlgorithm.isEmpty());
-        Preconditions.checkNotNull(termCollector);
+        // 默认core的分词算法
+        if(wordSplitAlgorithmList.isEmpty()){
+            install(new CoreLexerPlugin());
+        }
+
+        //默认SentenceCollector收集器
+        if (termCollector == null) {
+            install(new SentenceCollectorPlugin());
+        }
 
         callListener();
 
-        final ArrayList<WordSplitAlgorithm> splitAlgorithms = Lists.newArrayList(wordSplitAlgorithm);
+        final ArrayList<WordSplitAlgorithm> splitAlgorithms = Lists.newArrayList(wordSplitAlgorithmList);
         final ArrayList<WordpathProcessor> wordpathProcessors = Lists.newArrayList(pipeLine);
 
         Collections.sort(splitAlgorithms);
@@ -143,8 +146,8 @@ public class PipelineLexerBuilder implements LexerBuilder {
                 pair.consumer.accept(termCollector);
             }
 
-            //wordSplitAlgorithm
-            wordSplitAlgorithm.forEach(it -> {
+            //wordSplitAlgorithmList
+            wordSplitAlgorithmList.forEach(it -> {
                 if (instanceOf(it, pair.clazz)) {
                     pair.consumer.accept(it);
                 }
@@ -304,13 +307,13 @@ public class PipelineLexerBuilder implements LexerBuilder {
      * @return
      */
     public PipelineLexerBuilder addWordSplitAlgorithm(WordSplitAlgorithm algorithm) {
-        if (wordSplitAlgorithm.contains(algorithm)) {
+        if (wordSplitAlgorithmList.contains(algorithm)) {
             return this;
         }
 
-        this.wordSplitAlgorithm.add(algorithm);
+        this.wordSplitAlgorithmList.add(algorithm);
 
-        Collections.sort(wordSplitAlgorithm);
+        Collections.sort(wordSplitAlgorithmList);
         return this;
     }
 

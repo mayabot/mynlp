@@ -16,7 +16,7 @@
 
 package com.mayabot.nlp.segment;
 
-import com.mayabot.nlp.segment.cwsperceptron.CwsSplitAlgorithm;
+import com.mayabot.nlp.segment.lexer.perceptron.PerceptronCwsSplitAlgorithm;
 import com.mayabot.nlp.segment.plugins.atom.AtomSplitAlgorithm;
 import com.mayabot.nlp.segment.wordnet.Wordnet;
 import org.jetbrains.annotations.NotNull;
@@ -33,8 +33,8 @@ import org.jetbrains.annotations.NotNull;
  * 在一个具体的分词器中，有可能综合同时使用多个分词算法。
  *
  * @see AtomSplitAlgorithm
- * @see CwsSplitAlgorithm
- * @see com.mayabot.nlp.segment.core.CoreDictionarySplitAlgorithm
+ * @see PerceptronCwsSplitAlgorithm
+ * @see com.mayabot.nlp.segment.lexer.core.CoreDictionarySplitAlgorithm
  * @see com.mayabot.nlp.segment.plugins.personname.PersonNameAlgorithm
  * @author jimichan
  */

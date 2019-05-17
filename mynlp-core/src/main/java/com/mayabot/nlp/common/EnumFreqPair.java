@@ -44,9 +44,11 @@ public class EnumFreqPair<E extends Enum> {
 
     /**
      * 优化
+     * <pre>
      * null -> "NULL"
      * a:1  -> a:1
      * {a:1,b:2}  -> a:1,b:2
+     * </pre>
      *
      * @param out
      */
