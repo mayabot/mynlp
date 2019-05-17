@@ -31,7 +31,3 @@ fun File.segment(outPath: String) {
                 }
     }
 }
-
-fun main() {
-    println("华为海思总裁致信".lexer())
-}
