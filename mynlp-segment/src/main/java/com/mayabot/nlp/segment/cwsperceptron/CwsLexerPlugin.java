@@ -1,4 +1,4 @@
-package com.mayabot.nlp.segment.cws;
+package com.mayabot.nlp.segment.cwsperceptron;
 
 import com.mayabot.nlp.segment.core.ViterbiBestPathAlgorithm;
 import com.mayabot.nlp.segment.pipeline.PipelineLexerBuilder;

@@ -1,4 +1,4 @@
-package com.mayabot.nlp.segment.cws;
+package com.mayabot.nlp.segment.cwsperceptron;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;

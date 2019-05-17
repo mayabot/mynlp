@@ -1,4 +1,4 @@
-package com.mayabot.nlp.segment.cws
+package com.mayabot.nlp.segment.cwsperceptron
 
 import com.mayabot.nlp.perceptron.solution.ner.NERPerceptron
 import com.mayabot.nlp.perceptron.solution.ner.NERPerceptronTrainer
