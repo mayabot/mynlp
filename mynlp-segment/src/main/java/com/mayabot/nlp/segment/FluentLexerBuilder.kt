@@ -6,7 +6,7 @@ import com.mayabot.nlp.segment.lexer.perceptron.CwsLexerPlugin
 import com.mayabot.nlp.segment.pipeline.PipelineLexerBuilder
 import com.mayabot.nlp.segment.pipeline.PipelineLexerPlugin
 import com.mayabot.nlp.segment.plugins.collector.SentenceCollectorPlugin
-import com.mayabot.nlp.segment.plugins.collector.TermCollectorMode
+import com.mayabot.nlp.segment.plugins.collector.SentenceCollectorPluginBuilder
 import com.mayabot.nlp.segment.plugins.customwords.CustomDictionaryPlugin
 import com.mayabot.nlp.segment.plugins.ner.NerPlugin
 import com.mayabot.nlp.segment.plugins.personname.PersonNamePlugin
@@ -56,17 +56,16 @@ class FluentLexerBuilder : LexerBuilder {
         builder.install(plugin)
     }
 
-    fun collector(consumer: Consumer<SentenceCollectorPlugin>): FluentLexerBuilder {
-        val scPlugin = SentenceCollectorPlugin()
-        consumer.accept(scPlugin)
+    fun collector(xbuilder: SentenceCollectorPluginBuilder): FluentLexerBuilder {
+        val scPlugin = xbuilder.build()
         builder.install(scPlugin)
         return this
     }
 
-    fun collector(block: SentenceCollectorPlugin.()->Unit): FluentLexerBuilder {
-        val scPlugin = SentenceCollectorPlugin()
+    fun collector(block: SentenceCollectorPluginBuilder.()->Unit): FluentLexerBuilder {
+        val scPlugin = SentenceCollectorPlugin.builder()
         scPlugin.block()
-        builder.install(scPlugin)
+        builder.install(scPlugin.build())
         return this
     }
 
