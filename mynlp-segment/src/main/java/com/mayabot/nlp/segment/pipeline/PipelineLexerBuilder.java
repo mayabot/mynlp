@@ -296,7 +296,7 @@ public class PipelineLexerBuilder implements LexerBuilder {
      * @return PipelineLexerBuilder
      */
     public boolean existWordPathProcessor(Class clazz) {
-        return Iterables.any(pipeLine, x -> instanceOf(x.getClass(), clazz));
+        return pipeLine.stream().anyMatch(x -> instanceOf(x.getClass(), clazz));
     }
 
 
