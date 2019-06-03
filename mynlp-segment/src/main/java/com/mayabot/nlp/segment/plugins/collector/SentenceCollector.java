@@ -18,8 +18,6 @@ import java.util.function.Consumer;
  */
 public class SentenceCollector implements WordTermCollector {
 
-    private TermCollectorMode model = TermCollectorMode.TOP;
-
     private SubwordCollector subwordCollector;
 
     private ComputeMoreSubword computeMoreSubword;
@@ -49,39 +47,10 @@ public class SentenceCollector implements WordTermCollector {
                 subwordCollector.subWord(term, wordnet, wordPath);
             }
 
-            switch (model) {
-                case TOP:
-                    consumer.accept(term);
-                    break;
-                case ATOM:
-                    if (term.hasSubword()) {
-                        for (WordTerm s : term.getSubword()) {
-                            consumer.accept(s);
-                        }
-                    } else {
-                        consumer.accept(term);
-                    }
-                    break;
-                case MIXED:
-                    consumer.accept(term);
-                    if (term.hasSubword()) {
-                        for (WordTerm s : term.getSubword()) {
-                            consumer.accept(s);
-                        }
-                    }
-                    break;
-            }
+            consumer.accept(term);
         }
     }
 
-    public TermCollectorMode getModel() {
-        return model;
-    }
-
-    public SentenceCollector setModel(TermCollectorMode model) {
-        this.model = model;
-        return this;
-    }
 
     public SubwordCollector getSubwordCollector() {
         return subwordCollector;

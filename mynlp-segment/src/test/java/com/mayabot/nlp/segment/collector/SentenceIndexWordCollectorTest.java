@@ -2,7 +2,6 @@ package com.mayabot.nlp.segment.collector;
 
 import com.mayabot.nlp.segment.Lexer;
 import com.mayabot.nlp.segment.Lexers;
-import com.mayabot.nlp.segment.plugins.collector.TermCollectorMode;
 import org.junit.Assert;
 import org.junit.Test;
 

@@ -4,8 +4,6 @@ import com.mayabot.nlp.segment.lexer.core.ViterbiBestPathAlgorithm;
 import com.mayabot.nlp.segment.pipeline.PipelineLexerBuilder;
 import com.mayabot.nlp.segment.pipeline.PipelineLexerPlugin;
 import com.mayabot.nlp.segment.plugins.atom.AtomSplitAlgorithm;
-import com.mayabot.nlp.segment.plugins.collector.SentenceCollectorPlugin;
-import com.mayabot.nlp.segment.plugins.collector.TermCollectorMode;
 
 public class CwsLexerPlugin implements PipelineLexerPlugin {
 
@@ -19,7 +17,7 @@ public class CwsLexerPlugin implements PipelineLexerPlugin {
 
         if (atomSplitAlgorithm != null) {
             builder.addWordSplitAlgorithm(atomSplitAlgorithm);
-        }else {
+        } else {
             builder.addWordSplitAlgorithm(AtomSplitAlgorithm.class);
         }
 
