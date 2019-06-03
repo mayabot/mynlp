@@ -17,7 +17,6 @@
 package com.mayabot.nlp.segment.pipeline;
 
 import com.google.common.base.Preconditions;
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.mayabot.nlp.Mynlp;
 import com.mayabot.nlp.Mynlps;
@@ -25,9 +24,7 @@ import com.mayabot.nlp.segment.*;
 import com.mayabot.nlp.segment.common.DefaultCharNormalize;
 import com.mayabot.nlp.segment.lexer.core.CoreLexerPlugin;
 import com.mayabot.nlp.segment.lexer.core.ViterbiBestPathAlgorithm;
-import com.mayabot.nlp.segment.plugins.collector.SentenceCollector;
 import com.mayabot.nlp.segment.plugins.collector.SentenceCollectorPlugin;
-import com.mayabot.nlp.segment.plugins.collector.TermCollectorMode;
 import com.mayabot.nlp.segment.wordnet.BestPathAlgorithm;
 import org.jetbrains.annotations.NotNull;
 
@@ -105,7 +102,7 @@ public class PipelineLexerBuilder implements LexerBuilder {
     public Lexer build() {
 
         // 默认core的分词算法
-        if(wordSplitAlgorithmList.isEmpty()){
+        if (wordSplitAlgorithmList.isEmpty()) {
             install(new CoreLexerPlugin());
         }
 

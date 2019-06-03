@@ -1,14 +1,8 @@
 package com.mayabot.nlp.lucene;
 
-import com.mayabot.nlp.segment.Lexer;
-import com.mayabot.nlp.segment.LexerReader;
-import com.mayabot.nlp.segment.Nature;
-import com.mayabot.nlp.segment.WordTerm;
+import com.mayabot.nlp.segment.*;
 import org.apache.lucene.analysis.Tokenizer;
-import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
-import org.apache.lucene.analysis.tokenattributes.OffsetAttribute;
-import org.apache.lucene.analysis.tokenattributes.PositionIncrementAttribute;
-import org.apache.lucene.analysis.tokenattributes.TypeAttribute;
+import org.apache.lucene.analysis.tokenattributes.*;
 
 import java.io.IOException;
 import java.util.Iterator;
@@ -20,6 +14,8 @@ import java.util.Iterator;
  * @author jimichan
  */
 final public class MynlpTokenizer extends Tokenizer {
+
+    private IterableMode mode = IterableMode.DEFAULT;
 
     public static Tokenizer fromLexer(LexerReader lexerReader) {
         return new MynlpTokenizer(lexerReader);
@@ -46,6 +42,9 @@ final public class MynlpTokenizer extends Tokenizer {
      */
     private final PositionIncrementAttribute positionAttr = addAttribute(PositionIncrementAttribute.class);
 
+
+    private final PositionLengthAttribute positionLenAttr = addAttribute(PositionLengthAttribute.class);
+
     private Iterator<WordTerm> iterator;
 
     private final LexerReader lexerReader;
@@ -57,6 +56,20 @@ final public class MynlpTokenizer extends Tokenizer {
      */
     public MynlpTokenizer(LexerReader lexerReader) {
         this.lexerReader = lexerReader;
+    }
+
+    public MynlpTokenizer(LexerReader lexerReader,IterableMode mode) {
+        this.lexerReader = lexerReader;
+        this.mode = mode;
+    }
+
+    public IterableMode getMode() {
+        return mode;
+    }
+
+    public MynlpTokenizer setMode(IterableMode mode) {
+        this.mode = mode;
+        return this;
     }
 
     /**
@@ -74,15 +87,25 @@ final public class MynlpTokenizer extends Tokenizer {
             if (Nature.w == next.getNature()) {
                 typeAtt.setType("Punctuation");
             }
-            
+
             positionAttr.setPositionIncrement(next.getPosInc());
             termAtt.setEmpty().append(next.word);
             offsetAtt.setOffset(next.offset, next.offset + next.length());
+
+            if (mode == IterableMode.GRAPH) {
+                if (next.hasSubword()) {
+                    positionLenAttr.setPositionLength(next.getSubword().size());
+                }else{
+                    positionLenAttr.setPositionLength(1);
+                }
+            }
 
             return true;
         } else {
             return false;
         }
+
+
     }
 
 
@@ -100,7 +123,19 @@ final public class MynlpTokenizer extends Tokenizer {
     @Override
     public void reset() throws IOException {
         super.reset();
-        iterator = lexerReader.scan(this.input).iterator();
+
+        switch (mode) {
+            case GRAPH:
+                iterator = new GraphIterator(lexerReader.scan(this.input).iterator());
+                break;
+            case FLATTEN:
+                iterator = new FlattenIterator(lexerReader.scan(this.input).iterator());
+                break;
+            case DEFAULT:
+            default:
+                iterator = lexerReader.scan(this.input).iterator();
+        }
+
     }
 
 }

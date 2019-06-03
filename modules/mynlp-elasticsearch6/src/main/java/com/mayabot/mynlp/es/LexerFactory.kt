@@ -2,11 +2,11 @@ package com.mayabot.mynlp.es
 
 import com.mayabot.nlp.segment.FluentLexerBuilder
 import com.mayabot.nlp.segment.Lexer
-import com.mayabot.nlp.segment.plugins.collector.TermCollectorMode
 import org.elasticsearch.common.settings.Settings
 
 /**
  * @author jimichan
+ * //TODO 这里需要和企业版同步
  */
 class LexerFactory {
 
@@ -17,7 +17,6 @@ class LexerFactory {
     var filterStopword = false
 
     var isIndexWordModel = false
-
 
     constructor(settings: Settings) {
         filterPunctuaction = settings.getAsBoolean("punctuation", true)
@@ -33,11 +32,10 @@ class LexerFactory {
                     .basic().cws()
 
             if (isIndexWordModel) {
-                builder.collector {
-                    model = TermCollectorMode.MIXED
-                    dictMoreSubword()
-                    indexedSubword(2)
-                }
+                builder.collector()
+                        .dictMoreSubword()
+                        .indexedSubword(2)
+                        .ok()
             }
 
             builder.build()
@@ -46,10 +44,7 @@ class LexerFactory {
                     .basic().core()
 
             if (isIndexWordModel) {
-                builder.collector {
-                    model = TermCollectorMode.MIXED
-                    indexedSubword(2)
-                }
+                builder.collector().indexedSubword().ok()
             }
 
             builder.build()

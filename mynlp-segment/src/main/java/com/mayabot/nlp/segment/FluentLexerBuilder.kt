@@ -1,12 +1,14 @@
 package com.mayabot.nlp.segment
 
+import com.google.common.base.Preconditions
+import com.mayabot.nlp.Mynlps
+import com.mayabot.nlp.segment.lexer.core.CoreDictionary
 import com.mayabot.nlp.segment.lexer.core.CoreLexerPlugin
 import com.mayabot.nlp.segment.lexer.core.DictionaryMatcher
 import com.mayabot.nlp.segment.lexer.perceptron.CwsLexerPlugin
 import com.mayabot.nlp.segment.pipeline.PipelineLexerBuilder
 import com.mayabot.nlp.segment.pipeline.PipelineLexerPlugin
-import com.mayabot.nlp.segment.plugins.collector.SentenceCollectorPlugin
-import com.mayabot.nlp.segment.plugins.collector.SentenceCollectorPluginBuilder
+import com.mayabot.nlp.segment.plugins.collector.*
 import com.mayabot.nlp.segment.plugins.customwords.CustomDictionaryPlugin
 import com.mayabot.nlp.segment.plugins.ner.NerPlugin
 import com.mayabot.nlp.segment.plugins.personname.PersonNamePlugin
@@ -29,7 +31,7 @@ open class FluentLexerBuilder : LexerBuilder {
 
     val builder = PipelineLexerBuilder.builder()
 
-    fun basic() = Basic()
+    fun basic() = BasicBlock()
 
     fun withPos(): FluentLexerBuilder {
         builder.install(PosPlugin())
@@ -55,25 +57,62 @@ open class FluentLexerBuilder : LexerBuilder {
         builder.install(plugin)
     }
 
-    fun collector(xbuilder: SentenceCollectorPluginBuilder): FluentLexerBuilder {
-        val scPlugin = xbuilder.build()
-        builder.install(scPlugin)
-        return this
+    fun collector(): CollectorBlock {
+        return CollectorBlock()
     }
 
-    fun collector(block: SentenceCollectorPluginBuilder.()->Unit): FluentLexerBuilder {
-        val scPlugin = SentenceCollectorPlugin.builder()
-        scPlugin.block()
-        builder.install(scPlugin.build())
-        return this
+    inner class CollectorBlock {
+
+        var plugin = SentenceCollectorPlugin()
+        var pluginSelf = false
+        var collector: WordTermCollector? = null
+
+        fun subwordCollector(subwordCollector: SubwordCollector) {
+            Preconditions.checkState(!pluginSelf)
+            plugin.subwordCollector = subwordCollector
+        }
+
+        @JvmOverloads
+        fun indexedSubword(minWordLen: Int = 2): CollectorBlock {
+            Preconditions.checkState(!pluginSelf)
+            val subwordCollector = IndexSubwordCollector()
+            subwordCollector.minWordLength = minWordLen
+            plugin.subwordCollector = subwordCollector
+            return this
+        }
+
+        @JvmOverloads
+        fun dictMoreSubword(dbcms: DictionaryMatcher = Mynlps.instanceOf(CoreDictionary::class.java)): CollectorBlock {
+            Preconditions.checkState(!pluginSelf)
+            plugin.computeMoreSubword = DictBasedComputeMoreSubword(dbcms)
+            return this
+        }
+
+
+        fun with(plugin: SentenceCollectorPlugin) : CollectorBlock{
+            this.plugin = plugin
+            this.pluginSelf = true
+            return this
+        }
+
+        fun with(collector: WordTermCollector) : CollectorBlock{
+            builder.termCollector = collector
+            return this
+        }
+
+        fun ok() : FluentLexerBuilder{
+
+            if (collector != null) {
+                builder.termCollector = collector
+            }else{
+                builder.install(plugin)
+            }
+
+            return this@FluentLexerBuilder
+        }
     }
 
-    fun collector(collector: WordTermCollector): FluentLexerBuilder {
-        builder.termCollector = collector
-        return this
-    }
-
-    inner class Basic {
+    inner class BasicBlock {
         fun core(): FluentLexerBuilder {
             builder.install(CoreLexerPlugin())
             return this@FluentLexerBuilder

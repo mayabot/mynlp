@@ -2,6 +2,7 @@ package com.mayabot.mynlp.es;
 
 
 import com.mayabot.nlp.lucene.MynlpAnalyzer;
+import com.mayabot.nlp.lucene.MynlpTokenizer;
 import org.apache.lucene.analysis.Analyzer;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.env.Environment;
@@ -36,7 +37,7 @@ public class MynlpAnalyzerProvider extends AbstractIndexAnalyzerProvider<Analyze
         return AccessController.doPrivileged(new PrivilegedAction<Analyzer>() {
             @Override
             public Analyzer run() {
-                return new MynlpAnalyzer(factory.build());
+                return new MynlpAnalyzer(new MynlpTokenizer(factory.build()));
             }
         });
 
