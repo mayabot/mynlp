@@ -37,9 +37,7 @@ import java.util.TreeMap;
  */
 public abstract class BasePinyinDictionary {
 
-
     InternalLogger logger = InternalLoggerFactory.getInstance(BasePinyinDictionary.class);
-
 
     private AhoCorasickDoubleArrayTrie<Pinyin[]> trie = null;
 

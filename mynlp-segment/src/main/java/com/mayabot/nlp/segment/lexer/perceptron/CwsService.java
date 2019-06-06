@@ -40,8 +40,8 @@ public class CwsService {
         NlpResource featureResource = mynlp.loadResource(modelName + "/feature.dat");
 
         this.perceptron = CWSPerceptron.load(
-                parameterResource.openInputStream(),
-                featureResource.openInputStream());
+                parameterResource.inputStream(),
+                featureResource.inputStream());
 
         for (String example : cwsPatch.getExamples()) {
             perceptron.learn(example);

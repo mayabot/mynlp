@@ -24,11 +24,11 @@ public class PinyinTest {
 
     @Test
     public void testSpeed() {
-        Mynlps.instanceOf(PinyinDictionary.class);
+        Mynlps.instanceOf(PinyinService.class);
 
         long t1 = System.currentTimeMillis();
         for (int i = 0; i < 10000; i++) {
-            Mynlps.instanceOf(PinyinDictionary.class);
+            Mynlps.instanceOf(PinyinService.class);
         }
         long t2 = System.currentTimeMillis();
 
@@ -65,7 +65,7 @@ public class PinyinTest {
         Mynlps.clear();
 
         Mynlps.install(builder -> {
-            builder.set(PinyinDictionary.pinyinExtDicSetting, "pinyin.txt");
+            builder.set(PinyinService.getPinyinExtDicSetting(), "pinyin.txt");
         });
 
         Pinyins.reset();
@@ -84,13 +84,12 @@ public class PinyinTest {
     public void test3() {
         Mynlps.clear();
 
-        PinyinDictionary pinyinService = Mynlps.instanceOf(PinyinDictionary.class);
+        PinyinService pinyinService = Pinyins.service();
 
         CustomPinyin customPinyin = pinyinService.getCustomPinyin();
         customPinyin.put("朝朝盈", "zhao1,zhao1,yin2");
 
         pinyinService.rebuild();
-
 
         PinyinResult result = pinyinService.text2Pinyin("123aed,.你好朝朝暮暮,银行");
 

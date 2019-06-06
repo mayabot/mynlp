@@ -31,9 +31,10 @@ constructor(val mynlpEnv: MynlpEnv) {
     private fun loadExample(rsName: String): List<String> {
         val resource = mynlpEnv.loadResource(rsName)
         if (resource != null) {
-            return resource.openLineReader().asSequence().map { it.trim() }.filter {
-                it.isNotBlank() && !it.startsWith("#")
-            }.toList()
+            return resource.inputStream().bufferedReader().readLines()
+                    .map { it.trim() }.filter {
+                        it.isNotBlank() && !it.startsWith("#")
+                    }
         }
         return listOf()
     }

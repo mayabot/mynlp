@@ -4,7 +4,7 @@ import com.google.inject.Inject
 import com.google.inject.Singleton
 import com.mayabot.nlp.MynlpEnv
 
-const val StopWordDictPath = "stopword-dict/stopwords.txt"
+const val StopWordDictPath = "stopwords.txt"
 
 /**
  * 停用词词典
@@ -22,11 +22,9 @@ class StopWordDict
         val resource = env.loadResource(StopWordDictPath)
                 ?: throw RuntimeException("Not found $StopWordDictPath Resource")
 
-        stopWords = resource.openInputStream().bufferedReader()
-                .lineSequence()
-                .map {
-                    it.trim()
-                }.filter { it.isNotBlank() }
+        stopWords = resource.inputStream()
+                .bufferedReader().readLines().asSequence()
+                .map { it.trim()}.filter { it.isNotBlank()}
                 .toSet()
     }
 

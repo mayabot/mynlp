@@ -113,9 +113,6 @@ public class MynlpBuilder {
             resourceFactoryList.add(new JarNlpResourceFactory(dataDirFile));
             resourceFactoryList.add(new ClasspathNlpResourceFactory(Mynlps.class.getClassLoader()));
 
-            ImmutableList.copyOf(resourceFactoryList);
-
-
             MynlpEnv env = new MynlpEnv(dataDirFile, cacheDirFile, resourceFactoryList, settings);
 
             Injector injector = createInject(env);

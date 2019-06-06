@@ -174,7 +174,7 @@ public class JarNlpResourceFactory implements NlpResourceFactory {
         }
 
         @Override
-        public InputStream openInputStream() throws IOException {
+        public InputStream inputStream() throws IOException {
             ZipFile zipFile = new ZipFile(file);
 
             ZipEntry entry = zipFile.getEntry(resourceName);
@@ -189,7 +189,7 @@ public class JarNlpResourceFactory implements NlpResourceFactory {
 //
 //        @Override
 //        public CharSourceLineReader openLineReader() throws IOException {
-//            return new CharSourceLineReader(new BufferedReader(new InputStreamReader(openInputStream())));
+//            return new CharSourceLineReader(new BufferedReader(new InputStreamReader(inputStream())));
 //        }
 
         @Override
@@ -219,7 +219,7 @@ public class JarNlpResourceFactory implements NlpResourceFactory {
 //        }
 //
 //        @Override
-//        public InputStream openInputStream() throws IOException {
+//        public InputStream inputStream() throws IOException {
 //            ByteArrayInputStreamMynlp stream = new ByteArrayInputStreamMynlp(data);
 //            return stream;
 //        }

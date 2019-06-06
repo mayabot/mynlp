@@ -30,6 +30,7 @@ import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
 import com.mayabot.nlp.resources.NlpResouceExternalizable;
 import com.mayabot.nlp.resources.NlpResource;
+import com.mayabot.nlp.resources.UseLines;
 import com.mayabot.nlp.utils.CharSourceLineReader;
 
 import java.io.IOException;
@@ -82,7 +83,12 @@ public class CoreBiGramTableDictionary extends NlpResouceExternalizable {
 
         String firstWord = null;
         int count = 0;
-        try (CharSourceLineReader reader = source.openLineReader()) {
+
+        UseLines.forEachLine(source.inputStream(), line->{
+
+        });
+
+        try (CharSourceLineReader reader = UseLines.lineReader(source.inputStream())) {
             while (reader.hasNext()) {
                 String line = reader.next();
 

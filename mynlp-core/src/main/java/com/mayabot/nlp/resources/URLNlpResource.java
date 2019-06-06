@@ -42,20 +42,10 @@ public class URLNlpResource implements NlpResource {
     }
 
     @Override
-    public InputStream openInputStream() throws IOException {
+    public InputStream inputStream() throws IOException {
         ByteSource byteSource = Resources.asByteSource(url);
         return byteSource.openBufferedStream();
     }
-//
-//    @Override
-//    public CharSourceLineReader openLineReader() {
-//        ByteSource byteSource = Resources.asByteSource(url);
-//
-//
-//        CharSource charSource = byteSource.asCharSource(charset);
-//
-//        return new CharSourceLineReader(charSource);
-//    }
 
     @Override
     public String toString() {
