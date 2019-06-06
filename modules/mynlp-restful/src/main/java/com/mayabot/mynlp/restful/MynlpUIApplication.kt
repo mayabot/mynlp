@@ -1,4 +1,4 @@
-package com.mayabot.mynlp.ui
+package com.mayabot.mynlp.restful
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
