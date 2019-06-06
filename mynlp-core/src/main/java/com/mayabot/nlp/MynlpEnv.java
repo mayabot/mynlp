@@ -184,8 +184,8 @@ public class MynlpEnv {
         return this.loadResource(resourceName, Charsets.UTF_8);
     }
 
-    public synchronized NlpResource loadResource(SettingItem<String> resourceNameSettting) {
-        return this.loadResource(settings.get(resourceNameSettting), Charsets.UTF_8);
+    public synchronized NlpResource loadResource(SettingItem<String> resourceNameSetting) {
+        return this.loadResource(settings.get(resourceNameSetting), Charsets.UTF_8);
     }
 
     public File getDataDir() {

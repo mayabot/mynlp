@@ -113,14 +113,6 @@ class SegmentModule(private val env: MynlpEnv) : Module {
                     )
             ),
             ResourceMeta(
-                    name = "STOPWORD",
-                    version = "1.0.0",
-                    fileName = "mynlp-resource-stopword.jar",
-                    content = listOf(
-                            "stopword-dict/stopwords.txt"
-                    )
-            ),
-            ResourceMeta(
                     name = "CWS",
                     version = "1.0.0",
                     fileName = "mynlp-resource-cws.jar",

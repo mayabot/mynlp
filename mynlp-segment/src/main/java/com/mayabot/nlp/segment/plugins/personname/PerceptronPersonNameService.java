@@ -39,12 +39,12 @@ public class PerceptronPersonNameService {
         Files.createParentDirs(featureDatFile);
 
         if (!featureDatFile.exists()) {
-            FeatureSet featureSet = FeatureSet.readFromText(new BufferedInputStream(featureResource.openInputStream()));
+            FeatureSet featureSet = FeatureSet.readFromText(new BufferedInputStream(featureResource.inputStream()));
             featureSet.save(featureDatFile, null);
         }
 
         this.perceptron = PersonNamePerceptron.load(
-                parameterResource.openInputStream(),
+                parameterResource.inputStream(),
                 new FileInputStream(featureDatFile));
 
         long t2 = System.currentTimeMillis();

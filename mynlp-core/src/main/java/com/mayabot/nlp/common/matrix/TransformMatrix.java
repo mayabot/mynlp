@@ -111,7 +111,7 @@ public class TransformMatrix {
 
     public boolean load(NlpResource resource) throws IOException {
 
-        try (InputStream inputStream = resource.openInputStream()) {
+        try (InputStream inputStream = resource.inputStream()) {
             return load(inputStream);
         }
 

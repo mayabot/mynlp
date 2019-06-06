@@ -24,6 +24,7 @@ import com.mayabot.nlp.collection.dat.DoubleArrayTrieStringIntMap;
 import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
 import com.mayabot.nlp.resources.NlpResource;
+import com.mayabot.nlp.resources.UseLines;
 import com.mayabot.nlp.utils.CharNormUtils;
 import com.mayabot.nlp.utils.CharSourceLineReader;
 
@@ -70,7 +71,7 @@ public class DefaultCustomDictionary implements CustomDictionary {
                 continue;
             }
 
-            try (CharSourceLineReader reader = resource.openLineReader()) {
+            try (CharSourceLineReader reader = UseLines.lineReader(resource.inputStream())) {
                 while (reader.hasNext()) {
                     String line = reader.next();
 

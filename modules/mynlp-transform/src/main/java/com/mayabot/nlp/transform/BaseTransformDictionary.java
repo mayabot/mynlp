@@ -4,9 +4,9 @@ import com.mayabot.nlp.Mynlp;
 import com.mayabot.nlp.Mynlps;
 import com.mayabot.nlp.collection.ahocorasick.AhoCoraickDoubleArrayTrieBuilder;
 import com.mayabot.nlp.collection.ahocorasick.AhoCorasickDoubleArrayTrie;
+import com.mayabot.nlp.resources.UseLines;
 import com.mayabot.nlp.utils.CharSourceLineReader;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.TreeMap;
 
@@ -31,19 +31,9 @@ public abstract class BaseTransformDictionary {
 
             Mynlp mynlp = Mynlps.get();
 
-            mynlp.getEnv().registeResourceMissing("transform", (rsName, env) -> {
-                if (rsName.equals(Simplified2Traditional.rsName) || rsName.equals(Traditional2Simplified.rsName)) {
-                    File file = env.download("mynlp-resource-transform-" + rsVersion + ".jar");
-
-                    if (file != null && file.exists()) {
-                        return true;
-                    }
-
-                }
-                return false;
-            });
-
-            CharSourceLineReader charSourceLineReader = mynlp.getEnv().loadResource(resourceName).openLineReader();
+            CharSourceLineReader charSourceLineReader =
+                    UseLines.lineReader(mynlp.getEnv().loadResource(resourceName).inputStream())
+                    ;
 
             charSourceLineReader.forEachRemaining(
                     line -> {

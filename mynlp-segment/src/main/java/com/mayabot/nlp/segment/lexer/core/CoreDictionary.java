@@ -22,12 +22,12 @@ import com.google.common.hash.Hashing;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.mayabot.nlp.MynlpEnv;
-import com.mayabot.nlp.collection.dat.DATMapMatcher;
 import com.mayabot.nlp.collection.dat.DoubleArrayTrieStringIntMap;
 import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
 import com.mayabot.nlp.resources.NlpResouceExternalizable;
 import com.mayabot.nlp.resources.NlpResource;
+import com.mayabot.nlp.resources.UseLines;
 import com.mayabot.nlp.utils.CharSourceLineReader;
 
 import java.io.IOException;
@@ -77,7 +77,7 @@ public class CoreDictionary extends NlpResouceExternalizable implements Dictiona
 
         Splitter splitter = Splitter.on(CharMatcher.breakingWhitespace()).omitEmptyStrings().trimResults();
 
-        try (CharSourceLineReader reader = dictResource.openLineReader()) {
+        try (CharSourceLineReader reader = UseLines.lineReader(dictResource.inputStream())) {
             while (reader.hasNext()) {
                 String line = reader.next();
 

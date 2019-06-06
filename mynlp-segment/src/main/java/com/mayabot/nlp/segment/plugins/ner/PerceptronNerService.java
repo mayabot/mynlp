@@ -43,14 +43,14 @@ public class PerceptronNerService {
 
         File featureDatFile = new File(temp, featureResource.hash() + ".ner.dat");
         if (!featureDatFile.exists()) {
-            FeatureSet featureSet = FeatureSet.readFromText(new BufferedInputStream(featureResource.openInputStream()));
+            FeatureSet featureSet = FeatureSet.readFromText(new BufferedInputStream(featureResource.inputStream()));
             featureSet.save(featureDatFile, null);
         }
 
         this.perceptron = NERPerceptron.load(
-                parameterResource.openInputStream(),
+                parameterResource.inputStream(),
                 new BufferedInputStream(new FileInputStream(featureDatFile)),
-                labelResource.openInputStream());
+                labelResource.inputStream());
     }
 
     /**

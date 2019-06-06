@@ -46,21 +46,12 @@ public class FileNlpResourceFactory implements NlpResourceFactory {
         }
 
         @Override
-        public InputStream openInputStream() throws IOException {
+        public InputStream inputStream() throws IOException {
 
             ByteSource byteSource = Files.asByteSource(file);
 
             return byteSource.openBufferedStream();
         }
-
-//        @Override
-//        public CharSourceLineReader openLineReader() {
-//
-//
-//
-//            CharSource charSource = byteSource.asCharSource(charset);
-//            return new CharSourceLineReader(charSource);
-//        }
 
         @Override
         public String toString() {

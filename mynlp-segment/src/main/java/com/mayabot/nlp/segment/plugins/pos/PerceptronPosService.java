@@ -37,9 +37,9 @@ public class PerceptronPosService {
         long t1 = System.currentTimeMillis();
 
         this.perceptron = POSPerceptron.load(
-                parameterResource.openInputStream(),
-                featureResource.openInputStream(),
-                labelResource.openInputStream());
+                parameterResource.inputStream(),
+                featureResource.inputStream(),
+                labelResource.inputStream());
 
         long t2 = System.currentTimeMillis();
 
