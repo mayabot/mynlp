@@ -38,6 +38,8 @@ public class JarNlpResourceFactory implements NlpResourceFactory {
         this.baseDir = baseDir;
     }
 
+    private final Pattern pattern = Pattern.compile("(\\d+)\\.(\\d+)\\.(\\d+)\\.jar$");
+
     private Map<String, File> doIndex() {
         Map<String, File> index = Maps.newHashMap();
 
@@ -45,8 +47,6 @@ public class JarNlpResourceFactory implements NlpResourceFactory {
         List<File> jarFiles = Ordering.<File>from(
                 Comparator.comparing(file -> {
                     String text = file.getName();
-                    Pattern pattern = Pattern.compile("(\\d+)\\.(\\d+)\\.(\\d+)\\.jar$");
-
                     StringBuffer sb = new StringBuffer();
 
                     Matcher matcher = pattern.matcher(text);
@@ -68,24 +68,29 @@ public class JarNlpResourceFactory implements NlpResourceFactory {
 
         try {
             for (File jar : jarFiles) {
-                try (ZipFile f = new ZipFile(jar)) {
-                    Enumeration<? extends ZipEntry> entries = f.entries();
-                    while (entries.hasMoreElements()) {
-                        ZipEntry zipEntry = entries.nextElement();
-                        if (!zipEntry.isDirectory()) {
-                            String name = zipEntry.getName();
-                            index.put(name, jar);
+                if(jar.getName().startsWith(".")){
+                    //不可以是隐藏文件，有些服务器上传文件的时候，会导致._的临时文件，导致加载失败。
+                    continue;
+                }
+                try{
+                    try (ZipFile f = new ZipFile(jar)) {
+                        Enumeration<? extends ZipEntry> entries = f.entries();
+                        while (entries.hasMoreElements()) {
+                            ZipEntry zipEntry = entries.nextElement();
+                            if (!zipEntry.isDirectory()) {
+                                String name = zipEntry.getName();
+                                index.put(name, jar);
+                            }
                         }
                     }
+                }catch (Exception e){
+                    System.err.println("open file "+jar.getAbsolutePath()+" error ");
+                    logger.error("read file"+jar.getAbsolutePath(),e);
                 }
-
             }
         } catch (Exception e) {
-            logger.error("", e);
             e.printStackTrace();
         }
-
-        long t2 = System.currentTimeMillis();
 
 
         return index;

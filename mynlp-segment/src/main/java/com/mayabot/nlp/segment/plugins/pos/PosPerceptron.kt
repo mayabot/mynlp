@@ -4,6 +4,9 @@ import com.mayabot.nlp.common.FastStringBuilder
 import com.mayabot.nlp.hppc.IntArrayList
 import com.mayabot.nlp.perceptron.*
 import com.mayabot.nlp.segment.Nature
+import com.mayabot.nlp.segment.common.PkuWord
+import com.mayabot.nlp.segment.common.allFiles
+import com.mayabot.nlp.segment.common.parseToFlatWords
 import com.mayabot.nlp.segment.plugins.pos.POSPerceptronFeature.extractFeature
 import com.mayabot.nlp.segment.plugins.pos.POSPerceptronFeature.extractFeatureVector
 import com.mayabot.nlp.segment.plugins.pos.POSPerceptronFeature.extractFeatureVector2
@@ -20,8 +23,6 @@ import java.util.function.Function
 class POSPerceptron(val model: Perceptron, val labelList: Array<String>) {
 
     private val featureSet = model.featureSet()
-
-    val parameter = (model as PerceptronModel).parameter
 
     val natureList = labelList.map { Nature.parse(it) }.toTypedArray()
 
@@ -77,7 +78,7 @@ class POSPerceptron(val model: Perceptron, val labelList: Array<String>) {
             var score = 0.0
 
             for (j in 0 until vector.size() - 1) {
-                score += parameter[offset[j] + label]
+                score += model.parameterAt(offset[j] + label)
             }
 
             if (score > maxScore) {
@@ -128,7 +129,7 @@ class POSPerceptron(val model: Perceptron, val labelList: Array<String>) {
         fun load(parameterBin: InputStream, featureBin: InputStream, labelText: InputStream): POSPerceptron {
             val model = PerceptronModel.load(parameterBin, featureBin, true)
 
-            model.decodeQuickModel = true
+            model.decodeQuickMode(true)
             val labelList = labelText.use { it.bufferedReader().readLines() }
             return POSPerceptron(model, labelList.toTypedArray())
         }
@@ -242,7 +243,7 @@ object POSPerceptronFeature {
             }
         }
 
-        buffer.append(preWord);
+        buffer.append(preWord)
         buffer.append('☺')
         addFeature(features, vector, buffer)
 
@@ -398,7 +399,7 @@ class POSPerceptronTrainer {
 
             val featureMatrix = ArrayList<IntArrayList>(words.size)
             for (i in 0 until words.size) {
-                featureMatrix += POSPerceptronFeature.extractFeatureVector(words, words.size, i, featureSet, buffer)
+                featureMatrix += extractFeatureVector(words, words.size, i, featureSet, buffer)
             }
 
             return TrainSample(featureMatrix, poss)

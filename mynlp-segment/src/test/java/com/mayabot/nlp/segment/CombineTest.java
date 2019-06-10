@@ -25,7 +25,7 @@ public class CombineTest {
                 "五十八公斤\n" +
                 "产品 编号 bn-598\n" +
                 "产品 编号 bn-598-122n\n" +
-                "我 买 了 一台 very cool iphone7\n" +
+                "我 买了 一台 very cool iphone7\n" +
                 "分词 标签 是 __lable__").split("\n");
 
         int i = 0;

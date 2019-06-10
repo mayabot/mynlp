@@ -1,4 +1,4 @@
-package com.mayabot.nlp.perceptron
+package com.mayabot.nlp.segment.common
 
 
 import com.google.common.base.Splitter

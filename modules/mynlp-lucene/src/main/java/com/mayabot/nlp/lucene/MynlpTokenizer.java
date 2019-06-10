@@ -15,7 +15,7 @@ import java.util.Iterator;
  */
 final public class MynlpTokenizer extends Tokenizer {
 
-    private IterableMode mode = IterableMode.DEFAULT;
+    private WordTermIterableMode mode = WordTermIterableMode.TOP;
 
     public static Tokenizer fromLexer(LexerReader lexerReader) {
         return new MynlpTokenizer(lexerReader);
@@ -43,7 +43,7 @@ final public class MynlpTokenizer extends Tokenizer {
     private final PositionIncrementAttribute positionAttr = addAttribute(PositionIncrementAttribute.class);
 
 
-    private final PositionLengthAttribute positionLenAttr = addAttribute(PositionLengthAttribute.class);
+//    private final PositionLengthAttribute positionLenAttr = addAttribute(PositionLengthAttribute.class);
 
     private Iterator<WordTerm> iterator;
 
@@ -58,18 +58,13 @@ final public class MynlpTokenizer extends Tokenizer {
         this.lexerReader = lexerReader;
     }
 
-    public MynlpTokenizer(LexerReader lexerReader,IterableMode mode) {
+    public MynlpTokenizer(LexerReader lexerReader,WordTermIterableMode mode) {
         this.lexerReader = lexerReader;
         this.mode = mode;
     }
 
-    public IterableMode getMode() {
+    public WordTermIterableMode getMode() {
         return mode;
-    }
-
-    public MynlpTokenizer setMode(IterableMode mode) {
-        this.mode = mode;
-        return this;
     }
 
     /**
@@ -92,13 +87,13 @@ final public class MynlpTokenizer extends Tokenizer {
             termAtt.setEmpty().append(next.word);
             offsetAtt.setOffset(next.offset, next.offset + next.length());
 
-            if (mode == IterableMode.GRAPH) {
-                if (next.hasSubword()) {
-                    positionLenAttr.setPositionLength(next.getSubword().size());
-                }else{
-                    positionLenAttr.setPositionLength(1);
-                }
-            }
+//            if (mode == IterableMode.GRAPH) {
+//                if (next.hasSubword()) {
+//                    positionLenAttr.setPositionLength(next.getSubword().size());
+//                }else{
+//                    positionLenAttr.setPositionLength(1);
+//                }
+//            }
 
             return true;
         } else {
@@ -125,13 +120,13 @@ final public class MynlpTokenizer extends Tokenizer {
         super.reset();
 
         switch (mode) {
-            case GRAPH:
-                iterator = new GraphIterator(lexerReader.scan(this.input).iterator());
+            case Overlap:
+                iterator = new OverlapIterator(lexerReader.scan(this.input).iterator());
                 break;
-            case FLATTEN:
-                iterator = new FlattenIterator(lexerReader.scan(this.input).iterator());
+            case ATOM:
+                iterator = new AtomIterator(lexerReader.scan(this.input).iterator());
                 break;
-            case DEFAULT:
+            case TOP:
             default:
                 iterator = lexerReader.scan(this.input).iterator();
         }

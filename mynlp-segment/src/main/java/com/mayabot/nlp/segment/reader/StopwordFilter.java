@@ -30,7 +30,7 @@ import java.util.Set;
  */
 public class StopwordFilter extends BaseFilterLexerReader {
 
-    Set<String> stopWords = new HashSet<String>();
+    Set<String> stopWords;
 
     public StopwordFilter(LexerReader source, Set<String> stopWords) {
         super(source);
@@ -45,11 +45,7 @@ public class StopwordFilter extends BaseFilterLexerReader {
     public StopwordFilter(LexerReader source) {
         super(source);
         Set<String> defaultSet = Mynlps.instanceOf(StopWordDict.class).getStopWords();
-        Set<String> words = new HashSet<>();
-        if (defaultSet != null) {
-            words.addAll(defaultSet);
-        }
-        this.stopWords = words;
+        this.stopWords = new HashSet<>(defaultSet);
     }
 
     public Set<String> getStopWords() {

@@ -318,7 +318,6 @@ class CWSPerceptronTrainer {
 
     lateinit var featureSet: FeatureSet
 
-
     fun train(trainFileDir: File, evaluateFile: File, maxIter: Int, threadNumber: Int): CWSPerceptron {
 
         val allFiles = if (trainFileDir.isFile) listOf(trainFileDir) else trainFileDir.walkTopDown().filter { it.isFile && !it.name.startsWith(".") }.toList()
@@ -414,33 +413,7 @@ object CWSEvaluate {
             val predArray = segmenter.decodeToWordList(text)
             predTotal += predArray.size
 
-            var goldIndex = 0
-            var predIndex = 0
-            var goldLen = 0
-            var predLen = 0
-
-            while (goldIndex < wordArray.size && predIndex < predArray.size) {
-                if (goldLen == predLen) {
-                    if (wordArray[goldIndex] == predArray[predIndex]) {
-                        correct++
-                        goldLen += wordArray[goldIndex].length
-                        predLen += wordArray[goldIndex].length
-                        goldIndex++
-                        predIndex++
-                    } else {
-                        goldLen += wordArray[goldIndex].length
-                        predLen += predArray[predIndex].length
-                        goldIndex++
-                        predIndex++
-                    }
-                } else if (goldLen < predLen) {
-                    goldLen += wordArray[goldIndex].length
-                    goldIndex++
-                } else {
-                    predLen += predArray[predIndex].length
-                    predIndex++
-                }
-            }
+            correct += wordCorrect(wordArray,predArray)
 
             count++
 

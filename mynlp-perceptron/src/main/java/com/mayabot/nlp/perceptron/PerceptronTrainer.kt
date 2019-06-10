@@ -1,6 +1,5 @@
 package com.mayabot.nlp.perceptron
 
-import java.util.*
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.Executors
 
@@ -26,7 +25,7 @@ class PerceptronTrainer(
         return PerceptronModel(
                 featureSet, labelCount
         ).apply {
-            this.decodeQuickModel = decodeQuickModel_
+            this.decodeQuickMode(decodeQuickModel_)
         }
     }
 
@@ -34,7 +33,7 @@ class PerceptronTrainer(
         return PerceptronModel(
                 featureSet, labelCount, parameter
         ).apply {
-            this.decodeQuickModel = decodeQuickModel_
+            this.decodeQuickMode(decodeQuickModel_)
         }
     }
 
@@ -88,7 +87,7 @@ class PerceptronTrainer(
             println("train use ${t2 - t1} ms\n")
 
             // 备份参数
-            val back = Arrays.copyOf(model.parameter, model.parameter.size)
+            val back = model.parameter.copyOf(model.parameter.size)
             model.average(total, timestamp, current)
             // 运行评估
             evaluateScript.run(k, model)
@@ -165,8 +164,6 @@ class PerceptronTrainer(
 
             println("use ${t2 - t1} ms\n")
             evaluateScript.run(k, modelArray.first())
-
-
         }
 
         executor.shutdownNow()

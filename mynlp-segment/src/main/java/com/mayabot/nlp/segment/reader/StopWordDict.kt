@@ -18,7 +18,6 @@ class StopWordDict
     private val stopWords: Set<String>
 
     init {
-
         val resource = env.loadResource(StopWordDictPath)
                 ?: throw RuntimeException("Not found $StopWordDictPath Resource")
 
@@ -29,6 +28,6 @@ class StopWordDict
     }
 
     fun getStopWords(): Set<String> {
-        return stopWords
+        return stopWords?: emptySet()
     }
 }

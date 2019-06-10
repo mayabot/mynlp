@@ -29,14 +29,36 @@ import java.io.Reader;
  */
 public interface LexerReader {
 
+    /**
+     *
+     * @param reader
+     * @return WordTermSequence
+     */
     WordTermSequence scan(Reader reader);
 
+    /**
+     *
+     * @param text
+     * @return WordTermSequence
+     */
     WordTermSequence scan(String text);
 
+    /**
+     *
+     * @param lexer
+     * @return LexerReader
+     */
     static LexerReader from(Lexer lexer) {
         return new DefaultLexerReader(lexer);
     }
 
+    /**
+     *
+     * @param lexer
+     * @param punctuation
+     * @param stopWord
+     * @return LexerReader
+     */
     static LexerReader filter(Lexer lexer, boolean punctuation, boolean stopWord) {
 
         LexerReader reader = new DefaultLexerReader(lexer);
@@ -50,3 +72,4 @@ public interface LexerReader {
     }
 
 }
+
