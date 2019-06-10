@@ -64,9 +64,7 @@ public class IntArrayList {
         ensureCapacity(expectedElements);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+
     public void add(int e1) {
         ensureBufferSpace(1);
         buffer[elementsCount++] = e1;
@@ -113,9 +111,7 @@ public class IntArrayList {
         return buffer[index];
     }
 
-    /**
-     * {@inheritDoc}
-     */
+
     public int set(int index, int e1) {
         assert (index >= 0 && index < size()) : "Index " + index + " out of bounds [" + 0 + ", " + size() + ").";
 
@@ -124,9 +120,7 @@ public class IntArrayList {
         return v;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+
     public int remove(int index) {
         assert (index >= 0 && index < size()) : "Index " + index + " out of bounds [" + 0 + ", " + size() + ").";
 
@@ -140,9 +134,7 @@ public class IntArrayList {
     }
 
 
-    /**
-     * {@inheritDoc}
-     */
+
     public boolean contains(int e1) {
         return indexOf(e1) >= 0;
     }
@@ -168,9 +160,7 @@ public class IntArrayList {
         return -1;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+
     public boolean isEmpty() {
         return elementsCount == 0;
     }
@@ -223,9 +213,6 @@ public class IntArrayList {
         this.elementsCount = newSize;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public int size() {
         return elementsCount;
     }
@@ -259,7 +246,6 @@ public class IntArrayList {
     }
 
     /**
-     * {@inheritDoc}
      *
      * <p>The returned array is sized to match exactly
      * the number of elements of the stack.</p>
@@ -284,9 +270,7 @@ public class IntArrayList {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
+
     @Override
     public int hashCode() {
         int h = 1, max = elementsCount;

@@ -27,7 +27,7 @@ ext {
 }
 
 //def buildVersion = "2.0.x"
-def buildVersion = "2.1.0"
+def buildVersion = "3.0.0"
 def snapShot = true
 
 allprojects {

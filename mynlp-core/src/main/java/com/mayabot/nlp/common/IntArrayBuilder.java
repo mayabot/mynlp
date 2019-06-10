@@ -168,7 +168,6 @@ public class IntArrayBuilder {
     }
 
     /**
-     * {@inheritDoc}
      *
      * <p>The returned array is sized to match exactly
      * the number of elements of the stack.</p>

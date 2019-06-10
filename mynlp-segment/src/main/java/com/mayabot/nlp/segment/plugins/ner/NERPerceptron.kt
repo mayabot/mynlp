@@ -7,6 +7,10 @@ import com.mayabot.nlp.perceptron.*
 import com.mayabot.nlp.segment.Nature
 import com.mayabot.nlp.segment.WordAndNature
 import com.mayabot.nlp.segment.WordTerm
+import com.mayabot.nlp.segment.common.PkuWord
+import com.mayabot.nlp.segment.common.allFiles
+import com.mayabot.nlp.segment.common.parseToFlatWords
+import com.mayabot.nlp.segment.common.parseToWords
 import com.mayabot.nlp.segment.wordnet.Vertex
 import com.mayabot.nlp.utils.CharNormUtils
 import java.io.File

@@ -1,6 +1,7 @@
 package com.mayabot.nlp.lucene;
 
 import com.mayabot.nlp.segment.LexerReader;
+import com.mayabot.nlp.segment.WordTermIterableMode;
 import org.apache.lucene.analysis.Analyzer;
 
 /**
@@ -17,7 +18,7 @@ public class MynlpAnalyzer extends Analyzer {
     public MynlpAnalyzer(LexerReader reader) {
         this.tokenizer = new MynlpTokenizer(reader);
     }
-    public MynlpAnalyzer(LexerReader reader,IterableMode mode) {
+    public MynlpAnalyzer(LexerReader reader, WordTermIterableMode mode) {
         this.tokenizer = new MynlpTokenizer(reader,mode);
     }
 
