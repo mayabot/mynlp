@@ -24,7 +24,8 @@ import com.mayabot.nlp.segment.*;
 import com.mayabot.nlp.segment.common.DefaultCharNormalize;
 import com.mayabot.nlp.segment.lexer.core.CoreLexerPlugin;
 import com.mayabot.nlp.segment.lexer.core.ViterbiBestPathAlgorithm;
-import com.mayabot.nlp.segment.plugins.collector.SentenceCollectorPlugin;
+import com.mayabot.nlp.segment.plugins.collector.SentenceCollector;
+import com.mayabot.nlp.segment.plugins.collector.WordTermCollector;
 import com.mayabot.nlp.segment.wordnet.BestPathAlgorithm;
 import org.jetbrains.annotations.NotNull;
 
@@ -75,7 +76,7 @@ public class PipelineLexerBuilder implements LexerBuilder {
     /**
      * 最终结构收集器
      */
-    private WordTermCollector termCollector;
+    private WordTermCollector termCollector = new SentenceCollector();
 
     @NotNull
     public static PipelineLexerBuilder builder() {
@@ -104,11 +105,6 @@ public class PipelineLexerBuilder implements LexerBuilder {
         // 默认core的分词算法
         if (wordSplitAlgorithmList.isEmpty()) {
             install(new CoreLexerPlugin());
-        }
-
-        //默认SentenceCollector收集器
-        if (termCollector == null) {
-            install(new SentenceCollectorPlugin());
         }
 
         callListener();
@@ -332,7 +328,12 @@ public class PipelineLexerBuilder implements LexerBuilder {
      * @param termCollector
      * @return PipelineLexerBuilder
      */
-    public PipelineLexerBuilder setTermCollector(WordTermCollector termCollector) {
+    public PipelineLexerBuilder setTermCollector(
+            @NotNull
+            WordTermCollector termCollector) {
+        if(termCollector == null){
+            throw new NullPointerException("WordTermCollector is null");
+        }
         this.termCollector = termCollector;
         return this;
     }
@@ -348,6 +349,7 @@ public class PipelineLexerBuilder implements LexerBuilder {
         return this;
     }
 
+    @NotNull
     public WordTermCollector getTermCollector() {
         return termCollector;
     }

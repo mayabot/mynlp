@@ -67,7 +67,15 @@ public class MynlpBuilder {
     private Map<Class, Object> injectInstance = Maps.newHashMap();
 
 
-    Mynlp build() throws RuntimeException {
+    /**
+     * 构建Mynlp实例。
+     * 一般情况通过Mynlps获取全局唯一实例。不需要调用这个方法构造。
+     * 这个保留public是为了test和一些特殊多实例场景使用。
+     * Mynlp是一个重量级的对象，是一个容器,包含了Mynlp运行时所有的组件。
+     * @return
+     * @throws RuntimeException
+     */
+    public Mynlp build() throws RuntimeException {
 
         try {
             logger.info("Current Working Dir is " + new File(".").getAbsolutePath());

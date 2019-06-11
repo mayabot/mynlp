@@ -365,7 +365,7 @@ class POSPerceptronTrainer {
                 featureSet,
                 labelMap.size,
                 sampleList,
-                POSEvaluateRunner(evaluateSampleList),
+                POSEvaluateRunner(evaluateSampleList)::run,
                 maxIter, true)
 
         val model = trainer.train(threadNumber)
@@ -484,9 +484,9 @@ class POSPerceptronTrainer {
 /**
  * 词性评估
  */
-class POSEvaluateRunner(private val sampleList: List<TrainSample>) : EvaluateRunner {
+class POSEvaluateRunner(private val sampleList: List<TrainSample>)  {
 
-    override fun run(k: Int, model: Perceptron) {
+     fun run(k: Int, model: Perceptron) {
 
         var total = 0.0
         var right = 0.0

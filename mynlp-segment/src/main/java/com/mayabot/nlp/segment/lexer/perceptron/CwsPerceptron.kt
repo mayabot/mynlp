@@ -346,7 +346,7 @@ class CWSPerceptronTrainer {
         println("Start train ...")
 
         val trainer = PerceptronTrainer(featureSet, tagList.size, sampleList,
-                EvaluateRunner { _, it ->
+                { _, it ->
                     CWSEvaluate.evaluate(evaluateSample, CWSPerceptron(it))
                 }, maxIter, false)
 

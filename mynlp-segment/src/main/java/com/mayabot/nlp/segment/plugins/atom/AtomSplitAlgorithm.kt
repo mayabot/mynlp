@@ -1,5 +1,9 @@
 package com.mayabot.nlp.segment.plugins.atom
 
+import com.google.inject.ImplementedBy
+import com.google.inject.Inject
+import com.google.inject.Singleton
+import com.mayabot.nlp.Mynlps
 import com.mayabot.nlp.collection.dat.DoubleArrayTrieStringIntMap
 import com.mayabot.nlp.collection.dat.FastDatCharSet
 import com.mayabot.nlp.segment.Nature
@@ -10,6 +14,25 @@ import com.mayabot.nlp.segment.wordnet.Wordnet
 import java.util.*
 import java.util.regex.Pattern
 
+// DoubleArrayTrieStringIntMap
+
+@ImplementedBy(DefaultAtomSplitAlgorithmTemplateProvider::class)
+interface AtomSplitAlgorithmTemplateProvider{
+    fun load():DoubleArrayTrieStringIntMap
+}
+
+@Singleton
+class DefaultAtomSplitAlgorithmTemplateProvider:AtomSplitAlgorithmTemplateProvider{
+
+    val defaultTemplates = defaultTemplates()
+
+    override fun load(): DoubleArrayTrieStringIntMap {
+        Mynlps.logger.info("Load Default AtomSplitAlgorithm Template")
+        return defaultTemplates
+    }
+
+}
+
 /**
  * 高性能多模式识别。
  *
@@ -17,9 +40,12 @@ import java.util.regex.Pattern
  *
  * @author jimichan
  */
-class AtomSplitAlgorithm
-(val dat: DoubleArrayTrieStringIntMap = defaultTemplates())
+@Singleton
+class AtomSplitAlgorithm @Inject constructor(
+        templateProvider: AtomSplitAlgorithmTemplateProvider)
     : BaseSegmentComponent(LEVEL2), WordSplitAlgorithm {
+
+    val dat: DoubleArrayTrieStringIntMap = templateProvider.load()
 
     //CharScatterSet 5000万次查询耗时40ms
     private val chineseNumSet = FastDatCharSet(

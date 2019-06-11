@@ -13,8 +13,6 @@ public class CoreLexerPlugin implements PipelineLexerPlugin {
 
     private DictionaryMatcher dictionaryMatcher;
 
-    private AtomSplitAlgorithm atomSplitAlgorithm;
-
     public CoreLexerPlugin(DictionaryMatcher dictionaryMatcher) {
         this.dictionaryMatcher = dictionaryMatcher;
     }
@@ -32,23 +30,13 @@ public class CoreLexerPlugin implements PipelineLexerPlugin {
 
         builder.setBestPathComputer(ViterbiBestPathAlgorithm.class);
 
+
         builder.addWordSplitAlgorithm(new CoreDictionarySplitAlgorithm(
                 dictionaryMatcher
         ));
 
-        if (atomSplitAlgorithm != null) {
-            builder.addWordSplitAlgorithm(atomSplitAlgorithm);
-        } else {
-            builder.addWordSplitAlgorithm(new AtomSplitAlgorithm());
-        }
+        builder.addWordSplitAlgorithm(AtomSplitAlgorithm.class);
+
     }
 
-    public AtomSplitAlgorithm getAtomSplitAlgorithm() {
-        return atomSplitAlgorithm;
-    }
-
-    public CoreLexerPlugin setAtomSplitAlgorithm(AtomSplitAlgorithm atomSplitAlgorithm) {
-        this.atomSplitAlgorithm = atomSplitAlgorithm;
-        return this;
-    }
 }

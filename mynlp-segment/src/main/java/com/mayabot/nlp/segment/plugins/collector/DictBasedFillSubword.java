@@ -5,20 +5,21 @@ import com.mayabot.nlp.segment.lexer.core.DictionaryMatcher;
 import com.mayabot.nlp.segment.wordnet.Vertex;
 import com.mayabot.nlp.segment.wordnet.Wordnet;
 import com.mayabot.nlp.segment.wordnet.Wordpath;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * 基于词典的子词补全
  */
-public class DictBasedComputeMoreSubword  implements ComputeMoreSubword{
+public class DictBasedFillSubword  implements WordTermCollector.FillSubword {
 
     private DictionaryMatcher dictionary;
 
-    public DictBasedComputeMoreSubword(DictionaryMatcher dictionary) {
+    public DictBasedFillSubword(DictionaryMatcher dictionary) {
         this.dictionary = dictionary;
     }
 
     @Override
-    public void fill(Wordnet wordnet, Wordpath wordPath) {
+    public void fill(@NotNull Wordnet wordnet, @NotNull Wordpath wordPath) {
             char[] text = wordnet.getCharArray();
 
             // 核心词典查询

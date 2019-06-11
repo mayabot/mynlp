@@ -7,7 +7,6 @@ import com.mayabot.nlp.segment.plugins.atom.AtomSplitAlgorithm;
 
 public class CwsLexerPlugin implements PipelineLexerPlugin {
 
-    private AtomSplitAlgorithm atomSplitAlgorithm;
 
     @Override
     public void install(PipelineLexerBuilder builder) {
@@ -15,11 +14,8 @@ public class CwsLexerPlugin implements PipelineLexerPlugin {
         //切词算法
         builder.addWordSplitAlgorithm(PerceptronCwsSplitAlgorithm.class);
 
-        if (atomSplitAlgorithm != null) {
-            builder.addWordSplitAlgorithm(atomSplitAlgorithm);
-        } else {
-            builder.addWordSplitAlgorithm(AtomSplitAlgorithm.class);
-        }
+
+        builder.addWordSplitAlgorithm(AtomSplitAlgorithm.class);
 
 
         //最优路径算法
@@ -27,12 +23,4 @@ public class CwsLexerPlugin implements PipelineLexerPlugin {
 
     }
 
-    public AtomSplitAlgorithm getAtomSplitAlgorithm() {
-        return atomSplitAlgorithm;
-    }
-
-    public CwsLexerPlugin setAtomSplitAlgorithm(AtomSplitAlgorithm atomSplitAlgorithm) {
-        this.atomSplitAlgorithm = atomSplitAlgorithm;
-        return this;
-    }
 }
