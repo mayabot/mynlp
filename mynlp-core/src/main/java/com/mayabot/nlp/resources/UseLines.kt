@@ -48,6 +48,6 @@ object UseLines {
 
     @JvmStatic
     fun lineReader(inputStream: InputStream): CharSourceLineReader {
-        return CharSourceLineReader(BufferedReader(InputStreamReader(inputStream)))
+        return CharSourceLineReader(inputStream.bufferedReader(charset = Charsets.UTF_8))
     }
 }
