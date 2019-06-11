@@ -17,7 +17,7 @@ class PerceptronTrainer(
         private val featureSet: FeatureSet,
         private val labelCount: Int,
         private val trainSource: List<TrainSample>,
-        private val evaluateScript: EvaluateRunner,
+        private val evaluateScript: (iter: Int, perceptron: Perceptron)->Unit,
         private val maxIter: Int,
         private val decodeQuickModel_: Boolean) {
 
@@ -90,7 +90,7 @@ class PerceptronTrainer(
             val back = model.parameter.copyOf(model.parameter.size)
             model.average(total, timestamp, current)
             // 运行评估
-            evaluateScript.run(k, model)
+            evaluateScript(k, model)
             model.parameter = back
         }
 
@@ -163,7 +163,7 @@ class PerceptronTrainer(
             val t2 = System.currentTimeMillis()
 
             println("use ${t2 - t1} ms\n")
-            evaluateScript.run(k, modelArray.first())
+            evaluateScript(k, modelArray.first())
         }
 
         executor.shutdownNow()
