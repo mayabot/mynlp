@@ -13,14 +13,14 @@ import java.util.List;
  * 收集子词所有的可能性组合
  * @author jimichan
  */
-public class IndexSubwordCollector implements SubwordCollector {
+public class IndexPickUpSubword implements WordTermCollector.PickUpSubword {
     /**
      * 字词的最小长度
      */
     private int minWordLength = 2;
 
     @Override
-    public void subWord(WordTerm term, Wordnet wordnet, Wordpath wordPath) {
+    public void pickup(WordTerm term, Wordnet wordnet, Wordpath wordPath) {
         if (term.length() >= 3) {
             int from = term.offset;
             int to = from + term.length();
@@ -50,7 +50,7 @@ public class IndexSubwordCollector implements SubwordCollector {
         return minWordLength;
     }
 
-    public IndexSubwordCollector setMinWordLength(int minWordLength) {
+    public IndexPickUpSubword setMinWordLength(int minWordLength) {
         this.minWordLength = minWordLength;
         return this;
     }

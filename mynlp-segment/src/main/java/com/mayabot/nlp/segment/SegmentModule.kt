@@ -17,13 +17,17 @@ package com.mayabot.nlp.segment
 
 import com.google.inject.Binder
 import com.google.inject.Module
+import com.google.inject.name.Names
 import com.mayabot.nlp.MynlpEnv
+import com.mayabot.nlp.segment.plugins.collector.IndexPickUpSubword
+import com.mayabot.nlp.segment.plugins.collector.WordTermCollector
 import java.io.File
 import java.util.regex.Pattern
 
 class SegmentModule(private val env: MynlpEnv) : Module {
 
     override fun configure(binder: Binder?) {
+
         env.registeResourceMissing("segment") { rsName, env -> this.processMiss(rsName, env) }
         update()
     }

@@ -1,6 +1,7 @@
 package com.mayabot.nlp.segment
 
-import com.google.common.base.Preconditions
+import com.google.inject.Key
+import com.google.inject.name.Names
 import com.mayabot.nlp.Mynlps
 import com.mayabot.nlp.segment.lexer.core.CoreDictionary
 import com.mayabot.nlp.segment.lexer.core.CoreLexerPlugin
@@ -8,7 +9,11 @@ import com.mayabot.nlp.segment.lexer.core.DictionaryMatcher
 import com.mayabot.nlp.segment.lexer.perceptron.CwsLexerPlugin
 import com.mayabot.nlp.segment.pipeline.PipelineLexerBuilder
 import com.mayabot.nlp.segment.pipeline.PipelineLexerPlugin
-import com.mayabot.nlp.segment.plugins.collector.*
+import com.mayabot.nlp.segment.plugins.collector.DictBasedFillSubword
+import com.mayabot.nlp.segment.plugins.collector.IndexPickUpSubword
+import com.mayabot.nlp.segment.plugins.collector.SentenceCollector
+import com.mayabot.nlp.segment.plugins.collector.WordTermCollector
+import com.mayabot.nlp.segment.plugins.customwords.CustomDictionary
 import com.mayabot.nlp.segment.plugins.customwords.CustomDictionaryPlugin
 import com.mayabot.nlp.segment.plugins.ner.NerPlugin
 import com.mayabot.nlp.segment.plugins.personname.PersonNamePlugin
@@ -48,6 +53,11 @@ open class FluentLexerBuilder : LexerBuilder {
         return this
     }
 
+    fun withCustomDictionary(dict: CustomDictionary): FluentLexerBuilder {
+        builder.install(CustomDictionaryPlugin(dict))
+        return this
+    }
+
     fun withCustomDictionary(): FluentLexerBuilder {
         builder.install(CustomDictionaryPlugin())
         return this
@@ -63,51 +73,59 @@ open class FluentLexerBuilder : LexerBuilder {
 
     inner class CollectorBlock {
 
-        var plugin = SentenceCollectorPlugin()
-        var pluginSelf = false
-        var collector: WordTermCollector? = null
+        val collector: WordTermCollector = SentenceCollector()
 
-        fun subwordCollector(subwordCollector: SubwordCollector) {
-            Preconditions.checkState(!pluginSelf)
-            plugin.subwordCollector = subwordCollector
+        fun pickUpSubword(pickUpSubword: WordTermCollector.PickUpSubword): CollectorBlock {
+            collector.pickUpSubword = pickUpSubword
+            return this
         }
 
-        @JvmOverloads
-        fun indexedSubword(minWordLen: Int = 2): CollectorBlock {
-            Preconditions.checkState(!pluginSelf)
-            val subwordCollector = IndexSubwordCollector()
-            subwordCollector.minWordLength = minWordLen
-            plugin.subwordCollector = subwordCollector
+        fun fillSubword(fillSubword: WordTermCollector.FillSubword): CollectorBlock {
+            collector.fillSubword = fillSubword
             return this
         }
 
         @JvmOverloads
-        fun dictMoreSubword(dbcms: DictionaryMatcher = Mynlps.instanceOf(CoreDictionary::class.java)): CollectorBlock {
-            Preconditions.checkState(!pluginSelf)
-            plugin.computeMoreSubword = DictBasedComputeMoreSubword(dbcms)
+        fun indexPickup(minWordLen: Int = 2): CollectorBlock {
+            val indexd = IndexPickUpSubword()
+//
+            indexd.minWordLength = minWordLen
+            collector.pickUpSubword = indexd
             return this
         }
 
+        @JvmOverloads
+        fun smartPickup(block: (x: WordTermCollector.PickUpSubword) -> Unit
+                        = { _ -> Unit }
+        ): CollectorBlock {
+            try {
+                val p = Mynlps.get()
+                        .injector
+                        .getInstance(
+                                Key.get(WordTermCollector.PickUpSubword::class.java
+                                        , Names.named("smart")))!!
+                block(p)
+                collector.pickUpSubword = p
+            } catch (e: Exception) {
+                Mynlps.logger.warn("企业版才可以调用这个方法", e)
+            }
 
-        fun with(plugin: SentenceCollectorPlugin) : CollectorBlock{
-            this.plugin = plugin
-            this.pluginSelf = true
             return this
         }
 
-        fun with(collector: WordTermCollector) : CollectorBlock{
+        @JvmOverloads
+        fun fillSubwordDict(dbcms: DictionaryMatcher = Mynlps.instanceOf(CoreDictionary::class.java)): CollectorBlock {
+            collector.fillSubword = DictBasedFillSubword(dbcms)
+            return this
+        }
+
+        fun with(collector: WordTermCollector): CollectorBlock {
             builder.termCollector = collector
             return this
         }
 
-        fun ok() : FluentLexerBuilder{
-
-            if (collector != null) {
-                builder.termCollector = collector
-            }else{
-                builder.install(plugin)
-            }
-
+        fun done(): FluentLexerBuilder {
+            builder.termCollector = collector
             return this@FluentLexerBuilder
         }
     }

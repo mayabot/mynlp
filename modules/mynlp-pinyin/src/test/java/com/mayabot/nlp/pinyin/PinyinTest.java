@@ -62,8 +62,6 @@ public class PinyinTest {
 
     @Test
     public void test2() {
-        Mynlps.clear();
-
         Mynlps.install(builder -> {
             builder.set(PinyinService.getPinyinExtDicSetting(), "pinyin.txt");
         });
@@ -82,8 +80,6 @@ public class PinyinTest {
 
     @Test
     public void test3() {
-        Mynlps.clear();
-
         PinyinService pinyinService = Pinyins.service();
 
         CustomPinyin customPinyin = pinyinService.getCustomPinyin();

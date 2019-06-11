@@ -35,6 +35,9 @@ fun defaultTemplates(): DoubleArrayTrieStringIntMap {
 
     treeMap.addTemplate("{Z[1-30]}", NUMBER)
 
+    treeMap.addTemplate("{Z|N[1-10]}{(元|串|事|册|丘|下|丈|丝|举|具|包|厘|刀|分|列|则|剂|副|些|匝|队|部|出|个)}", MQ)
+    treeMap.addTemplate("{Z|N[1-10]}{(介|令|份|伙|件|任|倍|儋|亩|记|双|发|叠|节|茎|通|造|遍|道)}", MQ)
+
     treeMap.addTemplate("{Z|N[1-10]}{(公里|米|千米|厘米|毫米|微米|纳米|飞米|km|dm|cm|mm|μm|nm|fm)}", MQ)
     treeMap.addTemplate("{Z|N[1-10]}{(kg|dg|cg|mg|公斤|斤|克)}", MQ)
     treeMap.addTemplate("{Z|N[1-10]}{(tb|gb|mb|kb|字节|兆)}", MQ)

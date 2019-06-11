@@ -10,7 +10,7 @@ public class IndexSegmentTest {
 
         Lexer mynlpTokenizer = Lexers.
                 coreBuilder()
-                .collector().indexedSubword().ok()
+                .collector().indexPickup().done()
                 .build();
 
 
