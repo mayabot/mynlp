@@ -20,9 +20,6 @@ import com.mayabot.nlp.Mynlps;
 import com.mayabot.nlp.segment.LexerReader;
 import com.mayabot.nlp.segment.WordTerm;
 
-import java.util.HashSet;
-import java.util.Set;
-
 /**
  * 过滤停用词
  *
@@ -30,9 +27,9 @@ import java.util.Set;
  */
 public class StopwordFilter extends BaseFilterLexerReader {
 
-    Set<String> stopWords;
+    StopWordDict stopWords;
 
-    public StopwordFilter(LexerReader source, Set<String> stopWords) {
+    public StopwordFilter(LexerReader source, StopWordDict stopWords) {
         super(source);
         this.stopWords = stopWords;
     }
@@ -43,21 +40,8 @@ public class StopwordFilter extends BaseFilterLexerReader {
      * @param source
      */
     public StopwordFilter(LexerReader source) {
-        super(source);
-        Set<String> defaultSet = Mynlps.instanceOf(StopWordDict.class).getStopWords();
-        this.stopWords = new HashSet<>(defaultSet);
-    }
+        this(source, Mynlps.instanceOf(SystemStopWordDict.class));
 
-    public Set<String> getStopWords() {
-        return stopWords;
-    }
-
-    public void add(String word) {
-        this.stopWords.add(word);
-    }
-
-    public void remove(String word) {
-        stopWords.remove(word);
     }
 
     @Override
