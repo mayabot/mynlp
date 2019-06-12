@@ -17,6 +17,7 @@ package com.mayabot.nlp.segment;
 
 import com.mayabot.nlp.segment.reader.DefaultLexerReader;
 import com.mayabot.nlp.segment.reader.PunctuationFilter;
+import com.mayabot.nlp.segment.reader.StopWordDict;
 import com.mayabot.nlp.segment.reader.StopwordFilter;
 
 import java.io.Reader;
@@ -68,6 +69,17 @@ public interface LexerReader {
         if (stopWord) {
             reader = new StopwordFilter(reader);
         }
+        return reader;
+    }
+
+    static LexerReader filter(Lexer lexer, boolean punctuation, StopWordDict stopWord) {
+
+        LexerReader reader = new DefaultLexerReader(lexer);
+        if (punctuation) {
+            reader = new PunctuationFilter(reader);
+        }
+
+        reader = new StopwordFilter(reader,stopWord);
         return reader;
     }
 

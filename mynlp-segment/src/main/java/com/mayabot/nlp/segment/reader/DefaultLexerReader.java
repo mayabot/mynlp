@@ -6,6 +6,9 @@ import com.mayabot.nlp.segment.WordTermSequence;
 
 import java.io.Reader;
 
+/**
+ * @author jimichan
+ */
 public class DefaultLexerReader implements LexerReader {
 
     private final Lexer lexer;

@@ -99,8 +99,6 @@ final public class MynlpTokenizer extends Tokenizer {
         } else {
             return false;
         }
-
-
     }
 
 
