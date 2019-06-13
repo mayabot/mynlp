@@ -62,6 +62,11 @@ class LexerIterator(val lexer: Lexer, val paragraphReader: ParagraphReader) : Ab
             //补充偏移量
             if (baseOffset != 0) {
                 term.setOffset(term.getOffset() + baseOffset)
+                if (term.hasSubword()) {
+                    term.subword.forEach { s->
+                        s.offset = s.offset+baseOffset
+                    }
+                }
             }
             setNext(term)
         }
