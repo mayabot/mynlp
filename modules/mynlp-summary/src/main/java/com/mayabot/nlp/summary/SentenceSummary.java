@@ -30,6 +30,9 @@ public class SentenceSummary {
      */
     public String summary(String document, int max) {
         List<String> sentenceList = splitSentence(document);
+        if (sentenceList.isEmpty()) {
+            return "";
+        }
 
         int sentence_count = sentenceList.size();
         int document_length = document.length();
