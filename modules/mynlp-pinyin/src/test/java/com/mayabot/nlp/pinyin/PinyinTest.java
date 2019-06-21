@@ -60,23 +60,23 @@ public class PinyinTest {
     }
 
 
-    @Test
-    public void test2() {
-        Mynlps.install(builder -> {
-            builder.set(PinyinService.getPinyinExtDicSetting(), "pinyin.txt");
-        });
-
-        Pinyins.reset();
-
-
-        PinyinResult result = Pinyins.convert("123aed,.你好朝朝暮暮,银行");
-
-        Assert.assertEquals("", result.asString(), "1 2 3 a e d ni hao zhao zhao mu mu yin hang");
-        Assert.assertEquals("", result.asHeadString(), "1 2 3 a e d n h z z m m y h");
-
-        System.out.println(Pinyins.convert("朝朝盈"));
-
-    }
+//    @Test
+//    public void test2() {
+//        Mynlps.install(builder -> {
+//            builder.set(PinyinService.getPinyinExtDicSetting(), "pinyin.txt");
+//        });
+//
+//        Pinyins.reset();
+//
+//
+//        PinyinResult result = Pinyins.convert("123aed,.你好朝朝暮暮,银行");
+//
+//        Assert.assertEquals("", result.asString(), "1 2 3 a e d ni hao zhao zhao mu mu yin hang");
+//        Assert.assertEquals("", result.asHeadString(), "1 2 3 a e d n h z z m m y h");
+//
+//        System.out.println(Pinyins.convert("朝朝盈"));
+//
+//    }
 
     @Test
     public void test3() {
