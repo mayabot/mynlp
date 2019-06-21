@@ -112,9 +112,7 @@ object Mynlps {
     @JvmStatic
     fun <T> instanceOf(clazz: Class<T>): T {
         return AccessController.doPrivileged(PrivilegedAction<T>{
-            val x = mynlp.getInstance(clazz)
-            println(x)
-            x
+            mynlp.getInstance(clazz)
         })
     }
 

@@ -55,7 +55,7 @@ class PinyinService @Inject constructor(private val mynlp: MynlpEnv) : BasePinyi
                     .forEachLine { line ->
                         //降龙伏虎=xiang2,long2,fu2,hu3
                         //单=dan1,shan4,chan2
-                        val param = line.split("=".toRegex()).dropLastWhile({ it.isEmpty() }).toTypedArray()
+                        val param = line.split("=".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
 
                         val key = param[0]
                         try {
@@ -83,4 +83,7 @@ class PinyinService @Inject constructor(private val mynlp: MynlpEnv) : BasePinyi
         val pinyinExtDicSetting = string("pinyin.ext.dict", null)
     }
 
+    override fun toString(): String {
+        return super.toString()
+    }
 }
