@@ -22,7 +22,7 @@ object PerceptronFormat {
         return if (isDat) {
             loadWithFeatureBin(parameter, feature)
         } else {
-            loadWithFeatureBin(parameter,feature)
+            loadWithFeatureTxt(parameter,feature)
         }
 
     }
