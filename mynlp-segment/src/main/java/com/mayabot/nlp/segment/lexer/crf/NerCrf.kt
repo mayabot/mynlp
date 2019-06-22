@@ -74,7 +74,7 @@ class NerCrf(val model: Perceptron, val labels: Array<String>, val featureTempla
                  labelText: InputStream,
                  featureTemplate: InputStream
         ): NerCrf {
-            val model = PerceptronModel.load(parameterBin, featureBin, true)
+            val model = PerceptronModel.loadWithFeatureBin(parameterBin, featureBin)
             val labelList = labelText.use { it.bufferedReader().readLines() }
 
             val featureTemplateGroup = FeatureTemplateGroup(featureTemplate.use { it.bufferedReader().readLines() })

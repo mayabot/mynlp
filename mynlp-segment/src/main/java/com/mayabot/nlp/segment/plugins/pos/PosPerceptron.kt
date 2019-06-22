@@ -127,7 +127,7 @@ class POSPerceptron(val model: Perceptron, val labelList: Array<String>) {
          */
         @JvmStatic
         fun load(parameterBin: InputStream, featureBin: InputStream, labelText: InputStream): POSPerceptron {
-            val model = PerceptronModel.load(parameterBin, featureBin, true)
+            val model = PerceptronModel.loadWithFeatureBin(parameterBin, featureBin)
 
             model.decodeQuickMode(true)
             val labelList = labelText.use { it.bufferedReader().readLines() }

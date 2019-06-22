@@ -24,6 +24,9 @@ import java.io.File
 import java.io.InputStream
 import java.util.*
 
+/**
+ * FeatureVector最后多一位是留个转移特征使用
+ */
 typealias FeatureVector = IntArrayList
 
 typealias FeatureVectorSequence = List<FeatureVector>
@@ -66,7 +69,7 @@ interface Perceptron {
 
     /**
      * 压缩模型
-     *
+     * 要求FeatureSet的文本key不能为空，在训练阶段的时候使用
      * 压缩模型大小。删除权重不重要的特征。
      * - [ratio]是压缩比，0.1表示压缩去掉10%的特征。
      * - [threshold]特征最小得分,得分小于这个阈值就删除。
@@ -551,20 +554,23 @@ class PerceptronModel(
     companion object {
 
         @JvmStatic
-        fun load(parameterBin: InputStream, featureBin: InputStream, featureDatIsBin: Boolean) =
-                PerceptronFormat.load(parameterBin, featureBin, featureDatIsBin)
+        @JvmOverloads
+        fun loadFromClasspath(prefix:String,loader: ClassLoader = Thread.currentThread().contextClassLoader) :Perceptron
+        {
+            return PerceptronFormat.loadFromClasspath(prefix, loader)
+        }
+
+        @JvmStatic
+        fun loadWithFeatureBin(parameterBin: InputStream,featureBin: InputStream)  =
+                PerceptronFormat.loadWithFeatureBin(parameterBin, featureBin)
+
+        @JvmStatic
+        fun loadWithFeatureTxt(parameterBin: InputStream,featureTxt: InputStream) =
+                PerceptronFormat.loadWithFeatureTxt(parameterBin, featureTxt)
 
         @JvmStatic
         fun load(dir: File): Perceptron = PerceptronFormat.load(dir)
 
-        @JvmStatic
-        fun load(parameterBinFile: File, featureBin: File?, featureText: File?) =
-                PerceptronFormat.load(parameterBinFile, featureBin, featureText)
-
-        @JvmStatic
-        fun load(parameterBin: InputStream,
-                 featureBin: InputStream?,
-                 featureText: InputStream?) = PerceptronFormat.load(parameterBin, featureBin, featureText)
     }
 
 

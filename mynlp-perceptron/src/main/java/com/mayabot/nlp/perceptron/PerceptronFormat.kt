@@ -10,30 +10,49 @@ import java.nio.ByteBuffer
  */
 object PerceptronFormat {
 
-    @JvmStatic
-    fun load(parameterBin: InputStream, featureBinOrTxt: InputStream, featureDatIsBin: Boolean): Perceptron {
-        return if (featureDatIsBin) {
-            load(parameterBin, featureBinOrTxt, null)
+    fun loadFromClasspath(prefix:String,loader: ClassLoader = Thread.currentThread().contextClassLoader) :Perceptron{
+        val parameter = loader.getResourceAsStream("$prefix/parameter.bin")
+        val feature = loader.getResourceAsStream("$prefix/feature.dat")?:
+                    loader.getResourceAsStream("$prefix/feature.txt")
+
+        check(parameter != null && feature != null)
+
+        val isDat = loader.getResource("$prefix/feature.dat") != null
+
+        return if (isDat) {
+            loadWithFeatureBin(parameter, feature)
         } else {
-            load(parameterBin, null, featureBinOrTxt)
+            loadWithFeatureBin(parameter,feature)
         }
 
     }
 
-    @JvmStatic
-    fun load(parameterFile: File, featureBin: File?, featureText: File?): Perceptron {
-        return load(
-                parameterFile.inputStream().buffered(),
-                featureBin?.inputStream()?.buffered(),
-                featureText?.inputStream()?.buffered()
-        )
+    fun loadWithFeatureBin(parameterBin: InputStream,featureBin: InputStream) : Perceptron{
+        return load(parameterBin, featureBin, null)
     }
 
-    @JvmStatic
+    fun loadWithFeatureTxt(parameterBin: InputStream,featureTxt: InputStream) : Perceptron{
+        return load(parameterBin, null, featureTxt)
+    }
+
+    /**
+     * 正常训练完成的模型，是保存在文件夹。
+     * 里面包含featureBin和featureTxt
+     * 我们发布的模型bin和txt是二选一的
+     * 使用这种加载方式，是可以对模型进行压缩的。
+     */
     fun load(dir: File): Perceptron {
         fun loadIfExit(name: String): File? {
             val f = File(dir, name)
             return if (f.exists()) f else null
+        }
+
+        fun load(parameterFile: File, featureBin: File?, featureText: File?): Perceptron {
+            return load(
+                    parameterFile.inputStream().buffered(),
+                    featureBin?.inputStream()?.buffered(),
+                    featureText?.inputStream()?.buffered()
+            )
         }
 
         return load(
@@ -43,8 +62,9 @@ object PerceptronFormat {
         )
     }
 
-    @JvmStatic
-    fun load(parameterBin: InputStream, featureBin: InputStream?, featureText: InputStream?): Perceptron {
+    private fun load(parameterBin: InputStream, featureBin: InputStream?, featureText: InputStream?): Perceptron {
+
+        check(!(featureBin==null && featureText==null)) {"featureBin不可以同时为空"}
 
         var labelCount = 0
         var parameter = FloatArray(0)
@@ -87,9 +107,9 @@ object PerceptronFormat {
             }
         } else {
             if (featureText != null) {
-                FeatureSet.read(featureText)
+                FeatureSet.readFromTextButNotSave(featureText)
             } else {
-                throw RuntimeException()
+                throw RuntimeException("featureText featureBin 不可以同时为空")
             }
         }
 

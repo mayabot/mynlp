@@ -17,9 +17,14 @@ class PerceptronTrainer(
         private val featureSet: FeatureSet,
         private val labelCount: Int,
         private val trainSource: List<TrainSample>,
-        private val evaluateScript: (iter: Int, perceptron: Perceptron)->Unit,
+        private val evaluateScript: (iter: Int, perceptron: Perceptron) -> Unit,
         private val maxIter: Int,
         private val decodeQuickModel_: Boolean) {
+
+    init {
+        // 训练的时候FeatureSet里面是必须要有keys原文的。
+        check(featureSet.keys != null)
+    }
 
     private fun buildPerceptronModel(featureSet: FeatureSet, labelCount: Int): PerceptronModel {
         return PerceptronModel(
