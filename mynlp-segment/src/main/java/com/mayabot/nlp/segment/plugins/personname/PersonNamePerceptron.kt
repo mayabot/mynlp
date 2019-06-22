@@ -149,7 +149,7 @@ class PersonNamePerceptron(val model: Perceptron) {
 
         @JvmStatic
         fun load(parameterBin: InputStream, featureBin: InputStream): PersonNamePerceptron {
-            val model = PerceptronModel.load(parameterBin, featureBin, true)
+            val model = PerceptronModel.loadWithFeatureBin(parameterBin, featureBin)
             return PersonNamePerceptron(model)
         }
 

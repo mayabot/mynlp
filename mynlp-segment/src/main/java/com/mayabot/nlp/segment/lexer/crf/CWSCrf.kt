@@ -117,7 +117,7 @@ class CWSCrf(val model: Perceptron, val labelList: Array<String>, val featureTem
         fun load(parameterBin: InputStream, featureBin: InputStream, labelText: InputStream,
                  featureTemplate: InputStream
         ): CWSCrf {
-            val model = PerceptronModel.load(parameterBin, featureBin, true)
+            val model = PerceptronModel.loadWithFeatureBin(parameterBin, featureBin)
             val labelList = labelText.use { it.bufferedReader().readLines() }
 
             val featureTemplateGroup = FeatureTemplateGroup(featureTemplate.use { it.bufferedReader().readLines() })

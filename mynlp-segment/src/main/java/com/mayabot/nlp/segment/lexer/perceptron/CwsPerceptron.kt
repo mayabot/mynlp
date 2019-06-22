@@ -110,7 +110,7 @@ class CWSPerceptron(val model: Perceptron) {
 
         @JvmStatic
         fun load(parameterBin: InputStream, featureBin: InputStream): CWSPerceptron {
-            val model = PerceptronModel.load(parameterBin, featureBin, true)
+            val model = PerceptronModel.loadWithFeatureBin(parameterBin, featureBin)
             return CWSPerceptron(model)
         }
 
