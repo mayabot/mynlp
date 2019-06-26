@@ -76,7 +76,7 @@ interface Perceptron {
      * - [ratio]是压缩比，0.1表示压缩去掉10%的特征。
      * - [threshold]特征最小得分,得分小于这个阈值就删除。
      */
-    fun compress(ratio: Double, threshold: Double) : Perceptron
+    fun compress(ratio: Double, threshold: Double): Perceptron
 
     /**
      * 解码
@@ -111,9 +111,9 @@ interface Perceptron {
      */
     fun save(dir: File)
 
-    fun decodeQuickMode(quick:Boolean)
+    fun decodeQuickMode(quick: Boolean)
 
-    fun parameterAt(index:Int):Float
+    fun parameterAt(index: Int): Float
 
 }
 
@@ -146,7 +146,7 @@ class PerceptronModel(
     override fun parameterAt(index: Int) = parameter[index]
 
     override fun decodeQuickMode(quick: Boolean) {
-       decodeQuickModel= quick
+        decodeQuickModel = quick
     }
 
     private val maxScore = Integer.MIN_VALUE.toDouble()
@@ -326,7 +326,7 @@ class PerceptronModel(
      * 模型压缩
      * @param ratio 压缩比，如0.2，那么就是去掉0.2的特征
      */
-    override fun compress(ratio: Double, threshold: Double):Perceptron {
+    override fun compress(ratio: Double, threshold: Double): Perceptron {
         if (ratio < 0 || ratio >= 1) {
             throw IllegalArgumentException("压缩比必须介于 0 和 1 之间")
         }
@@ -394,7 +394,7 @@ class PerceptronModel(
         return PerceptronModel(FeatureSet(DoubleArrayTrie(newFeatureList), newFeatureList),
                 labelCount,
                 newParameter
-                )
+        )
     }
 
     /**
@@ -557,24 +557,23 @@ class PerceptronModel(
 
         @JvmStatic
         @JvmOverloads
-        fun loadFromClasspath(prefix:String,loader: ClassLoader = Thread.currentThread().contextClassLoader) :Perceptron
-        {
+        fun loadFromClasspath(prefix: String, loader: ClassLoader = Thread.currentThread().contextClassLoader): Perceptron {
             return PerceptronFormat.loadFromClasspath(prefix, loader)
         }
 
 
         @JvmStatic
         @JvmOverloads
-        fun loadFromNlpResouce(prefix: String,env:MynlpEnv = Mynlps.get().env) :Perceptron{
-            return PerceptronFormat.loadFromNlpResource(prefix,env)
+        fun loadFromNlpResouce(prefix: String, env: MynlpEnv = Mynlps.get().env): Perceptron {
+            return PerceptronFormat.loadFromNlpResource(prefix, env)
         }
 
         @JvmStatic
-        fun loadWithFeatureBin(parameterBin: InputStream,featureBin: InputStream)  =
+        fun loadWithFeatureBin(parameterBin: InputStream, featureBin: InputStream) =
                 PerceptronFormat.loadWithFeatureBin(parameterBin, featureBin)
 
         @JvmStatic
-        fun loadWithFeatureTxt(parameterBin: InputStream,featureTxt: InputStream) =
+        fun loadWithFeatureTxt(parameterBin: InputStream, featureTxt: InputStream) =
                 PerceptronFormat.loadWithFeatureTxt(parameterBin, featureTxt)
 
         @JvmStatic

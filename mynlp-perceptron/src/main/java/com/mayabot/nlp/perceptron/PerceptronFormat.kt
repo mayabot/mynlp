@@ -1,3 +1,18 @@
+/*
+ * Copyright 2018 mayabot.com authors. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.mayabot.nlp.perceptron
 
 import com.mayabot.nlp.MynlpEnv
@@ -12,10 +27,10 @@ import java.nio.ByteBuffer
  */
 object PerceptronFormat {
 
-    fun loadFromClasspath(prefix:String,loader: ClassLoader = Thread.currentThread().contextClassLoader) :Perceptron{
+    fun loadFromClasspath(prefix: String, loader: ClassLoader = Thread.currentThread().contextClassLoader): Perceptron {
         val parameter = loader.getResourceAsStream("$prefix/parameter.bin")
-        val feature = loader.getResourceAsStream("$prefix/feature.dat")?:
-                    loader.getResourceAsStream("$prefix/feature.txt")
+        val feature = loader.getResourceAsStream("$prefix/feature.dat")
+                ?: loader.getResourceAsStream("$prefix/feature.txt")
 
         check(parameter != null && feature != null)
 
@@ -24,16 +39,15 @@ object PerceptronFormat {
         return if (isDat) {
             loadWithFeatureBin(parameter, feature)
         } else {
-            loadWithFeatureTxt(parameter,feature)
+            loadWithFeatureTxt(parameter, feature)
         }
 
     }
 
-    fun loadFromNlpResource(prefix:String, nlpEnv: MynlpEnv = Mynlps.get().env):Perceptron{
+    fun loadFromNlpResource(prefix: String, nlpEnv: MynlpEnv = Mynlps.get().env): Perceptron {
 
         val parameter = nlpEnv.loadResource("$prefix/parameter.bin")
-        val feature = nlpEnv.loadResource("$prefix/feature.dat")?:
-        nlpEnv.loadResource("$prefix/feature.txt")
+        val feature = nlpEnv.loadResource("$prefix/feature.dat") ?: nlpEnv.loadResource("$prefix/feature.txt")
 
         check(parameter != null && feature != null)
 
@@ -42,16 +56,16 @@ object PerceptronFormat {
         return if (isDat) {
             loadWithFeatureBin(parameter.inputStream(), feature.inputStream())
         } else {
-            loadWithFeatureTxt(parameter.inputStream(),feature.inputStream())
+            loadWithFeatureTxt(parameter.inputStream(), feature.inputStream())
         }
 
     }
 
-    fun loadWithFeatureBin(parameterBin: InputStream,featureBin: InputStream) : Perceptron{
+    fun loadWithFeatureBin(parameterBin: InputStream, featureBin: InputStream): Perceptron {
         return load(parameterBin, featureBin, null)
     }
 
-    fun loadWithFeatureTxt(parameterBin: InputStream,featureTxt: InputStream) : Perceptron{
+    fun loadWithFeatureTxt(parameterBin: InputStream, featureTxt: InputStream): Perceptron {
         return load(parameterBin, null, featureTxt)
     }
 
@@ -84,7 +98,7 @@ object PerceptronFormat {
 
     private fun load(parameterBin: InputStream, featureBin: InputStream?, featureText: InputStream?): Perceptron {
 
-        check(!(featureBin==null && featureText==null)) {"featureBin不可以同时为空"}
+        check(!(featureBin == null && featureText == null)) { "featureBin不可以同时为空" }
 
         var labelCount = 0
         var parameter = FloatArray(0)
