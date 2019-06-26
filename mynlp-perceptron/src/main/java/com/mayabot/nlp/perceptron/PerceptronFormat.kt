@@ -29,11 +29,7 @@ object PerceptronFormat {
 
     }
 
-    fun loadFromNlpResouce(prefix:String,nlpEnv: MynlpEnv = Mynlps.get().env):Perceptron{
-        val parameterResource = nlpEnv.loadResource("$prefix/parameter.bin")
-        val featureResource = nlpEnv.loadResource("$prefix/feature.dat")
-        val featureTxtResource = nlpEnv.loadResource("$prefix/feature.txt")
-
+    fun loadFromNlpResource(prefix:String, nlpEnv: MynlpEnv = Mynlps.get().env):Perceptron{
 
         val parameter = nlpEnv.loadResource("$prefix/parameter.bin")
         val feature = nlpEnv.loadResource("$prefix/feature.dat")?:

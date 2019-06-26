@@ -566,7 +566,7 @@ class PerceptronModel(
         @JvmStatic
         @JvmOverloads
         fun loadFromNlpResouce(prefix: String,env:MynlpEnv = Mynlps.get().env) :Perceptron{
-            return PerceptronFormat.loadFromNlpResouce(prefix,env)
+            return PerceptronFormat.loadFromNlpResource(prefix,env)
         }
 
         @JvmStatic
