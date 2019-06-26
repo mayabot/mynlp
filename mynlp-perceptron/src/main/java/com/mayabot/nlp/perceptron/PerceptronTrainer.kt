@@ -73,7 +73,7 @@ class PerceptronTrainer(
             val t1 = System.currentTimeMillis()
             println("\n#ITER $k/$maxIter")
 
-            System.out.print("Process 0%")
+            print("Process 0%")
             var per = 0
             trainSource.forEach {
                 current++
@@ -83,10 +83,10 @@ class PerceptronTrainer(
                 per++
 
                 if (per % 5000 == 0) {
-                    System.out.print("\rProcess ${"%.2f".format((per * 100.0 / trainSource.size))}%")
+                    print("\rProcess ${"%.2f".format((per * 100.0 / trainSource.size))}%")
                 }
             }
-            System.out.print("\r")
+            print("\r")
             val t2 = System.currentTimeMillis()
 
             println("train use ${t2 - t1} ms\n")

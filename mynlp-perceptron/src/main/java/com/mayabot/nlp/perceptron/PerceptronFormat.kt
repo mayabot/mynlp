@@ -106,8 +106,7 @@ object PerceptronFormat {
                     break
                 }
                 if (n % 4 != 0) {
-                    println("Error Size")
-                    System.exit(0)
+                    throw java.lang.RuntimeException("Error Size $n")
                 }
 
                 wrap.flip()
