@@ -46,6 +46,15 @@ public class PinyinTest {
     }
 
     @Test
+    public void testP() {
+
+        PinyinResult result = Pinyins.convert("沪人社规〔2017〕43号");
+        result.ignorePunctuation(false);
+        System.out.println(result);
+    }
+
+
+    @Test
     public void testShow() {
 
         PinyinResult result = Pinyins.convert("招商银行推出朝朝盈理财产品");
