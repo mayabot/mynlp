@@ -18,10 +18,12 @@ description = "mynlp的基础数据结构和IOC容器"
 
 dependencies {
 
-    compile group: 'com.google.guava', name: 'guava', version: "$guava_version"
     compile ('com.google.inject:guice:4.1.0:no_aop') {
         exclude module: 'aopalliance'
     }
+
+    // 19.0是被guice依赖的
+    compile group: 'com.google.guava', name: 'guava', version: "$guava_version"
 
     compile "org.jetbrains.kotlin:kotlin-stdlib"
 
@@ -31,6 +33,7 @@ dependencies {
     compileOnly(group: "org.apache.logging.log4j", name: "log4j-api", version: "2.6.2")
     compileOnly(group: "log4j", name: "log4j", version: "1.2.17")
 
+    // Test
     testCompile group: 'junit', name: 'junit', version: '4.12'
     testCompile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
 
