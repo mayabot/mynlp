@@ -25,9 +25,9 @@ public class FasttextClassification {
      */
     public static FastText train(File file, int dim, double learnRate, int epoch) throws Exception {
         TrainArgs trainArgs = new TrainArgs();
-        trainArgs.setDim(100);
-        trainArgs.setLr(0.05);
-        trainArgs.setEpoch(10);
+        trainArgs.setDim(dim);
+        trainArgs.setLr(learnRate);
+        trainArgs.setEpoch(epoch);
 
         return train(file, trainArgs);
     }
