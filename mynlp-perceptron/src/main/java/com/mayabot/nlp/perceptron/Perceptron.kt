@@ -16,6 +16,8 @@
 package com.mayabot.nlp.perceptron
 
 
+import com.mayabot.nlp.MynlpEnv
+import com.mayabot.nlp.Mynlps
 import com.mayabot.nlp.algorithm.TopIntMinK
 import com.mayabot.nlp.collection.dat.DoubleArrayTrie
 import com.mayabot.nlp.hppc.IntArrayList
@@ -558,6 +560,13 @@ class PerceptronModel(
         fun loadFromClasspath(prefix:String,loader: ClassLoader = Thread.currentThread().contextClassLoader) :Perceptron
         {
             return PerceptronFormat.loadFromClasspath(prefix, loader)
+        }
+
+
+        @JvmStatic
+        @JvmOverloads
+        fun loadFromNlpResouce(prefix: String,env:MynlpEnv = Mynlps.get().env) :Perceptron{
+            return PerceptronFormat.loadFromNlpResouce(prefix,env)
         }
 
         @JvmStatic

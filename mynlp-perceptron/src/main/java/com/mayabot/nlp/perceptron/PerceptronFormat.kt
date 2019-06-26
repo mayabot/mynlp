@@ -1,5 +1,7 @@
 package com.mayabot.nlp.perceptron
 
+import com.mayabot.nlp.MynlpEnv
+import com.mayabot.nlp.Mynlps
 import java.io.DataInputStream
 import java.io.File
 import java.io.InputStream
@@ -23,6 +25,28 @@ object PerceptronFormat {
             loadWithFeatureBin(parameter, feature)
         } else {
             loadWithFeatureTxt(parameter,feature)
+        }
+
+    }
+
+    fun loadFromNlpResouce(prefix:String,nlpEnv: MynlpEnv = Mynlps.get().env):Perceptron{
+        val parameterResource = nlpEnv.loadResource("$prefix/parameter.bin")
+        val featureResource = nlpEnv.loadResource("$prefix/feature.dat")
+        val featureTxtResource = nlpEnv.loadResource("$prefix/feature.txt")
+
+
+        val parameter = nlpEnv.loadResource("$prefix/parameter.bin")
+        val feature = nlpEnv.loadResource("$prefix/feature.dat")?:
+        nlpEnv.loadResource("$prefix/feature.txt")
+
+        check(parameter != null && feature != null)
+
+        val isDat = nlpEnv.loadResource("$prefix/feature.dat") != null
+
+        return if (isDat) {
+            loadWithFeatureBin(parameter.inputStream(), feature.inputStream())
+        } else {
+            loadWithFeatureTxt(parameter.inputStream(),feature.inputStream())
         }
 
     }
