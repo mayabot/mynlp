@@ -34,7 +34,7 @@ public class PinyinResult {
     private List<Pinyin> pinyinList;
     private String text;
 
-    private boolean skipNull = false;
+    private boolean notSkipNull = true;
 
     private boolean ignorePunctuation = true;
 
@@ -65,12 +65,12 @@ public class PinyinResult {
     }
 
     public PinyinResult skipNull(boolean skipNull) {
-        this.skipNull = skipNull;
+        this.notSkipNull = !skipNull;
         return this;
     }
 
     public PinyinResult ignorePunctuation(boolean ignore) {
-        this.ignorePunctuation = ignorePunctuation;
+        this.ignorePunctuation = ignore;
         return this;
     }
 
@@ -98,7 +98,7 @@ public class PinyinResult {
         int i = 0;
         for (Pinyin pinyin : pinyinList) {
 
-            if (pinyin == Pinyin.none5 && !skipNull) {
+            if (pinyin == Pinyin.none5 && notSkipNull) {
                 char x = text.charAt(i);
                 if (ignorePunctuation && Characters.isPunctuation(x)) {
 
@@ -133,7 +133,7 @@ public class PinyinResult {
         int i = 0;
         for (Pinyin pinyin : pinyinList) {
 
-            if (pinyin == Pinyin.none5 && !skipNull) {
+            if (pinyin == Pinyin.none5 && notSkipNull) {
                 char x = text.charAt(i);
                 if (ignorePunctuation && Characters.isPunctuation(x)) {
 
