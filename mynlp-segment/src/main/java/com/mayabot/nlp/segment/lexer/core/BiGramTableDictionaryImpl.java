@@ -44,7 +44,7 @@ import java.util.List;
  * @author jimichan
  */
 @Singleton
-public class CoreBiGramTableDictionary extends NlpResouceExternalizable {
+public class BiGramTableDictionaryImpl extends NlpResouceExternalizable implements BiGramTableDictionary {
 
     private CSRSparseMatrix matrix;
 
@@ -52,10 +52,10 @@ public class CoreBiGramTableDictionary extends NlpResouceExternalizable {
 
     protected InternalLogger logger = InternalLoggerFactory.getInstance(this.getClass());
 
-    private final CoreDictionary coreDictionary;
+    private final CoreDictionaryImpl coreDictionary;
 
     @Inject
-    public CoreBiGramTableDictionary(CoreDictionary coreDictionary, MynlpEnv mynlp) throws
+    public BiGramTableDictionaryImpl(CoreDictionaryImpl coreDictionary, MynlpEnv mynlp) throws
             Exception {
         this.coreDictionary = coreDictionary;
 
@@ -158,6 +158,7 @@ public class CoreBiGramTableDictionary extends NlpResouceExternalizable {
      * @param idB 第二个词的id
      * @return 共现频次, 不存在就返回0
      */
+    @Override
     public int getBiFrequency(int idA, int idB) {
         return matrix.get(idA, idB);
     }

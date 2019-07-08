@@ -34,9 +34,11 @@ public class PinyinResult {
     private List<Pinyin> pinyinList;
     private String text;
 
-    private boolean notSkipNull = true;
 
-    private boolean ignorePunctuation = true;
+    private boolean keepPunctuation = false;
+    private boolean keepNum = true;
+    private boolean keepAlpha = true;
+    private boolean keepOthers = false;
 
     /**
      * 模糊拼音.
@@ -64,13 +66,23 @@ public class PinyinResult {
         return this;
     }
 
-    public PinyinResult skipNull(boolean skipNull) {
-        this.notSkipNull = !skipNull;
+    public PinyinResult keepPunctuation(boolean keep) {
+        this.keepPunctuation = keep;
         return this;
     }
 
-    public PinyinResult ignorePunctuation(boolean ignore) {
-        this.ignorePunctuation = ignore;
+    public PinyinResult keepNum(boolean keep) {
+        this.keepNum = keep;
+        return this;
+    }
+
+    public PinyinResult keepAlpha(boolean keep) {
+        this.keepAlpha = keep;
+        return this;
+    }
+
+    public PinyinResult keepOthers(boolean keep) {
+        this.keepOthers = keep;
         return this;
     }
 
@@ -98,13 +110,25 @@ public class PinyinResult {
         int i = 0;
         for (Pinyin pinyin : pinyinList) {
 
-            if (pinyin == Pinyin.none5 && notSkipNull) {
+            if (pinyin == Pinyin.none5) {
+                // 数字 + 字符
                 char x = text.charAt(i);
-                if (ignorePunctuation && Characters.isPunctuation(x)) {
+                String target = null;
 
-                } else {
-                    list.add(text.charAt(i) + "");
+                if (keepPunctuation && Characters.isPunctuation(x)) {
+                    target = "" + x;
+                }else if(keepNum && (x>='0' && x<='9')){
+                    target = "" + x;
+                }else if(keepAlpha && ((x>='a' && x<='z') ||(x>='A' && x<='Z') ) ){
+                    target = "" + x;
+                } else if (keepOthers) {
+                    target = "" + x;
                 }
+
+                // skip null
+                list.add(target);
+
+
             } else {
                 String withoutTone = pinyin.getPinyinWithoutTone();
 
@@ -133,13 +157,29 @@ public class PinyinResult {
         int i = 0;
         for (Pinyin pinyin : pinyinList) {
 
-            if (pinyin == Pinyin.none5 && notSkipNull) {
+            if (pinyin == Pinyin.none5) {
                 char x = text.charAt(i);
-                if (ignorePunctuation && Characters.isPunctuation(x)) {
 
-                } else {
-                    list.add(text.charAt(i));
+                boolean out = false;
+
+                if (keepPunctuation && Characters.isPunctuation(x)) {
+                    out = true;
+                }else if(keepNum && (x>='0' && x<='9')){
+                    out = true;
+                }else if(keepAlpha && ((x>='a' && x<='z') ||(x>='A' && x<='Z') ) ){
+                    out = true;
+                } else if (keepOthers) {
+                    out = true;
                 }
+
+                // skip null
+                if(out){
+                    list.add(x);
+                }else{
+                    list.add(null);
+                }
+
+
             } else {
                 list.add(pinyin.getFirstChar());
             }

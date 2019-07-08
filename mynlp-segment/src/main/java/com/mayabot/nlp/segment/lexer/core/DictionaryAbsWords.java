@@ -11,8 +11,10 @@ import java.util.List;
  * 这样Nature和他们的对应的关系也就确定下来了，
  * 比如词性 m对应的等效词必定能快速查询，一个wordId是不是等效词也能快速判断。
  * 这些全部是Static的，程序没有依赖关系
+ *
+ * @author jimichan
  */
-public class DictionaryAbsWords {
+public final class DictionaryAbsWords {
 
     public static final int MaxId = 9;
 

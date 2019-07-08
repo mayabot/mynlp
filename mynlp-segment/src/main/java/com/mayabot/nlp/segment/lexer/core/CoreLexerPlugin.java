@@ -11,14 +11,14 @@ import com.mayabot.nlp.segment.plugins.atom.AtomSplitAlgorithm;
  */
 public class CoreLexerPlugin implements PipelineLexerPlugin {
 
-    private DictionaryMatcher dictionaryMatcher;
+    private CoreDictionary dictionaryMatcher;
 
-    public CoreLexerPlugin(DictionaryMatcher dictionaryMatcher) {
+    public CoreLexerPlugin(CoreDictionary dictionaryMatcher) {
         this.dictionaryMatcher = dictionaryMatcher;
     }
 
     public CoreLexerPlugin(Mynlp mynlp) {
-        this.dictionaryMatcher = mynlp.getInstance(CoreDictionary.class);
+        this.dictionaryMatcher = mynlp.getInstance(CoreDictionaryImpl.class);
     }
 
     public CoreLexerPlugin() {

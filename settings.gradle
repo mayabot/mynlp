@@ -19,6 +19,7 @@ List projects = [
         'mynlp-core',
         'mynlp-segment',
         'mynlp-perceptron',
+        'mynlp-fastText4j',
         'modules:mynlp-restful',
         'modules:mynlp-pinyin',
         'modules:mynlp-transform',

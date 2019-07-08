@@ -13,10 +13,10 @@ import com.mayabot.nlp.segment.wordnet.Wordnet;
  */
 public class CoreDictionarySplitAlgorithm extends BaseSegmentComponent implements WordSplitAlgorithm {
 
-    private DictionaryMatcher coreDictionary;
+    private CoreDictionary coreDictionary;
 
 
-    public CoreDictionarySplitAlgorithm(DictionaryMatcher coreDictionary) {
+    public CoreDictionarySplitAlgorithm(CoreDictionary coreDictionary) {
         super(LEVEL1);
         this.coreDictionary = coreDictionary;
     }
