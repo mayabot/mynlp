@@ -1,7 +1,7 @@
 package com.mayabot.nlp.segment.plugins.collector;
 
 import com.mayabot.nlp.collection.dat.DoubleArrayTrieStringIntMap;
-import com.mayabot.nlp.segment.lexer.core.DictionaryMatcher;
+import com.mayabot.nlp.segment.lexer.core.CoreDictionary;
 import com.mayabot.nlp.segment.wordnet.Vertex;
 import com.mayabot.nlp.segment.wordnet.Wordnet;
 import com.mayabot.nlp.segment.wordnet.Wordpath;
@@ -12,9 +12,9 @@ import org.jetbrains.annotations.NotNull;
  */
 public class DictBasedFillSubword  implements WordTermCollector.FillSubword {
 
-    private DictionaryMatcher dictionary;
+    private CoreDictionary dictionary;
 
-    public DictBasedFillSubword(DictionaryMatcher dictionary) {
+    public DictBasedFillSubword(CoreDictionary dictionary) {
         this.dictionary = dictionary;
     }
 

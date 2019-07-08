@@ -30,7 +30,7 @@ import com.mayabot.nlp.segment.wordnet.*;
 @Singleton
 public final class ViterbiBestPathAlgorithm implements BestPathAlgorithm {
 
-    private CoreBiGramTableDictionary coreBiGramTableDictionary;
+    private BiGramTableDictionary coreBiGramTableDictionary;
 
     /**
      * 平滑参数
@@ -60,14 +60,14 @@ public final class ViterbiBestPathAlgorithm implements BestPathAlgorithm {
     private final double value5;
 
     @Inject
-    public ViterbiBestPathAlgorithm(CoreBiGramTableDictionary coreBiGramTableDictionary,
+    public ViterbiBestPathAlgorithm(BiGramTableDictionary coreBiGramTableDictionary,
                                     CoreDictionary coreDictionary) {
         this.coreBiGramTableDictionary = coreBiGramTableDictionary;
-        dTemp = (double) 1 / coreDictionary.totalFreq + 0.00001;
+        dTemp = (double) 1 / coreDictionary.totalFreq() + 0.00001;
         partB = (1 - dTemp);
         PARTA_PARTB = partA * partB;
         PARTTA_Dtemp = partA * dTemp;
-        PartZ = dSmoothingPara / coreDictionary.totalFreq;
+        PartZ = dSmoothingPara / coreDictionary.totalFreq();
 
         double[] values = new double[21];
         for (int i = 0; i < 21; i++) {
@@ -93,9 +93,7 @@ public final class ViterbiBestPathAlgorithm implements BestPathAlgorithm {
     @Override
     public Wordpath select(Wordnet wordnet) {
 
-//        System.out.println(wordnet.toMoreString());
-
-        //从第二个字符节点开始，一直到最后一个字符
+        // 从第二个字符节点开始，一直到最后一个字符
         final int charSize = wordnet.getCharSizeLength();
 
         // 第一行的From肯定来自Start节点

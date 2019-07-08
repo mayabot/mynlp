@@ -3,9 +3,9 @@ package com.mayabot.nlp.segment
 import com.google.inject.Key
 import com.google.inject.name.Names
 import com.mayabot.nlp.Mynlps
-import com.mayabot.nlp.segment.lexer.core.CoreDictionary
+import com.mayabot.nlp.segment.lexer.core.CoreDictionaryImpl
 import com.mayabot.nlp.segment.lexer.core.CoreLexerPlugin
-import com.mayabot.nlp.segment.lexer.core.DictionaryMatcher
+import com.mayabot.nlp.segment.lexer.core.CoreDictionary
 import com.mayabot.nlp.segment.lexer.perceptron.CwsLexerPlugin
 import com.mayabot.nlp.segment.pipeline.PipelineLexerBuilder
 import com.mayabot.nlp.segment.pipeline.PipelineLexerPlugin
@@ -114,7 +114,7 @@ open class FluentLexerBuilder : LexerBuilder {
         }
 
         @JvmOverloads
-        fun fillSubwordDict(dbcms: DictionaryMatcher = Mynlps.instanceOf(CoreDictionary::class.java)): CollectorBlock {
+        fun fillSubwordDict(dbcms: CoreDictionary = Mynlps.instanceOf(CoreDictionaryImpl::class.java)): CollectorBlock {
             collector.fillSubword = DictBasedFillSubword(dbcms)
             return this
         }
@@ -136,7 +136,7 @@ open class FluentLexerBuilder : LexerBuilder {
             return this@FluentLexerBuilder
         }
 
-        fun coreByDict(dict: DictionaryMatcher): FluentLexerBuilder {
+        fun coreByDict(dict: CoreDictionary): FluentLexerBuilder {
             builder.install(CoreLexerPlugin(dict))
             return this@FluentLexerBuilder
         }

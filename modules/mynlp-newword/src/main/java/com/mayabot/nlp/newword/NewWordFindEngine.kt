@@ -8,7 +8,7 @@ import com.google.common.primitives.Ints
 import com.mayabot.nlp.Mynlps
 import com.mayabot.nlp.collection.dat.DoubleArrayTrieMap
 import com.mayabot.nlp.common.ParagraphReaderSmart
-import com.mayabot.nlp.segment.lexer.core.CoreDictionary
+import com.mayabot.nlp.segment.lexer.core.CoreDictionaryImpl
 import com.mayabot.nlp.utils.Characters
 import java.io.StringReader
 import java.util.*
@@ -33,7 +33,7 @@ class NewWordFindEngine(
 
     var docCount = 0
 
-    val coreDictionary = Mynlps.instanceOf(CoreDictionary::class.java)
+    val coreDictionary = Mynlps.instanceOf(CoreDictionaryImpl::class.java)
 
     /**
      * 语料中总共有多少字
