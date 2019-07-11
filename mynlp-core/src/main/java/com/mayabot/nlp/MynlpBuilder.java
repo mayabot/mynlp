@@ -94,8 +94,15 @@ public class MynlpBuilder {
                 dataDir = settings.get("data.dir", null);
             }
 
+            // 默认的位置
             if (dataDir == null) {
-                dataDir = System.getProperty("user.home") + "/.mynlp.data";
+                String userHome = System.getProperty("user.home");
+
+                if(new File(userHome+"/.mynlp.data").exists()){
+                    dataDir = userHome + "/.mynlp.data";
+                } else {
+                    dataDir = userHome + "/mynlp.data";
+                }
             }
 
             File dataDirFile = new File(dataDir);

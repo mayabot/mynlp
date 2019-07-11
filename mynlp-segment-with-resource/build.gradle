@@ -1,0 +1,4 @@
+dependencies{
+    compile project(':mynlp-segment')
+    compile project(':mynlp-resources')
+}
