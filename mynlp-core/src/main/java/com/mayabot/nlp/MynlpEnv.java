@@ -56,10 +56,6 @@ public class MynlpEnv {
 
     private Settings settings;
 
-    private Map<String, ResourceMissing> missingList = new ConcurrentHashMap<String, ResourceMissing>();
-
-    private String downloadBaseUrl = "http://cdn.mayabot.com/mynlp/files/";
-
     public MynlpEnv(File dataDir, File cacheDir, List<NlpResourceFactory> resourceFactory, Settings settings) {
         this.dataDir = dataDir;
         this.cacheDir = cacheDir;
@@ -74,25 +70,6 @@ public class MynlpEnv {
         resourceFactory = ImmutableList.of(new ClasspathNlpResourceFactory(Mynlps.class.getClassLoader()));
         settings = Settings.defaultSystemSettings();
     }
-
-
-    public void registeResourceMissing(String name, ResourceMissing missing) {
-        this.missingList.put(name, missing);
-    }
-
-    public void registeResourceMissing(String name, String rsName, String jarName, String version) {
-        this.registeResourceMissing(name, (rsName2, env) -> {
-            if (rsName.equals(rsName2)) {
-                File file = env.download(jarName.replace(".jar", "-" + version + ".jar"));
-
-                if (file != null && file.exists()) {
-                    return true;
-                }
-            }
-            return false;
-        });
-    }
-
 
     public Settings getSettings() {
         return settings;
@@ -121,35 +98,27 @@ public class MynlpEnv {
     /**
      * 加载资源
      *
-     * @param resourceName 资源路径名称 dict/abc.dict
+     * @param resourcePath 资源路径名称 dict/abc.dict
      * @param charset      字符集
      * @return NlpResource
      */
-    public synchronized NlpResource loadResource(String resourceName, Charset charset) {
+    public synchronized NlpResource loadResource(String resourcePath, Charset charset) {
         return AccessController.doPrivileged((PrivilegedAction<NlpResource>) () -> {
-            if (resourceName == null || resourceName.trim().isEmpty()) {
+            if (resourcePath == null || resourcePath.trim().isEmpty()) {
                 return null;
             }
 
-            NlpResource resource = getNlpResource(resourceName, charset);
-
-            boolean ps = false;
+            NlpResource resource = getNlpResource(resourcePath, charset);
 
             if (resource == null) {
-                for (ResourceMissing missing : missingList.values()) {
-                    boolean r = missing.process(resourceName, this);
-                    if (r) {
-                        ps = true;
-                        break;
-                    }
-                }
+                String wiki = "";
+                throw new RuntimeException(
+                        "Resource "+resourcePath+", Not Found!\n"
+                        +"Resource Jar not in your maven or gradle dependencies (com.mayabot.mynlp:mynlp-resources:Version) \n"+
+                         "Or Install to ${mynlp.data} Dir\n"+
+                        "\nGoto Wiki +"+wiki+" For help!"
+                );
             }
-
-            if (ps) {
-                // load again
-                resource = getNlpResource(resourceName, charset);
-            }
-
             return resource;
         });
 
@@ -197,41 +166,41 @@ public class MynlpEnv {
         return cacheDir;
     }
 
-
-    /**
-     * 从url地址下载jar文件，保存到data目录下
-     */
-    public synchronized File download(String fileName) {
-        return AccessController.doPrivileged((PrivilegedAction<File>) () -> {
-
-            File file = new File(dataDir, fileName);
-
-            if (file.exists()) {
-                return file;
-            }
-
-            try {
-                String url = downloadBaseUrl + fileName;
-
-                DownloadUtils.download(url, file);
-
-                System.out.println("Downloaded " + fileName + " , save to " + file);
-
-                if (file.exists()) {
-                    return file;
-                }
-
-            } catch (Exception e) {
-                System.err.println("Download " + (downloadBaseUrl + fileName) + " error!!!\n");
-                e.printStackTrace();
-
-                file.delete();
-                //下载失败 退出系统
-                //System.exit(0);
-            }
-
-            return null;
-        });
-
-    }
+//
+//    /**
+//     * 从url地址下载jar文件，保存到data目录下
+//     */
+//    public synchronized File download(String fileName) {
+//        return AccessController.doPrivileged((PrivilegedAction<File>) () -> {
+//
+//            File file = new File(dataDir, fileName);
+//
+//            if (file.exists()) {
+//                return file;
+//            }
+//
+//            try {
+//                String url = downloadBaseUrl + fileName;
+//
+//                DownloadUtils.download(url, file);
+//
+//                System.out.println("Downloaded " + fileName + " , save to " + file);
+//
+//                if (file.exists()) {
+//                    return file;
+//                }
+//
+//            } catch (Exception e) {
+//                System.err.println("Download " + (downloadBaseUrl + fileName) + " error!!!\n");
+//                e.printStackTrace();
+//
+//                file.delete();
+//                //下载失败 退出系统
+//                //System.exit(0);
+//            }
+//
+//            return null;
+//        });
+//
+//    }
 }

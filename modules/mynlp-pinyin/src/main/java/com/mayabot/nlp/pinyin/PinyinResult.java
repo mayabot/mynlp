@@ -189,16 +189,15 @@ public class PinyinResult {
     }
 
     public String asString(String splitter) {
-
-        return Joiner.on(splitter).join(asList());
+        return Joiner.on(splitter).skipNulls().join(asList());
     }
 
     public String asHeadString(String splitter) {
-        return Joiner.on(splitter).join(asHeadList());
+        return Joiner.on(splitter).skipNulls().join(asHeadList());
     }
 
     public String asHeadString() {
-        return Joiner.on(" ").join(asHeadList());
+        return asHeadString(" ");
     }
 
     @Override
