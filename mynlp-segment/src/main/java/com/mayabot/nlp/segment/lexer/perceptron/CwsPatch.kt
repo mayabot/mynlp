@@ -29,7 +29,7 @@ constructor(val mynlpEnv: MynlpEnv) {
     }
 
     private fun loadExample(rsName: String): List<String> {
-        val resource = mynlpEnv.loadResource(rsName)
+        val resource = mynlpEnv.tryLoadResource(rsName,Charsets.UTF_8)
         if (resource != null) {
             return resource.inputStream().bufferedReader().readLines()
                     .map { it.trim() }.filter {

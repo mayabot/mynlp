@@ -3,6 +3,5 @@ description = '感知机算法，包含训练和解码。'
 
 
 dependencies {
-    compile "org.jetbrains.kotlin:kotlin-stdlib"
     compile project(':mynlp-core')
 }
