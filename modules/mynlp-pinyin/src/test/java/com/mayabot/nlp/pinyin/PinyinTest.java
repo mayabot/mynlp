@@ -49,7 +49,7 @@ public class PinyinTest {
     public void testP() {
 
         PinyinResult result = Pinyins.convert("沪人社规〔2017〕43号");
-        result.ignorePunctuation(false);
+        result.keepPunctuation(false);
         System.out.println(result);
     }
 

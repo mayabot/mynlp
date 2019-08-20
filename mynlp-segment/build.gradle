@@ -20,11 +20,9 @@ dependencies {
     compile project(':mynlp-core')
     compile project(':mynlp-perceptron')
 
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
-
     compileOnly group: 'org.fusesource.jansi', name: 'jansi', version: '1.16'
     
     testCompile 'junit:junit:4.12'
     testCompile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
-
+    testCompile project(':mynlp-resources')
 }

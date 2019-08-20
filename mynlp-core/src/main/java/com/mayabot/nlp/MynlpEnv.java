@@ -104,14 +104,22 @@ public class MynlpEnv {
      */
     public synchronized NlpResource loadResource(String resourcePath, Charset charset) {
         return AccessController.doPrivileged((PrivilegedAction<NlpResource>) () -> {
+
+            String wiki = "";
+            //TODO wiki path need
             if (resourcePath == null || resourcePath.trim().isEmpty()) {
-                return null;
+                throw new RuntimeException(
+                        "Resource "+resourcePath+", Not Found!\n"
+                                +"Resource Jar not in your maven or gradle dependencies (com.mayabot.mynlp:mynlp-resources:Version) \n"+
+                                "Or Install to ${mynlp.data} Dir\n"+
+                                "\nGoto Wiki +"+wiki+" For help!"
+                );
             }
 
             NlpResource resource = getNlpResource(resourcePath, charset);
 
             if (resource == null) {
-                String wiki = "";
+
                 throw new RuntimeException(
                         "Resource "+resourcePath+", Not Found!\n"
                         +"Resource Jar not in your maven or gradle dependencies (com.mayabot.mynlp:mynlp-resources:Version) \n"+
@@ -120,6 +128,17 @@ public class MynlpEnv {
                 );
             }
             return resource;
+        });
+
+    }
+
+    public synchronized @Nullable NlpResource tryLoadResource(String resourcePath, Charset charset) {
+        return AccessController.doPrivileged((PrivilegedAction<NlpResource>) () -> {
+            if (resourcePath == null || resourcePath.trim().isEmpty()) {
+                return null;
+            }
+
+            return getNlpResource(resourcePath, charset);
         });
 
     }
@@ -152,6 +171,8 @@ public class MynlpEnv {
     public synchronized NlpResource loadResource(String resourceName) {
         return this.loadResource(resourceName, Charsets.UTF_8);
     }
+
+
 
     public synchronized NlpResource loadResource(SettingItem<String> resourceNameSetting) {
         return this.loadResource(settings.get(resourceNameSetting), Charsets.UTF_8);

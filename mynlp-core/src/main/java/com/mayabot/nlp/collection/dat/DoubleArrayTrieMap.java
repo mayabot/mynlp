@@ -35,7 +35,6 @@
  */
 package com.mayabot.nlp.collection.dat;
 
-import com.google.common.collect.Lists;
 import com.mayabot.nlp.collection.Trie;
 
 import java.io.DataInput;
@@ -88,7 +87,14 @@ public class DoubleArrayTrieMap<T> implements Trie<T> {
     }
 
     public DoubleArrayTrieMap(TreeMap<String, T> treeMap) {
-        this(new DoubleArrayTrie(Lists.newArrayList(treeMap.keySet())), Lists.newArrayList(treeMap.values()));
+        ArrayList<String> keys = new ArrayList<>(treeMap.size());
+        ArrayList<T> values = new ArrayList<>(treeMap.size());
+        treeMap.forEach((a,b)->{
+            keys.add(a);
+            values.add(b);
+        });
+        this.dat = new DoubleArrayTrie(keys);
+        this.values = values;
     }
 
     public DoubleArrayTrieMap(List<String> keys, ArrayList<T> values) {
