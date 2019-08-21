@@ -42,7 +42,7 @@ class PinyinService @Inject constructor(private val mynlp: MynlpEnv) : BasePinyi
 
         list.add(mynlp.loadResource(pinyinSetting))
 
-        val ext = mynlp.loadResource(pinyinExtDicSetting)
+        val ext = mynlp.tryLoadResource(pinyinExtDicSetting)
         if (ext != null) {
             list.add(ext)
         }

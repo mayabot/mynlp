@@ -27,8 +27,8 @@ ext {
 }
 
 //def buildVersion = "2.0.x"
-def buildVersion = "3.0.0"
-def snapShot = true
+def buildVersion = "3.0.0-RC2"
+def snapShot = false
 
 allprojects {
     repositories {

@@ -108,12 +108,7 @@ public class MynlpEnv {
             String wiki = "";
             //TODO wiki path need
             if (resourcePath == null || resourcePath.trim().isEmpty()) {
-                throw new RuntimeException(
-                        "Resource "+resourcePath+", Not Found!\n"
-                                +"Resource Jar not in your maven or gradle dependencies (com.mayabot.mynlp:mynlp-resources:Version) \n"+
-                                "Or Install to ${mynlp.data} Dir\n"+
-                                "\nGoto Wiki +"+wiki+" For help!"
-                );
+                return null;
             }
 
             NlpResource resource = getNlpResource(resourcePath, charset);
@@ -141,6 +136,10 @@ public class MynlpEnv {
             return getNlpResource(resourcePath, charset);
         });
 
+    }
+
+    public synchronized NlpResource tryLoadResource(SettingItem<String> resourceNameSetting) {
+        return this.tryLoadResource(settings.get(resourceNameSetting), Charsets.UTF_8);
     }
 
     private NlpResource getNlpResource(String resourceName, Charset charset) {
@@ -171,7 +170,6 @@ public class MynlpEnv {
     public synchronized NlpResource loadResource(String resourceName) {
         return this.loadResource(resourceName, Charsets.UTF_8);
     }
-
 
 
     public synchronized NlpResource loadResource(SettingItem<String> resourceNameSetting) {
