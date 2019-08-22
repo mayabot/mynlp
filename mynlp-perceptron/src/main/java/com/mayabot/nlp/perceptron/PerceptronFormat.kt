@@ -47,7 +47,7 @@ object PerceptronFormat {
     fun loadFromNlpResource(prefix: String, nlpEnv: MynlpEnv = Mynlps.get().env): Perceptron {
 
         val parameter = nlpEnv.loadResource("$prefix/parameter.bin")
-        val feature = nlpEnv.loadResource("$prefix/feature.dat") ?: nlpEnv.loadResource("$prefix/feature.txt")
+        val feature = nlpEnv.tryLoadResource("$prefix/feature.dat") ?: nlpEnv.loadResource("$prefix/feature.txt")
 
         check(parameter != null && feature != null)
 
