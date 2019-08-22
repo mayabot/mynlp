@@ -23,6 +23,7 @@ import com.mayabot.nlp.resources.ClasspathNlpResourceFactory;
 import com.mayabot.nlp.resources.NlpResource;
 import com.mayabot.nlp.resources.NlpResourceFactory;
 import com.mayabot.nlp.utils.DownloadUtils;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
@@ -88,11 +89,23 @@ public class MynlpEnv {
      */
     public String hashResource(String resourceName) {
 
-        NlpResource r1 = loadResource(resourceName, Charsets.UTF_8);
+        NlpResource r1 = tryLoadResource(resourceName, Charsets.UTF_8);
         if (r1 != null) {
             return r1.hash();
         }
         return null;
+    }
+
+
+    /**
+     * 加载资源
+     *
+     * @param resourceName 资源路径名称 dict/abc.dict
+     * @return NlpResource
+     */
+    @Nullable
+    public NlpResource loadResource(String resourceName) {
+        return this.loadResource(resourceName, Charsets.UTF_8);
     }
 
     /**
@@ -102,7 +115,7 @@ public class MynlpEnv {
      * @param charset      字符集
      * @return NlpResource
      */
-    public synchronized NlpResource loadResource(String resourcePath, Charset charset) {
+    public NlpResource loadResource(String resourcePath, Charset charset) {
         return AccessController.doPrivileged((PrivilegedAction<NlpResource>) () -> {
 
             String wiki = "";
@@ -127,7 +140,7 @@ public class MynlpEnv {
 
     }
 
-    public synchronized @Nullable NlpResource tryLoadResource(String resourcePath, Charset charset) {
+    public @Nullable NlpResource tryLoadResource(String resourcePath, Charset charset) {
         return AccessController.doPrivileged((PrivilegedAction<NlpResource>) () -> {
             if (resourcePath == null || resourcePath.trim().isEmpty()) {
                 return null;
@@ -135,14 +148,18 @@ public class MynlpEnv {
 
             return getNlpResource(resourcePath, charset);
         });
-
     }
 
-    public synchronized NlpResource tryLoadResource(SettingItem<String> resourceNameSetting) {
+    public @Nullable NlpResource tryLoadResource(String resourcePath) {
+        return this.tryLoadResource(resourcePath,Charsets.UTF_8);
+    }
+
+    public @Nullable NlpResource tryLoadResource(SettingItem<String> resourceNameSetting) {
         return this.tryLoadResource(settings.get(resourceNameSetting), Charsets.UTF_8);
     }
 
-    private NlpResource getNlpResource(String resourceName, Charset charset) {
+
+    private synchronized NlpResource getNlpResource(String resourceName, Charset charset) {
         NlpResource resource = null;
         long t1 = System.currentTimeMillis();
         for (NlpResourceFactory factory : resourceFactory) {
@@ -160,16 +177,6 @@ public class MynlpEnv {
         return resource;
     }
 
-    /**
-     * 加载资源
-     *
-     * @param resourceName 资源路径名称 dict/abc.dict
-     * @return NlpResource
-     */
-    @Nullable
-    public synchronized NlpResource loadResource(String resourceName) {
-        return this.loadResource(resourceName, Charsets.UTF_8);
-    }
 
 
     public synchronized NlpResource loadResource(SettingItem<String> resourceNameSetting) {
