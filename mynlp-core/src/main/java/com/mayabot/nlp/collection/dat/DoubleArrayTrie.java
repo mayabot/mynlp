@@ -91,40 +91,84 @@ public class DoubleArrayTrie {
     /**
      * 树叶子节点个数
      *
-     * @return
+     * @return int
      */
     public int size() {
         return size;
     }
 
+    /**
+     *
+     * @param text
+     * @param offset
+     * @return DATMatcher
+     */
     public DATMatcher matcher(String text, int offset) {
         return new DATMatcher(this, text, offset);
     }
 
+    /**
+     *
+     * @param text
+     * @param offset
+     * @return DATMatcher
+     */
     public DATMatcher matcher(char[] text, int offset) {
         return new DATMatcher(this, text, offset);
     }
 
+    /**
+     *
+     * @param text
+     * @return DATMatcher
+     */
     public DATMatcher matcher(String text) {
         return new DATMatcher(this, text, 0);
     }
 
+    /**
+     *
+     * @param text
+     * @return DATMatcher
+     */
     public DATMatcher matcher(char[] text) {
         return new DATMatcher(this, text, 0);
     }
 
+    /**
+     *
+     * @param text
+     * @param offset
+     * @return DATMatcher
+     */
     public DATLongMatcher matcherLong(String text, int offset) {
         return new DATLongMatcher(this, text, offset);
     }
 
+    /**
+     *
+     * @param text
+     * @param offset
+     * @return DATMatcher
+     */
     public DATLongMatcher matcherLong(char[] text, int offset) {
         return new DATLongMatcher(this, text, offset);
     }
 
+    /**
+     *
+     * @param text
+     * @return DATMatcher
+     */
     public DATLongMatcher matcherLong(String text) {
         return new DATLongMatcher(this, text, 0);
     }
 
+    /**
+     *
+     * @param text
+     * @return DATMatcher
+     */
     public DATLongMatcher matcherLong(char[] text) {
         return new DATLongMatcher(this, text, 0);
     }
@@ -140,6 +184,14 @@ public class DoubleArrayTrie {
         return indexOf(key, 0, 0, 0);
     }
 
+    /**
+     *
+     * @param key
+     * @param pos
+     * @param len
+     * @param nodePos
+     * @return index
+     */
     public int indexOf(CharSequence key, int pos, int len, int nodePos) {
         if (len <= 0) {
             len = key.length();
@@ -228,7 +280,6 @@ public class DoubleArrayTrie {
      * @param nodePos  开始查找的位置（本参数允许从非根节点查询）
      * @return 查到的节点代表的value ID，负数表示不存在
      */
-
     public int indexOf(char[] keyChars, int pos, int len, int nodePos) {
         if (len <= 0) {
             len = keyChars.length;
@@ -366,7 +417,7 @@ public class DoubleArrayTrie {
      *
      * @param current
      * @param c
-     * @return
+     * @return int
      */
     protected int transition(int current, char c) {
         int b = base[current];
@@ -495,7 +546,7 @@ public class DoubleArrayTrie {
      *
      * @param keyChars
      * @param begin
-     * @return
+     * @return LinkedList
      */
     public LinkedList<Map.Entry<String, Integer>> commonPrefixSearchWithValue(char[] keyChars, int begin) {
         int len = keyChars.length;

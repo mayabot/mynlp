@@ -99,6 +99,7 @@ open class FluentLexerBuilder : LexerBuilder {
                         = { _ -> Unit }
         ): CollectorBlock {
             try {
+                // 松散绑定name = smart的Bean，在企业版中提供
                 val p = Mynlps.get()
                         .injector
                         .getInstance(

@@ -27,7 +27,7 @@ public interface ParagraphReader {
     /**
      * 返回一个段落，最后返回null
      *
-     * @return
+     * @return String
      * @throws IOException
      */
     String next() throws IOException;

@@ -90,9 +90,8 @@ public class TransformMatrix {
      *
      * @param from
      * @param to
-     * @return
+     * @return int
      */
-
     public int getFrequency(String from, String to) {
         int v = matrix.get(from, to);
         if (v == Integer.MIN_VALUE) {
@@ -209,7 +208,7 @@ public class TransformMatrix {
      * 获取e的总频次
      *
      * @param from
-     * @return
+     * @return long
      */
     public long getTotalFrequency(String from) {
         Long v = total.get(from);
@@ -223,7 +222,7 @@ public class TransformMatrix {
     /**
      * 获取所有标签的总频次
      *
-     * @return
+     * @return long
      */
     public long getTotalFrequency() {
         return totalFrequency;

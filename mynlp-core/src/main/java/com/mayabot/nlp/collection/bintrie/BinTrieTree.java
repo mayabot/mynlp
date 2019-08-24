@@ -74,7 +74,7 @@ public class BinTrieTree<T> implements Trie<T>, BinTrieNode<T> {
     /**
      * 计算根节点的数量
      *
-     * @return
+     * @return child count
      */
     public int rootChildCount() {
         if (childrenMap != null) {
@@ -94,7 +94,7 @@ public class BinTrieTree<T> implements Trie<T>, BinTrieNode<T> {
      * 创建一个该树的Matcher对象
      *
      * @param text
-     * @return
+     * @return TrieTreeMatcher
      */
     public TrieTreeMatcher<T> newForwardMatcher(String text) {
         return new TrieTreeForwardMaxMatcher<>(this, text);
@@ -104,7 +104,7 @@ public class BinTrieTree<T> implements Trie<T>, BinTrieNode<T> {
      * 创建一个该树的Matcher对象
      *
      * @param text
-     * @return
+     * @return TrieTreeMatcher
      */
     public TrieTreeMatcher<T> newAllMatcher(String text) {
         return new TrieTreeAllMatcher<>(this, text);
@@ -296,7 +296,7 @@ public class BinTrieTree<T> implements Trie<T>, BinTrieNode<T> {
     /**
      * 访问所有的keys 词
      *
-     * @return
+     * @return Iterator
      */
     public Iterator<String> keys(NodeHolder holder) {
         return new IteratorKeys(holder);

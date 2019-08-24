@@ -18,6 +18,7 @@ package com.mayabot.nlp.segment.lexer.core;
 import com.google.common.base.CharMatcher;
 import com.google.common.base.Charsets;
 import com.google.common.base.Splitter;
+import com.google.common.hash.Hasher;
 import com.google.common.hash.Hashing;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -25,11 +26,12 @@ import com.mayabot.nlp.MynlpEnv;
 import com.mayabot.nlp.collection.dat.DoubleArrayTrieStringIntMap;
 import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
-import com.mayabot.nlp.resources.NlpResouceExternalizable;
 import com.mayabot.nlp.resources.NlpResource;
 import com.mayabot.nlp.resources.UseLines;
 import com.mayabot.nlp.utils.CharSourceLineReader;
+import kotlin.Pair;
 
+import javax.annotation.Nullable;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
@@ -44,11 +46,13 @@ import java.util.TreeMap;
  * word1 freq
  * word2 freq
  * 缓存为DAT格式
+ *
  * @author jimichan
  */
 @Singleton
-public class CoreDictionaryImpl extends NlpResouceExternalizable implements CoreDictionary {
+public class CoreDictionaryImpl extends BaseNlpResourceExternalizable implements CoreDictionary {
 
+    private final MynlpEnv env;
     private InternalLogger logger = InternalLoggerFactory.getInstance(CoreDictionaryImpl.class);
 
     private final String path = "core-dict/CoreDict.txt";
@@ -60,9 +64,24 @@ public class CoreDictionaryImpl extends NlpResouceExternalizable implements Core
 
     private DoubleArrayTrieStringIntMap trie;
 
+    private @Nullable
+    CoreDictPatch coreDictPatch;
+
     @Inject
-    public CoreDictionaryImpl(MynlpEnv mynlp) throws Exception {
-        this.restore(mynlp);
+    public CoreDictionaryImpl(MynlpEnv env, CoreDictPathWrap coreDictPathWrap) throws Exception {
+        super(env);
+        this.env = env;
+        this.coreDictPatch = coreDictPathWrap.getCoreDictPatch();
+        this.restore();
+    }
+
+    /**
+     * 刷新资源
+     * @throws Exception
+     */
+    @Override
+    public void refresh() throws Exception {
+        this.restore();
     }
 
     @Override
@@ -72,13 +91,18 @@ public class CoreDictionaryImpl extends NlpResouceExternalizable implements Core
 
     @Override
     @SuppressWarnings(value = "rawtypes")
-    public void loadFromSource(MynlpEnv mynlp) throws Exception {
-        NlpResource dictResource = mynlp.loadResource(path);
+    public void loadFromSource() throws Exception {
+        NlpResource dictResource = env.loadResource(path);
+
+        if (dictResource == null) {
+            throw new RuntimeException("Not Found dict resource " + path);
+        }
 
         //词和词频
         TreeMap<String, Integer> map = new TreeMap<>();
 
         int maxFreq = 0;
+
 
         Splitter splitter = Splitter.on(CharMatcher.breakingWhitespace()).omitEmptyStrings().trimResults();
 
@@ -91,6 +115,24 @@ public class CoreDictionaryImpl extends NlpResouceExternalizable implements Core
                     Integer count = Integer.valueOf(param.get(1));
                     map.put(param.get(0), count);
                     maxFreq += count;
+                }
+            }
+        }
+
+        // apply dict patch
+        if (coreDictPatch != null) {
+            List<Pair<String, Integer>> list = coreDictPatch.addDict();
+
+            if (list != null) {
+                for (Pair<String, Integer> pair : list) {
+                    map.put(pair.getFirst(), pair.getSecond());
+                }
+            }
+
+            List<String> deleted = coreDictPatch.deleteDict();
+            if (deleted != null) {
+                for (String word : deleted) {
+                    map.remove(word);
                 }
             }
         }
@@ -112,11 +154,16 @@ public class CoreDictionaryImpl extends NlpResouceExternalizable implements Core
     }
 
     @Override
-    public String sourceVersion(MynlpEnv mynlp) {
-        return Hashing.murmur3_32().newHasher().
-                putString(mynlp.hashResource(path), Charsets.UTF_8).
-                putString("v2", Charsets.UTF_8)
-                .hash().toString();
+    public String sourceVersion() {
+
+        Hasher hasher = Hashing.murmur3_32().newHasher().
+                putString(env.hashResource(path), Charsets.UTF_8).
+                putString("v2", Charsets.UTF_8);
+        if (coreDictPatch != null) {
+            hasher.putString(coreDictPatch.dictVersion(), Charsets.UTF_8);
+        }
+
+        return hasher.hash().toString();
     }
 
     @Override

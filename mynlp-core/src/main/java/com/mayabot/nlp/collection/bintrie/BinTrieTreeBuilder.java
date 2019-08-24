@@ -55,10 +55,10 @@ public enum BinTrieTreeBuilder {
     /**
      * 每行的格式 word[空格]args
      *
+     * @param split
      * @param lines
      * @param transFun
-     * @param <T>
-     * @return
+     * @return BinTrieTree T
      */
     public <T> BinTrieTree<T> build(String split, Iterable<String> lines, Function<String[], T> transFun) {
 

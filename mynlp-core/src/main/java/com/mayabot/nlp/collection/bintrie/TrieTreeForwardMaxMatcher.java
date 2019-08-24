@@ -56,7 +56,7 @@ public class TrieTreeForwardMaxMatcher<T> implements TrieTreeMatcher<T> {
     /**
      * 前向最大長度匹配
      *
-     * @return
+     * @return String
      */
     @Override
     public String next() {
@@ -166,7 +166,7 @@ public class TrieTreeForwardMaxMatcher<T> implements TrieTreeMatcher<T> {
      * 当参数对象是列表或者数组的时候，返回指定下标的内容。否则返回null
      *
      * @param i
-     * @return
+     * @return String
      */
     @Override
     public String getParam(int i) {
@@ -187,10 +187,10 @@ public class TrieTreeForwardMaxMatcher<T> implements TrieTreeMatcher<T> {
     /**
      * 得到全部参数
      *
-     * @return
+     * @return String
      */
     @Override
-    public T getParams() {
+     public T getParams() {
         return this.param;
     }
 

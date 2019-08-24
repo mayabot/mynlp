@@ -9,4 +9,5 @@ import com.google.inject.ImplementedBy;
 @ImplementedBy(value = BiGramTableDictionaryImpl.class)
 public interface BiGramTableDictionary {
     int getBiFrequency(int idA, int idB);
+    public void refresh() throws Exception;
 }

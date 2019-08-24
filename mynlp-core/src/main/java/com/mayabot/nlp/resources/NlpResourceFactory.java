@@ -24,7 +24,7 @@ public interface NlpResourceFactory {
      * 加载资源
      *
      * @param resourceName
-     * @return
+     * @return NlpResource
      */
     default NlpResource load(String resourceName) {
         return load(resourceName, Charsets.UTF_8);

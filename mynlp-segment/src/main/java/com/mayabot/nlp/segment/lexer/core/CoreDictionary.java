@@ -13,7 +13,7 @@ public interface CoreDictionary {
      * 匹配算法
      * @param text
      * @param offset
-     * @return
+     * @return DATMapMatcherInt
      */
     DATMapMatcherInt match(char[] text, int offset);
 
@@ -22,4 +22,6 @@ public interface CoreDictionary {
      * @return int 词频总量
      */
     int totalFreq();
+
+    void refresh() throws Exception;
 }

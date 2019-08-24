@@ -56,7 +56,7 @@ public class QuickStringDoubleTable {
      * 这个方法执行速度应该想飞一样
      * @param row
      * @param col
-     * @return
+     * @return double
      */
     public double get(String row, String col) {
         int rowid = labelBase[row.hashCode() % labelSize];

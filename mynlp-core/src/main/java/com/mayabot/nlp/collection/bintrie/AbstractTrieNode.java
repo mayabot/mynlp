@@ -59,7 +59,7 @@ public abstract class AbstractTrieNode<V> implements BinTrieNode<V> {
      * 得道第几个参数
      *
      * @param i
-     * @return
+     * @return V
      */
     @SuppressWarnings("unchecked")
     public V getParam(int i) {

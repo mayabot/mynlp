@@ -59,9 +59,9 @@ public class EnumTransformMatrix<E extends Enum<E>> {
      *
      * @param from
      * @param to
-     * @return
+     * @return double
      */
-    public double getTP(E from, E to) {
+    public double  getTP(E from, E to) {
         Double x = transformMatrix.getTP(from.name(), to.name());
         if (x != null) {
             return x.doubleValue();

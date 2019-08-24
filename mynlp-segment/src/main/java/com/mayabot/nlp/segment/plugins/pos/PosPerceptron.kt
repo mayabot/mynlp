@@ -490,12 +490,12 @@ class POSEvaluateRunner(private val sampleList: List<TrainSample>)  {
 
         var total = 0.0
         var right = 0.0
-//        var targetSampleSize = sampleList.size
-//        var count = 0
-//        System.out.print("Evaluating 0%")
+            // var targetSampleSize = sampleList.size
+            // var count = 0
+            // System.out.print("Evaluating 0%")
         sampleList.forEach { sample ->
             // 抽样10%进行验证
-//                count++
+            // count++
             total += sample.label.size
             val result = model.decode(sample.featureSequence)
             for (x in 0 until result.size) {
@@ -503,13 +503,9 @@ class POSEvaluateRunner(private val sampleList: List<TrainSample>)  {
                     right++
                 }
             }
-//                if (count % 2000 == 0) {
-//                    System.out.print("\rEvaluating ${"%.2f".format(count * 100.0 / targetSampleSize)}%")
-//
-//                }
         }
 
-        System.out.println("P = ${"%.3f".format((right / total))}\n")
+        println("$k P = ${"%.3f".format((right / total))}\n")
     }
 
 }

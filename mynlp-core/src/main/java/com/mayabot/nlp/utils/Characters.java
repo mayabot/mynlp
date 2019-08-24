@@ -128,7 +128,7 @@ public class Characters {
      * 是不是标点符号。包括ASCII中的标点，对应的全角标点。和中文扩展标点符号的判断
      *
      * @param c
-     * @return
+     * @return boolean
      */
     public static boolean isPunctuation(char c) {
         if (c <= 127) {

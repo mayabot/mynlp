@@ -111,7 +111,7 @@ public class DoubleArrayTrieMap<T> implements Trie<T> {
      *
      * @param text   带计算的文本
      * @param offset 文本中的偏移量
-     * @return
+     * @return DATMapMatcher
      */
     public DATMapMatcher<T> match(String text, int offset) {
         return new DATMapMatcherInner(dat.matcher(text, offset));
@@ -122,7 +122,7 @@ public class DoubleArrayTrieMap<T> implements Trie<T> {
      *
      * @param text   带计算的文本
      * @param offset 文本中的偏移量
-     * @return
+     * @return DATMapMatcher
      */
     public DATMapMatcher<T> match(char[] text, int offset) {
         return new DATMapMatcherInner(dat.matcher(text, offset));
@@ -171,7 +171,7 @@ public class DoubleArrayTrieMap<T> implements Trie<T> {
     /**
      * 树叶子节点个数
      *
-     * @return
+     * @return DATMapMatcher
      */
     public int size() {
         return values.size();
@@ -267,7 +267,7 @@ public class DoubleArrayTrieMap<T> implements Trie<T> {
      * 获取index对应的值
      *
      * @param index
-     * @return
+     * @return DATMapMatcher
      */
     public T getValueAt(int index) {
         return values.get(index);

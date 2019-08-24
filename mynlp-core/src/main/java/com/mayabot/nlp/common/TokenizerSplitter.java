@@ -58,7 +58,7 @@ public class TokenizerSplitter {
     /**
      * 移动到下一游标
      *
-     * @return
+     * @return boolean
      */
     public boolean next() {
 
