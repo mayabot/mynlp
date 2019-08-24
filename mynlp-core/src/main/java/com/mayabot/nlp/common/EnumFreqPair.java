@@ -174,7 +174,7 @@ public class EnumFreqPair<E extends Enum> {
     /**
      * 只有一个值的，key
      *
-     * @return
+     * @return E
      */
     public E oneKey() {
         return labelMap.entrySet().iterator().next().getKey();

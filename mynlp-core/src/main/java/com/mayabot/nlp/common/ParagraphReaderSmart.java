@@ -38,7 +38,7 @@ public class ParagraphReaderSmart implements ParagraphReader {
      * 选择一个好的实现
      *
      * @param string
-     * @return
+     * @return ParagraphReader
      */
     public static ParagraphReader prepare(String string) {
         if (string.length() < 256) {
@@ -99,7 +99,7 @@ public class ParagraphReaderSmart implements ParagraphReader {
     /**
      * 返回一段字符串
      *
-     * @return
+     * @return String
      * @throws IOException
      */
     @Override

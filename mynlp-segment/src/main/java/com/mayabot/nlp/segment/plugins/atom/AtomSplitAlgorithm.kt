@@ -24,7 +24,7 @@ interface AtomSplitAlgorithmTemplateProvider{
 @Singleton
 class DefaultAtomSplitAlgorithmTemplateProvider:AtomSplitAlgorithmTemplateProvider{
 
-    val defaultTemplates = defaultTemplates()
+    private val defaultTemplates = defaultTemplates()
 
     override fun load(): DoubleArrayTrieStringIntMap {
         Mynlps.logger.info("Load Default AtomSplitAlgorithm Template")

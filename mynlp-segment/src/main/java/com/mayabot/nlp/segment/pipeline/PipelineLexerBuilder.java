@@ -236,7 +236,7 @@ public class PipelineLexerBuilder implements LexerBuilder {
     /**
      * 设置BestPathComputer的实现对象
      *
-     * @param bestPathAlgorithm
+     * @param bestPathAlgorithm BestPathAlgorithm
      * @return PipelineLexerBuilder
      */
     public PipelineLexerBuilder setBestPathAlgorithm(BestPathAlgorithm bestPathAlgorithm) {
@@ -247,7 +247,7 @@ public class PipelineLexerBuilder implements LexerBuilder {
     /**
      * 设置BestPathComputer的实现类，有Guice创建对象
      *
-     * @param clazz
+     * @param clazz BestPathAlgorithm
      * @return PipelineLexerBuilder
      */
     public PipelineLexerBuilder setBestPathComputer(Class<? extends BestPathAlgorithm> clazz) {

@@ -54,7 +54,7 @@ public class ArrayTrieNode<T> extends AbstractTrieNode<T> {
      * 插入子节点
      *
      * @param c
-     * @return
+     * @return BinTrieNode
      */
     @Override
     @SuppressWarnings({"unchecked", "rawtypes"})
@@ -100,7 +100,7 @@ public class ArrayTrieNode<T> extends AbstractTrieNode<T> {
      * 查找子节点
      *
      * @param c
-     * @return
+     * @return ArrayTrieNode
      */
     @Override
     public ArrayTrieNode<T> findChild(char c) {
@@ -118,7 +118,7 @@ public class ArrayTrieNode<T> extends AbstractTrieNode<T> {
      * 测试是否包含
      *
      * @param c
-     * @return
+     * @return contains
      */
     @Override
     public boolean contains(char c) {

@@ -40,7 +40,7 @@ class PinyinService @Inject constructor(private val mynlp: MynlpEnv) : BasePinyi
     internal override fun load(): TreeMap<String, Array<Pinyin>> {
         val list = Lists.newArrayList<NlpResource>()
 
-        list.add(mynlp.loadResource(pinyinSetting))
+        list.add(mynlp.loadResource(mynlp.get(pinyinSetting)))
 
         val ext = mynlp.tryLoadResource(pinyinExtDicSetting)
         if (ext != null) {

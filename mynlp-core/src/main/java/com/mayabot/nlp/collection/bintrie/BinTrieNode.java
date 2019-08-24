@@ -50,7 +50,7 @@ public interface BinTrieNode<T> {
      * 寻找到这个路径的最后一个节点
      *
      * @param key
-     * @return
+     * @return BinTrieNode
      */
     default BinTrieNode<T> findNode(CharSequence key) {
         BinTrieNode<T> branch = this;

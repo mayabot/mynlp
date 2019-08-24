@@ -34,7 +34,7 @@ public interface NlpResource {
     /**
      * 有很多实现办法。要么对文件或数据进行计算，还有他同名文件 abc.txt 对应一个文件 abc.txt.hash 进行记录
      *
-     * @return
+     * @return String
      */
     default String hash() {
         ByteSource byteSource = new ByteSource() {

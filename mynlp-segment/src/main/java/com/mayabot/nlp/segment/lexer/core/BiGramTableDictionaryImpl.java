@@ -20,6 +20,7 @@ import com.google.common.base.Charsets;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Splitter;
 import com.google.common.collect.TreeBasedTable;
+import com.google.common.hash.Hasher;
 import com.google.common.hash.Hashing;
 import com.google.common.primitives.Ints;
 import com.google.inject.Inject;
@@ -28,10 +29,11 @@ import com.mayabot.nlp.MynlpEnv;
 import com.mayabot.nlp.common.matrix.CSRSparseMatrix;
 import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
-import com.mayabot.nlp.resources.NlpResouceExternalizable;
 import com.mayabot.nlp.resources.NlpResource;
 import com.mayabot.nlp.resources.UseLines;
 import com.mayabot.nlp.utils.CharSourceLineReader;
+import kotlin.Pair;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.io.ObjectInput;
@@ -44,34 +46,55 @@ import java.util.List;
  * @author jimichan
  */
 @Singleton
-public class BiGramTableDictionaryImpl extends NlpResouceExternalizable implements BiGramTableDictionary {
+public class BiGramTableDictionaryImpl extends BaseNlpResourceExternalizable implements BiGramTableDictionary {
 
+    private final MynlpEnv mynlp;
+    private final CoreDictPatch coreDictPatch;
     private CSRSparseMatrix matrix;
 
-    public final String path = "core-dict/CoreDict.bigram.txt";
+    private final String path = "core-dict/CoreDict.bigram.txt";
 
     protected InternalLogger logger = InternalLoggerFactory.getInstance(this.getClass());
 
+    @Nullable
     private final CoreDictionaryImpl coreDictionary;
 
     @Inject
-    public BiGramTableDictionaryImpl(CoreDictionaryImpl coreDictionary, MynlpEnv mynlp) throws
-            Exception {
+    public BiGramTableDictionaryImpl(CoreDictionaryImpl coreDictionary,
+                                     MynlpEnv mynlp,
+                                     CoreDictPathWrap coreDictPathWrap) throws Exception {
+        super(mynlp);
         this.coreDictionary = coreDictionary;
+        this.mynlp = mynlp;
+        coreDictPatch = coreDictPathWrap.getCoreDictPatch();
+        this.restore();
+    }
 
-        this.restore(mynlp);
+    /**
+     * 刷新资源
+     * @throws Exception
+     */
+    @Override
+    public void refresh() throws Exception {
+        this.restore();
     }
 
     @Override
-    public String sourceVersion(MynlpEnv mynlp) {
-        return Hashing.murmur3_32().newHasher().
+    public String sourceVersion() {
+        Hasher hasher = Hashing.murmur3_32().newHasher().
                 putString(mynlp.hashResource(path), Charsets.UTF_8).
-                putString("v2", Charsets.UTF_8)
-                .hash().toString();
+                putString("v2", Charsets.UTF_8);
+
+        if (coreDictPatch != null) {
+            hasher.putString(coreDictPatch.biGramVersion(),Charsets.UTF_8);
+        }
+
+        return hasher.hash().toString();
+
     }
 
     @Override
-    public void loadFromSource(MynlpEnv mynlp) throws Exception {
+    public void loadFromSource() throws Exception {
 
         NlpResource source = mynlp.loadResource(path);
 
@@ -117,6 +140,22 @@ public class BiGramTableDictionaryImpl extends NlpResouceExternalizable implemen
 
             }
         }
+
+
+        if (coreDictPatch != null) {
+            List<BiGram> list = coreDictPatch.addBiGram();
+            if (list != null) {
+                for (BiGram item : list) {
+                    int idA = coreDictionary.wordId(item.getWordA());
+                    int idB = coreDictionary.wordId(item.getWordB());
+                    if (idA >= 0 && idB >= 0) {
+                        table.put(idA, idB, item.getCount());
+                        count++;
+                    }
+                }
+            }
+        }
+
         logger.info("Core biGram pair size " + count);
         this.matrix = new CSRSparseMatrix(table, coreDictionary.size());
     }

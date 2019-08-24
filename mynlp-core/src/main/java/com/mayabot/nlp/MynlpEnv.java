@@ -80,32 +80,27 @@ public class MynlpEnv {
         settings.put(key, value);
     }
 
-
-    /**
-     * 计算资源的hash值
-     *
-     * @param resourceName
-     * @return hash
-     */
-    public String hashResource(String resourceName) {
-
-        NlpResource r1 = tryLoadResource(resourceName, Charsets.UTF_8);
-        if (r1 != null) {
-            return r1.hash();
-        }
-        return null;
+    public @Nullable String get(String setting)  {
+        return settings.get(setting);
     }
 
+    public String get(String setting,@NotNull String defaultValue)  {
+        return settings.get(setting,defaultValue);
+    }
+
+    public <T> T get(SettingItem<T> setting)  {
+        return settings.get(setting);
+    }
 
     /**
      * 加载资源
      *
-     * @param resourceName 资源路径名称 dict/abc.dict
+     * @param resourcePath 资源路径名称 dict/abc.dict
      * @return NlpResource
      */
     @Nullable
-    public NlpResource loadResource(String resourceName) {
-        return this.loadResource(resourceName, Charsets.UTF_8);
+    public NlpResource loadResource(String resourcePath) {
+        return this.loadResource(resourcePath, Charsets.UTF_8);
     }
 
     /**
@@ -115,15 +110,14 @@ public class MynlpEnv {
      * @param charset      字符集
      * @return NlpResource
      */
-    public NlpResource loadResource(String resourcePath, Charset charset) {
+    public @NotNull NlpResource loadResource(String resourcePath, Charset charset) {
+        // TODO wiki path need
+        if (resourcePath == null || resourcePath.trim().isEmpty()) {
+           throw new RuntimeException("resourcePath is null");
+        }
+
         return AccessController.doPrivileged((PrivilegedAction<NlpResource>) () -> {
-
             String wiki = "";
-            //TODO wiki path need
-            if (resourcePath == null || resourcePath.trim().isEmpty()) {
-                return null;
-            }
-
             NlpResource resource = getNlpResource(resourcePath, charset);
 
             if (resource == null) {
@@ -139,6 +133,23 @@ public class MynlpEnv {
         });
 
     }
+
+
+    /**
+     * 计算资源的hash值。
+     *
+     * @param resourceName
+     * @return hash
+     */
+    public @Nullable String hashResource(String resourceName) {
+
+        NlpResource r1 = tryLoadResource(resourceName, Charsets.UTF_8);
+        if (r1 != null) {
+            return r1.hash();
+        }
+        return null;
+    }
+
 
     public @Nullable NlpResource tryLoadResource(String resourcePath, Charset charset) {
         return AccessController.doPrivileged((PrivilegedAction<NlpResource>) () -> {
@@ -157,7 +168,6 @@ public class MynlpEnv {
     public @Nullable NlpResource tryLoadResource(SettingItem<String> resourceNameSetting) {
         return this.tryLoadResource(settings.get(resourceNameSetting), Charsets.UTF_8);
     }
-
 
     private synchronized NlpResource getNlpResource(String resourceName, Charset charset) {
         NlpResource resource = null;
@@ -178,10 +188,6 @@ public class MynlpEnv {
     }
 
 
-
-    public synchronized NlpResource loadResource(SettingItem<String> resourceNameSetting) {
-        return this.loadResource(settings.get(resourceNameSetting), Charsets.UTF_8);
-    }
 
     public File getDataDir() {
         return dataDir;

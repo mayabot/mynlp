@@ -107,7 +107,7 @@ public class DoubleArrayTrieStringIntMap {
      *
      * @param text   带计算的文本
      * @param offset 文本中的偏移量
-     * @return
+     * @return DATMapMatcherInt
      */
     public DATMapMatcherInt match(String text, int offset) {
         return new DATMapMatcherInt(dat.matcher(text, offset));
@@ -118,7 +118,7 @@ public class DoubleArrayTrieStringIntMap {
      *
      * @param text   带计算的文本
      * @param offset 文本中的偏移量
-     * @return
+     * @return DATMapMatcherInt
      */
     public DATMapLongMatcherInt matchLong(char[] text, int offset) {
         return new DATMapLongMatcherInt(dat.matcherLong(text, offset));
@@ -130,7 +130,7 @@ public class DoubleArrayTrieStringIntMap {
      *
      * @param text   带计算的文本
      * @param offset 文本中的偏移量
-     * @return
+     * @return DATMapMatcherInt
      */
     public DATMapLongMatcherInt matchLong(String text, int offset) {
         return new DATMapLongMatcherInt(dat.matcherLong(text, offset));
@@ -141,7 +141,7 @@ public class DoubleArrayTrieStringIntMap {
      *
      * @param text   带计算的文本
      * @param offset 文本中的偏移量
-     * @return
+     * @return DATMapMatcherInt
      */
     public DATMapMatcherInt match(char[] text, int offset) {
         return new DATMapMatcherInt(dat.matcher(text, offset));
@@ -220,7 +220,7 @@ public class DoubleArrayTrieStringIntMap {
     /**
      * 树叶子节点个数
      *
-     * @return
+     * @return DATMapMatcherInt
      */
     public int size() {
         return values.length;
@@ -317,16 +317,26 @@ public class DoubleArrayTrieStringIntMap {
      * 获取index对应的值
      *
      * @param index
-     * @return
+     * @return DATMapMatcherInt
      */
     public int getValueAt(int index) {
         return values[index];
     }
 
+    /**
+     *
+     * @param key
+     * @return true or false
+     */
     public boolean containsKey(String key) {
         return indexOf(key) >= 0;
     }
 
+    /**
+     *
+     * @param key
+     * @return true or false
+     */
     public boolean containsKey(char key) {
         return indexOf(key) >= 0;
     }

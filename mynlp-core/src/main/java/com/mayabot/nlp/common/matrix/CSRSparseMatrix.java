@@ -126,7 +126,7 @@ public class CSRSparseMatrix implements Serializable {
      *
      * @param row
      * @param col
-     * @return
+     * @return int
      */
     public int get(int row, int col) {
 

@@ -56,7 +56,7 @@ public class HashTrieNode<T> extends AbstractTrieNode<T> {
      * 插入子节点
      *
      * @param c
-     * @return
+     * @return BinTrieNode
      */
     @Override
     @SuppressWarnings({"unchecked", "rawtypes"})
@@ -95,7 +95,7 @@ public class HashTrieNode<T> extends AbstractTrieNode<T> {
      * 查找子节点
      *
      * @param c
-     * @return
+     * @return HashTrieNode
      */
     @Override
     public HashTrieNode<T> findChild(char c) {
@@ -109,7 +109,7 @@ public class HashTrieNode<T> extends AbstractTrieNode<T> {
      * 测试是否包含
      *
      * @param c
-     * @return
+     * @return boolean
      */
     @Override
     public boolean contains(char c) {

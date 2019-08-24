@@ -87,7 +87,7 @@ public class State {
     /**
      * 获取节点深度
      *
-     * @return
+     * @return 深度
      */
     public int getDepth() {
         return this.depth;
@@ -108,7 +108,7 @@ public class State {
     /**
      * 获取最大的值
      *
-     * @return
+     * @return 最大的值
      */
     public Integer getLargestValueId() {
         if (emits == null || emits.size() == 0) {
@@ -132,7 +132,7 @@ public class State {
     /**
      * 获取这个节点代表的模式串（们）
      *
-     * @return
+     * @return Collection<Integer>
      */
     public Collection<Integer> emit() {
         return this.emits == null ? Collections.emptyList() : this.emits;
@@ -141,7 +141,7 @@ public class State {
     /**
      * 是否是终止状态
      *
-     * @return
+     * @return boolean
      */
     public boolean isAcceptable() {
         return this.depth > 0 && this.emits != null;
@@ -150,7 +150,7 @@ public class State {
     /**
      * 获取failure状态
      *
-     * @return
+     * @return State
      */
     public State failure() {
         return this.failure;
@@ -185,7 +185,7 @@ public class State {
      * 按照character转移，根节点转移失败会返回自己（永远不会返回null）
      *
      * @param character
-     * @return
+     * @return State
      */
     public State nextState(Character character) {
         return nextState(character, false);
@@ -195,7 +195,7 @@ public class State {
      * 按照character转移，任何节点转移失败会返回null
      *
      * @param character
-     * @return
+     * @return State
      */
     public State nextStateIgnoreRootState(Character character) {
         return nextState(character, true);
@@ -233,7 +233,7 @@ public class State {
     /**
      * 获取goto表
      *
-     * @return
+     * @return Map<Character, State>
      */
     public Map<Character, State> getSuccess() {
         return success;

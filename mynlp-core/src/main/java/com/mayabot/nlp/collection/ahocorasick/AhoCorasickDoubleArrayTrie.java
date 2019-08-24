@@ -183,7 +183,7 @@ public class AhoCorasickDoubleArrayTrie<V> {
      * 获取值
      *
      * @param key 键
-     * @return
+     * @return V
      */
     public V get(String key) {
         int index = exactMatchSearch(key);
@@ -262,7 +262,7 @@ public class AhoCorasickDoubleArrayTrie<V> {
      *
      * @param current
      * @param c
-     * @return
+     * @return int
      */
     protected int transition(int current, char c) {
         int b = current;
@@ -284,7 +284,7 @@ public class AhoCorasickDoubleArrayTrie<V> {
      *
      * @param nodePos
      * @param c
-     * @return
+     * @return int
      */
     protected int transitionWithRoot(int nodePos, char c) {
         int b = base[nodePos];
@@ -385,7 +385,7 @@ public class AhoCorasickDoubleArrayTrie<V> {
     /**
      * 大小，即包含多少个模式串
      *
-     * @return
+     * @return int
      */
     public int size() {
         return values.size();
