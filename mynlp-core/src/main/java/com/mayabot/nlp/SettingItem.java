@@ -22,8 +22,9 @@ import java.util.function.Function;
 
 /**
  * 一个配置项
- * @author jimichan
+ *
  * @param <T>
+ * @author jimichan
  */
 public class SettingItem<T> {
 

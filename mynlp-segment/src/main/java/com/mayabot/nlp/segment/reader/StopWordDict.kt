@@ -8,7 +8,6 @@ import com.mayabot.nlp.Mynlps
 import com.mayabot.nlp.collection.dat.DoubleArrayTrieMap
 import java.util.*
 import kotlin.collections.HashSet
-import kotlin.system.measureTimeMillis
 
 const val StopWordDictPath = "stopwords.txt"
 

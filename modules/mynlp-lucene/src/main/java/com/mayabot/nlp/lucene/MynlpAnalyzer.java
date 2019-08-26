@@ -18,8 +18,9 @@ public class MynlpAnalyzer extends Analyzer {
     public MynlpAnalyzer(LexerReader reader) {
         this.tokenizer = new MynlpTokenizer(reader);
     }
+
     public MynlpAnalyzer(LexerReader reader, WordTermIterableMode mode) {
-        this.tokenizer = new MynlpTokenizer(reader,mode);
+        this.tokenizer = new MynlpTokenizer(reader, mode);
     }
 
     @Override

@@ -11,6 +11,7 @@ public interface CoreDictionary {
 
     /**
      * 匹配算法
+     *
      * @param text
      * @param offset
      * @return DATMapMatcherInt
@@ -19,6 +20,7 @@ public interface CoreDictionary {
 
     /**
      * 词频总量
+     *
      * @return int 词频总量
      */
     int totalFreq();

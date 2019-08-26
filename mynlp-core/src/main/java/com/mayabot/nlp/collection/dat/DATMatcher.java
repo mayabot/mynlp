@@ -36,7 +36,7 @@ package com.mayabot.nlp.collection.dat;
 
 /**
  * 一个搜索工具（注意，当调用next()返回false后不应该继续调用next()，除非reset状态）
- *
+ * <p>
  * DAT的匹配器是一个多匹配器，把各种可能都计算出来
  */
 public class DATMatcher {
@@ -76,7 +76,6 @@ public class DATMatcher {
 
     private int[] base;
     private int[] check;
-
 
 
     /**
@@ -133,7 +132,7 @@ public class DATMatcher {
             p = b + (int) (charArray[i]) + 1; // 状态转移 p = base[char[i-1]] +
             // char[i] + 1
             if (b == check[p]) // base[char[i-1]] == check[base[char[i-1]] +
-                // char[i] + 1]
+            // char[i] + 1]
             {
                 b = base[p]; // 转移成功
             } else {

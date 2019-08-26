@@ -28,11 +28,11 @@ import java.util.function.Consumer;
  * 切词器的实现类是个无状态，所以可以多线程安全，同一个配置只需要一个实例共享使用。
  * 所以一个固定的算法的切分,只需要一个实例。
  *
- * @since 2.1.0
  * @author jimichan
  * @see PipelineLexer
  * @see LexerBuilder
  * @see PipelineLexerBuilder
+ * @since 2.1.0
  */
 public interface Lexer {
 

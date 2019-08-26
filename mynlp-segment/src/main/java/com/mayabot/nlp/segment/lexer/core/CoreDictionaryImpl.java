@@ -77,6 +77,7 @@ public class CoreDictionaryImpl extends BaseNlpResourceExternalizable implements
 
     /**
      * 刷新资源
+     *
      * @throws Exception
      */
     @Override

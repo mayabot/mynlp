@@ -1,7 +1,6 @@
 package com.mayabot.nlp.segment.plugins.collector
 
 import com.mayabot.nlp.segment.WordTerm
-import com.mayabot.nlp.segment.wordnet.Vertex
 import com.mayabot.nlp.segment.wordnet.Wordnet
 import com.mayabot.nlp.segment.wordnet.Wordpath
 import com.mayabot.nlp.utils.StringUtils
@@ -13,7 +12,7 @@ import java.util.function.Consumer
  *
  * @author jimichan
  */
-class SentenceCollector : WordTermCollector{
+class SentenceCollector : WordTermCollector {
 
     override var pickUpSubword: WordTermCollector.PickUpSubword? = null
 

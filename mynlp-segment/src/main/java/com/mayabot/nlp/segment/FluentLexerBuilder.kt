@@ -3,9 +3,9 @@ package com.mayabot.nlp.segment
 import com.google.inject.Key
 import com.google.inject.name.Names
 import com.mayabot.nlp.Mynlps
+import com.mayabot.nlp.segment.lexer.core.CoreDictionary
 import com.mayabot.nlp.segment.lexer.core.CoreDictionaryImpl
 import com.mayabot.nlp.segment.lexer.core.CoreLexerPlugin
-import com.mayabot.nlp.segment.lexer.core.CoreDictionary
 import com.mayabot.nlp.segment.lexer.perceptron.CwsLexerPlugin
 import com.mayabot.nlp.segment.pipeline.PipelineLexerBuilder
 import com.mayabot.nlp.segment.pipeline.PipelineLexerPlugin

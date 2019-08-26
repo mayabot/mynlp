@@ -36,7 +36,7 @@ public abstract class BaseSegmentComponent implements SegmentComponent {
 
     private int order = LEVEL3;
 
-    public BaseSegmentComponent(int order){
+    public BaseSegmentComponent(int order) {
         this.order = order;
     }
 

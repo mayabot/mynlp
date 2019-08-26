@@ -193,10 +193,10 @@ public class BufferedReaderLFCR implements Closeable, ParagraphReader {
      * of a line feed ('\n'), a carriage return ('\r'), or a carriage return
      * followed immediately by a linefeed.
      *
-     * @throws IOException If an I/O error occurs
      * @return A String containing the contents of the line, not including
      * any line-termination characters, or null if the end of the
      * stream has been reached
+     * @throws IOException If an I/O error occurs
      */
     public String readLine() throws IOException {
         return readLine(false);

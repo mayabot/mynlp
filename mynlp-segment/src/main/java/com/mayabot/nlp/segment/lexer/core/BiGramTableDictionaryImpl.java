@@ -32,7 +32,6 @@ import com.mayabot.nlp.logging.InternalLoggerFactory;
 import com.mayabot.nlp.resources.NlpResource;
 import com.mayabot.nlp.resources.UseLines;
 import com.mayabot.nlp.utils.CharSourceLineReader;
-import kotlin.Pair;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
@@ -43,6 +42,7 @@ import java.util.List;
 /**
  * 核心词典的二元接续词典，采用整型储存，高性能。
  * 表示一个词接着另外一个词的概率次数
+ *
  * @author jimichan
  */
 @Singleton
@@ -72,6 +72,7 @@ public class BiGramTableDictionaryImpl extends BaseNlpResourceExternalizable imp
 
     /**
      * 刷新资源
+     *
      * @throws Exception
      */
     @Override
@@ -86,7 +87,7 @@ public class BiGramTableDictionaryImpl extends BaseNlpResourceExternalizable imp
                 putString("v2", Charsets.UTF_8);
 
         if (coreDictPatch != null) {
-            hasher.putString(coreDictPatch.biGramVersion(),Charsets.UTF_8);
+            hasher.putString(coreDictPatch.biGramVersion(), Charsets.UTF_8);
         }
 
         return hasher.hash().toString();
@@ -107,7 +108,7 @@ public class BiGramTableDictionaryImpl extends BaseNlpResourceExternalizable imp
         String firstWord = null;
         int count = 0;
 
-        UseLines.forEachLine(source.inputStream(), line->{
+        UseLines.forEachLine(source.inputStream(), line -> {
 
         });
 
@@ -127,11 +128,11 @@ public class BiGramTableDictionaryImpl extends BaseNlpResourceExternalizable imp
                         continue;
                     }
                     for (String wordB : words) {
-                            int idB = coreDictionary.wordId(wordB);
-                            if (idB >= 0) {
-                                table.put(idA, idB, num);
-                                count++;
-                            }
+                        int idB = coreDictionary.wordId(wordB);
+                        if (idB >= 0) {
+                            table.put(idA, idB, num);
+                            count++;
+                        }
                     }
 
                 } else {

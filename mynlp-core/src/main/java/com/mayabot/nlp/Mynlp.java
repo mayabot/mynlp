@@ -22,6 +22,7 @@ import com.mayabot.nlp.logging.InternalLoggerFactory;
 
 /**
  * 包含了执行环境和Guice IOC容器
+ *
  * @author jimichan
  */
 public final class Mynlp {

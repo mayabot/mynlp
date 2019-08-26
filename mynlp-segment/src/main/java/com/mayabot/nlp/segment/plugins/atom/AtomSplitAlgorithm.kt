@@ -17,12 +17,12 @@ import java.util.regex.Pattern
 // DoubleArrayTrieStringIntMap
 
 @ImplementedBy(DefaultAtomSplitAlgorithmTemplateProvider::class)
-interface AtomSplitAlgorithmTemplateProvider{
-    fun load():DoubleArrayTrieStringIntMap
+interface AtomSplitAlgorithmTemplateProvider {
+    fun load(): DoubleArrayTrieStringIntMap
 }
 
 @Singleton
-class DefaultAtomSplitAlgorithmTemplateProvider:AtomSplitAlgorithmTemplateProvider{
+class DefaultAtomSplitAlgorithmTemplateProvider : AtomSplitAlgorithmTemplateProvider {
 
     private val defaultTemplates = defaultTemplates()
 

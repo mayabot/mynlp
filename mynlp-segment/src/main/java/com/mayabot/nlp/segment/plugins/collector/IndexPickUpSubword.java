@@ -11,6 +11,7 @@ import java.util.List;
 
 /**
  * 收集子词所有的可能性组合
+ *
  * @author jimichan
  */
 public class IndexPickUpSubword implements WordTermCollector.PickUpSubword {

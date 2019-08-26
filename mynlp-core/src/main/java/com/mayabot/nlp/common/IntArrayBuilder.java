@@ -11,17 +11,17 @@ public class IntArrayBuilder {
      * An immutable empty buffer (array).
      */
     public final static
-    int []
+    int[]
 
             EMPTY_ARRAY =
-            new int [0];
+            new int[0];
 
     /**
      * Internal array for storing the list. The array may be larger than the current size
      * ({@link #size()}).
      */
     public
-    int []
+    int[]
 
             buffer = EMPTY_ARRAY;
 
@@ -45,9 +45,8 @@ public class IntArrayBuilder {
     /**
      * New instance with sane defaults.
      *
-     * @param expectedElements
-     *          The expected number of elements guaranteed not to cause buffer
-     *          expansion (inclusive).
+     * @param expectedElements The expected number of elements guaranteed not to cause buffer
+     *                         expansion (inclusive).
      */
     public IntArrayBuilder(int expectedElements) {
         this(expectedElements, BoundedProportionalArraySizingStrategy.DEFAULT_MIN_GROW_COUNT,
@@ -58,13 +57,11 @@ public class IntArrayBuilder {
     /**
      * New instance with sane defaults.
      *
-     * @param expectedElements
-     *          The expected number of elements guaranteed not to cause buffer
-     *          expansion (inclusive).
-     *
+     * @param expectedElements The expected number of elements guaranteed not to cause buffer
+     *                         expansion (inclusive).
      */
     public IntArrayBuilder(int expectedElements, int minGrow, int maxGrow, float ratio) {
-        this.resizer = new BoundedProportionalArraySizingStrategy(minGrow,maxGrow,ratio);
+        this.resizer = new BoundedProportionalArraySizingStrategy(minGrow, maxGrow, ratio);
         ensureCapacity(expectedElements);
     }
 
@@ -108,8 +105,8 @@ public class IntArrayBuilder {
     }
 
     public IntArray getCompactIntArray() {
-        if(buffer.length - elementsCount > 128
-                && buffer.length*1.0f/elementsCount > 1.15f ){
+        if (buffer.length - elementsCount > 128
+                && buffer.length * 1.0f / elementsCount > 1.15f) {
             trimToSize();
         }
         return new IntArray(buffer, elementsCount);
@@ -119,8 +116,7 @@ public class IntArrayBuilder {
      * Ensure this container can hold at least the given number of elements
      * without resizing its buffers.
      *
-     * @param expectedElements
-     *          The total number of elements, inclusive.
+     * @param expectedElements The total number of elements, inclusive.
      */
     public void ensureCapacity(int expectedElements) {
         final int bufferLen = (buffer == null ? 0 : buffer.length);
@@ -153,7 +149,7 @@ public class IntArrayBuilder {
      */
     public void trimToSize() {
         if (size() != this.buffer.length) {
-            this.buffer =  toArray();
+            this.buffer = toArray();
         }
     }
 
@@ -163,18 +159,15 @@ public class IntArrayBuilder {
      * storage array.
      */
     public void release() {
-        this.buffer =  EMPTY_ARRAY;
+        this.buffer = EMPTY_ARRAY;
         this.elementsCount = 0;
     }
 
     /**
-     *
      * <p>The returned array is sized to match exactly
      * the number of elements of the stack.</p>
      */
-    public int [] toArray()
-
-    {
+    public int[] toArray() {
         return Arrays.copyOf(buffer, elementsCount);
     }
 

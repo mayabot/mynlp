@@ -35,7 +35,7 @@ import java.util.function.Supplier;
 
 /**
  * 系统属性 mynlp.conf 可以配置配置文件加载的目录,默认当前工作目录的conf
- *
+ * <p>
  * TODO 读取过的属性,就不能再次修改了。
  *
  * @author jimichan

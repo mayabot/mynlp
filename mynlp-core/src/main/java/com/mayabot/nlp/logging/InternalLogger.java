@@ -48,7 +48,7 @@ public interface InternalLogger {
      * Is the logger instance enabled for the TRACE level?
      *
      * @return True if this Logger is enabled for the TRACE level,
-     *         false otherwise.
+     * false otherwise.
      */
     boolean isTraceEnabled();
 
@@ -111,7 +111,7 @@ public interface InternalLogger {
     /**
      * Log an exception (throwable) at the TRACE level.
      *
-     * @param t   the exception (throwable) to log
+     * @param t the exception (throwable) to log
      */
     void trace(Throwable t);
 
@@ -119,7 +119,7 @@ public interface InternalLogger {
      * Is the logger instance enabled for the DEBUG level?
      *
      * @return True if this Logger is enabled for the DEBUG level,
-     *         false otherwise.
+     * false otherwise.
      */
     boolean isDebugEnabled();
 
@@ -183,7 +183,7 @@ public interface InternalLogger {
     /**
      * Log an exception (throwable) at the DEBUG level.
      *
-     * @param t   the exception (throwable) to log
+     * @param t the exception (throwable) to log
      */
     void debug(Throwable t);
 
@@ -191,7 +191,7 @@ public interface InternalLogger {
      * Is the logger instance enabled for the INFO level?
      *
      * @return True if this Logger is enabled for the INFO level,
-     *         false otherwise.
+     * false otherwise.
      */
     boolean isInfoEnabled();
 
@@ -255,7 +255,7 @@ public interface InternalLogger {
     /**
      * Log an exception (throwable) at the INFO level.
      *
-     * @param t   the exception (throwable) to log
+     * @param t the exception (throwable) to log
      */
     void info(Throwable t);
 
@@ -263,7 +263,7 @@ public interface InternalLogger {
      * Is the logger instance enabled for the WARN level?
      *
      * @return True if this Logger is enabled for the WARN level,
-     *         false otherwise.
+     * false otherwise.
      */
     boolean isWarnEnabled();
 
@@ -327,7 +327,7 @@ public interface InternalLogger {
     /**
      * Log an exception (throwable) at the WARN level.
      *
-     * @param t   the exception (throwable) to log
+     * @param t the exception (throwable) to log
      */
     void warn(Throwable t);
 
@@ -335,7 +335,7 @@ public interface InternalLogger {
      * Is the logger instance enabled for the ERROR level?
      *
      * @return True if this Logger is enabled for the ERROR level,
-     *         false otherwise.
+     * false otherwise.
      */
     boolean isErrorEnabled();
 
@@ -399,7 +399,7 @@ public interface InternalLogger {
     /**
      * Log an exception (throwable) at the ERROR level.
      *
-     * @param t   the exception (throwable) to log
+     * @param t the exception (throwable) to log
      */
     void error(Throwable t);
 
@@ -407,7 +407,7 @@ public interface InternalLogger {
      * Is the logger instance enabled for the specified {@code level}?
      *
      * @return True if this Logger is enabled for the specified {@code level},
-     *         false otherwise.
+     * false otherwise.
      */
     boolean isEnabled(InternalLogLevel level);
 
@@ -472,7 +472,7 @@ public interface InternalLogger {
     /**
      * Log an exception (throwable) at the specified {@code level}.
      *
-     * @param t   the exception (throwable) to log
+     * @param t the exception (throwable) to log
      */
     void log(InternalLogLevel level, Throwable t);
 }

@@ -28,14 +28,13 @@ import com.mayabot.nlp.resources.FileNlpResourceFactory;
 import com.mayabot.nlp.resources.JarNlpResourceFactory;
 import com.mayabot.nlp.resources.NlpResourceFactory;
 import com.mayabot.nlp.utils.MynlpFactories;
-import sun.security.action.GetPropertyAction;
 
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -43,10 +42,10 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static java.security.AccessController.doPrivileged;
 
 /**
  * Mynlp构建器
+ *
  * @author jimichan
  */
 public class MynlpBuilder {
@@ -76,72 +75,78 @@ public class MynlpBuilder {
      * 一般情况通过Mynlps获取全局唯一实例。不需要调用这个方法构造。
      * 这个保留public是为了test和一些特殊多实例场景使用。
      * Mynlp是一个重量级的对象，是一个容器,包含了Mynlp运行时所有的组件。
+     *
      * @return Mynlp
      */
-    public Mynlp build() throws RuntimeException {
+    public Mynlp build() {
+        return AccessController.doPrivileged((PrivilegedAction<Mynlp>) () -> {
+            try {
+                logger.info("Current Working Dir is " + new File(".").getAbsolutePath());
 
-        try {
-            logger.info("Current Working Dir is " + new File(".").getAbsolutePath());
+                if (dataDir == null) {
+                    //通过JVM系统属性配置 -Dmynlp.data=/path/data
 
-            if (dataDir == null) {
-                //通过JVM系统属性配置 -Dmynlp.data=/path/data
-
-                if (System.getProperty("mynlp.data.dir") != null) {
-                    dataDir = System.getProperty("mynlp.data.dir");
+                    if (System.getProperty("mynlp.data.dir") != null) {
+                        dataDir = System.getProperty("mynlp.data.dir");
+                    }
                 }
-            }
-            if (dataDir == null) {
-                // 在全局配置文件中 data.dir 可以指定dir目录，默认是当前工作目录下面的data
+                if (dataDir == null) {
+                    // 在全局配置文件中 data.dir 可以指定dir目录，默认是当前工作目录下面的data
 
-                dataDir = settings.get("data.dir", null);
-            }
+                    dataDir = settings.get("data.dir", null);
+                }
 
-            // 默认的位置
-            if (dataDir == null) {
-                String userHome = System.getProperty("user.home");
+                // 默认的位置
+                if (dataDir == null) {
+                    String userHome = System.getProperty("user.home");
 
-                if(new File(userHome+"/.mynlp.data").exists()){
-                    dataDir = userHome + "/.mynlp.data";
+                    if (new File(userHome + "/.mynlp.data").exists()) {
+                        dataDir = userHome + "/.mynlp.data";
+                    } else {
+                        dataDir = userHome + "/mynlp.data";
+                    }
+                }
+
+                File dataDirFile = new File(dataDir);
+                if (!dataDirFile.exists()) {
+                    dataDirFile.mkdir();
+                }
+                logger.info("Mynlp data dir is " + dataDirFile.getAbsolutePath() + ",exists " + dataDirFile.exists());
+
+                if (settings.get("cache.dir") != null) {
+                    cacheDir = settings.get("cache.dir");
+                }
+
+                File cacheDirFile;
+                if (cacheDir == null) {
+
+                    File tmpDir = Paths.get(System.getProperty("java.io.tmpdir")).toFile();
+                    String userName = System.getProperty("user.name");
+
+                    cacheDirFile = ensureDir(new File(tmpDir, "mynlp-" + userName));
+
                 } else {
-                    dataDir = userHome + "/mynlp.data";
+
+                    cacheDirFile = ensureDir(new File(cacheDir));
+
                 }
+
+                logger.info("Mynlp cache dir is {}", cacheDirFile.getAbsolutePath());
+
+                resourceFactoryList.add(new FileNlpResourceFactory(dataDirFile));
+                resourceFactoryList.add(new JarNlpResourceFactory(dataDirFile));
+                resourceFactoryList.add(new ClasspathNlpResourceFactory(Mynlps.class.getClassLoader()));
+
+                MynlpEnv env = new MynlpEnv(dataDirFile, cacheDirFile, resourceFactoryList, settings);
+
+                Injector injector = createInject(env);
+
+                return new Mynlp(env, injector);
+            } catch (Exception e) {
+                throw new RuntimeException("Mynlp instance build error", e);
             }
+        });
 
-            File dataDirFile = new File(dataDir);
-            if (!dataDirFile.exists()) {
-                dataDirFile.mkdir();
-            }
-            logger.info("Mynlp data dir is " + dataDirFile.getAbsolutePath() + ",exists " + dataDirFile.exists());
-
-            if (settings.get("cache.dir") != null) {
-                cacheDir = settings.get("cache.dir");
-            }
-
-            File cacheDirFile;
-            if (cacheDir == null) {
-                File tmpDir = Paths.get(doPrivileged(new GetPropertyAction("java.io.tmpdir"))).toFile();
-                String userName = doPrivileged(new GetPropertyAction("user.name"));
-
-                cacheDirFile = ensureDir(new File(tmpDir,"mynlp-"+userName));
-
-            } else {
-                cacheDirFile = ensureDir(new File(cacheDir));
-            }
-
-            logger.info("Mynlp cache dir is {}", cacheDirFile.getAbsolutePath());
-
-            resourceFactoryList.add(new FileNlpResourceFactory(dataDirFile));
-            resourceFactoryList.add(new JarNlpResourceFactory(dataDirFile));
-            resourceFactoryList.add(new ClasspathNlpResourceFactory(Mynlps.class.getClassLoader()));
-
-            MynlpEnv env = new MynlpEnv(dataDirFile, cacheDirFile, resourceFactoryList, settings);
-
-            Injector injector = createInject(env);
-
-            return new Mynlp(env, injector);
-        } catch (Exception e) {
-            throw new RuntimeException((e));
-        }
     }
 
     private Injector createInject(MynlpEnv mynlpEnv) {
@@ -164,8 +169,7 @@ public class MynlpBuilder {
 
     private List<Module> loadModules(MynlpEnv mynlp) {
         try {
-            Collection<Class> classes = MynlpFactories.load().get(MynlpFactories.GuiceModule)
-                    ;
+            Collection<Class> classes = MynlpFactories.load().get(MynlpFactories.GuiceModule);
 
             return classes.stream().map(clazz -> {
                 try {

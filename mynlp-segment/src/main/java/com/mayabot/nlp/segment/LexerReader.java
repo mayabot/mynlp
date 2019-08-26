@@ -31,21 +31,18 @@ import java.io.Reader;
 public interface LexerReader {
 
     /**
-     *
      * @param reader
      * @return WordTermSequence
      */
     WordTermSequence scan(Reader reader);
 
     /**
-     *
      * @param text
      * @return WordTermSequence
      */
     WordTermSequence scan(String text);
 
     /**
-     *
      * @param lexer
      * @return LexerReader
      */
@@ -54,7 +51,6 @@ public interface LexerReader {
     }
 
     /**
-     *
      * @param lexer
      * @param punctuation
      * @param stopWord
@@ -79,7 +75,7 @@ public interface LexerReader {
             reader = new PunctuationFilter(reader);
         }
 
-        reader = new StopwordFilter(reader,stopWord);
+        reader = new StopwordFilter(reader, stopWord);
         return reader;
     }
 

@@ -62,7 +62,7 @@ class BM25 {
         for (int i = 0; i < D; i++) {
             f.add(null);
         }
-        
+
         df = new TreeMap<>();
         idf = new TreeMap<>();
         init();
@@ -80,7 +80,7 @@ class BM25 {
                 freq = (freq == null ? 0 : freq) + 1;
                 tf.put(word, freq);
             }
-            f.set(index,tf);
+            f.set(index, tf);
             for (Map.Entry<String, Integer> entry : tf.entrySet()) {
                 String word = entry.getKey();
                 Integer freq = df.get(word);

@@ -31,6 +31,7 @@ public interface SegmentComponent extends Comparable<SegmentComponent> {
 
     /**
      * return component name
+     *
      * @return name
      */
     String getName();

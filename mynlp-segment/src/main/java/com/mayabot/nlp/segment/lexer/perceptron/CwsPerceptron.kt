@@ -413,7 +413,7 @@ object CWSEvaluate {
             val predArray = segmenter.decodeToWordList(text)
             predTotal += predArray.size
 
-            correct += wordCorrect(wordArray,predArray)
+            correct += wordCorrect(wordArray, predArray)
 
             count++
 

@@ -484,15 +484,15 @@ class POSPerceptronTrainer {
 /**
  * 词性评估
  */
-class POSEvaluateRunner(private val sampleList: List<TrainSample>)  {
+class POSEvaluateRunner(private val sampleList: List<TrainSample>) {
 
-     fun run(k: Int, model: Perceptron) {
+    fun run(k: Int, model: Perceptron) {
 
         var total = 0.0
         var right = 0.0
-            // var targetSampleSize = sampleList.size
-            // var count = 0
-            // System.out.print("Evaluating 0%")
+        // var targetSampleSize = sampleList.size
+        // var count = 0
+        // System.out.print("Evaluating 0%")
         sampleList.forEach { sample ->
             // 抽样10%进行验证
             // count++

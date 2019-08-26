@@ -16,11 +16,8 @@
 
 package com.mayabot.nlp.segment;
 
-import com.google.common.collect.Lists;
 import com.mayabot.nlp.segment.utils.TokenizerTestHelp;
 import org.junit.Test;
-
-import java.util.List;
 
 public class CoreTokenizerTest {
 

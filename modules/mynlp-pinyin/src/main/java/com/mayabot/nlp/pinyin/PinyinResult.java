@@ -117,9 +117,9 @@ public class PinyinResult {
 
                 if (keepPunctuation && Characters.isPunctuation(x)) {
                     target = "" + x;
-                }else if(keepNum && (x>='0' && x<='9')){
+                } else if (keepNum && (x >= '0' && x <= '9')) {
                     target = "" + x;
-                }else if(keepAlpha && ((x>='a' && x<='z') ||(x>='A' && x<='Z') ) ){
+                } else if (keepAlpha && ((x >= 'a' && x <= 'z') || (x >= 'A' && x <= 'Z'))) {
                     target = "" + x;
                 } else if (keepOthers) {
                     target = "" + x;
@@ -164,18 +164,18 @@ public class PinyinResult {
 
                 if (keepPunctuation && Characters.isPunctuation(x)) {
                     out = true;
-                }else if(keepNum && (x>='0' && x<='9')){
+                } else if (keepNum && (x >= '0' && x <= '9')) {
                     out = true;
-                }else if(keepAlpha && ((x>='a' && x<='z') ||(x>='A' && x<='Z') ) ){
+                } else if (keepAlpha && ((x >= 'a' && x <= 'z') || (x >= 'A' && x <= 'Z'))) {
                     out = true;
                 } else if (keepOthers) {
                     out = true;
                 }
 
                 // skip null
-                if(out){
+                if (out) {
                     list.add(x);
-                }else{
+                } else {
                     list.add(null);
                 }
 

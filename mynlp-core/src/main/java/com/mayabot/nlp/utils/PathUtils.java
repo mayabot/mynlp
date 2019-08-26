@@ -26,7 +26,7 @@ import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-/** 
+/**
  * Utilities for creating a Path from names,
  * or accessing the default FileSystem.
  * <p>
@@ -34,16 +34,23 @@ import java.nio.file.Paths;
  * be changed during tests.
  */
 public final class PathUtils {
-    /** no instantiation */
-    private PathUtils() {}
-    
-    /** the actual JDK default */
+    /**
+     * no instantiation
+     */
+    private PathUtils() {
+    }
+
+    /**
+     * the actual JDK default
+     */
     static final FileSystem ACTUAL_DEFAULT = FileSystems.getDefault();
-    
-    /** can be changed by tests */
+
+    /**
+     * can be changed by tests
+     */
     static volatile FileSystem DEFAULT = ACTUAL_DEFAULT;
-    
-    /** 
+
+    /**
      * Returns a {@code Path} from name components.
      * <p>
      * This works just like {@code Paths.get()}.
@@ -56,8 +63,8 @@ public final class PathUtils {
     public static Path get(String first, String... more) {
         return DEFAULT.getPath(first, more);
     }
-    
-    /** 
+
+    /**
      * Returns a {@code Path} from a URI
      * <p>
      * This works just like {@code Paths.get()}.
@@ -75,14 +82,14 @@ public final class PathUtils {
 
     /**
      * Tries to resolve the given path against the list of available roots.
-     *
+     * <p>
      * If path starts with one of the listed roots, it returned back by this method, otherwise null is returned.
      */
     public static Path get(Path[] roots, String path) {
         for (Path root : roots) {
             Path normalizedRoot = root.normalize();
             Path normalizedPath = normalizedRoot.resolve(path).normalize();
-            if(normalizedPath.startsWith(normalizedRoot)) {
+            if (normalizedPath.startsWith(normalizedRoot)) {
                 return normalizedPath;
             }
         }
@@ -91,7 +98,7 @@ public final class PathUtils {
 
     /**
      * Tries to resolve the given file uri against the list of available roots.
-     *
+     * <p>
      * If uri starts with one of the listed roots, it returned back by this method, otherwise null is returned.
      */
     public static Path get(Path[] roots, URI uri) {

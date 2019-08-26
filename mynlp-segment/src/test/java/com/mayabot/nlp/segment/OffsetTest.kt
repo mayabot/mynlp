@@ -43,10 +43,10 @@ class OffsetTest {
     }
 
     @Test
-    fun testE1(){
+    fun testE1() {
         val text = "俞正声主持召开全国政协第五十三次主席会议"
         val lexer = Lexers.coreBuilder().withPersonName().build()
-        lexer.scan(text).toList().forEach { w->
+        lexer.scan(text).toList().forEach { w ->
             println("${w.word} ${w.offset} ${w.length()}")
         }
     }

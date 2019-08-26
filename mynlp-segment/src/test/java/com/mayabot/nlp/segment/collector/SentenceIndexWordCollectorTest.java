@@ -1,10 +1,5 @@
 package com.mayabot.nlp.segment.collector;
 
-import com.mayabot.nlp.segment.Lexer;
-import com.mayabot.nlp.segment.Lexers;
-import org.junit.Assert;
-import org.junit.Test;
-
 public class SentenceIndexWordCollectorTest {
 //
 //    @Test

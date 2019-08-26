@@ -18,11 +18,11 @@ package com.mayabot.nlp.segment;
 
 /**
  * 字符规范化接口
- *
+ * <p>
  * 分词之前可以对char进行转换。一般完成大小写、半全角、归一化转换的需求.
  *
- * @see com.mayabot.nlp.segment.common.DefaultCharNormalize
  * @author jimichan
+ * @see com.mayabot.nlp.segment.common.DefaultCharNormalize
  */
 public interface CharNormalize {
 

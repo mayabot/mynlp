@@ -54,7 +54,7 @@ public interface DataInOutputUtils {
         input.readFully(result);
 
         int[] ints = MyInts.fromByteArrayToArray(result);
-        if(ints.length == 3 && ints[0] == 1123992342 && ints[1] == 832718121 && ints[2] == 957462342 ){
+        if (ints.length == 3 && ints[0] == 1123992342 && ints[1] == 832718121 && ints[2] == 957462342) {
             return null;
         }
         return ints;
@@ -62,20 +62,20 @@ public interface DataInOutputUtils {
 
 
     static int[] readIntArray(ByteBuffer buffer) {
-        int size = buffer.getInt()/4;
+        int size = buffer.getInt() / 4;
         int[] ints = new int[size];
         buffer.asIntBuffer().get(ints);
-        buffer.position(buffer.position()+size*4);
-        if(ints.length == 3 && ints[0] == 1123992342 && ints[1] == 832718121 && ints[2] == 957462342 ){
+        buffer.position(buffer.position() + size * 4);
+        if (ints.length == 3 && ints[0] == 1123992342 && ints[1] == 832718121 && ints[2] == 957462342) {
             return null;
         }
         return ints;
     }
 
-    int[] nullMagic = new int[]{1123992342,832718121,957462342};
+    int[] nullMagic = new int[]{1123992342, 832718121, 957462342};
 
     static void writeIntArray(int[] array, DataOutput output) throws IOException {
-        if(array == null){
+        if (array == null) {
             array = nullMagic;
         }
         byte[] bytes = MyInts.toByteArray(array);

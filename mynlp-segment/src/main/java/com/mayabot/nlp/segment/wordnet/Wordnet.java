@@ -396,6 +396,7 @@ public final class Wordnet implements CharSequence {
 
     /**
      * 原始的
+     *
      * @return chars
      */
     public @NotNull

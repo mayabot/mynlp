@@ -19,10 +19,8 @@ import com.google.common.base.Charsets;
 import com.google.common.collect.ImmutableList;
 import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
-import com.mayabot.nlp.resources.ClasspathNlpResourceFactory;
 import com.mayabot.nlp.resources.NlpResource;
 import com.mayabot.nlp.resources.NlpResourceFactory;
-import com.mayabot.nlp.utils.DownloadUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -31,12 +29,11 @@ import java.nio.charset.Charset;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Mynlp运行环境。
  * 负责数据目录，缓存、资源加载、Settings等
+ *
  * @author jimichan
  */
 public class MynlpEnv {
@@ -73,15 +70,16 @@ public class MynlpEnv {
         settings.put(key, value);
     }
 
-    public @Nullable String get(String setting)  {
+    public @Nullable
+    String get(String setting) {
         return settings.get(setting);
     }
 
-    public String get(String setting,@NotNull String defaultValue)  {
-        return settings.get(setting,defaultValue);
+    public String get(String setting, @NotNull String defaultValue) {
+        return settings.get(setting, defaultValue);
     }
 
-    public <T> T get(SettingItem<T> setting)  {
+    public <T> T get(SettingItem<T> setting) {
         return settings.get(setting);
     }
 
@@ -103,10 +101,11 @@ public class MynlpEnv {
      * @param charset      字符集
      * @return NlpResource
      */
-    public @NotNull NlpResource loadResource(String resourcePath, Charset charset) {
+    public @NotNull
+    NlpResource loadResource(String resourcePath, Charset charset) {
         // TODO wiki path need
         if (resourcePath == null || resourcePath.trim().isEmpty()) {
-           throw new RuntimeException("resourcePath is null");
+            throw new RuntimeException("resourcePath is null");
         }
 
         return AccessController.doPrivileged((PrivilegedAction<NlpResource>) () -> {
@@ -116,10 +115,10 @@ public class MynlpEnv {
             if (resource == null) {
 
                 throw new RuntimeException(
-                        "Resource "+resourcePath+", Not Found!\n"
-                        +"Resource Jar not in your maven or gradle dependencies (com.mayabot.mynlp:mynlp-resources:Version) \n"+
-                         "Or Install to ${mynlp.data} Dir\n"+
-                        "\nGoto Wiki +"+wiki+" For help!"
+                        "Resource " + resourcePath + ", Not Found!\n"
+                                + "Resource Jar not in your maven or gradle dependencies (com.mayabot.mynlp:mynlp-resources:Version) \n" +
+                                "Or Install to ${mynlp.data} Dir\n" +
+                                "\nGoto Wiki +" + wiki + " For help!"
                 );
             }
             return resource;
@@ -134,7 +133,8 @@ public class MynlpEnv {
      * @param resourceName
      * @return hash
      */
-    public @Nullable String hashResource(String resourceName) {
+    public @Nullable
+    String hashResource(String resourceName) {
 
         NlpResource r1 = tryLoadResource(resourceName, Charsets.UTF_8);
         if (r1 != null) {
@@ -144,7 +144,8 @@ public class MynlpEnv {
     }
 
 
-    public @Nullable NlpResource tryLoadResource(String resourcePath, Charset charset) {
+    public @Nullable
+    NlpResource tryLoadResource(String resourcePath, Charset charset) {
         return AccessController.doPrivileged((PrivilegedAction<NlpResource>) () -> {
             if (resourcePath == null || resourcePath.trim().isEmpty()) {
                 return null;
@@ -154,11 +155,13 @@ public class MynlpEnv {
         });
     }
 
-    public @Nullable NlpResource tryLoadResource(String resourcePath) {
-        return this.tryLoadResource(resourcePath,Charsets.UTF_8);
+    public @Nullable
+    NlpResource tryLoadResource(String resourcePath) {
+        return this.tryLoadResource(resourcePath, Charsets.UTF_8);
     }
 
-    public @Nullable NlpResource tryLoadResource(SettingItem<String> resourceNameSetting) {
+    public @Nullable
+    NlpResource tryLoadResource(SettingItem<String> resourceNameSetting) {
         return this.tryLoadResource(settings.get(resourceNameSetting), Charsets.UTF_8);
     }
 
@@ -173,13 +176,12 @@ public class MynlpEnv {
                     string = "../.." + string.substring(string.length() - 60);
                 }
                 long t2 = System.currentTimeMillis();
-                logger.info("load resource {} ,use time {} ms", string,t2-t1);
+                logger.info("load resource {} ,use time {} ms", string, t2 - t1);
                 break;
             }
         }
         return resource;
     }
-
 
 
     public File getDataDir() {
