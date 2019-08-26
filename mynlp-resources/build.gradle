@@ -2,9 +2,9 @@ description "集中依赖Mynlp所使用的资源"
 
 dependencies{
     compile "org.jetbrains.kotlin:kotlin-stdlib"
-    implementation 'com.mayabot.mynlp.resource:mynlp-resource-coredict:1.0.0'
+    
+
+
     implementation 'com.mayabot.mynlp.resource:mynlp-resource-cws:1.0.0'
     implementation 'com.mayabot.mynlp.resource:mynlp-resource-custom:1.0.0'
-    implementation 'com.mayabot.mynlp.resource:mynlp-resource-ner:1.0.0'
-    implementation 'com.mayabot.mynlp.resource:mynlp-resource-pos:1.0.0'
 }

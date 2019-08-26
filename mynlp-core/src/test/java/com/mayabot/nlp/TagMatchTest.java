@@ -107,7 +107,7 @@ public class TagMatchTest {
         public Template(List<String> words, String tag) {
             this.words = words;
             this.tag = tag;
-            Hasher hasher = Hashing.md5().newHasher();
+            Hasher hasher = Hashing.murmur3_128().newHasher();
             hasher.putString(tag, Charsets.UTF_8);
             for (String w : words) {
                 hasher.putString(w, Charsets.UTF_8);
