@@ -140,7 +140,9 @@ public class DoubleArrayMaker {
             int posPlus = ++pos;
 
             if (array_capacity <= pos) {
-                if (posPlus > array_capacity) resize(posPlus);
+                if (posPlus > array_capacity) {
+                    resize(posPlus);
+                }
             }
 
             if (check[pos] != 0) {
@@ -154,7 +156,9 @@ public class DoubleArrayMaker {
             begin = pos - firstSiblingCode; // 当前位置离第一个兄弟节点的距离
             if (array_capacity <= (begin + lastSiblingCode)) {
                 int nsize = begin + lastSiblingCodeAndMax;
-                if (nsize > array_capacity) resize(nsize);
+                if (nsize > array_capacity) {
+                    resize(nsize);
+                }
             }
 
             if (used.get(begin)) {

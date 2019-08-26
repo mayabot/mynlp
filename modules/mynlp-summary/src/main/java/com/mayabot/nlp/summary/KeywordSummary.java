@@ -88,7 +88,7 @@ public class KeywordSummary {
         });
 
 
-        Map<String, Float> score = new HashMap<>();
+        Map<String, Float> score = new HashMap<>(64);
 
         //依据TF来设置初值
         for (Map.Entry<String, Set<String>> entry : words.entrySet()) {

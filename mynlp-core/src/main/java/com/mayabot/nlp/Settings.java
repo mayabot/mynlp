@@ -102,7 +102,7 @@ public class Settings {
     }
 
     public static Settings create(Properties properties) {
-        Map<String, String> map = new HashMap<>();
+        Map<String, String> map = new HashMap<>(16);
         for (String key : properties.stringPropertyNames()) {
             String value = properties.getProperty(key);
             map.put(key, value);

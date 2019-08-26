@@ -63,15 +63,15 @@ public class CustomCharSequence implements CharSequence {
         return new String(text, offset, length);
     }
 
-    public static void main(String[] args) {
-        CustomCharSequence s = new CustomCharSequence("abcdefabg".toCharArray());
-
-        System.out.println(s);
-
-        Pattern p = Pattern.compile("ab");
-        Matcher m = p.matcher(s);
-        while (m.find()) {
-            System.out.println(m.start() + " : " + m.group());
-        }
-    }
+//    public static void main(String[] args) {
+//        CustomCharSequence s = new CustomCharSequence("abcdefabg".toCharArray());
+//
+//        System.out.println(s);
+//
+//        Pattern p = Pattern.compile("ab");
+//        Matcher m = p.matcher(s);
+//        while (m.find()) {
+//            System.out.println(m.start() + " : " + m.group());
+//        }
+//    }
 }

@@ -39,8 +39,9 @@ public class BufferedReaderLFCR implements Closeable, ParagraphReader {
      * @throws IllegalArgumentException If {@code sz <= 0}
      */
     public BufferedReaderLFCR(Reader in, int sz) {
-        if (sz <= 0)
+        if (sz <= 0) {
             throw new IllegalArgumentException("Buffer size <= 0");
+        }
         this.in = in;
         cb = new char[sz];
         nextChar = nChars = 0;
@@ -60,8 +61,9 @@ public class BufferedReaderLFCR implements Closeable, ParagraphReader {
      * Checks to make sure that the stream has not been closed
      */
     private void ensureOpen() throws IOException {
-        if (in == null)
+        if (in == null) {
             throw new IOException("Stream closed");
+        }
     }
 
     /**
@@ -131,13 +133,15 @@ public class BufferedReaderLFCR implements Closeable, ParagraphReader {
         bufferLoop:
         for (; ; ) {
 
-            if (nextChar >= nChars)
+            if (nextChar >= nChars) {
                 fill();
+            }
             if (nextChar >= nChars) { /* EOF */
-                if (s != null && s.length() > 0)
+                if (s != null && s.length() > 0) {
                     return s.toString();
-                else
+                } else {
                     return null;
+                }
             }
             boolean eol = false;
             char c = 0;
@@ -176,8 +180,9 @@ public class BufferedReaderLFCR implements Closeable, ParagraphReader {
                 return str;
             }
 
-            if (s == null)
+            if (s == null) {
                 s = new StringBuffer(defaultExpectedLineLength);
+            }
             s.append(cb, startChar, i - startChar);
         }
 
