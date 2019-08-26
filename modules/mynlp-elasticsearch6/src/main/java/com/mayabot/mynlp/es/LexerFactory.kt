@@ -29,9 +29,9 @@ class LexerFactory {
     var isCorrection = true
 
     constructor(settings: Settings) {
-        filterPunctuaction = settings.getAsBoolean("punctuation", true)
-        filterStopword = settings.getAsBoolean("stopword", false)
-        subWord = settings.get("subWord", "none") // smart index
+        filterPunctuaction = settings.getAsBoolean("filter-punctuation", true)
+        filterStopword = settings.getAsBoolean("filter-stopword", false)
+        subWord = settings.get("sub-word", "none") // smart index
         mode = when (settings.get("mode", "top").toLowerCase()) {
             "top" -> WordTermIterableMode.TOP
             "atom" -> WordTermIterableMode.ATOM

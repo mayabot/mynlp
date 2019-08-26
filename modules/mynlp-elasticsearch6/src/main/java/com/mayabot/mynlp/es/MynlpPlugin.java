@@ -17,8 +17,10 @@
 
 package com.mayabot.mynlp.es;
 
+import com.google.common.collect.Lists;
 import org.apache.lucene.analysis.Analyzer;
 import org.elasticsearch.SpecialPermission;
+import org.elasticsearch.common.settings.Setting;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.index.analysis.AnalyzerProvider;
 import org.elasticsearch.index.analysis.TokenizerFactory;
@@ -28,6 +30,7 @@ import org.elasticsearch.plugins.Plugin;
 
 import java.nio.file.Path;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class MynlpPlugin extends Plugin implements AnalysisPlugin {
@@ -37,6 +40,8 @@ public class MynlpPlugin extends Plugin implements AnalysisPlugin {
      */
     private boolean enableCws;
 
+    private static Setting<Boolean> enableCwsSetting = Setting.boolSetting("mynlp.cws.enabled", false, Setting.Property.NodeScope);
+
     public MynlpPlugin(Settings settings, Path configPath) {
 
         SecurityManager sm = System.getSecurityManager();
@@ -44,7 +49,12 @@ public class MynlpPlugin extends Plugin implements AnalysisPlugin {
             sm.checkPermission(new SpecialPermission());
         }
 
-        enableCws = settings.getAsBoolean("mynlp.cws", false);
+        enableCws = enableCwsSetting.get(settings);
+    }
+
+    @Override
+    public List<Setting<?>> getSettings() {
+        return Lists.newArrayList(enableCwsSetting);
     }
 
     @Override
