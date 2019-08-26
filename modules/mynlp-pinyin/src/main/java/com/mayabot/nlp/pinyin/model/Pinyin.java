@@ -1551,7 +1551,7 @@ public enum Pinyin {
     /**
      * 获取声母
      *
-     * @return
+     * @return Shengmu
      */
     public Shengmu getShengmu() {
         return shengmu;
@@ -1560,7 +1560,7 @@ public enum Pinyin {
     /**
      * 获取韵母
      *
-     * @return
+     * @return Yunmu
      */
     public Yunmu getYunmu() {
         return yunmu;
@@ -1569,7 +1569,7 @@ public enum Pinyin {
     /**
      * 获取声调
      *
-     * @return
+     * @return int
      */
     public int getTone() {
         return tone;
@@ -1578,7 +1578,7 @@ public enum Pinyin {
     /**
      * 获取带音调的拼音
      *
-     * @return
+     * @return String
      */
     public String getPinyinWithToneMark() {
         return pinyinWithToneMark;
@@ -1587,7 +1587,7 @@ public enum Pinyin {
     /**
      * 获取纯字母的拼音
      *
-     * @return
+     * @return String
      */
     public String getPinyinWithoutTone() {
         return pinyinWithoutTone;
@@ -1596,7 +1596,7 @@ public enum Pinyin {
     /**
      * 获取输入法头
      *
-     * @return
+     * @return String
      */
     public String getHeadString() {
         return head.toString();
@@ -1605,7 +1605,7 @@ public enum Pinyin {
     /**
      * 获取输入法头
      *
-     * @return
+     * @return PinyinHead
      */
     public PinyinHead getHead() {
         return head;
@@ -1614,7 +1614,7 @@ public enum Pinyin {
     /**
      * 获取首字母
      *
-     * @return
+     * @return char
      */
     public char getFirstChar() {
         return firstChar;

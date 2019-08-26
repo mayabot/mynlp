@@ -57,20 +57,13 @@ public class MynlpEnv {
 
     private Settings settings;
 
-    public MynlpEnv(File dataDir, File cacheDir, List<NlpResourceFactory> resourceFactory, Settings settings) {
+    MynlpEnv(File dataDir, File cacheDir, List<NlpResourceFactory> resourceFactory, Settings settings) {
         this.dataDir = dataDir;
         this.cacheDir = cacheDir;
         this.resourceFactory = ImmutableList.copyOf(resourceFactory);
         this.settings = settings;
     }
 
-    /**
-     * 给只从classpath下加载资源的环境
-     */
-    public MynlpEnv() {
-        resourceFactory = ImmutableList.of(new ClasspathNlpResourceFactory(Mynlps.class.getClassLoader()));
-        settings = Settings.defaultSystemSettings();
-    }
 
     public Settings getSettings() {
         return settings;

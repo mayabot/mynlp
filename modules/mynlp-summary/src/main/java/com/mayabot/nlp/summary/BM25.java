@@ -1,5 +1,6 @@
 package com.mayabot.nlp.summary;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -28,7 +29,7 @@ class BM25 {
     /**
      * 文档中每个句子中的每个词与词频
      */
-    Map<String, Integer>[] f;
+    ArrayList<Map<String, Integer>> f;
 
     /**
      * 文档中全部词语与出现在几个句子中
@@ -57,9 +58,13 @@ class BM25 {
             avgdl += sentence.size();
         }
         avgdl /= D;
-        f = new Map[D];
-        df = new TreeMap<String, Integer>();
-        idf = new TreeMap<String, Double>();
+        f = new ArrayList<>(D);
+        for (int i = 0; i < D; i++) {
+            f.add(null);
+        }
+        
+        df = new TreeMap<>();
+        idf = new TreeMap<>();
         init();
     }
 
@@ -75,7 +80,7 @@ class BM25 {
                 freq = (freq == null ? 0 : freq) + 1;
                 tf.put(word, freq);
             }
-            f[index] = tf;
+            f.set(index,tf);
             for (Map.Entry<String, Integer> entry : tf.entrySet()) {
                 String word = entry.getKey();
                 Integer freq = df.get(word);
@@ -94,9 +99,11 @@ class BM25 {
     public double sim(List<String> sentence, int index) {
         double score = 0;
         for (String word : sentence) {
-            if (!f[index].containsKey(word)) continue;
+            if (!f.get(index).containsKey(word)) {
+                continue;
+            }
             int d = docs.get(index).size();
-            Integer wf = f[index].get(word);
+            Integer wf = f.get(index).get(word);
             score += (idf.get(word) * wf * (k1 + 1)
                     / (wf + k1 * (1 - b + b * d
                     / avgdl)));

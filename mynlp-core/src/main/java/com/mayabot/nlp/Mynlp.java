@@ -35,7 +35,7 @@ public final class Mynlp {
      */
     private Injector injector;
 
-    public Mynlp(MynlpEnv env, Injector injector) {
+    Mynlp(MynlpEnv env, Injector injector) {
         this.env = env;
         this.injector = injector;
     }

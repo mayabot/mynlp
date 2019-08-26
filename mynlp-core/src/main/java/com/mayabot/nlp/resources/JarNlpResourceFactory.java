@@ -164,7 +164,6 @@ public class JarNlpResourceFactory implements NlpResourceFactory {
 
             this.charset = charset;
             this.resourceName = resourceName;
-
         }
 
         @Override
@@ -191,54 +190,12 @@ public class JarNlpResourceFactory implements NlpResourceFactory {
                 }
             };
         }
-//
-//        @Override
-//        public CharSourceLineReader openLineReader() throws IOException {
-//            return new CharSourceLineReader(new BufferedReader(new InputStreamReader(inputStream())));
-//        }
+
 
         @Override
         public String toString() {
             return file + "@" + resourceName;
         }
     }
-//
-//    public static class BytesMynlpResource implements NlpResource {
-//
-//        private final byte[] data;
-//        private final String path;
-//        private Charset charset;
-//
-//        private String hash;
-//
-//        public BytesMynlpResource(String path, byte[] data, Charset charset, String hash) {
-//            this.data = data;
-//            this.charset = charset;
-//            this.path = path;
-//            this.hash = hash;
-//        }
-//
-//        @Override
-//        public String hash() {
-//            return hash;
-//        }
-//
-//        @Override
-//        public InputStream inputStream() throws IOException {
-//            ByteArrayInputStreamMynlp stream = new ByteArrayInputStreamMynlp(data);
-//            return stream;
-//        }
-//
-//        @Override
-//        public CharSourceLineReader openLineReader() {
-//            ByteSource byteSource = ByteSource.wrap(data);
-//            CharSource charSource = byteSource.asCharSource(charset);
-//            return new CharSourceLineReader(charSource);
-//        }
-//
-//        @Override
-//        public String toString() {
-//            return path;
-//        }
-//    }
+
 }
