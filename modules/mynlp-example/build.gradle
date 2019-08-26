@@ -24,12 +24,17 @@ project.afterEvaluate {
 
 dependencies {
     compile project(':mynlp-segment')
+    implementation 'com.mayabot.mynlp.resource:mynlp-resource-cws:1.0.0'
+    implementation 'com.mayabot.mynlp.resource:mynlp-resource-custom:1.0.0'
+    
     compile project(':modules:mynlp-classification')
     compile project(':modules:mynlp-transform')
     compile project(':modules:mynlp-pinyin')
+    
+    
     compile group: 'org.fusesource.jansi', name: 'jansi', version: '1.16'
     compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
-
+    
 
     // compile group: 'org.ansj', name: 'ansj_seg', version: '5.1.6'
 }

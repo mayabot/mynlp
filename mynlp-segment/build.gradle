@@ -20,9 +20,16 @@ dependencies {
     compile project(':mynlp-core')
     compile project(':mynlp-perceptron')
 
+    implementation 'com.mayabot.mynlp.resource:mynlp-resource-coredict:1.0.0'
+    implementation 'com.mayabot.mynlp.resource:mynlp-resource-pos:1.0.0'
+    implementation 'com.mayabot.mynlp.resource:mynlp-resource-ner:1.0.0'
+
+//   implementation 'com.mayabot.mynlp.resource:mynlp-resource-cws:1.0.0'
+//   implementation 'com.mayabot.mynlp.resource:mynlp-resource-custom:1.0.0'
+
     compileOnly group: 'org.fusesource.jansi', name: 'jansi', version: '1.16'
     
     testCompile 'junit:junit:4.12'
     testCompile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
-    testCompile project(':mynlp-resources')
+    testCompile 'com.mayabot.mynlp.resource:mynlp-resource-cws:1.0.0'
 }

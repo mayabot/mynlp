@@ -40,7 +40,7 @@ public class FasttextClassification {
         Splitter splitter = Splitter.on(CharMatcher.whitespace()).omitEmptyStrings().trimResults();
 
 
-        LexerReader analyzer = Lexers.core().filterReader(true, true);
+        LexerReader analyzer = Lexers.coreBuilder().build().filterReader(true, true);
 
         FileTrainExampleSource source = new FileTrainExampleSource(
                 new WordSplitter() {
@@ -129,7 +129,7 @@ public class FasttextClassification {
     public static List<FloatStringPair> predict(FastText model, String text, int top) {
 
         if (lexerReader == null) {
-            lexerReader = Lexers.core().filterReader(true,true);
+            lexerReader = Lexers.coreBuilder().build().filterReader(true,true);
         }
 
         return predict(model, lexerReader, text,top);
@@ -138,7 +138,7 @@ public class FasttextClassification {
     public static FloatStringPair predictOne(FastText model, String text) {
 
         if (lexerReader == null) {
-            lexerReader = Lexers.core().filterReader(true, true);
+            lexerReader = Lexers.coreBuilder().build().filterReader(true, true);
         }
 
         return predictOne(model, lexerReader, text);

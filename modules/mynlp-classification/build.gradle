@@ -17,7 +17,11 @@
 description = '文本分类.使用Fasttext算法.'
 
 dependencies {
-    compile project(':mynlp-segment')
+    compile (project(":mynlp-segment")) {
+        exclude module :'mynlp-resource-pos'
+        exclude module :'mynlp-resource-ner'
+    }
+    
     compile 'com.mayabot:fastText4j:1.2.2'
 
     testCompile 'junit:junit:4.12'
