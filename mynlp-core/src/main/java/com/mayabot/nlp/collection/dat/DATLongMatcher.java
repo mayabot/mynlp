@@ -128,9 +128,12 @@ public class DATLongMatcher {
             }
             p = b + (int) (charArray[i]) + 1;   // 状态转移 p = base[char[i-1]] + char[i] + 1
             if (b == check[p])                  // base[char[i-1]] == check[base[char[i-1]] + char[i] + 1]
+            {
                 b = base[p];                    // 转移成功
-            else {
-                if (begin == arrayLength) break;
+            } else {
+                if (begin == arrayLength) {
+                    break;
+                }
                 if (value != null) {
                     i = begin + length;         // 输出最长词后，从该词语的下一个位置恢复扫描
                     return true;

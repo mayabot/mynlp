@@ -49,7 +49,7 @@ public class MynlpPlugin extends Plugin implements AnalysisPlugin {
 
     @Override
     public Map<String, AnalysisModule.AnalysisProvider<TokenizerFactory>> getTokenizers() {
-        Map<String, AnalysisModule.AnalysisProvider<TokenizerFactory>> extra = new HashMap<>();
+        Map<String, AnalysisModule.AnalysisProvider<TokenizerFactory>> extra = new HashMap<>(16);
 
         extra.put("mynlp", MynlpTokenizerFactory::new);
         extra.put("mynlp-core", MynlpTokenizerFactory::new);
