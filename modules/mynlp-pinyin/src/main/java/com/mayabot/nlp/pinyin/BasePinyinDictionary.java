@@ -87,9 +87,9 @@ public abstract class BasePinyinDictionary {
      * 来自Hanlp的拼音方法
      *
      * @param charArray
-     * @return
+     * @return List<Pinyin>
      */
-    protected List<Pinyin> segLongest(char[] charArray) {
+    private List<Pinyin> segLongest(char[] charArray) {
         final Pinyin[][] wordNet = new Pinyin[charArray.length][];
 
         trie.parseText(charArray, (begin, end, value) -> {
