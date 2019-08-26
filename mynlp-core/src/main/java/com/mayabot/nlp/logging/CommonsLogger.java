@@ -70,10 +70,8 @@ class CommonsLogger extends AbstractInternalLogger {
      * for level TRACE.
      * </p>
      *
-     * @param format
-     *          the format string
-     * @param arg
-     *          the argument
+     * @param format the format string
+     * @param arg    the argument
      */
     @Override
     public void trace(String format, Object arg) {
@@ -92,12 +90,9 @@ class CommonsLogger extends AbstractInternalLogger {
      * for level TRACE.
      * </p>
      *
-     * @param format
-     *          the format string
-     * @param argA
-     *          the first argument
-     * @param argB
-     *          the second argument
+     * @param format the format string
+     * @param argA   the first argument
+     * @param argB   the second argument
      */
     @Override
     public void trace(String format, Object argA, Object argB) {
@@ -116,7 +111,7 @@ class CommonsLogger extends AbstractInternalLogger {
      * for level TRACE.
      * </p>
      *
-     * @param format the format string
+     * @param format    the format string
      * @param arguments a list of 3 or more arguments
      */
     @Override
@@ -131,10 +126,8 @@ class CommonsLogger extends AbstractInternalLogger {
      * Delegates to the {@link Log#trace(Object, Throwable)} method of
      * the underlying {@link Log} instance.
      *
-     * @param msg
-     *          the message accompanying the exception
-     * @param t
-     *          the exception (throwable) to log
+     * @param msg the message accompanying the exception
+     * @param t   the exception (throwable) to log
      */
     @Override
     public void trace(String msg, Throwable t) {
@@ -172,10 +165,8 @@ class CommonsLogger extends AbstractInternalLogger {
      * for level DEBUG.
      * </p>
      *
-     * @param format
-     *          the format string
-     * @param arg
-     *          the argument
+     * @param format the format string
+     * @param arg    the argument
      */
     @Override
     public void debug(String format, Object arg) {
@@ -194,12 +185,9 @@ class CommonsLogger extends AbstractInternalLogger {
      * for level DEBUG.
      * </p>
      *
-     * @param format
-     *          the format string
-     * @param argA
-     *          the first argument
-     * @param argB
-     *          the second argument
+     * @param format the format string
+     * @param argA   the first argument
+     * @param argB   the second argument
      */
     @Override
     public void debug(String format, Object argA, Object argB) {
@@ -218,7 +206,7 @@ class CommonsLogger extends AbstractInternalLogger {
      * for level DEBUG.
      * </p>
      *
-     * @param format the format string
+     * @param format    the format string
      * @param arguments a list of 3 or more arguments
      */
     @Override
@@ -233,10 +221,8 @@ class CommonsLogger extends AbstractInternalLogger {
      * Delegates to the {@link Log#debug(Object, Throwable)} method of
      * the underlying {@link Log} instance.
      *
-     * @param msg
-     *          the message accompanying the exception
-     * @param t
-     *          the exception (throwable) to log
+     * @param msg the message accompanying the exception
+     * @param t   the exception (throwable) to log
      */
     @Override
     public void debug(String msg, Throwable t) {
@@ -272,10 +258,8 @@ class CommonsLogger extends AbstractInternalLogger {
      * for level INFO.
      * </p>
      *
-     * @param format
-     *          the format string
-     * @param arg
-     *          the argument
+     * @param format the format string
+     * @param arg    the argument
      */
 
     @Override
@@ -295,12 +279,9 @@ class CommonsLogger extends AbstractInternalLogger {
      * for level INFO.
      * </p>
      *
-     * @param format
-     *          the format string
-     * @param argA
-     *          the first argument
-     * @param argB
-     *          the second argument
+     * @param format the format string
+     * @param argA   the first argument
+     * @param argB   the second argument
      */
     @Override
     public void info(String format, Object argA, Object argB) {
@@ -319,7 +300,7 @@ class CommonsLogger extends AbstractInternalLogger {
      * for level INFO.
      * </p>
      *
-     * @param format the format string
+     * @param format    the format string
      * @param arguments a list of 3 or more arguments
      */
     @Override
@@ -334,10 +315,8 @@ class CommonsLogger extends AbstractInternalLogger {
      * Delegates to the {@link Log#info(Object, Throwable)} method of
      * the underlying {@link Log} instance.
      *
-     * @param msg
-     *          the message accompanying the exception
-     * @param t
-     *          the exception (throwable) to log
+     * @param msg the message accompanying the exception
+     * @param t   the exception (throwable) to log
      */
     @Override
     public void info(String msg, Throwable t) {
@@ -373,10 +352,8 @@ class CommonsLogger extends AbstractInternalLogger {
      * for level WARN.
      * </p>
      *
-     * @param format
-     *          the format string
-     * @param arg
-     *          the argument
+     * @param format the format string
+     * @param arg    the argument
      */
     @Override
     public void warn(String format, Object arg) {
@@ -395,12 +372,9 @@ class CommonsLogger extends AbstractInternalLogger {
      * for level WARN.
      * </p>
      *
-     * @param format
-     *          the format string
-     * @param argA
-     *          the first argument
-     * @param argB
-     *          the second argument
+     * @param format the format string
+     * @param argA   the first argument
+     * @param argB   the second argument
      */
     @Override
     public void warn(String format, Object argA, Object argB) {
@@ -419,7 +393,7 @@ class CommonsLogger extends AbstractInternalLogger {
      * for level WARN.
      * </p>
      *
-     * @param format the format string
+     * @param format    the format string
      * @param arguments a list of 3 or more arguments
      */
     @Override
@@ -434,10 +408,8 @@ class CommonsLogger extends AbstractInternalLogger {
      * Delegates to the {@link Log#warn(Object, Throwable)} method of
      * the underlying {@link Log} instance.
      *
-     * @param msg
-     *          the message accompanying the exception
-     * @param t
-     *          the exception (throwable) to log
+     * @param msg the message accompanying the exception
+     * @param t   the exception (throwable) to log
      */
 
     @Override
@@ -474,10 +446,8 @@ class CommonsLogger extends AbstractInternalLogger {
      * for level ERROR.
      * </p>
      *
-     * @param format
-     *          the format string
-     * @param arg
-     *          the argument
+     * @param format the format string
+     * @param arg    the argument
      */
     @Override
     public void error(String format, Object arg) {
@@ -496,12 +466,9 @@ class CommonsLogger extends AbstractInternalLogger {
      * for level ERROR.
      * </p>
      *
-     * @param format
-     *          the format string
-     * @param argA
-     *          the first argument
-     * @param argB
-     *          the second argument
+     * @param format the format string
+     * @param argA   the first argument
+     * @param argB   the second argument
      */
     @Override
     public void error(String format, Object argA, Object argB) {
@@ -520,7 +487,7 @@ class CommonsLogger extends AbstractInternalLogger {
      * for level ERROR.
      * </p>
      *
-     * @param format the format string
+     * @param format    the format string
      * @param arguments a list of 3 or more arguments
      */
     @Override
@@ -535,10 +502,8 @@ class CommonsLogger extends AbstractInternalLogger {
      * Delegates to the {@link Log#error(Object, Throwable)} method of
      * the underlying {@link Log} instance.
      *
-     * @param msg
-     *          the message accompanying the exception
-     * @param t
-     *          the exception (throwable) to log
+     * @param msg the message accompanying the exception
+     * @param t   the exception (throwable) to log
      */
     @Override
     public void error(String msg, Throwable t) {

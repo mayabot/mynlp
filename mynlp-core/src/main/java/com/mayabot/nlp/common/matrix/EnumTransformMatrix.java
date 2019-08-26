@@ -22,8 +22,9 @@ import java.io.InputStream;
 
 /**
  * 转移矩阵词典
- * @author jimichan
+ *
  * @param <E> 标签的枚举类型
+ * @author jimichan
  */
 public class EnumTransformMatrix<E extends Enum<E>> {
 
@@ -61,7 +62,7 @@ public class EnumTransformMatrix<E extends Enum<E>> {
      * @param to
      * @return double
      */
-    public double  getTP(E from, E to) {
+    public double getTP(E from, E to) {
         Double x = transformMatrix.getTP(from.name(), to.name());
         if (x != null) {
             return x.doubleValue();

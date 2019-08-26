@@ -53,6 +53,7 @@ import static com.mayabot.nlp.utils.DataInOutputUtils.writeArrayList;
  * 双数组Trie树。
  * 字典树，
  * 用数字存放values。也就是每个项目都是有个整数id。
+ *
  * @author jimichan
  */
 public class DoubleArrayTrieMap<T> implements Trie<T> {
@@ -89,7 +90,7 @@ public class DoubleArrayTrieMap<T> implements Trie<T> {
     public DoubleArrayTrieMap(TreeMap<String, T> treeMap) {
         ArrayList<String> keys = new ArrayList<>(treeMap.size());
         ArrayList<T> values = new ArrayList<>(treeMap.size());
-        treeMap.forEach((a,b)->{
+        treeMap.forEach((a, b) -> {
             keys.add(a);
             values.add(b);
         });

@@ -88,7 +88,6 @@ public class ParagraphReaderSmart implements ParagraphReader {
     }
 
 
-
     public int offset() {
         return offset;
     }

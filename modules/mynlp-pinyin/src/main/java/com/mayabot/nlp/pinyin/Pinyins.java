@@ -17,7 +17,7 @@ public class Pinyins {
         pinyinService = Mynlps.instanceOf(PinyinService.class);
     }
 
-    public static PinyinService service(){
+    public static PinyinService service() {
         return Mynlps.instanceOf(PinyinService.class);
     }
 

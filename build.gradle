@@ -31,7 +31,12 @@ subprojects {
 
     def toPublish = true
 
-    if(project.name == "mynlp-restful" || project.name == "mynlp-cli" || project.name == "mynlp-example"){
+    def notPublish = new HashSet<String>()
+    notPublish.add("mynlp-restful")
+    notPublish.add("mynlp-example")
+    notPublish.add("mynlp-elasticsearch6")
+    
+    if( notPublish.contains(project.name)){
         toPublish = false
     }
 

@@ -190,7 +190,7 @@ public class TrieTreeForwardMaxMatcher<T> implements TrieTreeMatcher<T> {
      * @return String
      */
     @Override
-     public T getParams() {
+    public T getParams() {
         return this.param;
     }
 

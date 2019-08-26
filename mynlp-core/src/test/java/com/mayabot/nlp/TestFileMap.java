@@ -11,10 +11,10 @@ import java.util.Arrays;
 import java.util.Random;
 
 public class TestFileMap {
-    public static void main2(String[] args) throws Exception{
+    public static void main2(String[] args) throws Exception {
         //FileChannel.open()
 
-        RandomAccessFile f = new RandomAccessFile("testdata/float.martix","rw");
+        RandomAccessFile f = new RandomAccessFile("testdata/float.martix", "rw");
         FileChannel fileChannel = f.getChannel();
 
 
@@ -26,7 +26,6 @@ public class TestFileMap {
         System.out.println(buffer);
         buffer.getChar();
         System.out.println(buffer);
-
 
 
         float[] floats = new float[300];
@@ -71,14 +70,14 @@ public class TestFileMap {
         fileChannel.close();
 
 
-
     }
 
 
-    public static void main(String[] args)throws Exception {
-     test();
+    public static void main(String[] args) throws Exception {
+        test();
     }
-    public static void test() throws Exception{
+
+    public static void test() throws Exception {
         FileOutputStream fout = new FileOutputStream(new File("testdata/float.martix"));
 
         FileChannel channel = fout.getChannel();
@@ -88,10 +87,8 @@ public class TestFileMap {
         Random random = new Random(0);
 
 
-        ByteBuffer byteBuffer = ByteBuffer.allocate(300*4);
+        ByteBuffer byteBuffer = ByteBuffer.allocate(300 * 4);
         FloatBuffer buffer = byteBuffer.asFloatBuffer();
-
-
 
 
         for (int i = 0; i < 10; i++) {

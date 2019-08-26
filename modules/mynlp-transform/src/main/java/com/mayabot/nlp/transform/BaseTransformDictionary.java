@@ -32,8 +32,7 @@ public abstract class BaseTransformDictionary {
             Mynlp mynlp = Mynlps.get();
 
             CharSourceLineReader charSourceLineReader =
-                    UseLines.lineReader(mynlp.getEnv().loadResource(resourceName).inputStream())
-                    ;
+                    UseLines.lineReader(mynlp.getEnv().loadResource(resourceName).inputStream());
 
             charSourceLineReader.forEachRemaining(
                     line -> {

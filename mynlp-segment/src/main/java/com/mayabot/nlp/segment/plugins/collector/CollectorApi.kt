@@ -27,9 +27,9 @@ interface WordTermCollector {
      */
     fun collect(wordnet: Wordnet, wordPath: Wordpath, consumer: Consumer<WordTerm>)
 
-    var pickUpSubword:PickUpSubword?
+    var pickUpSubword: PickUpSubword?
 
-    var fillSubword:FillSubword?
+    var fillSubword: FillSubword?
 
 
     /**

@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
  * <p>
  * Mynlp 分词 使用 612 ms
  * 速度 1464429字/秒
- *
+ * <p>
  * 使用新的原子分词后，关闭词性和人名识别。
  * 性能达到 438 ms
  * 速度 2046189字/秒

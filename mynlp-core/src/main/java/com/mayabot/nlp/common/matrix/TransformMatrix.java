@@ -42,6 +42,7 @@ import java.util.Map;
  * <p>
  * 放弃了HanLp中使用Enum的做法，直接使用了string。
  * <p>
+ *
  * @author jimichan
  */
 public class TransformMatrix {
@@ -101,7 +102,6 @@ public class TransformMatrix {
     }
 
 
-
     public boolean load(ByteSource source) throws IOException {
         try (InputStream inputStream = source.openBufferedStream()) {
             return load(inputStream);
@@ -145,8 +145,6 @@ public class TransformMatrix {
 
 
         }
-
-
 
 
         return true;

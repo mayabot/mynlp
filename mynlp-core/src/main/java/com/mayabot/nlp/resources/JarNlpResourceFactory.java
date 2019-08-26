@@ -68,11 +68,11 @@ public class JarNlpResourceFactory implements NlpResourceFactory {
 
         try {
             for (File jar : jarFiles) {
-                if(jar.getName().startsWith(".")){
+                if (jar.getName().startsWith(".")) {
                     //不可以是隐藏文件，有些服务器上传文件的时候，会导致._的临时文件，导致加载失败。
                     continue;
                 }
-                try{
+                try {
                     try (ZipFile f = new ZipFile(jar)) {
                         Enumeration<? extends ZipEntry> entries = f.entries();
                         while (entries.hasMoreElements()) {
@@ -83,9 +83,9 @@ public class JarNlpResourceFactory implements NlpResourceFactory {
                             }
                         }
                     }
-                }catch (Exception e){
-                    System.err.println("open file "+jar.getAbsolutePath()+" error ");
-                    logger.error("read file"+jar.getAbsolutePath(),e);
+                } catch (Exception e) {
+                    System.err.println("open file " + jar.getAbsolutePath() + " error ");
+                    logger.error("read file" + jar.getAbsolutePath(), e);
                 }
             }
         } catch (Exception e) {

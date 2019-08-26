@@ -134,7 +134,6 @@ public class IntArrayList {
     }
 
 
-
     public boolean contains(int e1) {
         return indexOf(e1) >= 0;
     }
@@ -246,7 +245,6 @@ public class IntArrayList {
     }
 
     /**
-     *
      * <p>The returned array is sized to match exactly
      * the number of elements of the stack.</p>
      */

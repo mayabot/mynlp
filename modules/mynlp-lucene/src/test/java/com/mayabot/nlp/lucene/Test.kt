@@ -5,8 +5,7 @@ import com.mayabot.nlp.segment.Lexers
 
 fun main() {
 
-    AtomIterable(Lexers.coreBuilder().collector().indexPickup().done().build().
-            scan("上海市委召开会议")
+    AtomIterable(Lexers.coreBuilder().collector().indexPickup().done().build().scan("上海市委召开会议")
     ).forEach {
         println(it)
     }

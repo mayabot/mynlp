@@ -54,6 +54,7 @@ public class QuickStringDoubleTable {
 
     /**
      * 这个方法执行速度应该想飞一样
+     *
      * @param row
      * @param col
      * @return double

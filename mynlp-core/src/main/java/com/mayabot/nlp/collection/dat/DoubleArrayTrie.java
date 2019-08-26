@@ -47,9 +47,8 @@ import static com.mayabot.nlp.utils.DataInOutputUtils.writeIntArray;
 
 /**
  * 双数组Trie树。
- *
+ * <p>
  * 每个key对应其数值的下标（这个特性可以用来做TreeSet String()的索引）
- *
  */
 public class DoubleArrayTrie {
 
@@ -98,7 +97,6 @@ public class DoubleArrayTrie {
     }
 
     /**
-     *
      * @param text
      * @param offset
      * @return DATMatcher
@@ -108,7 +106,6 @@ public class DoubleArrayTrie {
     }
 
     /**
-     *
      * @param text
      * @param offset
      * @return DATMatcher
@@ -118,7 +115,6 @@ public class DoubleArrayTrie {
     }
 
     /**
-     *
      * @param text
      * @return DATMatcher
      */
@@ -127,7 +123,6 @@ public class DoubleArrayTrie {
     }
 
     /**
-     *
      * @param text
      * @return DATMatcher
      */
@@ -136,7 +131,6 @@ public class DoubleArrayTrie {
     }
 
     /**
-     *
      * @param text
      * @param offset
      * @return DATMatcher
@@ -146,7 +140,6 @@ public class DoubleArrayTrie {
     }
 
     /**
-     *
      * @param text
      * @param offset
      * @return DATMatcher
@@ -156,7 +149,6 @@ public class DoubleArrayTrie {
     }
 
     /**
-     *
      * @param text
      * @return DATMatcher
      */
@@ -165,7 +157,6 @@ public class DoubleArrayTrie {
     }
 
     /**
-     *
      * @param text
      * @return DATMatcher
      */
@@ -185,7 +176,6 @@ public class DoubleArrayTrie {
     }
 
     /**
-     *
      * @param key
      * @param pos
      * @param len
@@ -253,9 +243,6 @@ public class DoubleArrayTrie {
 
         return result;
     }
-
-
-
 
 
     /**

@@ -50,6 +50,7 @@ import static com.mayabot.nlp.utils.DataInOutputUtils.writeIntArray;
 /**
  * 【String int】的map
  * 这是一个定制化的String，Int的DATMap的实现，采用int来存储，比Integer对内存的要求更低。
+ *
  * @author jimichan
  */
 public class DoubleArrayTrieStringIntMap {
@@ -324,7 +325,6 @@ public class DoubleArrayTrieStringIntMap {
     }
 
     /**
-     *
      * @param key
      * @return true or false
      */
@@ -333,7 +333,6 @@ public class DoubleArrayTrieStringIntMap {
     }
 
     /**
-     *
      * @param key
      * @return true or false
      */

@@ -21,7 +21,7 @@ import com.mayabot.nlp.segment.lexer.core.BiGramTableDictionaryImpl;
 import com.mayabot.nlp.segment.lexer.core.CoreDictionaryImpl;
 import org.junit.Test;
 
-public class CoreGiGramTableDictionaryTest{
+public class CoreGiGramTableDictionaryTest {
 
     @Test
     public void test() {

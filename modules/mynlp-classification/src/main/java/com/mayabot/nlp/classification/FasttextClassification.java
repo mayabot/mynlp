@@ -129,10 +129,10 @@ public class FasttextClassification {
     public static List<FloatStringPair> predict(FastText model, String text, int top) {
 
         if (lexerReader == null) {
-            lexerReader = Lexers.coreBuilder().build().filterReader(true,true);
+            lexerReader = Lexers.coreBuilder().build().filterReader(true, true);
         }
 
-        return predict(model, lexerReader, text,top);
+        return predict(model, lexerReader, text, top);
     }
 
     public static FloatStringPair predictOne(FastText model, String text) {

@@ -2,7 +2,10 @@ package com.mayabot.nlp.lucene;
 
 import com.mayabot.nlp.segment.*;
 import org.apache.lucene.analysis.Tokenizer;
-import org.apache.lucene.analysis.tokenattributes.*;
+import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
+import org.apache.lucene.analysis.tokenattributes.OffsetAttribute;
+import org.apache.lucene.analysis.tokenattributes.PositionIncrementAttribute;
+import org.apache.lucene.analysis.tokenattributes.TypeAttribute;
 
 import java.io.IOException;
 import java.util.Iterator;
@@ -58,7 +61,7 @@ final public class MynlpTokenizer extends Tokenizer {
         this.lexerReader = lexerReader;
     }
 
-    public MynlpTokenizer(LexerReader lexerReader,WordTermIterableMode mode) {
+    public MynlpTokenizer(LexerReader lexerReader, WordTermIterableMode mode) {
         this.lexerReader = lexerReader;
         this.mode = mode;
     }

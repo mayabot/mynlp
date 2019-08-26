@@ -5,6 +5,7 @@ import java.util.TreeMap;
 
 /**
  * 给一个没有重复的字符串数组建立索引，可以快速查询字符串在数组中的位置
+ *
  * @author jimichan
  */
 public class FastDatStringListIndex {

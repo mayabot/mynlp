@@ -55,6 +55,7 @@ public class PerceptronNerService {
 
     /**
      * 返回双层嵌套结构的句子列表
+     *
      * @param list
      * @return List[WordTerm]
      */
@@ -122,9 +123,8 @@ public class PerceptronNerService {
     }
 
     /**
-     *
      * @param list
-     * @param pos 是否需要计算词性
+     * @param pos  是否需要计算词性
      */
     public List<WordTerm> ner(List<WordTerm> list, boolean pos) {
 

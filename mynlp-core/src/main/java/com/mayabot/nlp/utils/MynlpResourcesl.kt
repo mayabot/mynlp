@@ -14,18 +14,18 @@ object MynlpResources {
 
     @JvmStatic
     fun install() {
-        val dir = File(System.getProperty("user.home"),"mynlp.data")
-        if(!dir.exists()){
+        val dir = File(System.getProperty("user.home"), "mynlp.data")
+        if (!dir.exists()) {
             dir.mkdir()
         }
 
         val urls = Jars().parseClassPath()
         val regex = Regex("mynlp-resource-.*\\.jar$")
-        urls.filter { regex.containsMatchIn(it.file)}.forEach {
+        urls.filter { regex.containsMatchIn(it.file) }.forEach {
             val the = File(it.toURI())
-            val out = File(dir,the.name)
-            println("Copy\n${the.absolutePath}\n>>\n$out\n" )
-            the.copyTo(out,overwrite = true)
+            val out = File(dir, the.name)
+            println("Copy\n${the.absolutePath}\n>>\n$out\n")
+            the.copyTo(out, overwrite = true)
         }
 
         println("OK")

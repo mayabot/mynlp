@@ -29,6 +29,7 @@ import java.util.Map;
 
 /**
  * 稀疏矩阵CSR.
+ *
  * @author jimichan
  */
 public class CSRSparseMatrix implements Serializable {
@@ -133,7 +134,6 @@ public class CSRSparseMatrix implements Serializable {
         if (row < 0 || col < 0) {
             return 0;
         }
-
 
 
         int off = rowOffset[row];

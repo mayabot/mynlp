@@ -19,9 +19,9 @@ package com.mayabot.nlp.segment.wordnet;
 /**
  * 选择最佳路径接口。具体实现有，viterbi 维特比 dijkstra算法 NShort算法 前向最大路径算法
  *
+ * @author jimichan
  * @see com.mayabot.nlp.segment.lexer.core.ViterbiBestPathAlgorithm
  * @see com.mayabot.nlp.segment.plugins.bestpath.LongpathBestPathAlgorithm
- * @author jimichan
  */
 public interface BestPathAlgorithm {
 

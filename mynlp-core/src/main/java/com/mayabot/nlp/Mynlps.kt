@@ -17,8 +17,6 @@
 package com.mayabot.nlp
 
 import com.mayabot.nlp.logging.InternalLoggerFactory
-import java.lang.RuntimeException
-
 import java.security.AccessController
 import java.security.PrivilegedAction
 import java.util.function.Consumer
@@ -39,18 +37,17 @@ object Mynlps {
 
     private var inited = false
 
-    private val mynlp:Mynlp by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
+    private val mynlp: Mynlp by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
         inited = true
         val builder = MynlpBuilder()
 
-        initList.forEach {
-            it.accept(builder)
-        }
-
-         AccessController.doPrivileged(PrivilegedAction<Mynlp>{
-             builder.build()
+        AccessController.doPrivileged(PrivilegedAction<Unit> {
+            initList.forEach {
+                it.accept(builder)
+            }
         })
 
+        builder.build()
     }
 
     /**
@@ -58,14 +55,14 @@ object Mynlps {
      * @param consumer 设置MynlpBuilder
      */
     @JvmStatic
-    fun install(consumer: Consumer<MynlpBuilder>){
+    fun install(consumer: Consumer<MynlpBuilder>) {
         if (inited) {
             throw RuntimeException("必须在调用Mynlp.get之前调用")
         }
-        initList+=consumer
+        initList += consumer
     }
 
-    fun install(consumer: (MynlpBuilder)->Unit){
+    fun install(consumer: (MynlpBuilder) -> Unit) {
         initList += Consumer<MynlpBuilder> {
             consumer(it)
         }
@@ -82,7 +79,7 @@ object Mynlps {
         if (inited) {
             throw RuntimeException("必须在调用Mynlp.get之前调用")
         }
-        AccessController.doPrivileged(PrivilegedAction<Unit>{
+        AccessController.doPrivileged(PrivilegedAction<Unit> {
             System.setProperty("mynlp.data.dir", dataDir)
         })
     }
@@ -105,12 +102,12 @@ object Mynlps {
     </T> */
     @JvmStatic
     fun <T> instanceOf(clazz: Class<T>): T {
-        return AccessController.doPrivileged(PrivilegedAction<T>{
+        return AccessController.doPrivileged(PrivilegedAction<T> {
             mynlp.getInstance(clazz)
         })
     }
 
-    inline fun <reified T> instanceOf():T{
+    inline fun <reified T> instanceOf(): T {
         return instanceOf(T::class.java)
     }
 

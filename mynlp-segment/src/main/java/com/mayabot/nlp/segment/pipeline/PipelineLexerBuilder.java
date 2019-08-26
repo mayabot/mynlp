@@ -330,8 +330,8 @@ public class PipelineLexerBuilder implements LexerBuilder {
      */
     public PipelineLexerBuilder setTermCollector(
             @NotNull
-            WordTermCollector termCollector) {
-        if(termCollector == null){
+                    WordTermCollector termCollector) {
+        if (termCollector == null) {
             throw new NullPointerException("WordTermCollector is null");
         }
         this.termCollector = termCollector;

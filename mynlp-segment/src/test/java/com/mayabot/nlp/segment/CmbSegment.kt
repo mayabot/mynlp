@@ -42,5 +42,4 @@ class CmbSegment {
     }
 
 
-
 }
