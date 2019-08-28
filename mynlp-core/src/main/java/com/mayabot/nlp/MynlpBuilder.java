@@ -108,9 +108,7 @@ public class MynlpBuilder {
                 }
 
                 File dataDirFile = new File(dataDir);
-                if (!dataDirFile.exists()) {
-                    dataDirFile.mkdir();
-                }
+
                 logger.info("Mynlp data dir is " + dataDirFile.getAbsolutePath() + ",exists " + dataDirFile.exists());
 
                 if (settings.get("cache.dir") != null) {

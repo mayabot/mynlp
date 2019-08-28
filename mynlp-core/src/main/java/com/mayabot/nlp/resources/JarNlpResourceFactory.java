@@ -101,11 +101,12 @@ public class JarNlpResourceFactory implements NlpResourceFactory {
     @Override
     public NlpResource load(String resourceName, Charset charset) {
 
-        Map<String, File> index = doIndex();
-
         if (!baseDir.exists() || baseDir.isFile()) {
             return null;
         }
+
+        Map<String, File> index = doIndex();
+
 
         File jar = index.get(resourceName);
 
