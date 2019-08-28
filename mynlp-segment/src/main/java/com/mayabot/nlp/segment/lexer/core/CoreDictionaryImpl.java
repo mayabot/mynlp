@@ -156,10 +156,14 @@ public class CoreDictionaryImpl extends BaseNlpResourceExternalizable implements
 
     @Override
     public String sourceVersion() {
-
+        String version = env.hashResource(path);
+        if (version == null) {
+            version = "";
+        }
         Hasher hasher = Hashing.murmur3_32().newHasher().
-                putString(env.hashResource(path), Charsets.UTF_8).
+                putString(version, Charsets.UTF_8).
                 putString("v2", Charsets.UTF_8);
+
         if (coreDictPatch != null) {
             hasher.putString(coreDictPatch.dictVersion(), Charsets.UTF_8);
         }

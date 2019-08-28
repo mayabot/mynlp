@@ -1,23 +1,50 @@
+//plugins {
+//    id 'org.springframework.boot' version '2.1.3.RELEASE'
+//    id 'org.jetbrains.kotlin.plugin.spring' version '1.3.31'
+//}
 plugins {
-    id 'org.springframework.boot' version '2.1.3.RELEASE'
-    id 'org.jetbrains.kotlin.plugin.spring' version '1.3.31'
+    id 'com.github.johnrengelman.shadow' version '5.1.0'
+    id 'application'
 }
 
-apply plugin: 'io.spring.dependency-management'
+ext.ktor_version = '1.2.3'
 
-description = "Mynlp UI"
+//apply plugin: 'io.spring.dependency-management'
 
-dependencies {
-    compile 'org.springframework.boot:spring-boot-starter-web'
-    compile 'com.fasterxml.jackson.module:jackson-module-kotlin'
+description = "Mynlp Restfull"
 
-    // mynlp
-    compile project(":mynlp-segment")
-    compile project(":modules:mynlp-classification")
-    compile project(":modules:mynlp-pinyin")
-    compile project(":modules:mynlp-summary")
-    compile project(":modules:mynlp-transform")
+mainClassName = 'com.mayabot.mynlp.restful.MynlpRestfullKt'
+
+dependencies{
+    implementation "io.ktor:ktor-server-core:$ktor_version"
+    implementation "io.ktor:ktor-server-netty:$ktor_version"
+    implementation "io.ktor:ktor-jackson:$ktor_version"
+    compile "io.ktor:ktor-html-builder:$ktor_version"
+    implementation("ch.qos.logback:logback-classic:1.2.3")
+    compile (project(":mynlp-segment"))
+//    {
+//        exclude group: "com.mayabot.mynlp.resource"
+//    }
 }
+ 
+shadowJar {
+    manifest {
+        attributes 'Main-Class': mainClassName
+    }
+}
+
+//
+//dependencies {
+//    compile 'org.springframework.boot:spring-boot-starter-web'
+//    compile 'com.fasterxml.jackson.module:jackson-module-kotlin'
+//
+//    // mynlp
+//    compile project(":mynlp-segment")
+//    compile project(":modules:mynlp-classification")
+//    compile project(":modules:mynlp-pinyin")
+//    compile project(":modules:mynlp-summary")
+//    compile project(":modules:mynlp-transform")
+//}
 
 compileKotlin {
     kotlinOptions {
@@ -25,7 +52,7 @@ compileKotlin {
         jvmTarget = '1.8'
     }
 }
-
-bootJar {
-    launchScript()
-}
+//
+//bootJar {
+//    launchScript()
+//}

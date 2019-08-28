@@ -109,16 +109,16 @@ public class MynlpEnv {
         }
 
         return AccessController.doPrivileged((PrivilegedAction<NlpResource>) () -> {
-            String wiki = "";
+            String wiki = "https://github.com/mayabot/mynlp/wiki/resources";
             NlpResource resource = getNlpResource(resourcePath, charset);
 
             if (resource == null) {
 
                 throw new RuntimeException(
                         "Resource " + resourcePath + ", Not Found!\n"
-                                + "Resource Jar not in your maven or gradle dependencies (com.mayabot.mynlp:mynlp-resources:Version) \n" +
-                                "Or Install to ${mynlp.data} Dir\n" +
-                                "\nGoto Wiki +" + wiki + " For help!"
+                                + "Resource Jar not in your maven or gradle dependencies \n" +
+                                "Or ${mynlp.data} Dir\n" +
+                                "\nAccess Wiki +" + wiki + " For help!"
                 );
             }
             return resource;
