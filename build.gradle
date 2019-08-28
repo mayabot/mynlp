@@ -7,8 +7,8 @@ apply plugin: 'eclipse'
 
 description = "mynlp是mayabot开源的中文自然语言处理工具集"
 
-def buildVersion = "3.0.0-BETA1"
-def snapShot = false
+def buildVersion = "3.0.0-beta.2"
+def snapShot = true
 
 allprojects {
     repositories {
@@ -48,6 +48,7 @@ subprojects {
         apply plugin: 'signing'
     }
 
+    
     sourceCompatibility = '1.8'
     targetCompatibility = '1.8'
 
@@ -69,6 +70,7 @@ subprojects {
         }
 
         publishing {
+            
             publications {
                 java(MavenPublication) {
 
@@ -134,6 +136,7 @@ subprojects {
                         } else {
                             url = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
                         }
+                        
                         credentials {
                             username "${oss_user}"
                             password "${oss_password}"
