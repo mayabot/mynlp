@@ -8,14 +8,23 @@
 
 [**更多使用介绍阅读Wiki文档**](https://github.com/mayabot/mynlp/wiki/Home)
 
->微信`jimichan`,备注mynlp，加入微信交流群。
+mynlp是一个开源高性能、模块化、可扩展的中文NLP工具包。
 
-mynlp是一个高性能、模块化、可扩展的中文NLP工具包。内容如下：
+设计目标：
+- 企业级
+- 高性能
+- 模块化
+- 可扩展
+- 多场景
+- 柔性API
+
+
+包含功能和资源如下：
 - 中文分词
     - CORE分词 
         - 二元语言模型 + viterbi解码算法 + 基础规则（数字、英文、日期..。_
         - 高性能：速度200万+字/秒(_2.6GHz Intel i7_)
-    - CWS分词 
+    - 感知机分词 
     
         基于感知机序列标注算法 + 基础规则。_
     - CRF分词 
@@ -34,9 +43,7 @@ mynlp是一个高性能、模块化、可扩展的中文NLP工具包。内容如
 - 词性标注
 
     _基于感知机的词性标注_
-- 新词发现(未发布)
 
-    _可小内存上运行大数据集，完美超高性能_
 - 拼音转换
 
     _文字转拼音，好用的API_
@@ -52,8 +59,6 @@ mynlp是一个高性能、模块化、可扩展的中文NLP工具包。内容如
     _简单的文本摘要实现_
     
 - 基础架构
-    - 统一资源加载
-    - 可扩展的资源加载API
     - 基于GUICE的IOC实现可插拔的组件开发
     - 高性能、易扩展的基础数据结构
 
@@ -73,8 +78,10 @@ mynlp是一个高性能、模块化、可扩展的中文NLP工具包。内容如
         - 公开语料库 
             - 收集的互联网资源
         - 自建语料库
-            - 数据为人民日报2014，通过Hanlp、中科院等多种分词器自动切分对比差异，再经过10人5个月时间修复、校验
-            后获得的分词语料库。（准备在mynlp具备一定用户量之后再开源）
+            - 基础数据为人民日报2014全年内容，通过Hanlp、中科院等多种分词器自动切分对比差异，再经过50人月时间修复、校验
+            后获得的分词语料库。
+
+
 
 ## Getting Started
 非常易用，只需要1分钟你就可以体验mynlp。没有配置，无需手动下载资源文件，只需要依赖添加依赖包，写两行代码。
@@ -84,51 +91,55 @@ mynlp是一个高性能、模块化、可扩展的中文NLP工具包。内容如
 
 ### Installation
 
-mynlp的jar已经发布到Maven中央仓库，在您的项目中依赖mynlp-all.jar最新版本。
+mynlp多个功能被划分在不同的模块中，下面演示分词模块：
 
 GRADLE
 ```
-    compile 'com.mayabot.mynlp:mynlp-all:2.0.0'
+    compile 'com.mayabot.mynlp:mynlp-segment:3.0.0-beta.1'
 ```
 或者MAVEN
 ```xml
 <dependency>
   <groupId>com.mayabot.mynlp</groupId>
-  <artifactId>mynlp-all</artifactId>
-  <version>2.0.0</version>
+  <artifactId>mynlp-segment</artifactId>
+  <version>3.0.0-beta.1</version>
 </dependency>
 ```
 
 ### 中文分词示例
 
-```java
-MynlpTokenizer tokenizer = Tokenizers.coreTokenizer();
-Sentence sentence = tokenizer.parse("mynlp是mayabot开源的中文NLP工具包。");
-System.out.println(sentence.asWordList());
+Kotlin:
+```kotlin
+println("mynlp是mayabot开源的中文NLP工具包。".lexer().toList())
 ```
+
+Java:
+```java
+Lexer lexer = Lexers.coreBuilder()      //core分词构建器
+                     .withPos()         //开启词性
+                     .withPersonName()  //开启人名
+                     .build();          // 创建定制词法分析对象
+                     
+Sentence sentence = lexer.scan("mynlp是mayabot开源的中文NLP工具包。");
+
+System.out.println(sentence.toList());
+```
+
 输出：
 ```text
 [mynlp/x, 是/v, mayabot/x, 开源/v, 的/u, 中文/nz, nlp/x, 工具包/n, 。/w]
 ```
 
-    mynlp的发行jar里面是不包含资源文件的，在运行时如果发现本地mynlp.data目录夹没有对应资源时会自动从cdn上下载资源JAR文件，
-    所以第一次运行需要您电脑可以访问互联网。
-    默认mynlp.data文件夹的位置在~/.mynlp.data，mac系统下为隐藏文件夹，可以通过Command+Shift+G访问。
 
 
-详细文档请移步[WIKI](https://github.com/mayabot/mynlp/wiki/Home)
+## 微信群
 
-## 联系和交流
-
-MYNLP的发展和持续离不开大家的支持，所以建立了微信群方便大家及时沟通交流，有需要的同学可以添加我微信`jimichan`,备注mynlp。
-
+如有疑问或者需要交流，可加我微信`jimichan`,带你入交流群。
 
 ## 声明和致谢
-
-mynlp开发之初是对Hanlp和ansj项目的重构整理，通过多次迭代和项目需求驱动实践，逐渐发展为目前自有的架构体系。
-向HanLP和ansj在中文NLP开源中做出的贡献致敬！
+早期在使用ansj和hanlp过程中，遇到很多问题无法解决和扩展，mynlp开发之初是对他们的重构整理，通过多次迭代和项目需求驱动实践，逐渐发展为目前自有的架构体系。
+也向HanLP和ansj在中文NLP开源中做出的贡献和努力致敬！
 
 mynlp项目参考了以下项目：
 - [HanLP](https://github.com/hankcs/HanLP)
 - [ansj_seg](https://github.com/NLPchina/ansj_seg)
-
