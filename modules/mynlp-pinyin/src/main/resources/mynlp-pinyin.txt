@@ -6240,7 +6240,7 @@
 娙=xing2
 娚=nan2
 娛=yu2
-娜=nuo2,na4
+娜=na4,nuo2
 娝=pou1,bi3
 娞=nei3,sui1
 娟=juan1
