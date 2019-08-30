@@ -102,7 +102,7 @@ class SystemStopWordDict
     private fun loadStopword(): Set<String> {
 
         try {
-            val resource = env.loadResource(StopWordDictPath)
+            val resource = env.tryLoadResource(StopWordDictPath)
 
             resource?.let { re ->
                 return re.inputStream().bufferedReader().readLines().asSequence()
