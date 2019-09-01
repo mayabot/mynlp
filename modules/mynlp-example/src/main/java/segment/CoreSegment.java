@@ -12,6 +12,7 @@ public class CoreSegment {
 
         Lexer tokenizer = Lexers.core();
 
+
         Sentence sentence = tokenizer.scan("mynlp是mayabot开源的中文NLP工具包。");
 
         System.out.println(sentence.toWordList());

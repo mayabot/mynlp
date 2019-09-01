@@ -22,7 +22,11 @@ package com.mayabot.nlp.segment;
  */
 public class Lexers {
 
-    public static FluentLexerBuilder fluent() {
+    /**
+     * @return FluentLexerBuilder
+     * @since 3.0.0
+     */
+    public static FluentLexerBuilder builder() {
         return FluentLexerBuilder.builder();
     }
 
@@ -33,7 +37,7 @@ public class Lexers {
     }
 
     public static FluentLexerBuilder coreBuilder() {
-        return FluentLexerBuilder.builder()
+        return builder()
                 .basic().core();
     }
 
@@ -42,8 +46,13 @@ public class Lexers {
     }
 
     public static FluentLexerBuilder perceptronBuilder() {
-        return FluentLexerBuilder.builder()
+        return builder()
                 .basic().cws();
+    }
+
+    @Deprecated()
+    public static FluentLexerBuilder fluent() {
+        return FluentLexerBuilder.builder();
     }
 
 }

@@ -11,7 +11,7 @@ class PersonNameTest {
         run {
             val text = "这|是|陈|建国|的|快递"
 
-            val tokenizer = Lexers.fluent().basic().core()
+            val tokenizer = Lexers.builder().basic().core()
                     .build()
 
 
@@ -22,7 +22,7 @@ class PersonNameTest {
         run {
             val text = "这|是|陈建国|的|快递"
 
-            val tokenizer = Lexers.fluent().basic().core()
+            val tokenizer = Lexers.builder().basic().core()
                     .withPersonName().build()
 
             TokenizerTestHelp.test(tokenizer, text)
