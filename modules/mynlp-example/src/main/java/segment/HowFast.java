@@ -35,7 +35,7 @@ public class HowFast {
 
         String text = Joiner.on("\n").join(lines);
 
-        Lexer lexer = Lexers.fluent()
+        Lexer lexer = Lexers.builder()
                 .basic().core()
                 .build();
 
