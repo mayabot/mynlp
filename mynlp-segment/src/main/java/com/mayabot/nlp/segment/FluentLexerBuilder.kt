@@ -63,8 +63,9 @@ open class FluentLexerBuilder : LexerBuilder {
         return this
     }
 
-    fun with(plugin: PipelineLexerPlugin) {
+    fun with(plugin: PipelineLexerPlugin) : FluentLexerBuilder {
         builder.install(plugin)
+        return this
     }
 
     fun collector(): CollectorBlock {
