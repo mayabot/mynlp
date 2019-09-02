@@ -102,7 +102,7 @@ GRADLE
 <dependency>
   <groupId>com.mayabot.mynlp</groupId>
   <artifactId>mynlp-segment</artifactId>
-  <version>3.0.0-beta.1</version>
+  <version>3.0.0</version>
 </dependency>
 ```
 
