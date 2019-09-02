@@ -10,7 +10,7 @@
 
 mynlp是一个开源高性能、模块化、可扩展的中文NLP工具包。
 
-设计目标：
+### 设计目标：
 - 企业级
 - 高性能
 - 模块化
@@ -19,7 +19,66 @@ mynlp是一个开源高性能、模块化、可扩展的中文NLP工具包。
 - 柔性API
 
 
-包含功能和资源如下：
+## Getting Started
+只需要导入maven依赖，无需配置和额外资源下载。
+
+### Requirements
+您需要 JAVA1.8+ 运行环境
+
+### Installation
+
+mynlp多个功能被划分在不同的模块中，下面演示分词模块：
+
+GRADLE
+```
+    compile 'com.mayabot.mynlp:mynlp-segment:3.0.0-beta.1'
+```
+或者MAVEN
+```xml
+<dependency>
+  <groupId>com.mayabot.mynlp</groupId>
+  <artifactId>mynlp-segment</artifactId>
+  <version>3.0.0</version>
+</dependency>
+```
+
+模块（artifactId） | 功能 
+------ | ------------
+mynlp-core | 基础功能 Guice、logger、资源、基础数据结构和算法
+mynlp-perceptron | 通用序列标注感知机
+mynlp-segment | 分词
+mynlp-classification | 文本分类
+mynlp-lucene | lucene 分析器接口实现
+mynlp-pinyin | 文字转拼音
+mynlp-summary | 文本摘要
+mynlp-transform | 繁简体互转
+
+### 中文分词示例
+
+Kotlin:
+```kotlin
+println("mynlp是mayabot开源的中文NLP工具包。".lexer().toList())
+```
+
+Java:
+```java
+Lexer lexer = Lexers.coreBuilder()      //core分词构建器
+                     .withPos()         //开启词性
+                     .withPersonName()  //开启人名
+                     .build();          // 创建定制词法分析对象
+                     
+Sentence sentence = lexer.scan("mynlp是mayabot开源的中文NLP工具包。");
+
+System.out.println(sentence.toList());
+```
+
+输出：
+```text
+[mynlp/x, 是/v, mayabot/x, 开源/v, 的/u, 中文/nz, nlp/x, 工具包/n, 。/w]
+```
+
+
+## 包含功能和资源如下：
 - 中文分词
     - CORE分词 
         - 二元语言模型 + viterbi解码算法 + 基础规则（数字、英文、日期..。_
@@ -80,56 +139,6 @@ mynlp是一个开源高性能、模块化、可扩展的中文NLP工具包。
         - 自建语料库
             - 基础数据为人民日报2014全年内容，通过Hanlp、中科院等多种分词器自动切分对比差异，再经过50人月时间修复、校验
             后获得的分词语料库。
-
-
-
-## Getting Started
-非常易用，只需要1分钟你就可以体验mynlp。没有配置，无需手动下载资源文件，只需要依赖添加依赖包，写两行代码。
-
-### Requirements
-您需要 JAVA1.8+ 运行环境
-
-### Installation
-
-mynlp多个功能被划分在不同的模块中，下面演示分词模块：
-
-GRADLE
-```
-    compile 'com.mayabot.mynlp:mynlp-segment:3.0.0-beta.1'
-```
-或者MAVEN
-```xml
-<dependency>
-  <groupId>com.mayabot.mynlp</groupId>
-  <artifactId>mynlp-segment</artifactId>
-  <version>3.0.0</version>
-</dependency>
-```
-
-### 中文分词示例
-
-Kotlin:
-```kotlin
-println("mynlp是mayabot开源的中文NLP工具包。".lexer().toList())
-```
-
-Java:
-```java
-Lexer lexer = Lexers.coreBuilder()      //core分词构建器
-                     .withPos()         //开启词性
-                     .withPersonName()  //开启人名
-                     .build();          // 创建定制词法分析对象
-                     
-Sentence sentence = lexer.scan("mynlp是mayabot开源的中文NLP工具包。");
-
-System.out.println(sentence.toList());
-```
-
-输出：
-```text
-[mynlp/x, 是/v, mayabot/x, 开源/v, 的/u, 中文/nz, nlp/x, 工具包/n, 。/w]
-```
-
 
 
 ## 微信群
