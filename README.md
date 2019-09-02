@@ -31,7 +31,7 @@ mynlp多个功能被划分在不同的模块中，下面演示分词模块：
 
 GRADLE
 ```
-    compile 'com.mayabot.mynlp:mynlp-segment:3.0.0'
+compile 'com.mayabot.mynlp:mynlp-segment:3.0.0'
 ```
 或者MAVEN
 ```xml
