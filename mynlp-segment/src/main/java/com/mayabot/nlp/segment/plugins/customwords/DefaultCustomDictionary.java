@@ -65,9 +65,10 @@ public class DefaultCustomDictionary implements CustomDictionary {
         TreeMap<String, Integer> map = new TreeMap<>();
 
         for (String url : resourceUrls) {
-            NlpResource resource = mynlp.loadResource(url);
+            NlpResource resource = mynlp.tryLoadResource(url);
 
             if (resource == null) {
+                logger.warn("miss resource "+url);
                 continue;
             }
 
