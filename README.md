@@ -154,3 +154,11 @@ System.out.println(sentence.toList());
 mynlp项目参考了以下项目：
 - [HanLP](https://github.com/hankcs/HanLP)
 - [ansj_seg](https://github.com/NLPchina/ansj_seg)
+
+
+## 计划
+
+### 跨平台
+- Kotlin多平台特性,为 Android、iOS、Linux、Windows、 Mac支持
+- 跨平台动态库文件
+- 为Python RUST 语言提供支持接口
