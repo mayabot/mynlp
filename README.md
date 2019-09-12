@@ -8,7 +8,7 @@
 
 [**更多使用介绍阅读Wiki文档**](https://github.com/mayabot/mynlp/wiki/Home)
 
-**强烈需要Star人气，如果你认可MYNLP，欢迎CLONE、FORK、ISSUE，请STAR鼓励一下 ：）**
+**如果你认可MYNLP，欢迎CLONE、FORK、ISSUE，请STAR鼓励一下 ：）**
 
 mynlp是一个开源高性能、模块化、可扩展的中文NLP工具包。
 
