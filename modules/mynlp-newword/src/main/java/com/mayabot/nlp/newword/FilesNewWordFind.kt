@@ -4,6 +4,12 @@ import java.io.File
 import java.nio.charset.Charset
 import java.util.*
 
+fun main() {
+    val x = FilesNewWordFind(File("data.work/newword/data-shanghai"))
+
+    x.runSaveToFile(File("data.work/newword/out.csv"))
+}
+
 /**
  * 扫描指定文件夹下面的所有文本文件，计算发现的新词
  *
@@ -26,11 +32,11 @@ class FilesNewWordFind(
         val out = file.bufferedWriter(charset)
         out.use {
             if (head) {
-                it.write("Word,WordLen,Score,Freq,DocFreq,Freq/DocFreq,Idf,Mi,AvgMi,Entropy")
+                it.write("Word,WordLen,Score,Freq,DocFreq,Freq/DocFreq,Idf,Mi,AvgMi,Entropy,le,re")
                 it.newLine()
             }
             result.forEach {
-                out.write("${it.word},${it.len},${String.format("%.2f", it.score)},${it.freq},${it.docFreq},${it.freq.toFloat() / it.docFreq},${it.idf},${it.mi},${it.avg_mi},${it.entropy}")
+                out.write("${it.word},${it.len},${String.format("%.2f", it.score)},${it.freq},${it.docFreq},${it.freq.toFloat() / it.docFreq},${it.idf},${it.mi},${it.avg_mi},${it.entropy},${it.le},${it.re}")
                 out.newLine()
             }
         }
@@ -78,7 +84,7 @@ class FilesNewWordFind(
                 }
             }
         }
-        engine.finishSecond()
+        engine.endSecond()
         val t4 = System.currentTimeMillis()
         if (verbose) println("第二轮扫描耗时 ${t4 - t3} ms")
 

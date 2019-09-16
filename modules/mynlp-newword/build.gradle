@@ -6,7 +6,10 @@ description = '高性能新词发现'
 
 
 dependencies {
-    compile project(":mynlp-segment")
+    compile (project(":mynlp-segment")) {
+        exclude module:'mynlp-resource-pos'
+        exclude module:'mynlp-resource-ner'
+    }
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
     compile group: 'com.carrotsearch', name: 'hppc', version: '0.7.3'
     testCompile 'junit:junit:4.12'
