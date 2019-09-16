@@ -17,14 +17,11 @@ import java.util.TreeMap;
  */
 public abstract class BaseTransformDictionary {
 
-    public static final String rsVersion = "1.0.0";
-
     public abstract TreeMap<String, String> loadDictionary();
 
-    AhoCorasickDoubleArrayTrie<String> trie;
+    private AhoCorasickDoubleArrayTrie<String> trie;
 
-
-    TreeMap<String, String> loadFromResouce(String resourceName) {
+    TreeMap<String, String> loadFromResource(String resourceName) {
         TreeMap<String, String> treeMap = new TreeMap<>();
 
         try {

@@ -11,6 +11,8 @@ public class TransformService {
 
     private static Simplified2Traditional simplified2Traditional;
 
+    private static Traditional2Simplified traditional2Simplified;
+
     /**
      * 简体转换为繁体
      *
@@ -33,8 +35,6 @@ public class TransformService {
         return simplified2Traditional().transform(text);
     }
 
-
-    private static Traditional2Simplified traditional2Simplified;
 
     /**
      * 简体转换为繁体
