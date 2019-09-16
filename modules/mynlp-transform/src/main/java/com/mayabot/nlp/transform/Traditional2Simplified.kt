@@ -1,7 +1,7 @@
-package com.mayabot.nlp.transform;
+package com.mayabot.nlp.transform
 
-import javax.inject.Singleton;
-import java.util.TreeMap;
+import javax.inject.Singleton
+import java.util.TreeMap
 
 /**
  * 繁体转简体的词典
@@ -9,15 +9,14 @@ import java.util.TreeMap;
  * @author jimichan
  */
 @Singleton
-public class Traditional2Simplified extends BaseTransformDictionary {
+class Traditional2Simplified : BaseTransformDictionary() {
 
-    public static final String rsName = "ts-dict/t2s.txt";
-
-    public Traditional2Simplified() {
+    override fun loadDictionary(): TreeMap<String, String> {
+        return loadFromResource(RS_NAME)
     }
 
-    @Override
-    public TreeMap<String, String> loadDictionary() {
-        return loadFromResouce(rsName);
+    companion object {
+
+        private val RS_NAME = "ts-dict/t2s.txt"
     }
 }
