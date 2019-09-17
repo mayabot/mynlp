@@ -6,7 +6,35 @@
 
 ## 一个高性能、模块化、可扩展的中文NLP工具包
 
-[**更多使用介绍阅读Wiki文档**](https://github.com/mayabot/mynlp/wiki/Home)
+[**Wiki文档**](https://github.com/mayabot/mynlp/wiki/Home)
+
+* [首页](https://github.com/mayabot/mynlp/wiki/Home)
+* [Lexer](https://github.com/mayabot/mynlp/wiki/lexer)
+  * [Lexer基础架构](https://github.com/mayabot/mynlp/wiki/lexer)
+  * 基础分词算法
+    * [CORE分词](https://github.com/mayabot/mynlp/wiki/Core)
+    * [感知机分词](https://github.com/mayabot/mynlp/wiki/CWS)
+    * [原子分词](https://github.com/mayabot/mynlp/wiki/AtomSplitAlgorithm)
+  * [Wordnet & Path](https://github.com/mayabot/mynlp/wiki/wordnet)
+  * [词性分析](https://github.com/mayabot/mynlp/wiki/POS)
+  * [人名识别](https://github.com/mayabot/mynlp/wiki/PersonName)
+  * [NER命名实体识别](https://github.com/mayabot/mynlp/wiki/NER)
+  * [自定义词典](https://github.com/mayabot/mynlp/wiki/CustomDict)
+  * [分词纠错](https://github.com/mayabot/mynlp/wiki/correction)
+  * [收集器与索引分词](https://github.com/mayabot/mynlp/wiki/index)
+  * [词典和模型资源](https://github.com/mayabot/mynlp/wiki/resources)
+  * [自定义分词粒度](https://github.com/mayabot/mynlp/wiki/自定义分词粒度)
+* [ElasticSearch插件](https://github.com/mayabot/mynlp/wiki/elasticsearch)
+---
+* [感知机](https://github.com/mayabot/mynlp/wiki/perceptron)
+* [文本分类 & fastText](https://github.com/mayabot/mynlp/wiki/classification)
+* [拼音转换](https://github.com/mayabot/mynlp/wiki/Pinyin)
+---
+* [Guice和Mynlp设置](https://github.com/mayabot/mynlp/wiki/system)
+* [日志](https://github.com/mayabot/mynlp/wiki/Logger)
+* [资源加载器](https://github.com/mayabot/mynlp/wiki/loader)
+
+
 
 **如果你认可MYNLP，欢迎CLONE、FORK、ISSUE，请STAR鼓励一下 ：）**
 
