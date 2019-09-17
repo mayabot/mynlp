@@ -2,9 +2,12 @@ dependencies{
     compileOnly ("org.elasticsearch:elasticsearch:6.0.0"){
         transitive = false
     }
-    compile project(":mynlp-segment")
+    compile (project(":mynlp-segment")){
+        exclude module :'mynlp-resource-pos'
+    }
 
     compile project(':modules:mynlp-lucene')
+
     compileOnly 'org.apache.lucene:lucene-core:5.0.0'
 }
 

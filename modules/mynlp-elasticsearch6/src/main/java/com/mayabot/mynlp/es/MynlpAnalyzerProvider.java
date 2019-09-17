@@ -29,7 +29,6 @@ public class MynlpAnalyzerProvider extends AbstractIndexAnalyzerProvider<Analyze
 
         factory.setType(type);
 
-        this.factory = factory;
     }
 
     @Override
@@ -37,7 +36,7 @@ public class MynlpAnalyzerProvider extends AbstractIndexAnalyzerProvider<Analyze
         return AccessController.doPrivileged(new PrivilegedAction<Analyzer>() {
             @Override
             public Analyzer run() {
-                return new MynlpAnalyzer(new MynlpTokenizer(factory.build()));
+                return new MynlpAnalyzer(new MynlpTokenizer(factory.build(),factory.getMode()));
             }
         });
 

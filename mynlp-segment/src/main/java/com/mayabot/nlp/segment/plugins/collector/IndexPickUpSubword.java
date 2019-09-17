@@ -29,16 +29,29 @@ public class IndexPickUpSubword implements WordTermCollector.PickUpSubword {
 
             List<WordTerm> list = new ArrayList<>();
 
+            int lastMaxPoint = term.offset - 1;
+
             for (int i = term.offset; i < to; i++) {
                 VertexRow row = wordnet.getRow(i);
 
                 for (Vertex small = row.first(); small != null; small = small.next()) {
-                    if (small.length >= minWordLength && i + small.length() <= lastIndex && small.length != term.length()) {
+                    if(small.length == term.length()){
+                        continue;
+                    }
 
+                    if (i + small.length() <= lastIndex) {
                         WordTerm smallterm = new WordTerm(small.realWord(), small.nature, small.getRowNum());
 
-                        list.add(smallterm);
+                        if (small.length >= minWordLength ||
+                                (i > lastMaxPoint && (small.next() == null||small.next().length == term.length()))
+                        ) {
+                            list.add(smallterm);
+                            int lp = i + small.length - 1;
+                            if(lp>lastMaxPoint) {lastMaxPoint = lp;}
+                        }
+
                     }
+
                 }
             }
             if (!list.isEmpty()) {
