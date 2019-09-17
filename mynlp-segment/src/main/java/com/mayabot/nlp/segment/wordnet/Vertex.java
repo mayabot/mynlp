@@ -208,6 +208,7 @@ public class Vertex implements WordAndNature {
         return realWord;
     }
 
+
     public int offset() {
         return vertexRow.rowNum;
     }

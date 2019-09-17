@@ -28,6 +28,7 @@ import com.mayabot.nlp.segment.wordnet.Wordpath;
 import com.mayabot.nlp.utils.Characters;
 import com.mayabot.nlp.utils.StringUtils;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -57,6 +58,8 @@ public class PipelineLexer implements Lexer {
      */
     private WordpathProcessor[] pipeline;
 
+    private boolean keepChar = false;
+
     public static PipelineLexerBuilder builder() {
         return new PipelineLexerBuilder();
     }
@@ -65,12 +68,14 @@ public class PipelineLexer implements Lexer {
                   WordpathProcessor[] pipeline,
                   BestPathAlgorithm bestPathAlgorithm,
                   WordTermCollector termCollector,
-                  List<CharNormalize> charNormalizes) {
+                  List<CharNormalize> charNormalizes,
+                  boolean keepChar) {
         this.initer = initer.toArray(new WordSplitAlgorithm[0]);
         this.pipeline = pipeline;
         this.bestPathAlgorithm = bestPathAlgorithm;
         this.collector = termCollector;
         this.charNormalizes = charNormalizes.toArray(new CharNormalize[0]);
+        this.keepChar = keepChar;
 
         Preconditions.checkNotNull(bestPathAlgorithm);
         Preconditions.checkNotNull(this.initer);
@@ -79,8 +84,14 @@ public class PipelineLexer implements Lexer {
 
     @Override
     public void scan(char[] text, Consumer<WordTerm> consumer) {
+        char[] oriText = null;
 
         if (charNormalizes != null) {
+
+            if (keepChar) {
+                oriText = Arrays.copyOf(text,text.length);
+            }
+
             for (CharNormalize normalize : charNormalizes) {
                 normalize.normal(text);
             }
@@ -104,7 +115,7 @@ public class PipelineLexer implements Lexer {
         }
 
         //构建一个空的Wordnet对象
-        final Wordnet wordnet = new Wordnet(text);
+        final Wordnet wordnet = new Wordnet(oriText,text);
 
         for (WordSplitAlgorithm initializer : initer) {
             initializer.fill(wordnet);
