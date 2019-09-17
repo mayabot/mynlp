@@ -68,6 +68,14 @@ open class FluentLexerBuilder : LexerBuilder {
         return this
     }
 
+    /**
+     * 保持字符原样输出
+     */
+    fun keepOriCharOutput() : FluentLexerBuilder {
+        builder.setKeepOriCharOutput(true)
+        return this
+    }
+
     fun collector(): CollectorBlock {
         return CollectorBlock()
     }
@@ -149,6 +157,8 @@ open class FluentLexerBuilder : LexerBuilder {
             return this@FluentLexerBuilder
         }
     }
+
+
 }
 
 

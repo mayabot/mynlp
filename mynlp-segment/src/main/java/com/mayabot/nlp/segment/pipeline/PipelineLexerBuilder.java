@@ -46,6 +46,11 @@ public class PipelineLexerBuilder implements LexerBuilder {
     protected final Mynlp mynlp;
 
     /**
+     * 保持输出char不被规则化
+     */
+    private boolean keepOriCharOutput = false;
+
+    /**
      * 词图最优路径选择器
      */
     @NotNull
@@ -120,7 +125,8 @@ public class PipelineLexerBuilder implements LexerBuilder {
                 wordpathProcessors.toArray(new WordpathProcessor[0]),
                 bestPathAlgorithm,
                 termCollector,
-                Lists.newArrayList(this.charNormalizes));
+                Lists.newArrayList(this.charNormalizes),
+                keepOriCharOutput);
     }
 
     private boolean instanceOf(Object subObj, Class parent) {
@@ -364,4 +370,12 @@ public class PipelineLexerBuilder implements LexerBuilder {
         }
     }
 
+    public boolean isKeepOriCharOutput() {
+        return keepOriCharOutput;
+    }
+
+    public PipelineLexerBuilder setKeepOriCharOutput(boolean keepOriCharOutput) {
+        this.keepOriCharOutput = keepOriCharOutput;
+        return this;
+    }
 }

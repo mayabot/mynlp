@@ -58,8 +58,12 @@ public final class VertexRow implements Iterable<Vertex> {
         if (rowNum == -1 || length == 0) {
             return "";
         }
-        //FIXME 这里改成substring比较好，或者返回CharSeq 这里存在复制的问题
-        return new String(wordnet.charArray, rowNum, length);
+
+        if (wordnet.oriCharArray != null) {
+            return new String(wordnet.oriCharArray, rowNum, length);
+        }else{
+            return new String(wordnet.charArray, rowNum, length);
+        }
     }
 
     public Vertex getOrCrete(int length) {
