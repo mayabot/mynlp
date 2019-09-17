@@ -36,10 +36,9 @@ public class MynlpTokenizerFactory extends AbstractTokenizerFactory {
         return AccessController.doPrivileged(new PrivilegedAction<Tokenizer>() {
             @Override
             public Tokenizer run() {
-                return MynlpTokenizer.fromLexer(factory.build());
+                return new MynlpTokenizer(factory.build(), factory.getMode());
             }
         });
-
     }
 
 }

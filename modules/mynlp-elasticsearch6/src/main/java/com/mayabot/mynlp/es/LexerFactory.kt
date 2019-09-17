@@ -23,19 +23,15 @@ class LexerFactory {
 
     val mode: WordTermIterableMode // graph flatten
 
-    /**
-     * 分词纠错
-     */
-    var isCorrection = true
 
     constructor(settings: Settings) {
         filterPunctuaction = settings.getAsBoolean("filter-punctuation", true)
         filterStopword = settings.getAsBoolean("filter-stopword", false)
         subWord = settings.get("sub-word", "none") // smart index
         mode = when (settings.get("mode", "top").toLowerCase()) {
-            "top" -> WordTermIterableMode.TOP
-            "atom" -> WordTermIterableMode.ATOM
-            "overlap" -> WordTermIterableMode.Overlap
+            "top" -> WordTermIterableMode.TOP //复合词取大词
+            "atom" -> WordTermIterableMode.ATOM //复合词取原子词
+            "overlap" -> WordTermIterableMode.Overlap //同时输出大词和原子词
             else -> WordTermIterableMode.TOP
         }
         personName = settings.getAsBoolean("personName", settings.getAsBoolean("personname", true))
@@ -76,6 +72,7 @@ class LexerFactory {
                 } else if ("index" == subWord) {
                     cb.indexPickup()
                 }
+
                 cb.done()
             }
 

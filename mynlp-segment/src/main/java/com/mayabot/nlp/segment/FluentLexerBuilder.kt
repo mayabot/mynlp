@@ -110,6 +110,7 @@ open class FluentLexerBuilder : LexerBuilder {
                 collector.pickUpSubword = p
             } catch (e: Exception) {
                 Mynlps.logger.warn("企业版才可以调用这个方法", e)
+                throw e
             }
 
             return this
