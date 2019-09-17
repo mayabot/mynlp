@@ -67,7 +67,7 @@ compile 'com.mayabot.mynlp:mynlp-segment:3.0.0'
 <dependency>
   <groupId>com.mayabot.mynlp</groupId>
   <artifactId>mynlp-segment</artifactId>
-  <version>3.0.0</version>
+  <version>3.0.1</version>
 </dependency>
 ```
 
