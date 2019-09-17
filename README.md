@@ -8,7 +8,6 @@
 
 [**Wiki文档**](https://github.com/mayabot/mynlp/wiki/Home)
 
-* [首页](https://github.com/mayabot/mynlp/wiki/Home)
 * [Lexer](https://github.com/mayabot/mynlp/wiki/lexer)
   * [Lexer基础架构](https://github.com/mayabot/mynlp/wiki/lexer)
   * 基础分词算法
