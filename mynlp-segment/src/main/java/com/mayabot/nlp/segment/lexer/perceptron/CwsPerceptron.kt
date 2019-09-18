@@ -31,7 +31,6 @@ import com.mayabot.nlp.utils.CharNormUtils
 import java.io.File
 import java.io.InputStream
 import java.util.function.Consumer
-import kotlin.streams.toList
 
 /**
  * 用B M E S进行分词的感知机模型
@@ -249,8 +248,8 @@ object CWSPerceptronSample {
         // 解析语料库为数字化TrainSample
         allFiles.forEach { file ->
             file.useLines { lines ->
-                sampleList.addAll(lines.filter { it.isNotBlank() }.toList().parallelStream().map {
-                    CWSPerceptronSample.sentenceToSample(it, featureSet)
+                sampleList.addAll(lines.asSequence().filter { it.isNotBlank() }.map {
+                    sentenceToSample(it, featureSet)
                 }.toList())
             }
         }
