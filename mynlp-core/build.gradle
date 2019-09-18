@@ -18,7 +18,7 @@ description = "mynlp的基础数据结构和IOC容器"
 
 dependencies {
     // kotlin core lib
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+    compile "org.jetbrains.kotlin:kotlin-stdlib"
 
     // guice
     compile ('com.google.inject:guice:4.1.0:no_aop') {
