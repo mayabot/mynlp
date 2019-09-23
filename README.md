@@ -37,6 +37,7 @@
 
 **如果你认可MYNLP，欢迎CLONE、FORK、ISSUE，请STAR鼓励一下 ：）**
 
+
 mynlp是一个开源高性能、模块化、可扩展的中文NLP工具包。
 
 ### 设计目标：
@@ -106,6 +107,9 @@ System.out.println(sentence.toList());
 [mynlp/x, 是/v, mayabot/x, 开源/v, 的/u, 中文/nz, nlp/x, 工具包/n, 。/w]
 ```
 
+## 添加微信公众号：加入微信交流群、获取最新NLP相关文章和动态。
+
+![weixin](https://cdn.mayabot.com/mynlp/mayajimi.jpg)
 
 ## 包含功能和资源如下：
 - 中文分词
@@ -170,9 +174,8 @@ System.out.println(sentence.toList());
             后获得的分词语料库。
 
 
-## 微信群
-
-如有疑问或者需要交流，可加我微信`jimichan`,带你入交流群。
+## 微信公众号
+未开放
 
 ## 声明和致谢
 早期在使用ansj和hanlp过程中，遇到很多问题无法解决和扩展，mynlp开发之初借鉴了算法实现，通过多次迭代和项目需求驱动实践，逐渐发展为目前自有的架构体系。
