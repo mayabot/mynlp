@@ -1,8 +1,7 @@
 package com.mayabot.nlp.segment.plugins.ner;
 
 import com.google.common.collect.Lists;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
+import com.mayabot.nlp.injector.Singleton;
 import com.mayabot.nlp.segment.Nature;
 import com.mayabot.nlp.segment.WordpathProcessor;
 import com.mayabot.nlp.segment.common.BaseSegmentComponent;
@@ -22,8 +21,7 @@ public class NerProcessor extends BaseSegmentComponent implements WordpathProces
 
     private final PerceptronNerService service;
 
-    @Inject
-    NerProcessor(
+    public NerProcessor(
             PerceptronNerService perceptronPosService
     ) {
         super(LEVEL5);
@@ -43,23 +41,24 @@ public class NerProcessor extends BaseSegmentComponent implements WordpathProces
         List<String> tagS = service.getPerceptron().decodeVertexList(vertices);
 
         int from = -1;
-        int lenght = 0;
+        int length = 0;
         for (int i = 0; i < vertices.size(); i++) {
             String tag = tagS.get(i);
             Vertex vertex = vertices.get(i);
 
             if ("O".equals(tag) || "S".equals(tag)) {
                 from = -1;
-                lenght = 0;
+                length = 0;
             } else if (tag.startsWith("B-")) {
                 from = vertex.offset();
-                lenght += vertex.length;
+                length += vertex.length;
             } else if (tag.startsWith("M-")) {
-                lenght += vertex.length;
+                length += vertex.length;
             } else if (tag.startsWith("E-")) {
-                lenght += vertex.length;
+                length += vertex.length;
                 if (from != -1) {
-                    Vertex x = wordPath.combine(from, lenght);
+
+                    Vertex x = wordPath.combine(from, length);
 
                     if ("E-nt".equals(tag)) {
                         x.nature = Nature.nt;
@@ -68,6 +67,10 @@ public class NerProcessor extends BaseSegmentComponent implements WordpathProces
                         x.nature = Nature.ns;
                     }
                 }
+
+                //连续出现BMEBME
+                from = -1;
+                length = 0;
             }
         }
 
