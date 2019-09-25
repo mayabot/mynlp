@@ -21,6 +21,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
+import com.mayabot.nlp.segment.Nature;
 
 import java.util.BitSet;
 import java.util.Iterator;
@@ -99,11 +100,15 @@ public class Wordpath {
                 Vertex theVertex = wordnet.getVertex(from, len);
 
                 if (theVertex == null) {
-                    //System.out.println(wordnet.toMoreString());
+                   // System.out.println(wordnet.toMoreString());
                     //@ RepairWordnetProcessor 这里去修复了这个错误，到时要在之前去调用
-                    logger.error("row: " + from + " len " + len + " select is null");
-                    throw new IllegalStateException("row: " + from + " len " + len + " select is null");
+//                    logger.error("row: " + from + " len " + len + " select is null"
+//                            +"\nInput ");
+                    Vertex tmp = wordnet.put(from,len);
+                    tmp.nature = Nature.x;
 
+                    return tmp;
+//                    throw new IllegalStateException("row: " + from + " len " + len + " select is null");
                 }
 
                 return theVertex;
