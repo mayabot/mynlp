@@ -135,9 +135,6 @@ class TargetClassFactory(val clazz: Class<*>) : BeanFactory {
             throw java.lang.RuntimeException("$clazz must not be interface")
         }
 
-
-        println("Target class " + clazz)
-
         if (constructors.size > 1) {
             throw RuntimeException("${clazz} has more Constructors")
         }

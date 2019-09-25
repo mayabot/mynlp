@@ -16,7 +16,6 @@
 
 package com.mayabot.nlp.common;
 
-import com.google.common.collect.Lists;
 import com.mayabot.nlp.utils.Characters;
 
 import java.util.ArrayList;
@@ -112,7 +111,7 @@ public class TokenizerSplitter {
 
     public static List<String> parts(String string) {
         TokenizerSplitter p = create(string);
-        ArrayList<String> list = Lists.newArrayList();
+        ArrayList<String> list = new ArrayList<>();
         while (p.next()) {
             list.add((String) p.group());
         }

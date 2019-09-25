@@ -35,7 +35,6 @@
  */
 package com.mayabot.nlp.collection.dat;
 
-import com.google.common.collect.Lists;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -63,7 +62,7 @@ public class DoubleArrayTrie {
     }
 
     public DoubleArrayTrie(TreeSet<String> set) {
-        this(Lists.newArrayList(set));
+        this(new ArrayList<>(set));
     }
 
     /**

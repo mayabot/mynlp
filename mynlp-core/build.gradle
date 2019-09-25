@@ -19,10 +19,8 @@ description = "mynlp的基础数据结构和IOC容器"
 dependencies {
     // kotlin core lib
     compile "org.jetbrains.kotlin:kotlin-stdlib"
-    compile "org.jetbrains.kotlin:kotlin-reflect"
 
     compile group: 'com.google.guava', name: 'guava', version: '19.0'
-
 
     // logs
     compileOnly(group: "org.slf4j", name: "slf4j-api", version: "1.7.21")
