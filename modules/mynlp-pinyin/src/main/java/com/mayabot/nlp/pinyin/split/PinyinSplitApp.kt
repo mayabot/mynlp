@@ -1,7 +1,7 @@
 package com.mayabot.nlp.pinyin.split
 
-import com.google.inject.Singleton
 import com.mayabot.nlp.Mynlps
+import com.mayabot.nlp.injector.Singleton
 import com.mayabot.nlp.perceptron.Perceptron
 import com.mayabot.nlp.perceptron.PerceptronModel
 import com.mayabot.nlp.utils.CharNormUtils

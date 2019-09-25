@@ -1,8 +1,7 @@
 package com.mayabot.nlp.segment.plugins.pos;
 
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
 import com.mayabot.nlp.MynlpEnv;
+import com.mayabot.nlp.injector.Singleton;
 import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
 import com.mayabot.nlp.resources.NlpResource;
@@ -28,7 +27,6 @@ public class PerceptronPosService {
 
     static InternalLogger logger = InternalLoggerFactory.getInstance(PerceptronPosService.class);
 
-    @Inject
     public PerceptronPosService(MynlpEnv mynlp) throws Exception {
         NlpResource parameterResource = mynlp.loadResource("pos-model/parameter.bin");
         NlpResource featureResource = mynlp.loadResource("pos-model/feature.dat");

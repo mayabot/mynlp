@@ -1,13 +1,11 @@
 package com.mayabot.nlp.segment.reader
 
-import com.google.inject.ImplementedBy
-import com.google.inject.Inject
-import com.google.inject.Singleton
 import com.mayabot.nlp.MynlpEnv
 import com.mayabot.nlp.Mynlps
 import com.mayabot.nlp.collection.dat.DoubleArrayTrieMap
+import com.mayabot.nlp.injector.ImplementedBy
+import com.mayabot.nlp.injector.Singleton
 import java.util.*
-import kotlin.collections.HashSet
 
 const val StopWordDictPath = "stopwords.txt"
 
@@ -78,8 +76,7 @@ class DefaultStopWordDict(set: Set<String>) : StopWordDict {
  * @author jimichan
  */
 @Singleton
-class SystemStopWordDict
-@Inject constructor(val env: MynlpEnv) : StopWordDict {
+class SystemStopWordDict constructor(val env: MynlpEnv) : StopWordDict {
 
     private val stopDict = DefaultStopWordDict(loadStopword())
 

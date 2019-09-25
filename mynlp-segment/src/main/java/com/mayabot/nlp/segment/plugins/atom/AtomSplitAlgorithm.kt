@@ -1,11 +1,10 @@
 package com.mayabot.nlp.segment.plugins.atom
 
-import com.google.inject.ImplementedBy
-import com.google.inject.Inject
-import com.google.inject.Singleton
 import com.mayabot.nlp.Mynlps
 import com.mayabot.nlp.collection.dat.DoubleArrayTrieStringIntMap
 import com.mayabot.nlp.collection.dat.FastDatCharSet
+import com.mayabot.nlp.injector.ImplementedBy
+import com.mayabot.nlp.injector.Singleton
 import com.mayabot.nlp.segment.Nature
 import com.mayabot.nlp.segment.WordSplitAlgorithm
 import com.mayabot.nlp.segment.common.BaseSegmentComponent
@@ -41,7 +40,7 @@ class DefaultAtomSplitAlgorithmTemplateProvider : AtomSplitAlgorithmTemplateProv
  * @author jimichan
  */
 @Singleton
-class AtomSplitAlgorithm @Inject constructor(
+class AtomSplitAlgorithm(
         templateProvider: AtomSplitAlgorithmTemplateProvider)
     : BaseSegmentComponent(LEVEL2), WordSplitAlgorithm {
 

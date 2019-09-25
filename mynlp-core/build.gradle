@@ -19,12 +19,10 @@ description = "mynlp的基础数据结构和IOC容器"
 dependencies {
     // kotlin core lib
     compile "org.jetbrains.kotlin:kotlin-stdlib"
+    compile "org.jetbrains.kotlin:kotlin-reflect"
 
-    // guice
-    compile ('com.google.inject:guice:4.1.0:no_aop') {
-        exclude module: 'aopalliance'
-    }
-    compile 'com.google.code.findbugs:jsr305:3.0.2'
+    compile group: 'com.google.guava', name: 'guava', version: '19.0'
+
 
     // logs
     compileOnly(group: "org.slf4j", name: "slf4j-api", version: "1.7.21")
@@ -35,6 +33,5 @@ dependencies {
     // Test
     testCompile group: 'junit', name: 'junit', version: '4.12'
     testCompile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
-    
 
 }

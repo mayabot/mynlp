@@ -1,6 +1,5 @@
 package com.mayabot.nlp.segment.lexer.perceptron;
 
-import com.google.inject.Inject;
 import com.mayabot.nlp.segment.Nature;
 import com.mayabot.nlp.segment.WordSplitAlgorithm;
 import com.mayabot.nlp.segment.common.BaseSegmentComponent;
@@ -22,7 +21,6 @@ public class PerceptronCwsSplitAlgorithm extends BaseSegmentComponent implements
     private CwsService service;
     private CoreDictionaryImpl coreDictionary;
 
-    @Inject
     public PerceptronCwsSplitAlgorithm(CwsService service, CoreDictionaryImpl coreDictionary) {
         super(LEVEL1);
         this.service = service;

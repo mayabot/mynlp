@@ -65,7 +65,19 @@ public class StringUtils {
     }
 
     public static boolean isWhiteSpace(String word) {
-        return isWhiteSpace(word.charAt(0));
+        int len = word.length();
+        if (len == 0) {
+            return true;
+        }else if (len == 1) {
+            return isWhiteSpace(word.charAt(0));
+        }else if (len == 2){
+            return isWhiteSpace(word.charAt(0)) && isWhiteSpace(word.charAt(0));
+        }else {
+            return isWhiteSpace(word.charAt(0)) &&
+                    isWhiteSpace(word.charAt(len/2) )
+                            && isWhiteSpace(word.charAt(len-1));
+        }
+
     }
 
 }

@@ -19,11 +19,10 @@ package com.mayabot.nlp.pinyin
 import com.google.common.collect.Lists
 import com.mayabot.nlp.MynlpEnv
 import com.mayabot.nlp.SettingItem.string
+import com.mayabot.nlp.injector.Singleton
 import com.mayabot.nlp.pinyin.model.Pinyin
 import com.mayabot.nlp.resources.NlpResource
 import java.util.*
-import javax.inject.Inject
-import javax.inject.Singleton
 
 /**
  * 拼音的词典
@@ -31,7 +30,7 @@ import javax.inject.Singleton
  * @author jimichan
  */
 @Singleton
-class PinyinService @Inject constructor(private val mynlp: MynlpEnv) : BasePinyinDictionary() {
+class PinyinService constructor(private val mynlp: MynlpEnv) : BasePinyinDictionary() {
 
     init {
         rebuild()

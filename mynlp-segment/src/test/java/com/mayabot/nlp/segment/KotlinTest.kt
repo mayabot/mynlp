@@ -1,7 +1,9 @@
 package com.mayabot.nlp.segment
 
+import com.mayabot.nlp.Mynlps
 import com.mayabot.nlp.segment.kotlin.lexer
 import com.mayabot.nlp.segment.kotlin.segment
+import com.mayabot.nlp.segment.lexer.core.CoreDictionary
 
 
 fun main() {

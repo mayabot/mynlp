@@ -23,10 +23,9 @@ import com.google.common.collect.TreeBasedTable;
 import com.google.common.hash.Hasher;
 import com.google.common.hash.Hashing;
 import com.google.common.primitives.Ints;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
 import com.mayabot.nlp.MynlpEnv;
 import com.mayabot.nlp.common.matrix.CSRSparseMatrix;
+import com.mayabot.nlp.injector.Singleton;
 import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
 import com.mayabot.nlp.resources.NlpResource;
@@ -59,7 +58,6 @@ public class BiGramTableDictionaryImpl extends BaseNlpResourceExternalizable imp
     @Nullable
     private final CoreDictionaryImpl coreDictionary;
 
-    @Inject
     public BiGramTableDictionaryImpl(CoreDictionaryImpl coreDictionary,
                                      MynlpEnv mynlp,
                                      CoreDictPathWrap coreDictPathWrap) throws Exception {
