@@ -15,8 +15,8 @@
  */
 package com.mayabot.nlp;
 
-import com.google.common.collect.Lists;
 import com.mayabot.nlp.common.GuavaKt;
+import com.mayabot.nlp.common.Lists;
 import com.mayabot.nlp.injector.AbstractModule;
 import com.mayabot.nlp.injector.Injector;
 import com.mayabot.nlp.injector.Module;

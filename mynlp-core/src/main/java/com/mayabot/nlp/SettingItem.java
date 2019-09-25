@@ -16,7 +16,6 @@
 
 package com.mayabot.nlp;
 
-import com.google.common.primitives.Ints;
 
 import java.util.function.Function;
 
@@ -54,7 +53,7 @@ public class SettingItem<T> {
         SettingItem<Integer> setting = new SettingItem<>();
         setting.key = key;
         setting.defaultValue = value + "";
-        setting.parse = Ints::tryParse;
+        setting.parse = Integer::parseInt;
         return setting;
     }
 

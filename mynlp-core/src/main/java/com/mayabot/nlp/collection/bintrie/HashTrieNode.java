@@ -16,10 +16,9 @@
 
 package com.mayabot.nlp.collection.bintrie;
 
-
-import com.google.common.collect.Lists;
 import com.mayabot.nlp.hppc.CharObjectHashMap;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -49,7 +48,7 @@ public class HashTrieNode<T> extends AbstractTrieNode<T> {
             return null;
         }
 
-        return Lists.newArrayList(map.values());
+        return new ArrayList<>(map.values());
     }
 
     /**

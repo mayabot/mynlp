@@ -35,13 +35,11 @@
  */
 package com.mayabot.nlp.collection.dat;
 
-import com.google.common.collect.Lists;
-import com.google.common.primitives.Ints;
-
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.TreeMap;
 
 import static com.mayabot.nlp.utils.DataInOutputUtils.readIntArray;
@@ -92,8 +90,14 @@ public class DoubleArrayTrieStringIntMap {
     }
 
     public DoubleArrayTrieStringIntMap(TreeMap<String, Integer> map) {
-        ArrayList<String> keys = Lists.newArrayList(map.keySet());
-        int[] values = Ints.toArray(Lists.newArrayList(map.values()));
+        ArrayList<String> keys = new ArrayList<>(map.keySet());
+        int[] values = new int[map.size()];
+        Collection<Integer> values1 = map.values();
+        int c = 0;
+        for(Integer integer : values1){
+            values[c++] = integer.intValue();
+        }
+
         this.dat = new DoubleArrayTrie(keys);
         this.values = values;
     }
