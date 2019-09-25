@@ -1,12 +1,11 @@
 package com.mayabot.nlp.segment.lexer.perceptron
 
-import com.google.inject.Inject
-import com.google.inject.Singleton
 import com.mayabot.nlp.MynlpEnv
+import com.mayabot.nlp.injector.Singleton
 
 @Singleton
 class CwsPatch
-@Inject
+
 constructor(val mynlpEnv: MynlpEnv) {
 
     val examples = ArrayList<String>()

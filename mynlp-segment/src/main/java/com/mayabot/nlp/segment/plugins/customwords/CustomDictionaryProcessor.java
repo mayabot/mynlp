@@ -16,7 +16,6 @@
 package com.mayabot.nlp.segment.plugins.customwords;
 
 import com.google.common.collect.ImmutableList;
-import com.google.inject.Inject;
 import com.mayabot.nlp.collection.dat.DoubleArrayTrieStringIntMap;
 import com.mayabot.nlp.segment.WordpathProcessor;
 import com.mayabot.nlp.segment.common.BaseSegmentComponent;
@@ -36,7 +35,6 @@ public class CustomDictionaryProcessor extends BaseSegmentComponent implements W
 
     private CustomDictionary dictionary;
 
-    @Inject
     public CustomDictionaryProcessor(CustomDictionary dictionary) {
         super(LEVEL2);
         this.dictionary = dictionary;

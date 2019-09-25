@@ -1,6 +1,6 @@
 package com.mayabot.nlp.transform
 
-import javax.inject.Singleton
+import com.mayabot.nlp.injector.Singleton
 import java.util.TreeMap
 
 /**

@@ -15,14 +15,15 @@
  */
 package com.mayabot.nlp.segment
 
-import com.google.inject.Binder
-import com.google.inject.Module
 import com.mayabot.nlp.MynlpEnv
+import com.mayabot.nlp.injector.AbstractModule
 
-class SegmentModule(private val env: MynlpEnv) : Module {
+class SegmentModule(private val env: MynlpEnv) : AbstractModule() {
 
-    override fun configure(binder: Binder?) {
+    override fun configure() {
+
     }
+
 
 }
 

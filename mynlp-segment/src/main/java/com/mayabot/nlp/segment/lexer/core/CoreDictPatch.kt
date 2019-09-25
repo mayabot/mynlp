@@ -1,7 +1,8 @@
 package com.mayabot.nlp.segment.lexer.core
 
-import com.google.inject.Inject
-import com.google.inject.Singleton
+import com.mayabot.nlp.injector.Singleton
+import org.jetbrains.annotations.Nullable
+
 
 interface CoreDictPatch {
     fun dictVersion(): String
@@ -17,8 +18,9 @@ data class BiGram(
         val wordA: String, val wordB: String, val count: Int
 )
 
+//FIXME  @Nullable自己实现的，需要注意这个注解，运行注入空，默认不行
 @Singleton
 class CoreDictPathWrap {
-    @field:Inject(optional = true)
+    @Nullable
     val coreDictPatch: CoreDictPatch? = null
 }

@@ -16,11 +16,10 @@
 
 package com.mayabot.nlp.segment.plugins.customwords;
 
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
 import com.mayabot.nlp.MynlpEnv;
 import com.mayabot.nlp.SettingItem;
 import com.mayabot.nlp.collection.dat.DoubleArrayTrieStringIntMap;
+import com.mayabot.nlp.injector.Singleton;
 import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
 import com.mayabot.nlp.resources.NlpResource;
@@ -50,7 +49,6 @@ public class DefaultCustomDictionary implements CustomDictionary {
     public static final SettingItem<String> dictPathSetting = SettingItem.string(
             "custom.dictionary.path", "custom-dict/CustomDictionary.txt");
 
-    @Inject
     public DefaultCustomDictionary(MynlpEnv mynlp) throws Exception {
 
         List<String> resourceUrls = mynlp.getSettings().getAsList(dictPathSetting);

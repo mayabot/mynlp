@@ -20,18 +20,17 @@ import com.google.common.base.Charsets;
 import com.google.common.base.Splitter;
 import com.google.common.hash.Hasher;
 import com.google.common.hash.Hashing;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
 import com.mayabot.nlp.MynlpEnv;
 import com.mayabot.nlp.collection.dat.DoubleArrayTrieStringIntMap;
+import com.mayabot.nlp.injector.Singleton;
 import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
 import com.mayabot.nlp.resources.NlpResource;
 import com.mayabot.nlp.resources.UseLines;
 import com.mayabot.nlp.utils.CharSourceLineReader;
 import kotlin.Pair;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
@@ -67,7 +66,6 @@ public class CoreDictionaryImpl extends BaseNlpResourceExternalizable implements
     private @Nullable
     CoreDictPatch coreDictPatch;
 
-    @Inject
     public CoreDictionaryImpl(MynlpEnv env, CoreDictPathWrap coreDictPathWrap) throws Exception {
         super(env);
         this.env = env;

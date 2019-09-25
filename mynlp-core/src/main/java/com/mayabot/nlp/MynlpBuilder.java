@@ -16,11 +16,10 @@
 package com.mayabot.nlp;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.inject.AbstractModule;
-import com.google.inject.Guice;
-import com.google.inject.Injector;
-import com.google.inject.Module;
+import com.mayabot.nlp.common.GuavaKt;
+import com.mayabot.nlp.injector.AbstractModule;
+import com.mayabot.nlp.injector.Injector;
+import com.mayabot.nlp.injector.Module;
 import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
 import com.mayabot.nlp.resources.ClasspathNlpResourceFactory;
@@ -35,13 +34,10 @@ import java.lang.reflect.Constructor;
 import java.nio.file.Paths;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import static com.mayabot.nlp.injector.InjectorKt.createInjector;
 
 /**
  * Mynlp构建器
@@ -63,11 +59,11 @@ public class MynlpBuilder {
      */
     private String cacheDir;
 
-    private ArrayList<NlpResourceFactory> resourceFactoryList = Lists.newArrayList();
+    private ArrayList<NlpResourceFactory> resourceFactoryList = new ArrayList<>();
 
     private Settings settings = Settings.defaultSystemSettings();
 
-    private Map<Class, Object> injectInstance = Maps.newHashMap();
+    private Map<Class, Object> injectInstance = new HashMap<>();
 
 
     /**
@@ -153,7 +149,7 @@ public class MynlpBuilder {
 
         modules.add(new AbstractModule() {
             @Override
-            protected void configure() {
+            public void configure() {
                 bind(MynlpEnv.class).toInstance(mynlpEnv);
                 injectInstance.forEach((k, v) -> bind(k).toInstance(v));
             }
@@ -162,7 +158,7 @@ public class MynlpBuilder {
         //加载模块，在配置文件中声明的
         modules.addAll(loadModules(mynlpEnv));
 
-        return Guice.createInjector(modules);
+        return createInjector(modules);
     }
 
     private List<Module> loadModules(MynlpEnv mynlp) {
@@ -254,7 +250,7 @@ public class MynlpBuilder {
     }
 
     private void createParentDirs(File file) throws IOException {
-        checkNotNull(file);
+        GuavaKt.checkNotNull(file);
         File parent = file.getCanonicalFile().getParentFile();
         if (parent == null) {
             /*

@@ -1,7 +1,6 @@
 package com.mayabot.nlp.segment.plugins.personname;
 
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
+import com.mayabot.nlp.injector.Singleton;
 import com.mayabot.nlp.segment.Nature;
 import com.mayabot.nlp.segment.WordSplitAlgorithm;
 import com.mayabot.nlp.segment.common.BaseSegmentComponent;
@@ -21,7 +20,6 @@ public class PersonNameAlgorithm extends BaseSegmentComponent implements WordSpl
 
     private final PerceptronPersonNameService service;
 
-    @Inject
     public PersonNameAlgorithm(
             PerceptronPersonNameService service) {
         super(LEVEL3);

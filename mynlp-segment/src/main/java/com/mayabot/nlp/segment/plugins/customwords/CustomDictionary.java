@@ -15,8 +15,8 @@
  */
 package com.mayabot.nlp.segment.plugins.customwords;
 
-import com.google.inject.ImplementedBy;
 import com.mayabot.nlp.collection.dat.DoubleArrayTrieStringIntMap;
+import com.mayabot.nlp.injector.ImplementedBy;
 
 /**
  * 自定义词典结构.

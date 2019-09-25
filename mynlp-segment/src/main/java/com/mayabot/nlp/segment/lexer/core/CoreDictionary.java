@@ -1,7 +1,7 @@
 package com.mayabot.nlp.segment.lexer.core;
 
-import com.google.inject.ImplementedBy;
 import com.mayabot.nlp.collection.dat.DoubleArrayTrieStringIntMap.DATMapMatcherInt;
+import com.mayabot.nlp.injector.ImplementedBy;
 
 /**
  * @author jimichan

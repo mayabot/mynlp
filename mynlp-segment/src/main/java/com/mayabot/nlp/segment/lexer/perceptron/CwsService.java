@@ -1,9 +1,8 @@
 package com.mayabot.nlp.segment.lexer.perceptron;
 
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
 import com.mayabot.nlp.MynlpEnv;
 import com.mayabot.nlp.SettingItem;
+import com.mayabot.nlp.injector.Singleton;
 import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
 import com.mayabot.nlp.resources.NlpResource;
@@ -28,7 +27,6 @@ public class CwsService {
 
     static InternalLogger logger = InternalLoggerFactory.getInstance(PerceptronNerService.class);
 
-    @Inject
     public CwsService(MynlpEnv mynlp,
                       CwsPatch cwsPatch) throws Exception {
 

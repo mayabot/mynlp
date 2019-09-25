@@ -1,7 +1,7 @@
 package com.mayabot.nlp.transform
 
+import com.mayabot.nlp.injector.Singleton
 import java.util.*
-import javax.inject.Singleton
 
 /**
  * 简体转繁体的词典

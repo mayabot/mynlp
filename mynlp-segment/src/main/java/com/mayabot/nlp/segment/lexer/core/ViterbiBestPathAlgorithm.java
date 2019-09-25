@@ -17,8 +17,7 @@
 package com.mayabot.nlp.segment.lexer.core;
 
 import com.google.common.base.Preconditions;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
+import com.mayabot.nlp.injector.Singleton;
 import com.mayabot.nlp.segment.wordnet.*;
 
 /**
@@ -59,7 +58,6 @@ public final class ViterbiBestPathAlgorithm implements BestPathAlgorithm {
     private final double value4;
     private final double value5;
 
-    @Inject
     public ViterbiBestPathAlgorithm(BiGramTableDictionary coreBiGramTableDictionary,
                                     CoreDictionary coreDictionary) {
         this.coreBiGramTableDictionary = coreBiGramTableDictionary;

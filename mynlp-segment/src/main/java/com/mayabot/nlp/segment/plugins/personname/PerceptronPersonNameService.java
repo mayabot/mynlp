@@ -1,9 +1,8 @@
 package com.mayabot.nlp.segment.plugins.personname;
 
 import com.google.common.io.Files;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
 import com.mayabot.nlp.MynlpEnv;
+import com.mayabot.nlp.injector.Singleton;
 import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
 import com.mayabot.nlp.perceptron.FeatureSet;
@@ -26,7 +25,6 @@ public class PerceptronPersonNameService {
 
     static InternalLogger logger = InternalLoggerFactory.getInstance(PerceptronNerService.class);
 
-    @Inject
     public PerceptronPersonNameService(MynlpEnv mynlp) throws Exception {
 
         long t1 = System.currentTimeMillis();

@@ -1,7 +1,5 @@
 package com.mayabot.nlp.segment
 
-import com.google.inject.Key
-import com.google.inject.name.Names
 import com.mayabot.nlp.Mynlps
 import com.mayabot.nlp.segment.lexer.core.CoreDictionary
 import com.mayabot.nlp.segment.lexer.core.CoreDictionaryImpl
@@ -111,9 +109,7 @@ open class FluentLexerBuilder : LexerBuilder {
                 // 松散绑定name = smart的Bean，在企业版中提供
                 val p = Mynlps.get()
                         .injector
-                        .getInstance(
-                                Key.get(WordTermCollector.PickUpSubword::class.java
-                                        , Names.named("smart")))!!
+                        .getInstance(WordTermCollector.PickUpSubword::class.java,"smart")!!
                 block(p)
                 collector.pickUpSubword = p
             } catch (e: Exception) {

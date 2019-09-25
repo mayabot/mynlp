@@ -1,6 +1,7 @@
 package com.mayabot.nlp.segment.lexer.core;
 
-import com.google.inject.ImplementedBy;
+
+import com.mayabot.nlp.injector.ImplementedBy;
 
 /**
  * 查询词ID，两个接续ID中间的共现频率。
