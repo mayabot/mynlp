@@ -21,11 +21,13 @@ interface WordTermCollector {
     /**
      * 收集分词结构
      *
+     * @param txtChars  词图
+     * @param KeepChar  词图
      * @param wordnet  词图
      * @param wordPath 最后的WordPath路径
      * @param consumer 接受WordTerm的消费者
      */
-    fun collect(wordnet: Wordnet, wordPath: Wordpath, consumer: Consumer<WordTerm>)
+    fun collect(txtChars:CharArray?,wordnet: Wordnet, wordPath: Wordpath, consumer: Consumer<WordTerm>)
 
     var pickUpSubword: PickUpSubword?
 

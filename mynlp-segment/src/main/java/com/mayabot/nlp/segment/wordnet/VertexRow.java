@@ -59,11 +59,7 @@ public final class VertexRow implements Iterable<Vertex> {
             return "";
         }
 
-        if (wordnet.oriCharArray != null) {
-            return new String(wordnet.oriCharArray, rowNum, length);
-        }else{
-            return new String(wordnet.charArray, rowNum, length);
-        }
+        return new String(wordnet.charArray, rowNum, length);
     }
 
     public Vertex getOrCrete(int length) {

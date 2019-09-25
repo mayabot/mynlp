@@ -115,7 +115,7 @@ public class PipelineLexer implements Lexer {
         }
 
         //构建一个空的Wordnet对象
-        final Wordnet wordnet = new Wordnet(oriText,text);
+        final Wordnet wordnet = new Wordnet(text);
 
         for (WordSplitAlgorithm initializer : initer) {
             initializer.fill(wordnet);
@@ -135,7 +135,13 @@ public class PipelineLexer implements Lexer {
             }
         }
 
-        collector.collect(wordnet, wordPath, consumer);
+        if (keepChar) {
+            collector.collect(oriText,wordnet, wordPath, consumer);
+        }else{
+            collector.collect(null,wordnet, wordPath, consumer);
+        }
+
+
     }
 
 
