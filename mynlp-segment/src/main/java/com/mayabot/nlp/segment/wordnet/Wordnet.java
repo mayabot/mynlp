@@ -60,8 +60,6 @@ public final class Wordnet implements CharSequence {
      */
     final char[] charArray;
 
-    final char[] oriCharArray;
-
     /**
      * 字符的数量
      */
@@ -71,11 +69,7 @@ public final class Wordnet implements CharSequence {
 
     private Wordnet(Wordnet parent, int from, int length) {
         this.charArray = Arrays.copyOfRange(parent.charArray, from, from + length);
-        if (parent.oriCharArray != null) {
-            this.oriCharArray = Arrays.copyOfRange(parent.oriCharArray, from, from + length);
-        }else{
-            this.oriCharArray = null;
-        }
+
         this.charSize = length;
 
         this.begin = new VertexRow(-1, this);
@@ -94,18 +88,14 @@ public final class Wordnet implements CharSequence {
         getEndRow().put(VertexHelper.newEnd());
     }
 
-    public Wordnet(char[] charArray) {
-        this(null,charArray);
-    }
 
     /**
      * 构建一个空的网，槽的数量是charArray.length
      *
      * @param charArray 字符数组
      */
-    public Wordnet(char[] oriCharArray,char[] charArray) {
+    public Wordnet(char[] charArray) {
         this.charArray = charArray;
-        this.oriCharArray = oriCharArray;
 
         this.charSize = charArray.length;
 
