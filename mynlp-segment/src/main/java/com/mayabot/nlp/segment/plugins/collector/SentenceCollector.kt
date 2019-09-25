@@ -18,8 +18,7 @@ class SentenceCollector : WordTermCollector {
 
     override var fillSubword: WordTermCollector.FillSubword? = null
 
-    override fun collect(oriChar:CharArray?,wordnet: Wordnet, wordPath: Wordpath, consumer: Consumer<WordTerm>) {
-
+    override fun collect(txtChars:CharArray?,wordnet: Wordnet, wordPath: Wordpath, consumer: Consumer<WordTerm>) {
 
         val vertexIterator = wordPath.iteratorVertex()
 
@@ -28,10 +27,10 @@ class SentenceCollector : WordTermCollector {
         while (vertexIterator.hasNext()) {
             val vertex = vertexIterator.next()
 
-            val word = if(oriChar==null){
+            val word = if(txtChars==null){
                 vertex.realWord()
             }else {
-                String(oriChar, vertex.offset(), vertex.length);
+                String(txtChars, vertex.offset(), vertex.length);
             }
 
             val term = WordTerm(word, vertex.nature, vertex.offset())
