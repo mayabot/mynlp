@@ -1,12 +1,39 @@
 package com.mayabot.nlp.segment
 
 import com.mayabot.nlp.Mynlps
+import com.mayabot.nlp.segment.kotlin.lexer
 import com.mayabot.nlp.segment.lexer.perceptron.CwsService
 import org.junit.Test
+
+
 
 class CwsTest {
 
     val cws = Mynlps.instanceOf(CwsService::class.java)
+
+    @Test
+    fun test2(){
+//        println(cws.splitWord("检查settings.xml中的阿里云仓库地址正确"))
+//        println("检查settings.xml中的阿里云仓库地址正确".lexer())
+//
+        println(Lexers.perceptronBuilder().build().scan("检查settings.xml中的阿里云仓库地址正确"))
+
+
+        val builrder = Lexers.perceptronBuilder()
+        val lexer = builrder // core分词构建器
+                .withPos() // 开启词性
+
+                .withNer()
+                .withCustomDictionary()
+                //    .keepOriCharOutput()
+//                .withPersonName() // 开启人名
+                .build() // 创建定制词法分析对象
+//        val service = Mynlps.instanceOf(CwsService::class.java)
+//        service.perceptron.learn("阿里云 仓库")
+        val buffer = "检查settings.xml中的阿里云仓库地址正确"
+        val sentence = lexer.scan(buffer)
+        println(sentence.toList())
+    }
 
     @Test
     fun testCwsService() {
