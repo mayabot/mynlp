@@ -149,7 +149,7 @@ class PerceptronModel(
         decodeQuickModel = quick
     }
 
-    private val maxScore = Integer.MIN_VALUE.toDouble()
+    private val MaxScore = Integer.MIN_VALUE.toDouble()
     private var decodeQuickModel = false
 
     private val labelLimitInParameter = (labelCount + 1) * labelCount
@@ -425,20 +425,22 @@ class PerceptronModel(
 
         var index = 0
 
+        val parameterArray = parameter
+
         for (feature in featureSequence) {
 
             val buffer = feature.buffer
             val sizeM1 = feature.size() - 1
 
-            var maxScore = maxScore
+            var maxScore = Float.MIN_VALUE
             var maxIndex = 0
 
             for (label in 0 until labelCount) {
 
-                var score = 0.0
+                var score = 0.0f
 
                 for (i in 0 until sizeM1) {
-                    score += parameter[buffer[i] * labelCount + label]
+                    score += parameterArray[buffer[i] * labelCount + label]
                 }
 
                 if (score > maxScore) {
@@ -456,6 +458,7 @@ class PerceptronModel(
      * viterbi
      */
     override fun decode(featureSequence: FeatureVectorSequence, guessLabel: IntArray) {
+        val parameter = parameter
 
         //快速模式，不考虑转移，只适用于词性标注类型的任务
         if (decodeQuickModel) {
@@ -493,13 +496,12 @@ class PerceptronModel(
 
             for (curLabel in 0 until labelCount) {
 
-                var maxScore = maxScore
+                var maxScore = MaxScore
 
                 // baseScore的计算提取到下面for循环之外来，避免重复计算，提高性能
                 val baseScore = scoreBase(allFeature, curLabel)
 
                 for (preLabel in 0 until labelCount) {
-
                     val curScore = scoreMLast[preLabel] + baseScore + parameter[preLabel * labelCount + curLabel]
 
                     if (curScore > maxScore) {
@@ -541,7 +543,7 @@ class PerceptronModel(
     }
 
     private fun scoreBase(featureVector: FeatureVector, currentTag: Int): Double {
-
+        val parameter = parameter
         var score = 0.0
 
         val buffer = featureVector.buffer
