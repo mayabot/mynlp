@@ -197,7 +197,7 @@ public class BiGramTableDictionaryImpl extends BaseNlpResourceExternalizable imp
      * @return 共现频次, 不存在就返回0
      */
     @Override
-    public int getBiFrequency(int idA, int idB) {
+    public final int getBiFrequency(int idA, int idB) {
         return matrix.get(idA, idB);
     }
 }
