@@ -29,7 +29,7 @@ import com.mayabot.nlp.segment.wordnet.*;
 @Singleton
 public final class ViterbiBestPathAlgorithm implements BestPathAlgorithm {
 
-    private BiGramTableDictionary coreBiGramTableDictionary;
+    private final BiGramTableDictionary coreBiGramTableDictionary;
 
     /**
      * 平滑参数
@@ -153,7 +153,6 @@ public final class ViterbiBestPathAlgorithm implements BestPathAlgorithm {
 //			return -1000;
 //		}
 
-
         int nTwoWordsFreq = coreBiGramTableDictionary.getBiFrequency(from.wordID, to.wordID);
 //        double value = -Math
 //                .log(Predefine.dSmoothingPara * frequency / (Predefine.totalFreq) +
@@ -174,7 +173,7 @@ public final class ViterbiBestPathAlgorithm implements BestPathAlgorithm {
             if (frequency == 1) {
                 value = value1;
             } else if (frequency == 2) {
-                value = value1;
+                value = value2;
             } else if (frequency == 3) {
                 value = value3;
             } else if (frequency == 4) {
@@ -189,7 +188,7 @@ public final class ViterbiBestPathAlgorithm implements BestPathAlgorithm {
             }
         }
 
-        if (value < 0.0) {
+        if (value < 0) {
             value = -value;
         }
 
