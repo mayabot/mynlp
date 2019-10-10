@@ -129,7 +129,7 @@ public class CSRSparseMatrix implements Serializable {
      * @param col
      * @return int
      */
-    public int get(int row, int col) {
+    public final int get(int row, int col) {
 
         if (row < 0 || col < 0) {
             return 0;
@@ -147,7 +147,7 @@ public class CSRSparseMatrix implements Serializable {
 //        }
         //columnIndices
 
-        int index = Arrays.binarySearch(columnIndices, off, end, col);
+        final int index = Arrays.binarySearch(columnIndices, off, end, col);
         if (index >= 0) {
             return values[index];
         }
