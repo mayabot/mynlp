@@ -139,7 +139,7 @@ interface Perceptron {
  */
 class PerceptronModel(
         private val featureSet: FeatureSet,
-        private val labelCount: Int,
+        val labelCount: Int,
         var parameter: FloatArray
 ) : Perceptron {
 
@@ -156,6 +156,8 @@ class PerceptronModel(
 
     constructor(featureSet: FeatureSet, labelCount: Int) :
             this(featureSet, labelCount, FloatArray(featureSet.size() * labelCount))
+
+    fun parameterSize() = parameter.size
 
     override fun featureSet() = featureSet
 

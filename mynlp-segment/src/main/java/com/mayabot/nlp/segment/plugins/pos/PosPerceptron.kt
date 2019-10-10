@@ -210,7 +210,89 @@ object POSPerceptronFeature {
 
     @JvmStatic
     fun extractFeatureVector(sentence: List<String>, size: Int, position: Int, features: FeatureSet, buffer: FastStringBuilder): IntArrayList {
-        return extractFeatureVector2(sentence, size, position, features, s2s, buffer)
+        val vector = IntArrayList(11)
+        buffer.clear()
+
+        var preWord = if (position > 0) sentence[position - 1] else CHAR_BEGIN
+        val curWord = sentence[position]
+        var nextWord = if (position < size - 1) sentence[position + 1] else CHAR_END
+
+        if (nextWord.length == 1) {
+            val c = nextWord[0]
+            val isP = Characters.isPunctuation(c)
+            if (isP || c == ' ') {
+                // 我认为标点符号和词性无关
+                nextWord = "XPU"
+            }
+        }
+
+        if (preWord.length == 1) {
+            val c = preWord[0]
+            val isP = Characters.isPunctuation(c)
+            if (isP || c == ' ') {
+                // 我认为标点符号和词性无关
+                preWord = "XPU"
+            }
+        }
+
+        buffer.append(preWord)
+        buffer.append('☺')
+        addFeature(features, vector, buffer)
+
+        //让同一个特征出现两次。我认为这个特征比较重要
+        val id = features.featureId(curWord)
+        if (id >= 0) {
+            vector.add(id)
+            vector.add(id)
+        }
+
+        buffer.append(nextWord);
+        buffer.append('♂')
+        addFeature(features, vector, buffer)
+
+        val length = curWord.length
+
+        // prefix
+        if (length >= 2) {
+            val last = length - 1
+
+            val c1 = curWord[0]
+            val l1 = curWord[last]
+
+
+            buffer.set2(c1, '★')
+            addFeature(features, vector, buffer)
+
+            buffer.set2(l1, '✆')
+            addFeature(features, vector, buffer)
+
+            if (length >= 3) {
+                val c2 = curWord[1]
+                val l2 = curWord[last - 1]
+
+                buffer.set3(c1, c2, '★')
+                addFeature(features, vector, buffer)
+
+                buffer.set3(l1, l2, '✆')
+                addFeature(features, vector, buffer)
+
+                if (length >= 4) {
+                    val c3 = curWord[2]
+                    val l3 = curWord[last - 2]
+                    buffer.set4(c1, c2, c3, '★')
+                    addFeature(features, vector, buffer)
+                    buffer.set4(l1, l2, l3, '✆')
+                    addFeature(features, vector, buffer)
+                }
+            }
+        }
+
+
+//
+        //最后一列保留给特征向量使用
+        vector.add(0)
+
+        return vector
     }
 
 
