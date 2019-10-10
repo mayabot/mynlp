@@ -9,6 +9,7 @@ import com.mayabot.nlp.segment.Nature;
 import com.mayabot.nlp.segment.WordTerm;
 import com.mayabot.nlp.segment.wordnet.Vertex;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
@@ -58,7 +59,11 @@ public class PerceptronPosService {
     }
 
     public List<Nature> posFromVertex(List<Vertex> words) {
-        return perceptron.decode(words, PerceptronPosService::vertex2String);
+        ArrayList<String> stList = new ArrayList<>(words.size());
+        for (Vertex word : words) {
+            stList.add(word.realWord());
+        }
+        return perceptron.decode(stList);
     }
 
     public void posFromTerm(List<WordTerm> words) {

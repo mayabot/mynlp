@@ -79,9 +79,9 @@ class PerceptronTrainer(
         )
 
         //应该是权重的总和 最后要平均？
-        val total = DoubleArray(model.parameter.size)
+        val total = DoubleArray(model.parameterSize())
         //时间戳 每个正确预测的存活时间
-        val timestamp = IntArray(model.parameter.size)
+        val timestamp = IntArray(model.parameterSize())
         var current = 0//第N次更新
 
         for (k in 1..maxIter) {
@@ -107,7 +107,7 @@ class PerceptronTrainer(
             println("train use ${t2 - t1} ms\n")
 
             // 备份参数
-            val back = model.parameter.copyOf(model.parameter.size)
+            val back = model.parameter.copyOf(model.parameterSize())
             model.average(total, timestamp, current)
             // 运行评估
             evaluateScript(k, model)
