@@ -71,7 +71,7 @@ public class StringUtils {
         }else if (len == 1) {
             return isWhiteSpace(word.charAt(0));
         }else if (len == 2){
-            return isWhiteSpace(word.charAt(0)) && isWhiteSpace(word.charAt(0));
+            return isWhiteSpace(word.charAt(0)) && isWhiteSpace(word.charAt(1));
         }else {
             return isWhiteSpace(word.charAt(0)) &&
                     isWhiteSpace(word.charAt(len/2) )
