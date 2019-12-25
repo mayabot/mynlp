@@ -14,23 +14,22 @@
  * limitations under the License.
  */
 
-rootProject.name = 'mynlp'
+description = "mynlp的基础数据结构和IOC容器"
 
-List projects = [
-        'mynlp-core',
-        'mynlp-segment',
-        'mynlp-perceptron',
-        'fasttext',
-        'modules:mynlp-restful',
-        'modules:mynlp-pinyin',
-        'modules:mynlp-transform',
-        'modules:mynlp-classification',
-        'modules:mynlp-newword',
-        'modules:mynlp-summary',
-        'modules:mynlp-example',
-        'modules:mynlp-lucene',
-        'modules:mynlp-elasticsearch6'
-]
+dependencies {
+    // kotlin core lib
+    compile "org.jetbrains.kotlin:kotlin-stdlib"
 
-include projects.toArray(new String[0])
+    compile group: 'com.google.guava', name: 'guava', version: '19.0'
+    compile group: 'com.carrotsearch', name: 'hppc', version: '0.7.3'
 
+    // Test
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+
+}
+
+compileKotlin {
+    kotlinOptions {
+        freeCompilerArgs += "-Xuse-experimental=kotlin.ExperimentalUnsignedTypes"
+    }
+}

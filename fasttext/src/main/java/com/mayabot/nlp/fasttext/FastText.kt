@@ -1,0 +1,360 @@
+package com.mayabot.nlp.fasttext
+
+import com.carrotsearch.hppc.IntArrayList
+import com.google.common.base.Charsets
+import com.google.common.base.Stopwatch
+import com.google.common.collect.ImmutableList
+import com.google.common.collect.Iterables
+import com.google.common.collect.Lists
+import com.google.common.collect.Sets
+import com.mayabot.nlp.fasttext.args.ModelArgs
+import com.mayabot.nlp.fasttext.args.ModelName
+import com.mayabot.nlp.fasttext.blas.FloatMatrix
+import com.mayabot.nlp.fasttext.blas.vector.Vector
+import com.mayabot.nlp.fasttext.blas.vector.floatArrayVector
+import com.mayabot.nlp.fasttext.dictionary.Dictionary
+import com.mayabot.nlp.fasttext.dictionary.EOS
+import java.io.File
+import java.text.DecimalFormat
+import java.util.HashSet
+import java.util.concurrent.TimeUnit
+import kotlin.math.abs
+import kotlin.math.exp
+
+data class ScoreIdPair(val score: Float, val id: Int){
+    override fun toString(): String {
+        return "[$id,$score]"
+    }
+}
+
+data class ScoreLabelPair(var score: Float, var label: String) {
+    override fun toString(): String {
+        return "[$label,$score]"
+    }
+}
+
+@ExperimentalUnsignedTypes
+class FastText(
+        val args: ModelArgs,
+        val dict: Dictionary,
+        val input: FloatMatrix,
+        val output: FloatMatrix,
+        val model: Model,
+        val quant: Boolean
+) {
+
+    /**
+     * 预测分类标签
+     *
+     * @param tokens
+     * @param k
+     * @return
+     */
+    fun predict(tokens: List<String>, k: Int,threshold: Float): List<ScoreLabelPair> {
+
+        // 要附加一个EOS标记
+        val tokens2 = Iterables.concat(tokens, listOf(EOS))
+
+        val words = IntArrayList()
+        val labels = IntArrayList()
+
+        dict.getLine(tokens2, words, labels)
+
+        if (words.isEmpty) {
+            return ImmutableList.of()
+        }
+
+        val result = predict(k,words,threshold)
+
+        return result.map { x -> ScoreLabelPair(exp(x.score), dict.getLabel(x.id)) }
+    }
+
+    fun predict(k:Int,words: IntArrayList,threshold:Float) : List<ScoreIdPair> {
+        if (words.isEmpty) {
+            return emptyList()
+        }
+
+        if (args.model != ModelName.sup) {
+            error("Model needs to be supervised for prediction!")
+        }
+        val state = Model.State(args.dim,dict.nlabels,0)
+        val predictions = ArrayList<ScoreIdPair>()
+        model.predict(words,k,threshold,predictions,state)
+
+        return predictions
+    }
+
+
+    private fun findNN(wordVectors: FloatMatrix, queryVec: Vector, k: Int, sets: Set<String>): List<ScoreLabelPair> {
+
+        var queryNorm = queryVec.norm2()
+        if (abs(queryNorm) < 1e-8) {
+            queryNorm = 1f
+        }
+
+        val mostSimilar = (0 until k).map { ScoreLabelPair(-1f,"") }.toList().toTypedArray()
+        val mastSimilarLast = mostSimilar.size - 1
+
+        for (i in 0 until dict.nwords) {
+            val dp = wordVectors[i] *queryVec / queryNorm
+            val last = mostSimilar[mastSimilarLast]
+            if (dp > last.score) {
+                last.score = dp
+                last.label = dict.getWord(i)
+
+                mostSimilar.sortByDescending { it.score }
+            }
+        }
+
+        val result = Lists.newArrayList<ScoreLabelPair>()
+        for (r in mostSimilar) {
+            if (r.score != -1f && !sets.contains(r.label)) {
+                result.add(r)
+            }
+        }
+
+        return result
+    }
+
+    private val wordVectors: FloatMatrix  by lazy {
+        /**
+         * 计算所有词的向量。
+         * 之所以向量都除以norm进行归一化。因为使用者。使用dot表达相似度，也会除以query vector的norm。然后归一化。
+         * 最后距离结构都是0 ~ 1 的数字
+         * @param wordVectors
+         */
+        fun preComputeWordVectors(wordVectors: FloatMatrix) {
+            val vec = floatArrayVector(args.dim)
+            wordVectors.fill(0f)
+            for (i in 0 until dict.nwords) {
+                val word = dict.getWord(i)
+                getWordVector(vec, word)
+                val norm = vec.norm2()
+                if (norm > 0) {
+                    wordVectors[i] += 1.0f/norm to vec
+                }
+            }
+        }
+
+        val matrix = FloatMatrix.floatArrayMatrix(dict.nwords,args.dim)
+        val stopwatch = Stopwatch.createStarted()
+        preComputeWordVectors(matrix)
+        stopwatch.stop()
+        println("Init wordVectors martix use time ${stopwatch.elapsed(TimeUnit.MILLISECONDS)} ms")
+        matrix
+    }
+
+
+
+    /**
+     * NearestNeighbor
+     */
+    fun nearestNeighbor(wordQuery: String, k: Int): List<ScoreLabelPair> {
+        val queryVec = getWordVector(wordQuery)
+        val sets = HashSet<String>()
+        sets.add(wordQuery)
+        return findNN(wordVectors, queryVec, k, sets)
+    }
+
+    /**
+     * Query triplet (A - B + C)?
+     * @param A
+     * @param B
+     * @param C
+     * @param k
+     */
+    fun analogies(A: String, B: String, C: String, k: Int): List<ScoreLabelPair> {
+
+        val buffer = floatArrayVector(args.dim)
+        val query = floatArrayVector(args.dim)
+
+        getWordVector(buffer, A)
+        query += buffer
+
+        getWordVector(buffer, B)
+        query += -1f to buffer
+
+        getWordVector(buffer, C)
+        query += buffer
+
+        val sets = Sets.newHashSet(A, B, C)
+
+        return findNN(wordVectors, query, k, sets)
+    }
+
+
+
+
+    /**
+     * 把词向量填充到一个Vector对象里面去
+     *
+     * @param vec
+     * @param word
+     */
+    fun getWordVector(vec: Vector, word: String) {
+        vec.zero()
+        val ngrams = dict.getSubwords(word)
+        val buffer = ngrams.buffer
+        var i = 0
+        val len = ngrams.size()
+        while (i < len) {
+            addInputVector(vec, buffer[i])
+            i++
+        }
+
+        if (ngrams.size() > 0) {
+            vec *= 1.0f / ngrams.size()
+        }
+    }
+
+    fun getWordVector(word: String): Vector {
+        val vec = floatArrayVector(args.dim)
+        getWordVector(vec, word)
+        return vec
+    }
+
+
+    /**
+     * 计算句子向量
+     * @return 句子向量
+     */
+    fun getSentenceVector(tokens: Iterable<String>): Vector {
+        val svec = floatArrayVector(args.dim)
+        getSentenceVector(svec, tokens)
+        return svec
+    }
+
+
+    /**
+     * 句子向量
+     *
+     * @param svec
+     * @param tokens
+     */
+    private fun getSentenceVector(svec: Vector, tokens: Iterable<String>) {
+        svec.zero()
+        if (args.model == ModelName.sup) {
+            val line = IntArrayList()
+            val labels = IntArrayList()
+            dict.getLine(tokens, line, labels)
+
+            for (i in 0 until line.size()) {
+                addInputVector(svec, line.get(i))
+            }
+
+            if (!line.isEmpty) {
+                svec *= (1.0f / line.size())
+            }
+        } else {
+            val vec = floatArrayVector(args.dim)
+            var count = 0
+            for (word in tokens) {
+                getWordVector(vec, word)
+                val norm = vec.norm2()
+                if (norm > 0) {
+                    vec *= (1.0f / norm)
+                    svec += vec
+                    count++
+                }
+            }
+            if (count > 0) {
+                svec *= (1.0f / count)
+            }
+        }
+    }
+
+    private fun addInputVector(vec: Vector, ind: Int) {
+//        if (quant) {
+//            model.qinput.addToVector(vec, ind)
+//        } else {
+//            vec += input[ind]
+//        }
+        vec += input[ind]
+    }
+
+
+    /**
+     * 把词向量另存为文本格式
+     *
+     * @param file
+     */
+    @Throws(Exception::class)
+    fun saveVectors(fileName: String) {
+        var fileName = fileName
+        if (!fileName.endsWith("vec")) {
+            fileName += ".vec"
+        }
+
+        val file = File(fileName).apply {
+            if (exists()) delete()
+            if (parentFile != null) parentFile.mkdirs()
+        }
+
+        val vec = floatArrayVector(args.dim)
+        val df = DecimalFormat("0.#####")
+
+        file.bufferedWriter(Charsets.UTF_8).use { writer ->
+            writer.write("${dict.nwords} ${args.dim}\n")
+            for (i in 0 until dict.nwords) {
+                val word = dict.getWord(i)
+                getWordVector(vec, word)
+                writer.write(word)
+                writer.write(" ")
+                for (j in 0 until vec.length()) {
+                    writer.write(df.format(vec[j].toDouble()))
+                    writer.write(" ")
+                }
+                writer.write("\n")
+            }
+        }
+
+    }
+
+//    /**
+//     * 保存为自有的文件格式(多文件）
+//     */
+//    @Throws(Exception::class)
+//    fun saveModel(path: String) {
+//        var path = File(path)
+//        if (path.exists()) {
+//            path.deleteRecursively()
+//        }
+//        path.mkdirs()
+//
+//        //dict
+//        File(path, "dict.bin").outputStream().channel.use {
+//            dict.save(it)
+//        }
+//
+//        //args
+//        File(path, "args.bin").outputStream().channel.use {
+//            args.save(it)
+//        }
+//
+//        if (!quant) {
+//            //input float matrix
+//            File(path, "input.matrix").outputStream().channel.use {
+//                it.writeInt(model.input.rows())
+//                it.writeInt(model.input.cols())
+//                model.input.write(it)
+//            }
+//        } else {
+//            File(path, "qinput.matrix").outputStream().channel.use {
+//                model.qinput.save(it)
+//            }
+//        }
+//
+//        if (quant && model.quantOut) {
+//            File(path, "qoutput.matrix").outputStream().channel.use {
+//                model.qoutput!!.save(it)
+//            }
+//        } else {
+//            File(path, "output.matrix").outputStream().channel.use {
+//                it.writeInt(model.output.rows())
+//                it.writeInt(model.output.cols())
+//                model.output.write(it)
+//            }
+//        }
+//    }
+
+}
