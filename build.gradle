@@ -1,5 +1,5 @@
 plugins {
-    id "org.jetbrains.kotlin.jvm" version "1.3.50" apply false
+    id "org.jetbrains.kotlin.jvm" version "1.3.61" apply false
 }
 
 apply plugin: 'idea'
@@ -35,7 +35,7 @@ subprojects {
     notPublish.add("mynlp-restful")
     notPublish.add("mynlp-example")
     notPublish.add("mynlp-elasticsearch6")
-    
+
     if( notPublish.contains(project.name)){
         toPublish = false
     }
@@ -48,7 +48,7 @@ subprojects {
         apply plugin: 'signing'
     }
 
-    
+
     sourceCompatibility = '1.8'
     targetCompatibility = '1.8'
 
@@ -70,7 +70,7 @@ subprojects {
         }
 
         publishing {
-            
+
             publications {
                 java(MavenPublication) {
 
@@ -136,7 +136,7 @@ subprojects {
                         } else {
                             url = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
                         }
-                        
+
                         credentials {
                             username "${oss_user}"
                             password "${oss_password}"
