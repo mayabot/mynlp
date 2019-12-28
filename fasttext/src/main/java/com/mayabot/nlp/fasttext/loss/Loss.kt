@@ -110,7 +110,7 @@ abstract class Loss(val wo: FloatMatrix) {
             heap.sortByDescending { it.score } // 从高到低排序
             if (heap.size > k) {
                 heap.sortByDescending { it.score }
-                heap.dropLast(1)
+                heap.removeAt(heap.size-1)
             }
         }
     }
@@ -179,7 +179,8 @@ abstract class BinaryLogisticLoss(wo: FloatMatrix) : Loss(wo) {
 
     override fun computeOutput(state: Model.State) {
         val output = state.output
-        output.minusAssign(state.hidden)
+
+        output.mul(wo,state.hidden)
 
         val osz = output.length()
 

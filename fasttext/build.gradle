@@ -16,6 +16,9 @@
 
 description = "mynlp的基础数据结构和IOC容器"
 
+group = "com.mayabot"
+archivesBaseName = "fastText4j"
+
 dependencies {
     // kotlin core lib
     compile "org.jetbrains.kotlin:kotlin-stdlib"

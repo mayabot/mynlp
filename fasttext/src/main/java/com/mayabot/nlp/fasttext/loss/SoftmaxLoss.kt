@@ -23,7 +23,7 @@ class SoftmaxLoss(wo: FloatMatrix) : Loss(wo) {
         }
 
         for (i in 0 until osz) {
-            output[i] = exp((output[i] - max).toDouble()).toFloat()
+            output[i] = kotlin.math.exp((output[i] - max).toDouble()).toFloat()
             z += output[i]
         }
         // 归一化?

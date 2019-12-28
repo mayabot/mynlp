@@ -46,9 +46,8 @@ class FastTextTrain(
 
             val sources : List<TrainSampleList> = processAndSplit(file,wordSplitter,args.thread)
 
-            val builder = buildFromFile(args, sources, args.maxVocabSize)
+            val dict = buildFromFile(args, sources, args.maxVocabSize)
 
-            val dict: Dictionary = builder.toDictionary(args)
 
             val input = if (args.preTrainedVectors != null) {
                 loadPreTrainVectors(dict, args.preTrainedVectors, args)

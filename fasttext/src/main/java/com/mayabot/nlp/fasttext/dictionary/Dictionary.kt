@@ -374,4 +374,6 @@ class Dictionary(
 
     fun getWord(wid: Int) = onehotMap.getWord(wid)
 
+    fun getWordEntity(wid: Int) = onehotMap.get(wid)
+
 }

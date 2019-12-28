@@ -1,6 +1,7 @@
 package com.mayabot.nlp.fasttext.blas.vector
 
 import com.google.common.base.Preconditions
+import com.mayabot.nlp.fasttext.blas.FloatMatrix
 
 
 /**

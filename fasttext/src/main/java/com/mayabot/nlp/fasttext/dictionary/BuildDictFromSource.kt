@@ -14,9 +14,9 @@ import com.mayabot.nlp.fasttext.train.TrainSampleList
 @Throws(Exception::class)
 fun buildFromFile(args: ComputedTrainArgs,
                   sources: List<TrainSampleList>,
-                  maxVocabSize: Int = 200000,
+                  maxVocabSize: Int = 500000,
                   initWordListSize: Int = 5000
-): DictionaryBuilder {
+): Dictionary {
 
 
     val builder = DictionaryBuilder(args.label, maxVocabSize, initWordListSize)
@@ -36,7 +36,7 @@ fun buildFromFile(args: ComputedTrainArgs,
             val before = builder.size
             builder.threshold(minThreshold, minThreshold)
             lastMinThreshold = minThreshold
-//            println("word size from ${before} to ${builder.size} , threshold min $minThreshold")
+            println("word size from ${before} to ${builder.size} , threshold min $minThreshold")
             minThreshold++
         }
     }
@@ -73,6 +73,6 @@ fun buildFromFile(args: ComputedTrainArgs,
         throw RuntimeException("Empty vocabulary. Try a smaller -minCount second.")
     }
 
-    return builder
+    return builder.toDictionary(args)
 
 }

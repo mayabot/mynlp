@@ -71,9 +71,16 @@ class DictionaryBuilder(
     fun threshold(t: Long, minLabelCount: Long) {
 
         val wordList = wordIdMap.wordList
-                .filterNot { (it.type == EntryType.word && it.count < t) || (it.type == EntryType.label && it.count < minLabelCount) }
-                .sortedWith(Comparator<Entry> { o1, o2 -> o1.type.compareTo(o2.type) }
-                        .thenByDescending { it.count })
+                .filterNot { (it.type == EntryType.word && it.count < t)
+                        || (it.type == EntryType.label && it.count < minLabelCount) }
+                .sortedWith(Comparator<Entry> { o1, o2 ->
+                        o1.type.compareTo(o2.type)
+                        if(o1.type!=o2.type){
+                            o1.type.compareTo(o2.type)
+                        }else{
+                            o2.count.compareTo(o1.count)
+                        }
+                    })
                 .toMutableList()
         (wordList as ArrayList<Entry>).trimToSize()
 

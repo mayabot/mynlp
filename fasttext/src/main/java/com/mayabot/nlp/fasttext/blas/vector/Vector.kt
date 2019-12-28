@@ -1,5 +1,6 @@
 package com.mayabot.nlp.fasttext.blas.vector
 
+import com.mayabot.nlp.fasttext.blas.FloatMatrix
 import java.io.Serializable
 import java.nio.ByteBuffer
 import kotlin.math.sqrt
@@ -67,6 +68,16 @@ interface Vector : Serializable {
     fun putAll(v: FloatArray)
 
     fun zero()
+
+    /**
+     * 矩阵的每一行和vec点积，保存在当前这个向量里面
+     */
+    fun mul(m:FloatMatrix,vector: Vector) {
+        val rows = m.rows()
+        for (i in 0 until rows) {
+            this[i] = m.dotRow(vector,i)
+        }
+    }
 
     /**
      * 赋值
