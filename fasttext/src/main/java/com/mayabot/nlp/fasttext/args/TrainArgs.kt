@@ -63,7 +63,7 @@ class TrainArgs {
     var t :Double? = null
     var label:String? = null
 
-    val maxVocabSize:Int = 500000
+    var maxVocabSize:Int = 500000
 
     fun toComputedTrainArgs(model: ModelName) = ComputedTrainArgs(model,this)
 }

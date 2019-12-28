@@ -14,6 +14,7 @@ import com.mayabot.nlp.fasttext.blas.vector.Vector
 import com.mayabot.nlp.fasttext.blas.vector.floatArrayVector
 import com.mayabot.nlp.fasttext.dictionary.Dictionary
 import com.mayabot.nlp.fasttext.dictionary.EOS
+import com.mayabot.nlp.fasttext.train.TrainSampleList
 import java.io.File
 import java.text.DecimalFormat
 import java.util.HashSet
@@ -211,6 +212,24 @@ class FastText(
         val vec = floatArrayVector(args.dim)
         getWordVector(vec, word)
         return vec
+    }
+
+    fun test(file: File,k:Int=1,threshold:Float = 0.0f): Meter {
+        val line = IntArrayList()
+        val labels = IntArrayList()
+        val meter = Meter()
+//        val state = Model.State(args.dim,dict.nlabels,0)
+        for (sample in TrainSampleList(file)) {
+            line.clear()
+            labels.clear()
+            dict.getLine(sample.words,line,labels)
+            if (!labels.isEmpty && !line.isEmpty) {
+                val predictions = predict(k,line,threshold)
+                meter.log(labels,predictions)
+            }
+        }
+        meter.print(dict,k,true)
+        return meter
     }
 
 
