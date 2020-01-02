@@ -1,6 +1,6 @@
-package com.mayabot.nlp.fasttext.blas
+package com.mayabot.nlp.fasttext.utils
 
-import com.mayabot.nlp.fasttext.blas.vector.ByteUtils
+import com.mayabot.nlp.fasttext.blas.DenseArrayMatrix
 import java.io.*
 import java.nio.ByteOrder
 import java.util.*
@@ -33,7 +33,7 @@ class AutoDataInput(
         }
     }
 
-    fun loadFloatMatrix(): FloatMatrix {
+    fun loadFloatMatrix(): DenseArrayMatrix {
         val rows = readLong().toInt()
         val cols = readLong().toInt()
         val length = rows * cols
@@ -44,7 +44,7 @@ class AutoDataInput(
         for (i in 0 until length) {
             matrix[i] = this.readFloat()
         }
-        return FloatArrayMatrix(rows, cols, matrix)
+        return DenseArrayMatrix(rows, cols, matrix)
     }
 
     private var utf = ByteArray(256)

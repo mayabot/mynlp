@@ -60,6 +60,9 @@ fun buildFromFile(args: ComputedTrainArgs,
     // 系统级别的裁剪
     builder.threshold(args.modelArgs.minCount.toLong(), args.modelArgs.minCountLabel.toLong())
 
+    // 塌缩
+    builder.wordIdMap.collapseWordHash2Id()
+
 //        val dictionary = builder.toDictionary(args)
 //        dictionary.initTableDiscard()
 //        dictionary.initNgrams()
@@ -67,12 +70,15 @@ fun buildFromFile(args: ComputedTrainArgs,
     System.out.printf("\rRead %dM words\n", builder.ntokens / 1000000)
     println("Number of words:  ${builder.nwords}")
     println("Number of labels: ${builder.nlabels}")
+
     if (thresholdCount > 0) println("Max threshold count: $lastMinThreshold")
 
     if (builder.wordIdMap.size == 0) {
         throw RuntimeException("Empty vocabulary. Try a smaller -minCount second.")
     }
 
-    return builder.toDictionary(args)
+    val dict =  builder.toDictionary(args)
+    println("Number of wordHash2Id: ${dict.onehotMap.wordHash2WordId.size}")
+    return dict
 
 }

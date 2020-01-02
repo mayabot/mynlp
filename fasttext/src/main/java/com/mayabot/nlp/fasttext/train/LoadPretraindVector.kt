@@ -4,9 +4,10 @@ import com.google.common.base.Charsets
 import com.google.common.base.Splitter
 import com.google.common.collect.Lists
 import com.mayabot.nlp.fasttext.args.ComputedTrainArgs
-import com.mayabot.nlp.fasttext.blas.FloatMatrix
+import com.mayabot.nlp.fasttext.blas.Matrix
+import com.mayabot.nlp.fasttext.blas.floatArrayMatrix
 import com.mayabot.nlp.fasttext.dictionary.Dictionary
-import com.mayabot.nlp.fasttext.firstLine
+import com.mayabot.nlp.fasttext.utils.firstLine
 import java.io.File
 
 /**
@@ -15,7 +16,7 @@ import java.io.File
  */
 @ExperimentalUnsignedTypes
 @Throws(Exception::class)
-fun loadPreTrainVectors(dict: Dictionary, file: File, args: ComputedTrainArgs): FloatMatrix {
+fun loadPreTrainVectors(dict: Dictionary, file: File, args: ComputedTrainArgs): Matrix {
 
 //    var n: Int = 0
 //    var dim: Int = 0
@@ -29,7 +30,7 @@ fun loadPreTrainVectors(dict: Dictionary, file: File, args: ComputedTrainArgs): 
         throw Exception("Dimension of pretrained vectors " + dim + " does not match dimension (" + args.modelArgs.dim + ")")
     }
 
-    val input = FloatMatrix.floatArrayMatrix(dict.nwords + args.modelArgs.bucket, args.modelArgs.dim)
+    val input = floatArrayMatrix(dict.nwords + args.modelArgs.bucket, args.modelArgs.dim)
     input.uniform(1.0f / args.modelArgs.dim)
 
     val words = Lists.newArrayListWithExpectedSize<String>(n)

@@ -7,9 +7,9 @@ import com.carrotsearch.hppc.LongArrayList
 import com.google.common.base.Preconditions.checkArgument
 import com.mayabot.nlp.fasttext.args.ModelArgs
 import com.mayabot.nlp.fasttext.args.ModelName
-import com.mayabot.nlp.fasttext.writeInt
-import com.mayabot.nlp.fasttext.writeLong
-import com.mayabot.nlp.fasttext.writeUTF
+import com.mayabot.nlp.fasttext.utils.writeInt
+import com.mayabot.nlp.fasttext.utils.writeLong
+import com.mayabot.nlp.fasttext.utils.writeUTF
 import java.io.IOException
 import java.nio.ByteBuffer
 import java.nio.channels.FileChannel
@@ -268,8 +268,9 @@ class Dictionary(
      * 初始化 char ngrams 也就是 subwords
      */
     fun initNgrams() {
+        val wordList = onehotMap.wordList
         for (id in 0 until onehotMap.size) {
-            val e = onehotMap.wordList[id]
+            val e = wordList[id]
             val word = BOW + e.word + EOW
 
             if (maxn == 0) {

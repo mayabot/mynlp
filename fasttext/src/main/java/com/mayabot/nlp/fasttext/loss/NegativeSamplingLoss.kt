@@ -2,11 +2,11 @@ package com.mayabot.nlp.fasttext.loss
 
 import com.carrotsearch.hppc.IntArrayList
 import com.mayabot.nlp.fasttext.Model
-import com.mayabot.nlp.fasttext.blas.FloatMatrix
+import com.mayabot.nlp.fasttext.blas.Matrix
 import kotlin.random.Random
 
 
-class NegativeSamplingLoss(wo: FloatMatrix, val neg: Int, targetCounts: LongArray) : BinaryLogisticLoss(wo) {
+class NegativeSamplingLoss(wo: Matrix, val neg: Int, targetCounts: LongArray) : BinaryLogisticLoss(wo) {
     companion object{
         const val NEGATIVE_TABLE_SIZE = 10000000
     }

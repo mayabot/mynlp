@@ -6,8 +6,8 @@ import com.mayabot.nlp.fasttext.Model
 import com.mayabot.nlp.fasttext.Predictions
 import com.mayabot.nlp.fasttext.args.ModelArgs
 import com.mayabot.nlp.fasttext.args.ModelName
-import com.mayabot.nlp.fasttext.blas.FloatMatrix
-import com.mayabot.nlp.fasttext.blas.vector.FloatArrayVector
+import com.mayabot.nlp.fasttext.blas.Matrix
+import com.mayabot.nlp.fasttext.blas.DenseVector
 import com.mayabot.nlp.fasttext.dictionary.Dictionary
 import com.mayabot.nlp.fasttext.dictionary.EntryType
 import kotlin.math.exp
@@ -26,7 +26,7 @@ fun std_log(d: Float) = Math.log(d + 1e-5)
  */
 
 
-enum class LossName private constructor(var value: Int) {
+enum class LossName constructor(var value: Int) {
 
     /**
      * 分层softmax,比完全softmax慢一点。
@@ -69,7 +69,7 @@ enum class LossName private constructor(var value: Int) {
  * 统一创建loss函数实例
  */
 @ExperimentalUnsignedTypes
-fun createLoss(args: ModelArgs, output: FloatMatrix, modelName: ModelName, dictionary: Dictionary): Loss {
+fun createLoss(args: ModelArgs, output: Matrix, modelName: ModelName, dictionary: Dictionary): Loss {
 
     fun getTargetCounts(): LongArray {
         return if (modelName == ModelName.sup) {
@@ -88,7 +88,7 @@ fun createLoss(args: ModelArgs, output: FloatMatrix, modelName: ModelName, dicti
     }
 }
 
-abstract class Loss(val wo: FloatMatrix) {
+abstract class Loss(val wo: Matrix) {
 
     open fun predict(k: Int, threshold: Float, heap: Predictions, state: Model.State) {
         computeOutput(state)
@@ -96,7 +96,7 @@ abstract class Loss(val wo: FloatMatrix) {
         heap.sortByDescending { it.score }
     }
 
-    fun findKBest(k: Int, threshold: Float, heap: MutableList<ScoreIdPair>, output: FloatArrayVector) {
+    fun findKBest(k: Int, threshold: Float, heap: MutableList<ScoreIdPair>, output: DenseVector) {
         for (i in 0 until output.length()) {
             if (output[i] < threshold) {
                 continue
@@ -155,7 +155,7 @@ abstract class Loss(val wo: FloatMatrix) {
 
 }
 
-abstract class BinaryLogisticLoss(wo: FloatMatrix) : Loss(wo) {
+abstract class BinaryLogisticLoss(wo: Matrix) : Loss(wo) {
 
     fun binaryLogistic(
             target: Int,
@@ -163,10 +163,12 @@ abstract class BinaryLogisticLoss(wo: FloatMatrix) : Loss(wo) {
             labelIsPositive: Boolean,
             lr: Float,
             backprop: Boolean): Float {
-        val score = sigmoid(wo[target] * state.hidden)
+
+        val score = sigmoid( wo.dotRow(state.hidden,target) )
         if (backprop) {
             val alpha = lr * ((if (labelIsPositive) 1.0f else 0.0f) - score)
-            state.grad += (alpha to wo[target])
+//            state.grad += (alpha to wo[target])
+            state.grad.addRow(wo,target,alpha.toDouble())
             wo.addVectorToRow(state.hidden,target,alpha)
         }
 
