@@ -6,7 +6,7 @@ class BlasTest {
 
     @Test
     fun test(){
-       val m = FloatArrayMatrix(5,5)
+       val m = DenseArrayMatrix(5,5)
         m.gaussRandom(1)
         println(m[1])
     }

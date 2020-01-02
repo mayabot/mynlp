@@ -9,12 +9,11 @@ import com.google.common.collect.Lists
 import com.google.common.collect.Sets
 import com.mayabot.nlp.fasttext.args.ModelArgs
 import com.mayabot.nlp.fasttext.args.ModelName
-import com.mayabot.nlp.fasttext.blas.FloatMatrix
-import com.mayabot.nlp.fasttext.blas.vector.Vector
-import com.mayabot.nlp.fasttext.blas.vector.floatArrayVector
+import com.mayabot.nlp.fasttext.blas.*
 import com.mayabot.nlp.fasttext.dictionary.Dictionary
 import com.mayabot.nlp.fasttext.dictionary.EOS
 import com.mayabot.nlp.fasttext.train.TrainSampleList
+import com.mayabot.nlp.fasttext.utils.forEach2
 import java.io.File
 import java.text.DecimalFormat
 import java.util.HashSet
@@ -38,11 +37,12 @@ data class ScoreLabelPair(var score: Float, var label: String) {
 class FastText(
         val args: ModelArgs,
         val dict: Dictionary,
-        val input: FloatMatrix,
-        val output: FloatMatrix,
         val model: Model,
         val quant: Boolean
 ) {
+
+    val input: Matrix = model.wi
+    val output: Matrix = model.wo
 
     /**
      * 预测分类标签
@@ -67,6 +67,7 @@ class FastText(
 
         val result = predict(k,words,threshold)
 
+
         return result.map { x -> ScoreLabelPair(exp(x.score), dict.getLabel(x.id)) }
     }
 
@@ -86,7 +87,7 @@ class FastText(
     }
 
 
-    private fun findNN(wordVectors: FloatMatrix, queryVec: Vector, k: Int, sets: Set<String>): List<ScoreLabelPair> {
+    private fun findNN(wordVectors: DenseMatrix, queryVec: Vector, k: Int, sets: Set<String>): List<ScoreLabelPair> {
 
         var queryNorm = queryVec.norm2()
         if (abs(queryNorm) < 1e-8) {
@@ -117,16 +118,16 @@ class FastText(
         return result
     }
 
-    private val wordVectors: FloatMatrix  by lazy {
+    private val wordVectors: DenseMatrix by lazy {
         /**
          * 计算所有词的向量。
          * 之所以向量都除以norm进行归一化。因为使用者。使用dot表达相似度，也会除以query vector的norm。然后归一化。
          * 最后距离结构都是0 ~ 1 的数字
          * @param wordVectors
          */
-        fun preComputeWordVectors(wordVectors: FloatMatrix) {
+        fun preComputeWordVectors(wordVectors: DenseMatrix) {
             val vec = floatArrayVector(args.dim)
-            wordVectors.fill(0f)
+            wordVectors.zero()
             for (i in 0 until dict.nwords) {
                 val word = dict.getWord(i)
                 getWordVector(vec, word)
@@ -137,7 +138,7 @@ class FastText(
             }
         }
 
-        val matrix = FloatMatrix.floatArrayMatrix(dict.nwords,args.dim)
+        val matrix = floatArrayMatrix(dict.nwords,args.dim)
         val stopwatch = Stopwatch.createStarted()
         preComputeWordVectors(matrix)
         stopwatch.stop()
@@ -226,6 +227,14 @@ class FastText(
             if (!labels.isEmpty && !line.isEmpty) {
                 val predictions = predict(k,line,threshold)
                 meter.log(labels,predictions)
+
+//                if (labels[0] == 1 && predictions[0].id == 1) {
+//
+//                    line.forEach2 {
+//                        println(dict.getWord(it))
+//                    }
+//                    println("----")
+//                }
             }
         }
         meter.print(dict,k,true)
@@ -288,7 +297,9 @@ class FastText(
 //        } else {
 //            vec += input[ind]
 //        }
-        vec += input[ind]
+
+        // vec += input[ind]
+        input.addRowToVector(vec,ind)
     }
 
 
@@ -353,8 +364,8 @@ class FastText(
 //        if (!quant) {
 //            //input float matrix
 //            File(path, "input.matrix").outputStream().channel.use {
-//                it.writeInt(model.input.rows())
-//                it.writeInt(model.input.cols())
+//                it.writeInt(model.input.row)
+//                it.writeInt(model.input.col)
 //                model.input.write(it)
 //            }
 //        } else {
@@ -369,8 +380,8 @@ class FastText(
 //            }
 //        } else {
 //            File(path, "output.matrix").outputStream().channel.use {
-//                it.writeInt(model.output.rows())
-//                it.writeInt(model.output.cols())
+//                it.writeInt(model.output.row)
+//                it.writeInt(model.output.col)
 //                model.output.write(it)
 //            }
 //        }

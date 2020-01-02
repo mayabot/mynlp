@@ -1,7 +1,7 @@
 package com.mayabot.nlp.fasttext.dictionary
 
-import java.lang.Integer.min
 import java.lang.Integer.max
+import java.lang.Integer.min
 
 /**
  * 每个词和一个WordId关联。快速更具id查找到word。
@@ -12,23 +12,22 @@ class FastWordMap(
         /**
          * 记录的是hash和id的隐射关系
          */
-        val wordHash2WordId: IntArray,
+        var wordHash2WordId: IntArray,
 
         val wordList: ArrayList<Entry>,
 
         val label: String = "__label__"
 ) {
 
-    val vocabSize = wordHash2WordId.size
-
     /**
      * 构建一个空的
      */
     constructor(label:String,
-                vocabSize:Int,initWordListSize:Int?) : this(
+                vocabSize:Int,
+                initWordListSize:Int?) : this(
             IntArray(vocabSize){-1},
-            ArrayList(initWordListSize?:max(1000,min(10000,vocabSize/1000)))
-            ,label
+            ArrayList(initWordListSize?:max(1000,min(10000,vocabSize/1000))),
+            label
     )
 
     val size get() = wordList.size
@@ -118,5 +117,20 @@ class FastWordMap(
         }
         return id
     }
+
+    /**
+     * 为wordList里面的每个word进行编码
+     */
+    fun initWordHash2WordId(){
+        for (i in 0 until size) {
+            wordHash2WordId[find(wordList[i].word)]= i
+        }
+    }
+
+    fun collapseWordHash2Id(){
+        wordHash2WordId = IntArray((size.toFloat()/0.75).toInt()){-1}
+        initWordHash2WordId()
+    }
+
 
 }

@@ -1,9 +1,9 @@
 package com.mayabot.nlp.fasttext.args
 
-import com.mayabot.nlp.fasttext.blas.AutoDataInput
+import com.mayabot.nlp.fasttext.utils.AutoDataInput
 import com.mayabot.nlp.fasttext.loss.LossName
-import com.mayabot.nlp.fasttext.writeDouble
-import com.mayabot.nlp.fasttext.writeInt
+import com.mayabot.nlp.fasttext.utils.writeDouble
+import com.mayabot.nlp.fasttext.utils.writeInt
 import java.io.IOException
 import java.nio.channels.FileChannel
 

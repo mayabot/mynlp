@@ -1,14 +1,12 @@
-package com.mayabot.nlp.fasttext
+package com.mayabot.nlp.fasttext.utils
 
 import com.carrotsearch.hppc.IntArrayList
-import com.mayabot.nlp.fasttext.blas.FloatMatrix
-import com.mayabot.nlp.fasttext.blas.vector.ByteUtils
-import com.mayabot.nlp.fasttext.blas.vector.Vector
 import java.io.File
 import java.io.IOException
 import java.nio.ByteBuffer
 import java.nio.channels.FileChannel
 import java.nio.file.Files
+import java.util.*
 
 
 fun FileChannel.writeBoolean(value: Boolean) {
@@ -16,6 +14,13 @@ fun FileChannel.writeBoolean(value: Boolean) {
 }
 fun FileChannel.writeInt(value: Int) {
     this.write(ByteBuffer.allocate(4).putInt(value).apply { flip() })
+}
+
+fun FileChannel.readInt(): Int {
+    val b = ByteBuffer.allocate(4)
+    this.read(b)
+    b.flip()
+    return b.int
 }
 fun FileChannel.writeLong(value: Long) {
     this.write(ByteBuffer.allocate(8).putLong(value).apply { flip() })
@@ -69,5 +74,46 @@ inline fun IntArrayList.forEach2(action: (num: Int) -> Unit) {
     while (i < size) {
         action(buffer[i])
         i++
+    }
+}
+
+
+operator fun ByteBuffer.set(i: Int, v: Float) {
+    this.putFloat(i shl 2, v)
+}
+
+
+
+fun iota(data: IntArray) {
+    for (i in 0 until data.size) {
+        data[i] = i
+    }
+}
+
+
+fun swap(array: IntArray, i: Int, j: Int) {
+    val x = array[i]
+    array[i] = array[j]
+    array[j] = x
+}
+
+fun swap(array: IntArrayList, i: Int, j: Int) {
+    val x = array.get(i)
+    array.set(i, array.get(j))
+    array.set(j, x)
+}
+
+
+fun shuffle(array: IntArray, random: Random) {
+    val size = array.size
+    for (i in size - 1 downTo 2) {
+        swap(array, i - 1, random.nextInt(i))
+    }
+}
+
+fun shuffle(array: IntArrayList, random: Random) {
+    val size = array.size()
+    for (i in size - 1 downTo 2) {
+        swap(array, i - 1, random.nextInt(i))
     }
 }

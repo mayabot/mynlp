@@ -1,16 +1,17 @@
 package com.mayabot.nlp.fasttext
 
 import com.carrotsearch.hppc.IntArrayList
-import com.mayabot.nlp.fasttext.blas.FloatMatrix
-import com.mayabot.nlp.fasttext.blas.vector.FloatArrayVector
+import com.mayabot.nlp.fasttext.blas.Matrix
+import com.mayabot.nlp.fasttext.blas.DenseVector
 import com.mayabot.nlp.fasttext.loss.Loss
+import com.mayabot.nlp.fasttext.utils.forEach2
 import kotlin.random.Random
 
 typealias Predictions = MutableList<ScoreIdPair>
 
 class Model(
-        val wi: FloatMatrix,
-        val wo: FloatMatrix,
+        val wi: Matrix,
+        val wo: Matrix,
         val loss: Loss,
         val normalizeGradient: Boolean
 ) {
@@ -28,7 +29,8 @@ class Model(
         hidden.zero()
 
         input.forEach2 { row ->
-            hidden += wi[row]
+            wi.addRowToVector(hidden,row)
+            //hidden += wi[row]
         }
 
         //长度归一化
@@ -51,7 +53,7 @@ class Model(
     ) {
         val kk = if (k == kUnlimitedPredictions) {
             // output size
-            wo.rows()
+            wo.row
         } else{
             k
         }
@@ -95,9 +97,9 @@ class Model(
         private var lossValue = 0.0f
         private var nexamples = 0
 
-        val hidden = FloatArrayVector(hiddenSize)
-        val output = FloatArrayVector(outputSize)
-        val grad = FloatArrayVector(hiddenSize)
+        val hidden = DenseVector(hiddenSize)
+        val output = DenseVector(outputSize)
+        val grad = DenseVector(hiddenSize)
         val rng = Random(seed)
 
         val loss get() = lossValue / nexamples

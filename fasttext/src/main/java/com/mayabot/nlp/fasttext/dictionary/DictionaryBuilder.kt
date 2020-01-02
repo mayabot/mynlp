@@ -49,6 +49,7 @@ class DictionaryBuilder(
     var nlabels: Int = 0
 
     fun toDictionary(args: ComputedTrainArgs): Dictionary {
+
         return Dictionary(
                 args = args.modelArgs,
                 onehotMap = wordIdMap,

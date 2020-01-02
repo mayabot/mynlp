@@ -1,24 +1,19 @@
 package com.mayabot.nlp.fasttext.train
 
 import com.carrotsearch.hppc.IntArrayList
-import com.google.common.base.CharMatcher
-import com.google.common.base.Splitter
 import com.google.common.collect.Lists
 import com.google.common.util.concurrent.AtomicDouble
 import com.mayabot.nlp.fasttext.FastText
 import com.mayabot.nlp.fasttext.Model
 import com.mayabot.nlp.fasttext.args.ComputedTrainArgs
-import com.mayabot.nlp.fasttext.args.ModelArgs
 import com.mayabot.nlp.fasttext.args.ModelName
 import com.mayabot.nlp.fasttext.args.TrainArgs
-import com.mayabot.nlp.fasttext.blas.FloatMatrix
-import com.mayabot.nlp.fasttext.dictionary.Dictionary
+import com.mayabot.nlp.fasttext.blas.Matrix
+import com.mayabot.nlp.fasttext.blas.floatArrayMatrix
 import com.mayabot.nlp.fasttext.dictionary.buildFromFile
-import com.mayabot.nlp.fasttext.loss.Loss
 import com.mayabot.nlp.fasttext.loss.LossName
 import com.mayabot.nlp.fasttext.loss.createLoss
 import java.io.File
-import java.io.IOException
 import java.lang.Thread.sleep
 import java.util.concurrent.atomic.AtomicLong
 
@@ -52,7 +47,7 @@ class FastTextTrain(
             val input = if (args.preTrainedVectors != null) {
                 loadPreTrainVectors(dict, args.preTrainedVectors, args)
             } else {
-                FloatMatrix.floatArrayMatrix(dict.nwords + modelArgs.bucket, modelArgs.dim)
+                floatArrayMatrix(dict.nwords + modelArgs.bucket, modelArgs.dim)
                         .apply {
                             uniform(1.0f / modelArgs.dim)
                         }
@@ -60,11 +55,11 @@ class FastTextTrain(
 
             dict.init()
 
-            val output = FloatMatrix.floatArrayMatrix(
+            val output = floatArrayMatrix(
                     if (ModelName.sup == args.model) dict.nlabels else dict.nwords,
                     modelArgs.dim
             ).apply {
-                fill(0f)
+                zero()
             }
 
             val loss = createLoss(modelArgs,output,args.model,dict)
@@ -72,7 +67,7 @@ class FastTextTrain(
 
             val model = Model(input,output,loss,normalizeGradient)
 
-            val fastText = FastText(modelArgs,dict,input,output,model,false)
+            val fastText = FastText(modelArgs,dict,model,false)
 
             FastTextTrain(args,fastText).startThreads(sources)
 
@@ -118,7 +113,6 @@ class FastTextTrain(
 
         val ntokens = dict.ntokens
 
-        print("------")
         //printInfo(0f, loss)
         // Same condition as trainThread
         while (keepTraining()) {
@@ -152,7 +146,7 @@ class FastTextTrain(
 
     ) : Runnable {
 
-        val state = Model.State(args.dim,fastText.output.rows(),trainArgs.seed)
+        val state = Model.State(args.dim,fastText.output.row,trainArgs.seed)
 
         val ntokens = dict.ntokens
         var localTokenCount = 0

@@ -4,12 +4,12 @@ import com.carrotsearch.hppc.IntArrayList
 import com.mayabot.nlp.fasttext.ScoreIdPair
 import com.mayabot.nlp.fasttext.Model
 import com.mayabot.nlp.fasttext.Predictions
-import com.mayabot.nlp.fasttext.blas.FloatMatrix
-import com.mayabot.nlp.fasttext.blas.vector.Vector
+import com.mayabot.nlp.fasttext.blas.Matrix
+import com.mayabot.nlp.fasttext.blas.Vector
 import java.util.*
 import kotlin.math.exp
 
-class HierarchicalSoftmaxLoss(wo: FloatMatrix, targetCounts: LongArray) : BinaryLogisticLoss(wo) {
+class HierarchicalSoftmaxLoss(wo: Matrix, targetCounts: LongArray) : BinaryLogisticLoss(wo) {
 
     val osz = targetCounts.size
 
@@ -22,7 +22,7 @@ class HierarchicalSoftmaxLoss(wo: FloatMatrix, targetCounts: LongArray) : Binary
 
         val counts = targetCounts
 
-        val osz = wo.rows()
+        val osz = wo.row
 
         val pathsLocal = ArrayList<IntArray>(osz)
         val codesLocal = ArrayList<BooleanArray>(osz)

@@ -1,4 +1,4 @@
-package com.mayabot.nlp.fasttext.blas.vector;//package blas;
+package com.mayabot.nlp.fasttext.utils;//package blas;
 //
 //
 public class ByteUtils {

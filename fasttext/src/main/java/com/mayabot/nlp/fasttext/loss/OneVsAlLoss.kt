@@ -2,9 +2,9 @@ package com.mayabot.nlp.fasttext.loss
 
 import com.carrotsearch.hppc.IntArrayList
 import com.mayabot.nlp.fasttext.Model
-import com.mayabot.nlp.fasttext.blas.FloatMatrix
+import com.mayabot.nlp.fasttext.blas.Matrix
 
-class OneVsAlLoss(wo: FloatMatrix) : BinaryLogisticLoss(wo) {
+class OneVsAlLoss(wo: Matrix) : BinaryLogisticLoss(wo) {
 
     override fun forward(targets: IntArrayList, t_: Int, state: Model.State, lr: Float, backprop: Boolean): Float {
         var loss = 0f
