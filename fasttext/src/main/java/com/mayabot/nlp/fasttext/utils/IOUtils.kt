@@ -117,3 +117,11 @@ fun shuffle(array: IntArrayList, random: Random) {
         swap(array, i - 1, random.nextInt(i))
     }
 }
+
+
+/**
+ * 一共可以分为多少块。99个，2个一份，应该为50份
+ */
+fun pages(total: Int, size: Int): Int = (total + size - 1) / size
+
+fun pages(total: Long, size: Int): Int = ((total + size.toLong() - 1) / size.toLong()).toInt()
