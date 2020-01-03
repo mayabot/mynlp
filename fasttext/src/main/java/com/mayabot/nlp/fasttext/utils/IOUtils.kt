@@ -1,6 +1,7 @@
 package com.mayabot.nlp.fasttext.utils
 
 import com.carrotsearch.hppc.IntArrayList
+import java.io.DataInputStream
 import java.io.File
 import java.io.IOException
 import java.nio.ByteBuffer
@@ -125,3 +126,6 @@ fun shuffle(array: IntArrayList, random: Random) {
 fun pages(total: Int, size: Int): Int = (total + size - 1) / size
 
 fun pages(total: Long, size: Int): Int = ((total + size.toLong() - 1) / size.toLong()).toInt()
+
+//fun File.openAutoDataInput() = AutoDataInput(DataInputStream(this.inputStream().buffered()))
+fun File.openDataInputStream() = DataInputStream(this.inputStream().buffered())

@@ -26,6 +26,11 @@ fun buildQMatrix(mat: DenseMatrix,
     return qm
 }
 
+fun loadQuantMatrix(file: File): QuantMatrix {
+    return file.openDataInputStream().use {
+        loadQuantMatrix(AutoDataInput(it))
+    }
+}
 fun loadQuantMatrix(input: AutoDataInput): QuantMatrix {
     val qnorm = input.readUnsignedByte() != 0
     val m = input.readLong().toInt()

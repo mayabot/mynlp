@@ -31,47 +31,7 @@ interface Matrix : Serializable {
 
     fun save(file: File)
 
-    companion object {
 
-        fun loadMatrix(file: File, mmap: Boolean): Matrix {
-            fun pages(total: Long, size: Int): Int = ((total + size.toLong() - 1) / size.toLong()).toInt()
-            return if (mmap) {
-                file.inputStream().channel.use {
-                    val rows = it.readInt()
-                    val cols = it.readInt()
-
-                    //一个区域可以容纳多少行
-                    var areaRows = 0
-                    while (areaRows * cols < 268435456) {
-                        areaRows += 10
-                    }
-
-                    val fileSize = it.size()
-                    val arrayBytes = fileSize - 8
-                    val areaCount = pages(arrayBytes, 4 * areaRows * cols)
-                    val areaBytes = areaRows * cols * 4
-                    val lastBytes = arrayBytes % (areaRows * cols * 4)
-
-                    val list = ArrayList<ByteBuffer>()
-                    for (a in 0 until areaCount) {
-                        val len = if (a == areaCount - 1) lastBytes else areaBytes.toLong()
-                        list += it.map(FileChannel.MapMode.READ_ONLY, 8 + a.toLong() * areaBytes, len)
-                    }
-                    AreaByteBufferMatrix(rows, cols, list)
-                }
-            } else {
-                val dataInput = AutoDataInput.open(file)
-                val rows = dataInput.readInt()
-                val cols = dataInput.readInt()
-                val floatArray = FloatArray(rows * cols)
-                for (i in 0 until rows * cols) {
-                    floatArray[i] = dataInput.readFloat()
-                }
-                floatArrayMatrix(rows, cols, floatArray)
-            }
-
-        }
-    }
 }
 
 interface DenseMatrix : Matrix {
@@ -101,36 +61,3 @@ interface DenseMatrix : Matrix {
     fun l2NormRow(norms: Vector)
 
 }
-//
-//abstract class BaseMatrix(override val row: Int,
-//                          override val col: Int) : Matrix {
-//
-//    override fun toString(): String {
-//        if (row == 0) {
-//            return ""
-//        }
-//
-//        val b = StringBuilder()
-//
-//        b.append("-".repeat(col * 12))
-//        b.append("\n")
-//
-//        for (i in 0 until min(20, row)) {
-//            val row = get(i)
-//
-//            for (j in 0 until col) {
-//                b.append(row[j]).append("\t")
-//            }
-//
-//            b.append("\n")
-//        }
-//
-//        if (row > 20) {
-//            b.append("....more....")
-//        }
-//        b.append("\n")
-//
-//        return b.toString()
-//    }
-//}
-
