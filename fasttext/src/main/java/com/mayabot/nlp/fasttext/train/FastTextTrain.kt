@@ -22,64 +22,6 @@ class FastTextTrain(
         val fastText: FastText
 ) {
 
-    companion object {
-
-        @JvmStatic
-        fun trainSupervised(file: File, trainArgs: TrainArgs = TrainArgs(), wordSplitter: WordSplitter = whitespaceSplitter) = train(file, ModelName.sup, trainArgs, wordSplitter)
-
-        @JvmStatic
-        fun trainCow(file: File, trainArgs: TrainArgs = TrainArgs(), wordSplitter: WordSplitter = whitespaceSplitter) = train(file, ModelName.cbow, trainArgs, wordSplitter)
-
-        @JvmStatic
-        fun trainSkipgram(file: File, trainArgs: TrainArgs = TrainArgs(), wordSplitter: WordSplitter = whitespaceSplitter) = train(file, ModelName.sg, trainArgs, wordSplitter)
-
-
-        @JvmStatic
-        fun train(file: File, modelName: ModelName, trainArgs: TrainArgs, wordSplitter: WordSplitter) : FastText {
-            val args = trainArgs.toComputedTrainArgs(modelName)
-            val modelArgs = args.modelArgs
-
-            val sources : List<TrainSampleList> = processAndSplit(file,wordSplitter,args.thread)
-
-            val dict = buildFromFile(args, sources, args.maxVocabSize)
-
-
-            val input = if (args.preTrainedVectors != null) {
-                loadPreTrainVectors(dict, args.preTrainedVectors, args)
-            } else {
-                floatArrayMatrix(dict.nwords + modelArgs.bucket, modelArgs.dim)
-                        .apply {
-                            uniform(1.0f / modelArgs.dim)
-                        }
-            }
-
-            dict.init()
-
-            val output = floatArrayMatrix(
-                    if (ModelName.sup == args.model) dict.nlabels else dict.nwords,
-                    modelArgs.dim
-            ).apply {
-                zero()
-            }
-
-            val loss = createLoss(modelArgs,output,args.model,dict)
-            val normalizeGradient = args.model == ModelName.sup
-
-            val model = Model(input,output,loss,normalizeGradient)
-
-            val fastText = FastText(modelArgs,dict,model,false)
-
-            FastTextTrain(args,fastText).startThreads(sources)
-
-            for (source in sources) {
-                source.file.delete()
-            }
-
-            return fastText
-        }
-
-    }
-
     private val tokenCount = AtomicLong(0)
     private val loss = AtomicDouble(-1.0)
     private var startTime =  System.currentTimeMillis()

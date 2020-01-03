@@ -18,8 +18,13 @@ fun main() {
         maxn = 0
     }
 
-    val fastText = FastTextTrain.trainSupervised(trainFile, args)
+    val fastText = FastText.trainSupervised(trainFile, args)
+
+    val qFastText = fastText.quantize(dsub = 30)
+
+    println("xxxx")
 //
-    val x = fastText.test(testFile, 1)
+    fastText.test(testFile, 1)
+    qFastText.test(testFile, 1)
 
 }

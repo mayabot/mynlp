@@ -4,7 +4,7 @@ import com.mayabot.nlp.fasttext.blas.*
 import com.mayabot.nlp.fasttext.utils.*
 import java.io.File
 
-fun buildMatrix(mat: DenseArrayMatrix,
+fun buildQMatrix(mat: DenseMatrix,
                 dsub: Int = 2,
                 qnorm: Boolean = false): QuantMatrix {
 
@@ -105,7 +105,9 @@ class QuantMatrix(val m:Int,
         }
 
         pq.train(matrix)
+        println("compute_codes...")
         pq.compute_codes(matrix, codes)
+        println("compute_codes success")
     }
 
     private fun quantizeNorm(norms: DenseVector) {

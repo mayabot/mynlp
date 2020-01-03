@@ -9,11 +9,17 @@ import com.google.common.collect.Lists
 import com.google.common.collect.Sets
 import com.mayabot.nlp.fasttext.args.ModelArgs
 import com.mayabot.nlp.fasttext.args.ModelName
+import com.mayabot.nlp.fasttext.args.TrainArgs
 import com.mayabot.nlp.fasttext.blas.*
 import com.mayabot.nlp.fasttext.dictionary.Dictionary
 import com.mayabot.nlp.fasttext.dictionary.EOS
-import com.mayabot.nlp.fasttext.train.TrainSampleList
+import com.mayabot.nlp.fasttext.dictionary.buildFromFile
+import com.mayabot.nlp.fasttext.loss.createLoss
+import com.mayabot.nlp.fasttext.quant.QuantMatrix
+import com.mayabot.nlp.fasttext.quant.buildQMatrix
+import com.mayabot.nlp.fasttext.train.*
 import com.mayabot.nlp.fasttext.utils.forEach2
+import com.mayabot.nlp.fasttext.utils.iota
 import java.io.File
 import java.text.DecimalFormat
 import java.util.HashSet
@@ -336,6 +342,122 @@ class FastText(
                 }
                 writer.write("\n")
             }
+        }
+
+
+    }
+
+    @JvmOverloads
+    fun quantize(dsub:Int=2,
+//                 cutoff:Int=0,
+//                 retrain:Int,
+                 qnorm:Boolean = false,
+                 qout:Boolean=false): FastText {
+
+//        fun selectEmbedding(): IntArray{
+//            val norms = floatArrayVector(input.row)
+//            (input as DenseMatrix).l2NormRow(norms)
+//            val idx = IntArray(input.row){0}
+//            iota(idx)
+//            val eosid = dict.getWordId(EOS)
+//
+//            idx.sortedWith(Comparator { i1, i2 ->
+//                if (i1 == eosid && i2 == eosid) {
+//                    1
+//                }else{
+//                    if(eosid == i1){
+//                        -1
+//                    }else{
+//                        if(eosid !=i2){
+//                            -(norms[i1].compareTo(i2))
+//                        }else{
+//                            -1
+//                        }
+//                    }
+//                }
+//            })
+//
+//            return idx.takeLast(idx.size-cutoff).toIntArray()
+//        }
+
+        if (this.args.model != ModelName.sup) {
+            error("For now we only support quantization of supervised models")
+        }
+
+        val normalizeGradient = args.model == ModelName.sup
+
+        // 暂时不实现cutoff
+//        if (cutoff > 0 && cutoff < input.row) {
+//            val idx = selectEmbedding()
+//
+//        }
+
+        val input_ = buildQMatrix(this.input as DenseMatrix,dsub,qnorm)
+
+        var output_:Matrix = this.output
+        var loss_ = this.model.loss
+        if(qout){
+            output_ = buildQMatrix(this.output as DenseMatrix,2,qnorm)
+            loss_ = createLoss(args,output_,args.model,this.dict)
+        }
+
+        return FastText(args,dict,Model(input_,output_,loss_,normalizeGradient),true)
+    }
+
+
+    companion object {
+
+        @JvmStatic
+        fun trainSupervised(file: File, trainArgs: TrainArgs = TrainArgs(), wordSplitter: WordSplitter = whitespaceSplitter) = train(file, ModelName.sup, trainArgs, wordSplitter)
+
+        @JvmStatic
+        fun trainCow(file: File, trainArgs: TrainArgs = TrainArgs(), wordSplitter: WordSplitter = whitespaceSplitter) = train(file, ModelName.cbow, trainArgs, wordSplitter)
+
+        @JvmStatic
+        fun trainSkipgram(file: File, trainArgs: TrainArgs = TrainArgs(), wordSplitter: WordSplitter = whitespaceSplitter) = train(file, ModelName.sg, trainArgs, wordSplitter)
+
+        @JvmStatic
+        fun train(file: File, modelName: ModelName, trainArgs: TrainArgs, wordSplitter: WordSplitter) : FastText {
+            val args = trainArgs.toComputedTrainArgs(modelName)
+            val modelArgs = args.modelArgs
+
+            val sources : List<TrainSampleList> = processAndSplit(file,wordSplitter,args.thread)
+
+            val dict = buildFromFile(args, sources, args.maxVocabSize)
+
+
+            val input = if (args.preTrainedVectors != null) {
+                loadPreTrainVectors(dict, args.preTrainedVectors, args)
+            } else {
+                floatArrayMatrix(dict.nwords + modelArgs.bucket, modelArgs.dim)
+                        .apply {
+                            uniform(1.0f / modelArgs.dim)
+                        }
+            }
+
+            dict.init()
+
+            val output = floatArrayMatrix(
+                    if (ModelName.sup == args.model) dict.nlabels else dict.nwords,
+                    modelArgs.dim
+            ).apply {
+                zero()
+            }
+
+            val loss = createLoss(modelArgs,output,args.model,dict)
+            val normalizeGradient = args.model == ModelName.sup
+
+            val model = Model(input,output,loss,normalizeGradient)
+
+            val fastText = FastText(modelArgs,dict,model,false)
+
+            FastTextTrain(args,fastText).startThreads(sources)
+
+            for (source in sources) {
+                source.file.delete()
+            }
+
+            return fastText
         }
 
     }
