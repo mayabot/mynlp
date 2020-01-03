@@ -1,10 +1,52 @@
 package com.mayabot.nlp.fasttext.blas
 
+import com.mayabot.nlp.fasttext.utils.AutoDataInput
+import com.mayabot.nlp.fasttext.utils.readInt
 import com.mayabot.nlp.fasttext.utils.writeInt
 import java.io.File
 import java.nio.ByteBuffer
 import java.nio.channels.FileChannel
 import java.util.*
+
+
+fun loadDenseMatrix(file: File, mmap: Boolean): DenseMatrix {
+    fun pages(total: Long, size: Int): Int = ((total + size.toLong() - 1) / size.toLong()).toInt()
+    return if (mmap) {
+        file.inputStream().channel.use {
+            val rows = it.readInt()
+            val cols = it.readInt()
+
+            //一个区域可以容纳多少行
+            var areaRows = 0
+            while (areaRows * cols < 268435456) {
+                areaRows += 10
+            }
+
+            val fileSize = it.size()
+            val arrayBytes = fileSize - 8
+            val areaCount = pages(arrayBytes, 4 * areaRows * cols)
+            val areaBytes = areaRows * cols * 4
+            val lastBytes = arrayBytes % (areaRows * cols * 4)
+
+            val list = ArrayList<ByteBuffer>()
+            for (a in 0 until areaCount) {
+                val len = if (a == areaCount - 1) lastBytes else areaBytes.toLong()
+                list += it.map(FileChannel.MapMode.READ_ONLY, 8 + a.toLong() * areaBytes, len)
+            }
+            AreaByteBufferMatrix(rows, cols, list)
+        }
+    } else {
+        val dataInput = AutoDataInput.open(file)
+        val rows = dataInput.readInt()
+        val cols = dataInput.readInt()
+        val floatArray = FloatArray(rows * cols)
+        for (i in 0 until rows * cols) {
+            floatArray[i] = dataInput.readFloat()
+        }
+        floatArrayMatrix(rows, cols, floatArray)
+    }
+}
+
 
 /**
  * 行存储的只读矩阵。内存实现
@@ -172,16 +214,6 @@ class ByteBufferMatrix(row: Int, col: Int, val data: ByteBuffer) : BasicDenseMat
         return ByteBufferDenseVector(data, row * col, col)
     }
 
-//    /**
-//     * 均值为0
-//     * @param sd 标准差
-//     */
-//    fun gaussRandom(number: Number) {
-//        var sd = number.toFloat()
-//        for (i in 0 until length step 4) {
-//            data.putFloat(i, (rnd.nextGaussian() * sd).toFloat())
-//        }
-//    }
 
 }
 
@@ -235,8 +267,6 @@ class AreaByteBufferMatrix(row: Int, col: Int, val data: List<ByteBuffer>) : Bas
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }
-
-
 
 
 abstract class BasicDenseMatrix(

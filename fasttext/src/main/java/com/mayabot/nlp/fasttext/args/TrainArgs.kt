@@ -144,6 +144,10 @@ class ComputedTrainArgs(val model:ModelName,trainArgs: TrainArgs){
             temp = temp.copy(loss = it)
         }
 
+        if (temp.wordNgrams <= 1 && temp.maxn == 0) {
+            temp = temp.copy(bucket = 0)
+        }
+
         temp
     }
 }

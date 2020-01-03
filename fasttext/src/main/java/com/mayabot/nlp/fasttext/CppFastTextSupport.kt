@@ -3,7 +3,6 @@ package com.mayabot.nlp.fasttext
 import com.mayabot.nlp.fasttext.args.ModelArgs
 import com.mayabot.nlp.fasttext.args.ModelName
 import com.mayabot.nlp.fasttext.utils.AutoDataInput
-import com.mayabot.nlp.fasttext.dictionary.loadDictFromCppModel
 import java.io.DataInputStream
 import java.io.File
 import java.io.IOException
@@ -45,7 +44,7 @@ object CppFastTextSupport {
 
             //Args
             val args = run {
-                var args_ = ModelArgs.loadFromCppModel(buffer)
+                var args_ = ModelArgs.load(buffer)
 
                 if (version == 11 && args_.model == ModelName.sup) {
                     // backward compatibility: old supervised models do not use char ngrams.
@@ -53,17 +52,17 @@ object CppFastTextSupport {
                 }
                 args_
             }
-
+            TODO()
             //dictionary
-            val dictionary = loadDictFromCppModel(args,buffer)
-
+//            val dictionary = loadDictFromCppModel(args,buffer)
 //
-//            var input: FloatMatrix = FloatMatrix.floatArrayMatrix(0, 0)
-//            var qinput: QMatrix? = null
+////
+////            var input: FloatMatrix = FloatMatrix.floatArrayMatrix(0, 0)
+////            var qinput: QMatrix? = null
+////
 //
-
-            val quantInput = buffer.readUnsignedByte() != 0
-            val quant_ = quantInput
+//            val quantInput = buffer.readUnsignedByte() != 0
+//            val quant_ = quantInput
 
             TODO()
 //            val input = if (quantInput) {

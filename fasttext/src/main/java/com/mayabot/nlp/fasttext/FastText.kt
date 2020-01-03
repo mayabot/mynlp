@@ -11,23 +11,26 @@ import com.mayabot.nlp.fasttext.args.ModelArgs
 import com.mayabot.nlp.fasttext.args.ModelName
 import com.mayabot.nlp.fasttext.args.TrainArgs
 import com.mayabot.nlp.fasttext.blas.*
+import com.mayabot.nlp.fasttext.blas.Vector
 import com.mayabot.nlp.fasttext.dictionary.Dictionary
 import com.mayabot.nlp.fasttext.dictionary.EOS
 import com.mayabot.nlp.fasttext.dictionary.buildFromFile
 import com.mayabot.nlp.fasttext.loss.createLoss
 import com.mayabot.nlp.fasttext.quant.QuantMatrix
 import com.mayabot.nlp.fasttext.quant.buildQMatrix
+import com.mayabot.nlp.fasttext.quant.loadQuantMatrix
 import com.mayabot.nlp.fasttext.train.*
-import com.mayabot.nlp.fasttext.utils.forEach2
-import com.mayabot.nlp.fasttext.utils.iota
+import com.mayabot.nlp.fasttext.utils.AutoDataInput
+import com.mayabot.nlp.fasttext.utils.openDataInputStream
 import java.io.File
 import java.text.DecimalFormat
-import java.util.HashSet
+import java.util.*
 import java.util.concurrent.TimeUnit
+import kotlin.collections.ArrayList
 import kotlin.math.abs
 import kotlin.math.exp
 
-data class ScoreIdPair(val score: Float, val id: Int){
+data class ScoreIdPair(val score: Float, val id: Int) {
     override fun toString(): String {
         return "[$id,$score]"
     }
@@ -57,7 +60,7 @@ class FastText(
      * @param k
      * @return
      */
-    fun predict(tokens: List<String>, k: Int,threshold: Float): List<ScoreLabelPair> {
+    fun predict(tokens: List<String>, k: Int, threshold: Float): List<ScoreLabelPair> {
 
         // 要附加一个EOS标记
         val tokens2 = Iterables.concat(tokens, listOf(EOS))
@@ -71,13 +74,13 @@ class FastText(
             return ImmutableList.of()
         }
 
-        val result = predict(k,words,threshold)
+        val result = predict(k, words, threshold)
 
 
         return result.map { x -> ScoreLabelPair(exp(x.score), dict.getLabel(x.id)) }
     }
 
-    fun predict(k:Int,words: IntArrayList,threshold:Float) : List<ScoreIdPair> {
+    fun predict(k: Int, words: IntArrayList, threshold: Float): List<ScoreIdPair> {
         if (words.isEmpty) {
             return emptyList()
         }
@@ -85,9 +88,9 @@ class FastText(
         if (args.model != ModelName.sup) {
             error("Model needs to be supervised for prediction!")
         }
-        val state = Model.State(args.dim,dict.nlabels,0)
+        val state = Model.State(args.dim, dict.nlabels, 0)
         val predictions = ArrayList<ScoreIdPair>()
-        model.predict(words,k,threshold,predictions,state)
+        model.predict(words, k, threshold, predictions, state)
 
         return predictions
     }
@@ -100,11 +103,11 @@ class FastText(
             queryNorm = 1f
         }
 
-        val mostSimilar = (0 until k).map { ScoreLabelPair(-1f,"") }.toList().toTypedArray()
+        val mostSimilar = (0 until k).map { ScoreLabelPair(-1f, "") }.toList().toTypedArray()
         val mastSimilarLast = mostSimilar.size - 1
 
         for (i in 0 until dict.nwords) {
-            val dp = wordVectors[i] *queryVec / queryNorm
+            val dp = wordVectors[i] * queryVec / queryNorm
             val last = mostSimilar[mastSimilarLast]
             if (dp > last.score) {
                 last.score = dp
@@ -139,19 +142,18 @@ class FastText(
                 getWordVector(vec, word)
                 val norm = vec.norm2()
                 if (norm > 0) {
-                    wordVectors[i] += 1.0f/norm to vec
+                    wordVectors[i] += 1.0f / norm to vec
                 }
             }
         }
 
-        val matrix = floatArrayMatrix(dict.nwords,args.dim)
+        val matrix = floatArrayMatrix(dict.nwords, args.dim)
         val stopwatch = Stopwatch.createStarted()
         preComputeWordVectors(matrix)
         stopwatch.stop()
         println("Init wordVectors martix use time ${stopwatch.elapsed(TimeUnit.MILLISECONDS)} ms")
         matrix
     }
-
 
 
     /**
@@ -191,8 +193,6 @@ class FastText(
     }
 
 
-
-
     /**
      * 把词向量填充到一个Vector对象里面去
      *
@@ -221,7 +221,7 @@ class FastText(
         return vec
     }
 
-    fun test(file: File,k:Int=1,threshold:Float = 0.0f): Meter {
+    fun test(file: File, k: Int = 1, threshold: Float = 0.0f): Meter {
         val line = IntArrayList()
         val labels = IntArrayList()
         val meter = Meter()
@@ -229,10 +229,10 @@ class FastText(
         for (sample in TrainSampleList(file)) {
             line.clear()
             labels.clear()
-            dict.getLine(sample.words,line,labels)
+            dict.getLine(sample.words, line, labels)
             if (!labels.isEmpty && !line.isEmpty) {
-                val predictions = predict(k,line,threshold)
-                meter.log(labels,predictions)
+                val predictions = predict(k, line, threshold)
+                meter.log(labels, predictions)
 
 //                if (labels[0] == 1 && predictions[0].id == 1) {
 //
@@ -243,7 +243,7 @@ class FastText(
 //                }
             }
         }
-        meter.print(dict,k,true)
+        meter.print(dict, k, true)
         return meter
     }
 
@@ -305,7 +305,7 @@ class FastText(
 //        }
 
         // vec += input[ind]
-        input.addRowToVector(vec,ind)
+        input.addRowToVector(vec, ind)
     }
 
 
@@ -315,8 +315,8 @@ class FastText(
      * @param file
      */
     @Throws(Exception::class)
-    fun saveVectors(fileName: String) {
-        var fileName = fileName
+    fun saveVectors(file: String) {
+        var fileName = file
         if (!fileName.endsWith("vec")) {
             fileName += ".vec"
         }
@@ -347,12 +347,45 @@ class FastText(
 
     }
 
+
+    /**
+     * 保存为自有的文件格式(多文件）
+     */
+    @Throws(Exception::class)
+    fun saveModel(file: String) {
+        val path = File(file)
+        if (path.exists()) {
+            path.deleteRecursively()
+        }
+        path.mkdirs()
+
+        //dict
+        File(path, "dict.bin").outputStream().channel.use {
+            dict.save(it)
+        }
+
+        //args
+        File(path, "args.bin").outputStream().channel.use {
+            args.save(it)
+        }
+
+        val qInputFlag = if (input is QuantMatrix) "q" else ""
+        input.save(File(path, "${qInputFlag}input.matrix"))
+
+        val qOutputFlag = if (output is QuantMatrix) "q" else ""
+        output.save(File(path, "${qOutputFlag}output.matrix"))
+
+    }
+
+    /**
+     * 对分类模型进行压缩
+     */
     @JvmOverloads
-    fun quantize(dsub:Int=2,
+    fun quantize(dsub: Int = 2,
 //                 cutoff:Int=0,
 //                 retrain:Int,
-                 qnorm:Boolean = false,
-                 qout:Boolean=false): FastText {
+                 qnorm: Boolean = false,
+                 qout: Boolean = false): FastText {
 
 //        fun selectEmbedding(): IntArray{
 //            val norms = floatArrayVector(input.row)
@@ -392,16 +425,16 @@ class FastText(
 //
 //        }
 
-        val input_ = buildQMatrix(this.input as DenseMatrix,dsub,qnorm)
+        val input_ = buildQMatrix(this.input as DenseMatrix, dsub, qnorm)
 
-        var output_:Matrix = this.output
+        var output_: Matrix = this.output
         var loss_ = this.model.loss
-        if(qout){
-            output_ = buildQMatrix(this.output as DenseMatrix,2,qnorm)
-            loss_ = createLoss(args,output_,args.model,this.dict)
+        if (qout) {
+            output_ = buildQMatrix(this.output as DenseMatrix, 2, qnorm)
+            loss_ = createLoss(args, output_, args.model, this.dict)
         }
 
-        return FastText(args,dict,Model(input_,output_,loss_,normalizeGradient),true)
+        return FastText(args, dict, Model(input_, output_, loss_, normalizeGradient), true)
     }
 
 
@@ -417,11 +450,11 @@ class FastText(
         fun trainSkipgram(file: File, trainArgs: TrainArgs = TrainArgs(), wordSplitter: WordSplitter = whitespaceSplitter) = train(file, ModelName.sg, trainArgs, wordSplitter)
 
         @JvmStatic
-        fun train(file: File, modelName: ModelName, trainArgs: TrainArgs, wordSplitter: WordSplitter) : FastText {
+        fun train(file: File, modelName: ModelName, trainArgs: TrainArgs, wordSplitter: WordSplitter): FastText {
             val args = trainArgs.toComputedTrainArgs(modelName)
             val modelArgs = args.modelArgs
 
-            val sources : List<TrainSampleList> = processAndSplit(file,wordSplitter,args.thread)
+            val sources: List<TrainSampleList> = processAndSplit(file, wordSplitter, args.thread)
 
             val dict = buildFromFile(args, sources, args.maxVocabSize)
 
@@ -444,14 +477,14 @@ class FastText(
                 zero()
             }
 
-            val loss = createLoss(modelArgs,output,args.model,dict)
+            val loss = createLoss(modelArgs, output, args.model, dict)
             val normalizeGradient = args.model == ModelName.sup
 
-            val model = Model(input,output,loss,normalizeGradient)
+            val model = Model(input, output, loss, normalizeGradient)
 
-            val fastText = FastText(modelArgs,dict,model,false)
+            val fastText = FastText(modelArgs, dict, model, false)
 
-            FastTextTrain(args,fastText).startThreads(sources)
+            FastTextTrain(args, fastText).startThreads(sources)
 
             for (source in sources) {
                 source.file.delete()
@@ -460,53 +493,47 @@ class FastText(
             return fastText
         }
 
+        /**
+         * 加载Java模型,[file]是目录
+         */
+        fun loadModel(file: File, mmap: Boolean = false): FastText {
+
+            check(file.exists() && file.isDirectory)
+
+            val args = ModelArgs.load(File(file, "args.bin"))
+
+            val dict = File(file, "dict.bin").openDataInputStream().use {
+                Dictionary.loadModel(args, AutoDataInput(it))
+            }
+
+            val quant = File(file, "qinput.matrix").exists()
+
+            val input = if (quant) {
+                loadQuantMatrix(File(file, "qinput.matrix"))
+            } else {
+                loadDenseMatrix(File(file, "input.matrix"), mmap)
+            }
+
+
+            if (!quant && dict.isPruned()) {
+                error("Invalid model file.\n" +
+                        "Please download the updated model from www.fasttext.cc.\n" +
+                        "See issue #332 on Github for more information.\n")
+            }
+
+            val output = if (File(file, "qoutput.matrix").exists()) {
+                loadQuantMatrix(File(file, "qoutput.matrix"))
+            } else {
+                loadDenseMatrix(File(file, "output.matrix"), mmap)
+            }
+
+            val loss = createLoss(args, output, args.model, dict)
+
+            val normalizeGradient = args.model == ModelName.sup
+
+            return FastText(args, dict, Model(input, output, loss, normalizeGradient), quant)
+        }
     }
 
-//    /**
-//     * 保存为自有的文件格式(多文件）
-//     */
-//    @Throws(Exception::class)
-//    fun saveModel(path: String) {
-//        var path = File(path)
-//        if (path.exists()) {
-//            path.deleteRecursively()
-//        }
-//        path.mkdirs()
-//
-//        //dict
-//        File(path, "dict.bin").outputStream().channel.use {
-//            dict.save(it)
-//        }
-//
-//        //args
-//        File(path, "args.bin").outputStream().channel.use {
-//            args.save(it)
-//        }
-//
-//        if (!quant) {
-//            //input float matrix
-//            File(path, "input.matrix").outputStream().channel.use {
-//                it.writeInt(model.input.row)
-//                it.writeInt(model.input.col)
-//                model.input.write(it)
-//            }
-//        } else {
-//            File(path, "qinput.matrix").outputStream().channel.use {
-//                model.qinput.save(it)
-//            }
-//        }
-//
-//        if (quant && model.quantOut) {
-//            File(path, "qoutput.matrix").outputStream().channel.use {
-//                model.qoutput!!.save(it)
-//            }
-//        } else {
-//            File(path, "output.matrix").outputStream().channel.use {
-//                it.writeInt(model.output.row)
-//                it.writeInt(model.output.col)
-//                model.output.write(it)
-//            }
-//        }
-//    }
 
 }
