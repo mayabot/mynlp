@@ -23,6 +23,7 @@ import com.mayabot.nlp.fasttext.train.*
 import com.mayabot.nlp.fasttext.utils.AutoDataInput
 import com.mayabot.nlp.fasttext.utils.openDataInputStream
 import java.io.File
+import java.io.InputStream
 import java.text.DecimalFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -493,6 +494,14 @@ class FastText(
             return fastText
         }
 
+        fun loadCppModel(file: File):FastText {
+            return CppFastTextSupport.load(file)
+        }
+
+        fun loadCppModel(ins: InputStream): FastText {
+            return CppFastTextSupport.loadCModel(ins)
+        }
+
         /**
          * 加载Java模型,[file]是目录
          */
@@ -533,6 +542,8 @@ class FastText(
 
             return FastText(args, dict, Model(input, output, loss, normalizeGradient), quant)
         }
+
+
     }
 
 
