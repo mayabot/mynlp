@@ -28,8 +28,8 @@ fun main() {
 //    fastText.test(testFile, 1)
 //    qFastText.test(testFile, 1)
 
-    val fastText = FastText.loadModel(File("fasttext/data/agnews/model"),true)
-
+//    val fastText = FastText.loadModel(File("fasttext/data/agnews/model"),true)
+    val fastText = FastText.loadCppModel(File("fasttext/data/agnews/model.ftz"))
     fastText.test(testFile, 1)
 
 

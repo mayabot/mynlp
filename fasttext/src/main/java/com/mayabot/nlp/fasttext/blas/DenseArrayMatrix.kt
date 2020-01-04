@@ -47,6 +47,26 @@ fun loadDenseMatrix(file: File, mmap: Boolean): DenseMatrix {
     }
 }
 
+fun loadFloatArrayMatrix(dataInput: AutoDataInput): DenseArrayMatrix {
+    val rows = dataInput.readInt()
+    val cols = dataInput.readInt()
+    val floatArray = FloatArray(rows * cols)
+    for (i in 0 until rows * cols) {
+        floatArray[i] = dataInput.readFloat()
+    }
+    return floatArrayMatrix(rows, cols, floatArray)
+}
+
+fun loadFloatArrayMatrixCPP(dataInput: AutoDataInput): DenseArrayMatrix {
+    val rows = dataInput.readLong().toInt()
+    val cols = dataInput.readLong().toInt()
+    val floatArray = FloatArray(rows * cols)
+    for (i in 0 until rows * cols) {
+        floatArray[i] = dataInput.readFloat()
+    }
+    return floatArrayMatrix(rows, cols, floatArray)
+}
+
 
 /**
  * 行存储的只读矩阵。内存实现

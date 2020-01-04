@@ -2,6 +2,11 @@ package com.mayabot.nlp.fasttext
 
 import com.mayabot.nlp.fasttext.args.ModelArgs
 import com.mayabot.nlp.fasttext.args.ModelName
+import com.mayabot.nlp.fasttext.blas.loadFloatArrayMatrix
+import com.mayabot.nlp.fasttext.blas.loadFloatArrayMatrixCPP
+import com.mayabot.nlp.fasttext.dictionary.Dictionary
+import com.mayabot.nlp.fasttext.loss.createLoss
+import com.mayabot.nlp.fasttext.quant.loadQuantMatrix
 import com.mayabot.nlp.fasttext.utils.AutoDataInput
 import java.io.DataInputStream
 import java.io.File
@@ -25,7 +30,7 @@ object CppFastTextSupport {
     @Throws(Exception::class)
     fun loadCModel(input: InputStream): FastText {
 
-        val ins = DataInputStream(input.buffered(1024*1024))
+        val ins = DataInputStream(input.buffered(1024 * 1024))
 
         ins.use {
             val buffer = AutoDataInput(it, ByteOrder.LITTLE_ENDIAN)
@@ -52,55 +57,45 @@ object CppFastTextSupport {
                 }
                 args_
             }
-            TODO()
-            //dictionary
-//            val dictionary = loadDictFromCppModel(args,buffer)
-//
-////
-////            var input: FloatMatrix = FloatMatrix.floatArrayMatrix(0, 0)
-////            var qinput: QMatrix? = null
-////
-//
-//            val quantInput = buffer.readUnsignedByte() != 0
-//            val quant_ = quantInput
 
-            TODO()
-//            val input = if (quantInput) {
+
+            //dictionary
+            val dictionary = Dictionary.loadModel(args, buffer)
+
 //
-//                qinput = QMatrix.load(buffer)
-//            } else {
-//                buffer.loadFloatMatrix()
-//            }
+//            var input: FloatMatrix = FloatMatrix.floatArrayMatrix(0, 0)
+//            var qinput: QMatrix? = null
 //
-//            if (!quantInput && dictionary.isPruned()) {
-//                throw RuntimeException("Invalid model file.\n"
-//                        + "Please download the updated model from www.fasttext.cc.\n"
-//                        + "See issue #332 on Github for more information.\n")
-//            }
+
+            val quantInput = buffer.readUnsignedByte() != 0
+            val quant_ = quantInput
+
+
+            val input = if (quantInput) {
+                loadQuantMatrix(buffer)
+            } else {
+                loadFloatArrayMatrixCPP(buffer)
+            }
 //
-//            var output: FloatMatrix = FloatMatrix.floatArrayMatrix(0, 0)
-//            var qoutput: QMatrix? = null
-//
-//            val qout = buffer.readUnsignedByte().toInt() != 0
-//
-//            if (quantInput && qout) {
-//                qoutput = QMatrix.load(buffer)
-//            } else {
-//                output = buffer.loadFloatMatrix()
-//            }
-//
-//            val model = Model(input, output, args_, 0)
-//            if (quantInput) {
-//                model.setQuantizePointer(qinput, qoutput)
-//            }
-//
-//            if (args_.model == ModelName.sup) {
-//                model.setTargetCounts(dictionary.getCounts(EntryType.label))
-//            } else {
-//                model.setTargetCounts(dictionary.getCounts(EntryType.word))
-//            }
-//
-//            return FastText(args_, dictionary,  model)
+            if (!quantInput && dictionary.isPruned()) {
+                throw RuntimeException("Invalid model file.\n"
+                        + "Please download the updated model from www.fasttext.cc.\n"
+                        + "See issue #332 on Github for more information.\n")
+            }
+
+            val qout = buffer.readUnsignedByte() != 0
+
+            val output = if (quantInput && qout) {
+                loadQuantMatrix(buffer)
+            } else {
+                loadFloatArrayMatrixCPP(buffer)
+            }
+
+            val loss = createLoss(args, output, args.model, dictionary)
+
+            val normalizeGradient = args.model == ModelName.sup
+
+            return FastText(args, dictionary, Model(input, output, loss, normalizeGradient), quant_)
         }
     }
 
@@ -119,5 +114,7 @@ object CppFastTextSupport {
 
         return loadCModel(modelFile.inputStream())
     }
-
 }
+
+
+
