@@ -1,6 +1,5 @@
 package com.mayabot.nlp.fasttext.utils
 
-import com.carrotsearch.hppc.IntArrayList
 import java.util.*
 
 class IntArrayList (
@@ -12,7 +11,7 @@ class IntArrayList (
      * Internal array for storing the list. The array may be larger than the current size
      * ([.size]).
      */
-    private var buffer: IntArray = EMPTY_ARRAY
+    var buffer: IntArray = EMPTY_ARRAY
 
     /**
      * Current number of elements stored in [.buffer].
@@ -39,6 +38,14 @@ class IntArrayList (
     fun add(e1: Int) {
         ensureBufferSpace(1)
         buffer[elementsCount++] = e1
+    }
+
+
+    fun addAll(ngrams: IntArrayList) {
+        ensureBufferSpace(ngrams.size())
+        ngrams.forEach { x->
+            buffer[elementsCount++] = x
+        }
     }
 
     operator fun get(index: Int): Int {
@@ -164,11 +171,20 @@ class IntArrayList (
         return buffer.copyOf(elementsCount)
     }
 
+
     companion object {
         /**
          * An immutable empty buffer (array).
          */
         val EMPTY_ARRAY = IntArray(0)
+
+        fun from(vararg elements: Int): IntArrayList {
+            val list: IntArrayList = IntArrayList(elements.size)
+            for (x in elements) {
+                list.add(x)
+            }
+            return list
+        }
     }
 
 }

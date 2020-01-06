@@ -1,8 +1,5 @@
 package com.mayabot.nlp.fasttext.train
 
-import com.google.common.base.Charsets
-import com.google.common.base.Splitter
-import com.google.common.collect.Lists
 import com.mayabot.nlp.fasttext.args.ComputedTrainArgs
 import com.mayabot.nlp.fasttext.blas.Matrix
 import com.mayabot.nlp.fasttext.blas.floatArrayMatrix
@@ -33,7 +30,7 @@ fun loadPreTrainVectors(dict: Dictionary, file: File, args: ComputedTrainArgs): 
     val input = floatArrayMatrix(dict.nwords + args.modelArgs.bucket, args.modelArgs.dim)
     input.uniform(1.0f / args.modelArgs.dim)
 
-    val words = Lists.newArrayListWithExpectedSize<String>(n)
+    val words = ArrayList<String>(n)
     file.bufferedReader(Charsets.UTF_8).use { reader ->
         reader.readLine()//first line
         for (i in 0 until n) {
@@ -42,10 +39,12 @@ fun loadPreTrainVectors(dict: Dictionary, file: File, args: ComputedTrainArgs): 
             var parts = line.split(" ")
             if (parts.size != dim + 1) {
                 if (parts.size == dim) {
-                    val sp = Splitter.on(" ").trimResults()
-                    val x = sp.splitToList(line)
-                    parts = Lists.newArrayList(line.substring(0, line.indexOf(x[0]) - 1))
-                    parts.addAll(x)
+//                    val sp = Splitter.on(" ").trimResults()
+                    val x = line.split(" ")
+                    val p = ArrayList<String>()
+                    p += line.substring(0, line.indexOf(x[0]) - 1)
+                    p.addAll(x)
+                    parts = p
                 } else {
                     throw RuntimeException("line $line parse error")
                 }

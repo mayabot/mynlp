@@ -2,7 +2,7 @@
 
 package com.mayabot.nlp.fasttext.dictionary
 
-import com.carrotsearch.hppc.IntArrayList
+import com.mayabot.nlp.fasttext.utils.IntArrayList
 
 // The correct implementation of fnv should be:
 // h = h ^ uint32_t(uint8_t(str[i]));

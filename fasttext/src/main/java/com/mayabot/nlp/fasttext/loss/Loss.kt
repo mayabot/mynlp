@@ -1,6 +1,5 @@
 package com.mayabot.nlp.fasttext.loss
 
-import com.carrotsearch.hppc.IntArrayList
 import com.mayabot.nlp.fasttext.Model
 import com.mayabot.nlp.fasttext.Predictions
 import com.mayabot.nlp.fasttext.ScoreIdPair
@@ -10,6 +9,7 @@ import com.mayabot.nlp.fasttext.blas.DenseVector
 import com.mayabot.nlp.fasttext.blas.Matrix
 import com.mayabot.nlp.fasttext.dictionary.Dictionary
 import com.mayabot.nlp.fasttext.dictionary.EntryType
+import com.mayabot.nlp.fasttext.utils.IntArrayList
 import kotlin.math.exp
 import kotlin.math.ln
 

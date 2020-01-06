@@ -1,8 +1,7 @@
 package com.mayabot.nlp.fasttext
 
-import com.carrotsearch.hppc.IntArrayList
 import com.mayabot.nlp.fasttext.dictionary.Dictionary
-import com.mayabot.nlp.fasttext.utils.forEach2
+import com.mayabot.nlp.fasttext.utils.IntArrayList
 
 class Meter(
         val metrics: Metrics = Metrics(),
@@ -31,7 +30,7 @@ class Meter(
             labelMetrics.find(prediction.id).scoreVsTrue.add(score to gold)
         }
 
-        labels.forEach2 { label ->
+        labels.forEach { label ->
             labelMetrics.find(label).gold++
         }
     }
