@@ -78,11 +78,6 @@ class Dictionary(
 
     val size get() = onehotMap.size
 
-
-//    val bucket = args.bucket
-//    val bucketLong = args.bucket.toLong()
-//    val bucketULong = args.bucket.toULong()
-
     fun isPruned() = pruneidxSize >= 0
 
     private fun isWhiteSpaceChar(ch: Char) = ch == ' ' || ch == '\t' || ch == '\n' || ch == '\r'
