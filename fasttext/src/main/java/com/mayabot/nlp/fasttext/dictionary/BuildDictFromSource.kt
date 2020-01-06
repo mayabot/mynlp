@@ -1,7 +1,8 @@
 package com.mayabot.nlp.fasttext.dictionary
 
 import com.mayabot.nlp.fasttext.args.ComputedTrainArgs
-import com.mayabot.nlp.fasttext.train.TrainSampleList
+import com.mayabot.nlp.fasttext.train.FileSampleLineIterable
+import com.mayabot.nlp.fasttext.train.SampleLine
 
 
 /**
@@ -13,7 +14,7 @@ import com.mayabot.nlp.fasttext.train.TrainSampleList
 @ExperimentalUnsignedTypes
 @Throws(Exception::class)
 fun buildFromFile(args: ComputedTrainArgs,
-                  sources: List<TrainSampleList>,
+                  sources: List<Iterable<SampleLine>>,
                   maxVocabSize: Int = 500000,
                   initWordListSize: Int = 5000
 ): Dictionary {
@@ -77,7 +78,7 @@ fun buildFromFile(args: ComputedTrainArgs,
         throw RuntimeException("Empty vocabulary. Try a smaller -minCount second.")
     }
 
-    val dict =  builder.toDictionary(args)
+    val dict = builder.toDictionary(args)
     println("Number of wordHash2Id: ${dict.onehotMap.wordHash2WordId.size}")
     return dict
 

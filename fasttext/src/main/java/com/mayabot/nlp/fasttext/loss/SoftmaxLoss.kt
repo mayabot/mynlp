@@ -2,7 +2,6 @@ package com.mayabot.nlp.fasttext.loss
 
 import com.carrotsearch.hppc.IntArrayList
 import com.mayabot.nlp.fasttext.Model
-import com.mayabot.nlp.fasttext.blas.DenseMatrix
 import com.mayabot.nlp.fasttext.blas.Matrix
 import java.lang.Math.max
 
@@ -11,7 +10,7 @@ class SoftmaxLoss(wo: Matrix) : Loss(wo) {
         val output = state.output
 
 //        matrixMulVector(wo, state.hidden, output)
-        output.mul(wo,state.hidden)
+        output.mul(wo, state.hidden)
 
         var max = output[0]
         var z = 0.0f
@@ -43,8 +42,8 @@ class SoftmaxLoss(wo: Matrix) : Loss(wo) {
                 val label = if (i == target) 1.0f else 0.0f
                 val alpha = lr * (label - state.output[i])
 
-                state.grad.addRow(wo,i,alpha.toDouble())
-                wo.addVectorToRow(state.hidden,i,alpha)
+                state.grad.addRow(wo, i, alpha.toDouble())
+                wo.addVectorToRow(state.hidden, i, alpha)
             }
 
         }

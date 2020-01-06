@@ -1,8 +1,8 @@
 package com.mayabot.nlp.fasttext
 
 import com.carrotsearch.hppc.IntArrayList
-import com.mayabot.nlp.fasttext.blas.Matrix
 import com.mayabot.nlp.fasttext.blas.DenseVector
+import com.mayabot.nlp.fasttext.blas.Matrix
 import com.mayabot.nlp.fasttext.loss.Loss
 import com.mayabot.nlp.fasttext.utils.forEach2
 import kotlin.random.Random
@@ -29,7 +29,7 @@ class Model(
         hidden.zero()
 
         input.forEach2 { row ->
-            wi.addRowToVector(hidden,row)
+            wi.addRowToVector(hidden, row)
             //hidden += wi[row]
         }
 
@@ -54,42 +54,42 @@ class Model(
         val kk = if (k == kUnlimitedPredictions) {
             // output size
             wo.row
-        } else{
+        } else {
             k
         }
         if (kk == 0) {
             throw RuntimeException("k needs to be 1 or higher")
         }
 
-        computeHidden(input,state)
+        computeHidden(input, state)
 
-        loss.predict(k,threshold,heap,state)
+        loss.predict(k, threshold, heap, state)
     }
 
     fun update(input: IntArrayList,
-               targets:IntArrayList,
-               targetIndex:Int,
-               lr:Float,
-               state:State){
+               targets: IntArrayList,
+               targetIndex: Int,
+               lr: Float,
+               state: State) {
         if (input.size() == 0) {
             return
         }
 
-        computeHidden(input,state)
+        computeHidden(input, state)
 
         val grad = state.grad
         grad.zero()
 
-        val lossValue = loss.forward(targets,targetIndex,state,lr,true)
+        val lossValue = loss.forward(targets, targetIndex, state, lr, true)
 
         state.incrementNExamples(lossValue)
 
         if (normalizeGradient) {
-            grad *= (1.0f/input.size())
+            grad *= (1.0f / input.size())
         }
 
-        input.forEach2 { i->
-            wi.addVectorToRow(grad,i,1.0f)
+        input.forEach2 { i ->
+            wi.addVectorToRow(grad, i, 1.0f)
         }
     }
 

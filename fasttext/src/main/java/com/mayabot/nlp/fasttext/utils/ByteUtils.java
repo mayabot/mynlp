@@ -1,4 +1,5 @@
 package com.mayabot.nlp.fasttext.utils;//package blas;
+
 //
 //
 public class ByteUtils {

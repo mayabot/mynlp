@@ -1,9 +1,6 @@
 package com.mayabot.nlp.fasttext.blas
 
 import java.io.Serializable
-import java.nio.ByteBuffer
-
-
 
 
 /**
@@ -68,7 +65,6 @@ interface Vector : Serializable {
     fun zero()
 
 
-
     /**
      * 赋值
      */
@@ -77,21 +73,21 @@ interface Vector : Serializable {
     /**
      *
      */
-    fun addRow(A: Matrix, i: Int, a: Double){
-        check(i >=0 )
+    fun addRow(A: Matrix, i: Int, a: Double) {
+        check(i >= 0)
         check(i < A.row)
         check(length() == A.col)
-        A.addRowToVector(this,i,a)
+        A.addRowToVector(this, i, a)
     }
 
     /**
      * 矩阵的每一行和vec点积，保存在当前这个向量里面
      */
-    fun mul(A: Matrix, vec: Vector){
+    fun mul(A: Matrix, vec: Vector) {
         check(A.row == length())
         check(A.col == vec.length())
         for (i in 0 until length()) {
-            this[i] = A.dotRow(vec,i)
+            this[i] = A.dotRow(vec, i)
         }
     }
 

@@ -1,12 +1,11 @@
-package com.mayabot.nlp.fasttext.quant
+package com.mayabot.nlp.fasttext.blas
 
-import com.mayabot.nlp.fasttext.blas.*
 import com.mayabot.nlp.fasttext.utils.*
 import java.io.File
 
 fun buildQMatrix(mat: DenseMatrix,
-                dsub: Int = 2,
-                qnorm: Boolean = false): QuantMatrix {
+                 dsub: Int = 2,
+                 qnorm: Boolean = false): QuantMatrix {
 
     val m = mat.row
     val n = mat.col
@@ -17,7 +16,11 @@ fun buildQMatrix(mat: DenseMatrix,
     val codes = ShortArray(codeSize)
 
     val npq = ProductQuantizer(1, 1)
-    val normCodes = if (qnorm) { ShortArray(m) } else { ShortArray(0) }
+    val normCodes = if (qnorm) {
+        ShortArray(m)
+    } else {
+        ShortArray(0)
+    }
 
     val qm = QuantMatrix(mat.row, mat.col, codeSize, pq, npq, codes, normCodes, qnorm)
 
@@ -31,6 +34,7 @@ fun loadQuantMatrix(file: File): QuantMatrix {
         loadQuantMatrix(AutoDataInput(it))
     }
 }
+
 fun loadQuantMatrix(input: AutoDataInput): QuantMatrix {
     val qnorm = input.readUnsignedByte() != 0
     val m = input.readLong().toInt()
@@ -42,7 +46,7 @@ fun loadQuantMatrix(input: AutoDataInput): QuantMatrix {
 
     val pq = ProductQuantizer.loadFromBuffer(input)
 
-    val (npq,normCodes) = if (qnorm) {
+    val (npq, normCodes) = if (qnorm) {
         val normCodes = ShortArray(m)
 
         input.readShortArray(normCodes)
@@ -54,7 +58,7 @@ fun loadQuantMatrix(input: AutoDataInput): QuantMatrix {
         ProductQuantizer(1, 1) to ShortArray(0)
     }
 
-    return QuantMatrix(m,n,codeSize,pq,npq,codes,normCodes,qnorm)
+    return QuantMatrix(m, n, codeSize, pq, npq, codes, normCodes, qnorm)
 }
 
 //fun loadQuantMatrix(buffer: AutoDataInput): QMatrix {
@@ -88,10 +92,10 @@ fun loadQuantMatrix(input: AutoDataInput): QuantMatrix {
 //    return qmatrix
 //}
 
-class QuantMatrix(val m:Int,
-                  val n:Int,
-                  val codeSize:Int,
-                  val pq:ProductQuantizer,
+class QuantMatrix(val m: Int,
+                  val n: Int,
+                  val codeSize: Int,
+                  val pq: ProductQuantizer,
                   val npq: ProductQuantizer,
                   val codes: ShortArray,
                   val normCodes: ShortArray,

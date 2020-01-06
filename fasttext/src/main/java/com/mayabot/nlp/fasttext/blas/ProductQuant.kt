@@ -1,9 +1,5 @@
-package com.mayabot.nlp.fasttext.quant
+package com.mayabot.nlp.fasttext.blas
 
-import com.mayabot.nlp.fasttext.blas.DenseMatrix
-import com.mayabot.nlp.fasttext.blas.Matrix
-import com.mayabot.nlp.fasttext.blas.Vector
-import com.mayabot.nlp.fasttext.blas.floatArrayMatrix
 import com.mayabot.nlp.fasttext.utils.*
 import java.nio.ByteBuffer
 import java.nio.channels.FileChannel
@@ -66,14 +62,14 @@ class ProductQuantizer(val dim: Int, val dsub: Int) {
         iota(perm)
 
         var d = dsub
-        val xslice = floatArrayMatrix(np,dsub)
+        val xslice = floatArrayMatrix(np, dsub)
         val xsliceData = xslice.data
 
 
         print("Product Quantize 0%")
         for (m in 0 until nsubq_) {
             print("\r")
-            print("pq ${((m+1)*100.0/nsubq_).toInt()}%")
+            print("pq ${((m + 1) * 100.0 / nsubq_).toInt()}%")
 
             if (m == nsubq_ - 1) {
                 d = lastdsub_
@@ -195,12 +191,12 @@ class CentroidTable(
     /**
      * dim/dsub 有几个子空间
      */
-    val nsubq: Int = pages(dim,dsub)
+    val nsubq: Int = pages(dim, dsub)
 
     /**
      * 最后一个子空间的维度
      */
-    val lastdsub: Int = if(dim%dsub==0) dsub else dim % dsub
+    val lastdsub: Int = if (dim % dsub == 0) dsub else dim % dsub
 
     operator fun get(m: Int): MCentroid {
         return MCentroid(m)
@@ -211,7 +207,7 @@ class CentroidTable(
      */
     inner class MCentroid(val m: Int) {
 
-        private val start: Int =  m * ksub * dsub
+        private val start: Int = m * ksub * dsub
 
         val d: Int = if (m == nsubq - 1) {
             lastdsub
@@ -230,7 +226,7 @@ class CentroidTable(
                 // memcpy (&c[i * d], x + perm[i] * d, d * sizeof(real));
                 //System.arraycopy(xslice, perm[i] * d, centroidData, start + i * d, d)
                 val r = xslice[perm[i]]
-                var s = start + i*d
+                var s = start + i * d
                 for (ii in 0 until d) {
                     centroidData[s++] = r[ii]
                 }
@@ -241,7 +237,7 @@ class CentroidTable(
 
                 //记住每个向量和哪些之心最近
                 for (i in 0 until n) {
-                    codes[i] = assignCentroid(xslice[i],0)
+                    codes[i] = assignCentroid(xslice[i], 0)
                 }
 
                 //每个质心,坐标为和之有关的均值
@@ -256,7 +252,7 @@ class CentroidTable(
                 for (i in 0 until n) {
                     val k = codes[i].toInt()
 
-                    var t=0
+                    var t = 0
                     var r = xslice[i]
                     var j = start + k * d
                     val max = start + k * d + d
@@ -318,11 +314,11 @@ class CentroidTable(
          * @param offset
          * @return 质心点的下标
          */
-        fun assignCentroid(data: Vector, offset:Int): Short {
-            var dis = distL2(data,offset,0)
+        fun assignCentroid(data: Vector, offset: Int): Short {
+            var dis = distL2(data, offset, 0)
             var code: Short = 0
             for (j in 1 until ksub) {
-                val disij = distL2(data,offset,j)
+                val disij = distL2(data, offset, j)
                 if (disij < dis) {
                     code = j.toShort()
                     dis = disij
@@ -338,7 +334,7 @@ class CentroidTable(
         fun distL2(dataRow: Vector, offset: Int, iZ: Int): Float {
             var dist = 0f
             var j = index(iZ)
-            for (i in offset until offset+d) {
+            for (i in offset until offset + d) {
                 val tmp = dataRow[i] - centroidData[j]
                 dist += tmp * tmp
                 j++
