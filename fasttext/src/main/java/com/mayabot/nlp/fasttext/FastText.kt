@@ -2,8 +2,6 @@ package com.mayabot.nlp.fasttext
 
 import com.carrotsearch.hppc.IntArrayList
 import com.google.common.base.Charsets
-import com.google.common.base.Stopwatch
-import com.google.common.collect.ImmutableList
 import com.google.common.collect.Iterables
 import com.google.common.collect.Lists
 import com.google.common.collect.Sets
@@ -16,34 +14,23 @@ import com.mayabot.nlp.fasttext.dictionary.Dictionary
 import com.mayabot.nlp.fasttext.dictionary.EOS
 import com.mayabot.nlp.fasttext.dictionary.buildFromFile
 import com.mayabot.nlp.fasttext.loss.createLoss
-import com.mayabot.nlp.fasttext.quant.QuantMatrix
-import com.mayabot.nlp.fasttext.quant.buildQMatrix
-import com.mayabot.nlp.fasttext.quant.loadQuantMatrix
-import com.mayabot.nlp.fasttext.train.*
+import com.mayabot.nlp.fasttext.train.FastTextTrain
+import com.mayabot.nlp.fasttext.train.FileSampleLineIterable
+import com.mayabot.nlp.fasttext.train.SampleLine
+import com.mayabot.nlp.fasttext.train.loadPreTrainVectors
 import com.mayabot.nlp.fasttext.utils.AutoDataInput
 import com.mayabot.nlp.fasttext.utils.openDataInputStream
+import java.io.DataInputStream
 import java.io.File
+import java.io.IOException
 import java.io.InputStream
+import java.nio.ByteOrder
 import java.text.DecimalFormat
 import java.util.*
-import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
 import kotlin.math.abs
 import kotlin.math.exp
 
-data class ScoreIdPair(val score: Float, val id: Int) {
-    override fun toString(): String {
-        return "[$id,$score]"
-    }
-}
-
-data class ScoreLabelPair(var score: Float, var label: String) {
-    override fun toString(): String {
-        return "[$label,$score]"
-    }
-}
-
-@ExperimentalUnsignedTypes
 class FastText(
         val args: ModelArgs,
         val dict: Dictionary,
@@ -51,7 +38,7 @@ class FastText(
         val quant: Boolean
 ) {
 
-    val input: Matrix = model.wi
+    private val input: Matrix = model.wi
     val output: Matrix = model.wo
 
     /**
@@ -72,7 +59,7 @@ class FastText(
         dict.getLine(tokens2, words, labels)
 
         if (words.isEmpty) {
-            return ImmutableList.of()
+            return emptyList()
         }
 
         val result = predict(k, words, threshold)
@@ -149,10 +136,10 @@ class FastText(
         }
 
         val matrix = floatArrayMatrix(dict.nwords, args.dim)
-        val stopwatch = Stopwatch.createStarted()
+        val s1 = System.currentTimeMillis()
         preComputeWordVectors(matrix)
-        stopwatch.stop()
-        println("Init wordVectors martix use time ${stopwatch.elapsed(TimeUnit.MILLISECONDS)} ms")
+        val s2 = System.currentTimeMillis()
+        println("Init wordVectors martix use time ${s2 - s1} ms")
         matrix
     }
 
@@ -227,7 +214,7 @@ class FastText(
         val labels = IntArrayList()
         val meter = Meter()
 //        val state = Model.State(args.dim,dict.nlabels,0)
-        for (sample in TrainSampleList(file)) {
+        for (sample in FileSampleLineIterable(file)) {
             line.clear()
             labels.clear()
             dict.getLine(sample.words, line, labels)
@@ -299,13 +286,6 @@ class FastText(
     }
 
     private fun addInputVector(vec: Vector, ind: Int) {
-//        if (quant) {
-//            model.qinput.addToVector(vec, ind)
-//        } else {
-//            vec += input[ind]
-//        }
-
-        // vec += input[ind]
         input.addRowToVector(vec, ind)
     }
 
@@ -316,8 +296,8 @@ class FastText(
      * @param file
      */
     @Throws(Exception::class)
-    fun saveVectors(file: String) {
-        var fileName = file
+    fun saveVectors(path: String) {
+        var fileName = path
         if (!fileName.endsWith("vec")) {
             fileName += ".vec"
         }
@@ -442,59 +422,99 @@ class FastText(
     companion object {
 
         @JvmStatic
-        fun trainSupervised(file: File, trainArgs: TrainArgs = TrainArgs(), wordSplitter: WordSplitter = whitespaceSplitter) = train(file, ModelName.sup, trainArgs, wordSplitter)
+        fun trainSupervised(file: File, trainArgs: TrainArgs = TrainArgs()) = train(file, ModelName.sup, trainArgs)
 
         @JvmStatic
-        fun trainCow(file: File, trainArgs: TrainArgs = TrainArgs(), wordSplitter: WordSplitter = whitespaceSplitter) = train(file, ModelName.cbow, trainArgs, wordSplitter)
+        fun trainCow(file: File, trainArgs: TrainArgs = TrainArgs()) = train(file, ModelName.cbow, trainArgs)
 
         @JvmStatic
-        fun trainSkipgram(file: File, trainArgs: TrainArgs = TrainArgs(), wordSplitter: WordSplitter = whitespaceSplitter) = train(file, ModelName.sg, trainArgs, wordSplitter)
+        fun trainSkipgram(file: File, trainArgs: TrainArgs = TrainArgs()) = train(file, ModelName.sg, trainArgs)
 
         @JvmStatic
-        fun train(file: File, modelName: ModelName, trainArgs: TrainArgs, wordSplitter: WordSplitter): FastText {
+        fun train(file: File, modelName: ModelName, trainArgs: TrainArgs): FastText {
+
+
             val args = trainArgs.toComputedTrainArgs(modelName)
             val modelArgs = args.modelArgs
 
-            val sources: List<TrainSampleList> = processAndSplit(file, wordSplitter, args.thread)
+            fun prepareSources(): List<Iterable<SampleLine>> {
+                val parent = FileSampleLineIterable(file)
+                var thread = args.thread
 
-            val dict = buildFromFile(args, sources, args.maxVocabSize)
+                val Size50M = 100 * 1024 * 1024
+                var lines = -1
+                if (file.length() < Size50M) {
+                    lines = parent.lines()
 
+                    // 数量太少
+                    if (lines <= thread * 10) {
+                        thread = 1
+                    }
 
-            val input = if (args.preTrainedVectors != null) {
-                loadPreTrainVectors(dict, args.preTrainedVectors, args)
-            } else {
-                floatArrayMatrix(dict.nwords + modelArgs.bucket, modelArgs.dim)
-                        .apply {
-                            uniform(1.0f / modelArgs.dim)
-                        }
+                }
+
+                return if (thread == 1) {
+                    if (file.length() < Size50M) {
+                        listOf(parent.toMemList())
+                    } else {
+                        listOf(parent)
+                    }
+                } else {
+                    if (file.length() < Size50M) {
+                        parent.splitMutiFiles(thread).map { it.toMemList() }
+                    } else {
+                        parent.splitMutiFiles(thread)
+                    }
+                }
+
             }
 
-            dict.init()
+            // 如果文件在50M以内，可以估计行数，超过则不
+            val sources: List<Iterable<SampleLine>> = prepareSources()
 
-            val output = floatArrayMatrix(
-                    if (ModelName.sup == args.model) dict.nlabels else dict.nwords,
-                    modelArgs.dim
-            ).apply {
-                zero()
+            try {
+                val dict = buildFromFile(args, sources, args.maxVocabSize)
+
+                val input = if (args.preTrainedVectors != null) {
+                    loadPreTrainVectors(dict, args.preTrainedVectors, args)
+                } else {
+                    floatArrayMatrix(dict.nwords + modelArgs.bucket, modelArgs.dim)
+                            .apply {
+                                uniform(1.0f / modelArgs.dim)
+                            }
+                }
+
+                dict.init()
+
+                val output = floatArrayMatrix(
+                        if (ModelName.sup == args.model) dict.nlabels else dict.nwords,
+                        modelArgs.dim
+                ).apply {
+                    zero()
+                }
+
+                val loss = createLoss(modelArgs, output, args.model, dict)
+                val normalizeGradient = args.model == ModelName.sup
+
+                val model = Model(input, output, loss, normalizeGradient)
+
+                val fastText = FastText(modelArgs, dict, model, false)
+
+                FastTextTrain(args, fastText).startThreads(sources)
+
+                return fastText
+
+            } finally {
+
+                for (source in sources) {
+                    if (source is FileSampleLineIterable) {
+                        source.file.delete()
+                    }
+                }
             }
-
-            val loss = createLoss(modelArgs, output, args.model, dict)
-            val normalizeGradient = args.model == ModelName.sup
-
-            val model = Model(input, output, loss, normalizeGradient)
-
-            val fastText = FastText(modelArgs, dict, model, false)
-
-            FastTextTrain(args, fastText).startThreads(sources)
-
-            for (source in sources) {
-                source.file.delete()
-            }
-
-            return fastText
         }
 
-        fun loadCppModel(file: File):FastText {
+        fun loadCppModel(file: File): FastText {
             return CppFastTextSupport.load(file)
         }
 
@@ -503,24 +523,24 @@ class FastText(
         }
 
         /**
-         * 加载Java模型,[file]是目录
+         * 加载Java模型,[moduleDir]是目录
          */
-        fun loadModel(file: File, mmap: Boolean = false): FastText {
+        fun loadModel(moduleDir: File, mmap: Boolean = false): FastText {
 
-            check(file.exists() && file.isDirectory)
+            check(moduleDir.exists() && moduleDir.isDirectory)
 
-            val args = ModelArgs.load(File(file, "args.bin"))
+            val args = ModelArgs.load(File(moduleDir, "args.bin"))
 
-            val dict = File(file, "dict.bin").openDataInputStream().use {
+            val dict = File(moduleDir, "dict.bin").openDataInputStream().use {
                 Dictionary.loadModel(args, AutoDataInput(it))
             }
 
-            val quant = File(file, "qinput.matrix").exists()
+            val quant = File(moduleDir, "qinput.matrix").exists()
 
             val input = if (quant) {
-                loadQuantMatrix(File(file, "qinput.matrix"))
+                loadQuantMatrix(File(moduleDir, "qinput.matrix"))
             } else {
-                loadDenseMatrix(File(file, "input.matrix"), mmap)
+                loadDenseMatrix(File(moduleDir, "input.matrix"), mmap)
             }
 
 
@@ -530,10 +550,10 @@ class FastText(
                         "See issue #332 on Github for more information.\n")
             }
 
-            val output = if (File(file, "qoutput.matrix").exists()) {
-                loadQuantMatrix(File(file, "qoutput.matrix"))
+            val output = if (File(moduleDir, "qoutput.matrix").exists()) {
+                loadQuantMatrix(File(moduleDir, "qoutput.matrix"))
             } else {
-                loadDenseMatrix(File(file, "output.matrix"), mmap)
+                loadDenseMatrix(File(moduleDir, "output.matrix"), mmap)
             }
 
             val loss = createLoss(args, output, args.model, dict)
@@ -543,8 +563,114 @@ class FastText(
             return FastText(args, dict, Model(input, output, loss, normalizeGradient), quant)
         }
 
-
     }
 
+}
+
+data class ScoreIdPair(val score: Float, val id: Int) {
+    override fun toString(): String {
+        return "[$id,$score]"
+    }
+}
+
+data class ScoreLabelPair(var score: Float, var label: String) {
+    override fun toString(): String {
+        return "[$label,$score]"
+    }
+}
+
+/**
+ * 从C语言版本的FastText产生的模型文件
+ */
+object CppFastTextSupport {
+
+    /**
+     * Load binary model file. 这个二进制版本是C语言版本的模型
+     * 从流读取，因为生产环境可能从classpath里面读取模型文件
+     * @param input C语言版本的模型的InputStream
+     * @return FastTextModel
+     * @throws Exception
+     */
+    @Throws(Exception::class)
+    fun loadCModel(inputStream: InputStream): FastText {
+
+        val ins = DataInputStream(inputStream.buffered(1024 * 1024))
+
+        ins.use {
+            val buffer = AutoDataInput(it, ByteOrder.LITTLE_ENDIAN)
+
+            //check model
+            val magic = buffer.readInt()
+            val version = buffer.readInt()
+
+            if (magic != 793712314) {
+                throw RuntimeException("Model file has wrong file format!")
+            }
+
+            if (version > 12) {
+                throw RuntimeException("Model file has wrong file format! version is $version")
+            }
+
+            //Args
+            val args = run {
+                var args_ = ModelArgs.load(buffer)
+
+                if (version == 11 && args_.model == ModelName.sup) {
+                    // backward compatibility: old supervised models do not use char ngrams.
+                    args_ = args_.copy(maxn = 0)
+                }
+                args_
+            }
+
+            //dictionary
+            val dictionary = Dictionary.loadModel(args, buffer)
+
+            val quantInput = buffer.readUnsignedByte() != 0
+            val quant_ = quantInput
+
+
+            val input = if (quantInput) {
+                loadQuantMatrix(buffer)
+            } else {
+                loadFloatArrayMatrixCPP(buffer)
+            }
+//
+            if (!quantInput && dictionary.isPruned()) {
+                throw RuntimeException("Invalid model file.\n"
+                        + "Please download the updated model from www.fasttext.cc.\n"
+                        + "See issue #332 on Github for more information.\n")
+            }
+
+            val qout = buffer.readUnsignedByte() != 0
+
+            val output = if (quantInput && qout) {
+                loadQuantMatrix(buffer)
+            } else {
+                loadFloatArrayMatrixCPP(buffer)
+            }
+
+            val loss = createLoss(args, output, args.model, dictionary)
+
+            val normalizeGradient = args.model == ModelName.sup
+
+            return FastText(args, dictionary, Model(input, output, loss, normalizeGradient), quant_)
+        }
+    }
+
+    /**
+     * Load binary model file. 这个二进制版本是C语言版本的模型
+     * @param modelPath
+     * @return FastTextModel
+     * @throws Exception
+     */
+    @Throws(Exception::class)
+    fun load(modelFile: File): FastText {
+
+        if (!(modelFile.exists() && modelFile.isFile && modelFile.canRead())) {
+            throw IOException("Model file cannot be opened for loading!")
+        }
+
+        return loadCModel(modelFile.inputStream())
+    }
 
 }

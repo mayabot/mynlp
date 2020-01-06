@@ -54,33 +54,33 @@ class TrainArgs {
 
 
     // The following arguments for the dictionary are optional:
-    var minCount :Int? = null
-    var minCountLabel:Int? = null
-    var wordNgrams :Int? = null
-    var bucket:Int? = null
-    var minn :Int? = null
-    var maxn :Int? = null
-    var t :Double? = null
-    var label:String? = null
+    var minCount: Int? = null
+    var minCountLabel: Int? = null
+    var wordNgrams: Int? = null
+    var bucket: Int? = null
+    var minn: Int? = null
+    var maxn: Int? = null
+    var t: Double? = null
+    var label: String? = null
 
-    var maxVocabSize:Int = 500000
+    var maxVocabSize: Int = 500000
 
-    fun toComputedTrainArgs(model: ModelName) = ComputedTrainArgs(model,this)
+    fun toComputedTrainArgs(model: ModelName) = ComputedTrainArgs(model, this)
 }
 
-class ComputedTrainArgs(val model:ModelName,trainArgs: TrainArgs){
+class ComputedTrainArgs(val model: ModelName, trainArgs: TrainArgs) {
 
-    val maxVocabSize:Int = trainArgs.maxVocabSize
+    val maxVocabSize: Int = trainArgs.maxVocabSize
 
-    val seed:Int = 0
+    val seed: Int = 0
 
     val thread = trainArgs.thread ?: Math.max(Runtime.getRuntime().availableProcessors() - 2, 2)
 
     val label = trainArgs.label ?: "__label__"
 
-    val lr = trainArgs.lr ?: if(model == ModelName.sup) 0.1 else 0.05
+    val lr = trainArgs.lr ?: if (model == ModelName.sup) 0.1 else 0.05
 
-    val preTrainedVectors:File? = trainArgs.pretrainedVectors
+    val preTrainedVectors: File? = trainArgs.pretrainedVectors
 
     val modelArgs = run {
         var temp = ModelArgs(model = model)

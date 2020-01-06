@@ -14,10 +14,10 @@ import com.carrotsearch.hppc.IntArrayList
 // compatible whatever compiler is used.
 @ExperimentalUnsignedTypes
 
-fun String.fnv1aHash() : UInt{
+fun String.fnv1aHash(): UInt {
     var h = 2166136261u
     for (strByte in this.toByteArray()) {
-        h =  (h xor strByte.toUInt())
+        h = (h xor strByte.toUInt())
         h = h * 16777619u
     }
     return h

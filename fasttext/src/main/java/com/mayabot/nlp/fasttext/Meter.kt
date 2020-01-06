@@ -3,19 +3,18 @@ package com.mayabot.nlp.fasttext
 import com.carrotsearch.hppc.IntArrayList
 import com.mayabot.nlp.fasttext.dictionary.Dictionary
 import com.mayabot.nlp.fasttext.utils.forEach2
-import java.lang.StringBuilder
 
 class Meter(
-        val metrics:Metrics = Metrics(),
-        var nexamples:Long = 0,
-        var labelMetrics:HashMap<Int,Metrics> = HashMap()
+        val metrics: Metrics = Metrics(),
+        var nexamples: Long = 0,
+        var labelMetrics: HashMap<Int, Metrics> = HashMap()
 ) {
-    fun HashMap<Int,Metrics>.find(key:Int) : Metrics{
-        return getOrPut(key){Metrics()}
+    fun HashMap<Int, Metrics>.find(key: Int): Metrics {
+        return getOrPut(key) { Metrics() }
     }
 
     fun log(labels: IntArrayList, predictions: List<ScoreIdPair>) {
-        nexamples ++
+        nexamples++
         metrics.gold += labels.size()
         metrics.predicted += predictions.size
 
@@ -32,12 +31,12 @@ class Meter(
             labelMetrics.find(prediction.id).scoreVsTrue.add(score to gold)
         }
 
-        labels.forEach2 { label->
+        labels.forEach2 { label ->
             labelMetrics.find(label).gold++
         }
     }
 
-    fun precision(i:Int) : Double{
+    fun precision(i: Int): Double {
         return labelMetrics.find(i).precision()
     }
 
@@ -61,32 +60,32 @@ class Meter(
         var precision = this.precision()
         val recall = this.recall()
         if (precision + recall != 0.0) {
-            return 2* precision * recall / (precision + recall)
+            return 2 * precision * recall / (precision + recall)
         }
         return Double.NaN
     }
 
-    fun writeGeneralMetrics(k: Int) :String{
+    fun writeGeneralMetrics(k: Int): String {
         val sb = StringBuilder()
         sb.append("N\t$nexamples\n")
-        sb.append("P@$k\t${String.format("%.3f",metrics.precision())}\n")
-        sb.append("R@$k\t${String.format("%.3f",metrics.recall())}\n")
+        sb.append("P@$k\t${String.format("%.3f", metrics.precision())}\n")
+        sb.append("R@$k\t${String.format("%.3f", metrics.recall())}\n")
         return sb.toString()
     }
 
     /**
      * 打印结果，[preLabel]打印每个label的详细
      */
-    fun print(dict:Dictionary,k: Int,perLabel: Boolean = false) {
+    fun print(dict: Dictionary, k: Int, perLabel: Boolean = false) {
         if (perLabel) {
             fun writeMetric(name: String, value: Double) {
-                val sb = "$name : ${if(value.isFinite()) "%.6f".format(value) else "--------"} "
+                val sb = "$name : ${if (value.isFinite()) "%.6f".format(value) else "--------"} "
                 print(sb)
             }
             for (labelId in 0 until dict.nlabels) {
-                writeMetric("F1-Score",this.f1Score(labelId))
-                writeMetric("Precision",this.precision(labelId))
-                writeMetric("Recall",this.recall(labelId))
+                writeMetric("F1-Score", this.f1Score(labelId))
+                writeMetric("Precision", this.precision(labelId))
+                writeMetric("Recall", this.recall(labelId))
                 println(" ${dict.getLabel(labelId)}")
             }
         }
@@ -94,11 +93,11 @@ class Meter(
     }
 
 
-    class Metrics(var gold:Long = 0,
-                  var predicted:Long = 0,
-                  var predictedGold:Long = 0) {
+    class Metrics(var gold: Long = 0,
+                  var predicted: Long = 0,
+                  var predictedGold: Long = 0) {
 
-        var scoreVsTrue:MutableList<Pair<Double,Double>> = mutableListOf()
+        var scoreVsTrue: MutableList<Pair<Double, Double>> = mutableListOf()
 
         fun precision(): Double {
             if (predicted == 0L) {
@@ -111,14 +110,14 @@ class Meter(
             if (gold == 0L) {
                 return Double.NaN
             }
-            return predictedGold/gold.toDouble()
+            return predictedGold / gold.toDouble()
         }
 
         fun f1Score(): Double {
             if (predicted + gold == 0L) {
                 return Double.NaN
             }
-            return 2* predictedGold / (predicted + gold).toDouble()
+            return 2 * predictedGold / (predicted + gold).toDouble()
         }
 
     }

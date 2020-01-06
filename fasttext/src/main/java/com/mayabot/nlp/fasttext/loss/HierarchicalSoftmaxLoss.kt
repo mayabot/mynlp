@@ -1,9 +1,9 @@
 package com.mayabot.nlp.fasttext.loss
 
 import com.carrotsearch.hppc.IntArrayList
-import com.mayabot.nlp.fasttext.ScoreIdPair
 import com.mayabot.nlp.fasttext.Model
 import com.mayabot.nlp.fasttext.Predictions
+import com.mayabot.nlp.fasttext.ScoreIdPair
 import com.mayabot.nlp.fasttext.blas.Matrix
 import com.mayabot.nlp.fasttext.blas.Vector
 import java.util.*
@@ -82,9 +82,9 @@ class HierarchicalSoftmaxLoss(wo: Matrix, targetCounts: LongArray) : BinaryLogis
         this.tree = treeLocal
     }
 
-    private fun dfs(k: Int, threshold:Float, node: Int, score: Float, heap: MutableList<ScoreIdPair>, hidden: Vector) {
+    private fun dfs(k: Int, threshold: Float, node: Int, score: Float, heap: MutableList<ScoreIdPair>, hidden: Vector) {
 
-        if (score < std_log(threshold)) {
+        if (score < stdLog(threshold)) {
             return
         }
 
@@ -105,7 +105,7 @@ class HierarchicalSoftmaxLoss(wo: Matrix, targetCounts: LongArray) : BinaryLogis
         }
 
         var f = wo.dotRow(hidden, node - osz)
-        f =  1.0f / (1 + exp(-f))
+        f = 1.0f / (1 + exp(-f))
 ////        val f = sigmoid(output.dotRow(hidden, node - outputMatrixSize))
 //        var f = if (quant && quantOut) {
 //            qoutput.dotRow(hidden, node - outputMatrixSize)
@@ -115,24 +115,24 @@ class HierarchicalSoftmaxLoss(wo: Matrix, targetCounts: LongArray) : BinaryLogis
 //        f = 1.0f / (1 + exp(-f))
 
 
-        dfs(k,threshold, tree[node].left, score + std_log(1.0f - f).toFloat(), heap, hidden)
-        dfs(k,threshold, tree[node].right, score + std_log(f).toFloat(), heap, hidden)
+        dfs(k, threshold, tree[node].left, score + stdLog(1.0f - f).toFloat(), heap, hidden)
+        dfs(k, threshold, tree[node].right, score + stdLog(f).toFloat(), heap, hidden)
     }
 
     override fun forward(targets: IntArrayList, targetIndex: Int, state: Model.State, lr: Float, backprop: Boolean): Float {
-       var loss = 0f
+        var loss = 0f
         val target = targets[targetIndex]
         val binaryCode = codes[target]
         val pathToRoot = paths[target]
         for (i in pathToRoot.indices) {
-            loss += binaryLogistic(pathToRoot[i],state, binaryCode[i], lr,backprop)
+            loss += binaryLogistic(pathToRoot[i], state, binaryCode[i], lr, backprop)
         }
         return loss
     }
 
 
     override fun predict(k: Int, threshold: Float, heap: Predictions, state: Model.State) {
-        dfs(k,threshold,2*osz-2,0f,heap,state.hidden)
+        dfs(k, threshold, 2 * osz - 2, 0f, heap, state.hidden)
         heap.sortByDescending { it.score }
     }
 

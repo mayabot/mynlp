@@ -14,7 +14,8 @@ import com.mayabot.nlp.fasttext.utils.writeUTF
 import java.io.IOException
 import java.nio.ByteBuffer
 import java.nio.channels.FileChannel
-import java.util.ArrayList
+import java.util.*
+import kotlin.collections.HashMap
 import kotlin.math.min
 import kotlin.random.Random
 
@@ -22,7 +23,6 @@ import kotlin.random.Random
 const val HASH_C = 116049371
 const val MAX_VOCAB_SIZE = 30000000
 const val MAX_LINE_SIZE = 1024
-
 
 
 const val coeff: ULong = 116049371u
@@ -136,7 +136,7 @@ class Dictionary(
         return ntokens
     }
 
-    fun getLine(tokens: List<String>, words: IntArrayList,rng: Random): Int {
+    fun getLine(tokens: List<String>, words: IntArrayList, rng: Random): Int {
         var ntokens = 0
         words.clear()
         for (token in tokens) {
@@ -215,7 +215,7 @@ class Dictionary(
         return ngrams
     }
 
-    fun getSubwords(word: String, ngrams: IntArrayList,substrings: MutableList<String>) {
+    fun getSubwords(word: String, ngrams: IntArrayList, substrings: MutableList<String>) {
         val i = onehotMap.getId(word)
         ngrams.clear()
         substrings.clear()
@@ -231,7 +231,6 @@ class Dictionary(
             computeSubwords(BOW + word + EOW, ngrams)
         }
     }
-
 
 
     private fun discard(id: Int, rand: Float): Boolean {
@@ -250,7 +249,7 @@ class Dictionary(
     operator fun get(word: String) = onehotMap.getId(word)
     fun getWordId(word: String) = onehotMap.getId(word)
 
-    fun init(){
+    fun init() {
         initTableDiscard()
         initNgrams()
     }
@@ -382,7 +381,7 @@ class Dictionary(
     companion object {
 
         @Throws(IOException::class)
-        fun loadModel(args: ModelArgs,buffer: AutoDataInput): Dictionary {
+        fun loadModel(args: ModelArgs, buffer: AutoDataInput): Dictionary {
             // wordList.clear();
             // word2int_.clear();
 
@@ -400,7 +399,7 @@ class Dictionary(
                 wordList.add(e)
             }
 
-            val pruneidx = HashMap<Int,Int>()
+            val pruneidx = HashMap<Int, Int>()
             for (i in 0 until pruneidxSize) {
                 val first = buffer.readInt()
                 val second = buffer.readInt()
@@ -410,7 +409,7 @@ class Dictionary(
             // 这里的实际WordHash2WordId是词数量的0.75倍
             val dict = Dictionary(args,
                     FastWordMap(
-                            IntArray((size.toFloat()/0.75).toInt()) {-1},
+                            IntArray((size.toFloat() / 0.75).toInt()) { -1 },
                             wordList),
                     ntokens,
                     nwords,

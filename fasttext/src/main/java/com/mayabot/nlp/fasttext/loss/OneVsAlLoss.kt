@@ -11,7 +11,7 @@ class OneVsAlLoss(wo: Matrix) : BinaryLogisticLoss(wo) {
         val osz = state.output.length()
         for (i in 0 until osz) {
             val isMatch = targets.contains(i)
-            loss += binaryLogistic(i,state,isMatch,lr,backprop)
+            loss += binaryLogistic(i, state, isMatch, lr, backprop)
         }
         return loss
     }

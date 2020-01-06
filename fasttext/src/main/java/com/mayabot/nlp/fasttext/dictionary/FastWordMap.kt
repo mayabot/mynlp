@@ -22,11 +22,11 @@ class FastWordMap(
     /**
      * 构建一个空的
      */
-    constructor(label:String,
-                vocabSize:Int,
-                initWordListSize:Int?) : this(
-            IntArray(vocabSize){-1},
-            ArrayList(initWordListSize?:max(1000,min(10000,vocabSize/1000))),
+    constructor(label: String,
+                vocabSize: Int,
+                initWordListSize: Int?) : this(
+            IntArray(vocabSize) { -1 },
+            ArrayList(initWordListSize ?: max(1000, min(10000, vocabSize / 1000))),
             label
     )
 
@@ -57,7 +57,6 @@ class FastWordMap(
     }
 
 
-
     fun getType(id: Int): EntryType {
         return wordList[id].type
     }
@@ -82,7 +81,7 @@ class FastWordMap(
     /**
      * word 在wordList里面的下标，也就是词ID。
      */
-     fun getId(w: String, h: UInt): Int {
+    fun getId(w: String, h: UInt): Int {
         val id = find(w, h)
         return if (id == -1) {
             -1 //词不存在
@@ -121,14 +120,14 @@ class FastWordMap(
     /**
      * 为wordList里面的每个word进行编码
      */
-    fun initWordHash2WordId(){
+    fun initWordHash2WordId() {
         for (i in 0 until size) {
-            wordHash2WordId[find(wordList[i].word)]= i
+            wordHash2WordId[find(wordList[i].word)] = i
         }
     }
 
-    fun collapseWordHash2Id(){
-        wordHash2WordId = IntArray((size.toFloat()/0.75).toInt()){-1}
+    fun collapseWordHash2Id() {
+        wordHash2WordId = IntArray((size.toFloat() / 0.75).toInt()) { -1 }
         initWordHash2WordId()
     }
 

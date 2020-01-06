@@ -1,6 +1,5 @@
 package com.mayabot.nlp.fasttext.blas
 
-import java.lang.Exception
 import java.nio.ByteBuffer
 import kotlin.math.sqrt
 
@@ -14,7 +13,6 @@ class DenseVector(
         private val data: FloatArray,
         private val offset: Int,
         private val length: Int) : Vector {
-
 
 
     /**
@@ -238,7 +236,6 @@ class DenseVector(
         }
     }
 }
-
 
 
 /**

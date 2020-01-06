@@ -1,13 +1,7 @@
 package com.mayabot.nlp.fasttext.blas
 
-import com.mayabot.nlp.fasttext.utils.AutoDataInput
-import com.mayabot.nlp.fasttext.utils.readInt
 import java.io.File
 import java.io.Serializable
-import java.nio.ByteBuffer
-import java.nio.channels.FileChannel
-import java.util.*
-import kotlin.math.min
 
 /**
  * Float矩阵
@@ -27,7 +21,7 @@ interface Matrix : Serializable {
      */
     fun addVectorToRow(vector: Vector, row: Int, a: Float)
 
-    fun addRowToVector(target: Vector,i: Int,a: Double?=null)
+    fun addRowToVector(target: Vector, i: Int, a: Double? = null)
 
     fun save(file: File)
 
@@ -37,7 +31,7 @@ interface Matrix : Serializable {
 interface DenseMatrix : Matrix {
 
     fun zero()
-//    fun fill(v: Float)
+    //    fun fill(v: Float)
     fun uniform(number: Number)
 
     operator fun get(row: Int): Vector
@@ -50,14 +44,14 @@ interface DenseMatrix : Matrix {
      *
      * 从ib到ie这些行，系数存在vector里面
      */
-    fun multiplyRow(nums:Vector, ib:Int=0,ie:Int = -1)
+    fun multiplyRow(nums: Vector, ib: Int = 0, ie: Int = -1)
 
     /**
      * 除法
      */
-    fun divideRow(nums:Vector, ib:Int=0,ie:Int = -1)
+    fun divideRow(nums: Vector, ib: Int = 0, ie: Int = -1)
 
-    fun l2NormRow(i: Int) : Float
+    fun l2NormRow(i: Int): Float
     fun l2NormRow(norms: Vector)
 
 }
