@@ -1,10 +1,5 @@
 package com.mayabot.nlp.fasttext
 
-import com.carrotsearch.hppc.IntArrayList
-import com.google.common.base.Charsets
-import com.google.common.collect.Iterables
-import com.google.common.collect.Lists
-import com.google.common.collect.Sets
 import com.mayabot.nlp.fasttext.args.ModelArgs
 import com.mayabot.nlp.fasttext.args.ModelName
 import com.mayabot.nlp.fasttext.args.TrainArgs
@@ -19,6 +14,7 @@ import com.mayabot.nlp.fasttext.train.FileSampleLineIterable
 import com.mayabot.nlp.fasttext.train.SampleLine
 import com.mayabot.nlp.fasttext.train.loadPreTrainVectors
 import com.mayabot.nlp.fasttext.utils.AutoDataInput
+import com.mayabot.nlp.fasttext.utils.IntArrayList
 import com.mayabot.nlp.fasttext.utils.openDataInputStream
 import java.io.DataInputStream
 import java.io.File
@@ -51,7 +47,9 @@ class FastText(
     fun predict(tokens: List<String>, k: Int, threshold: Float): List<ScoreLabelPair> {
 
         // 要附加一个EOS标记
-        val tokens2 = Iterables.concat(tokens, listOf(EOS))
+
+        val tokens2 = tokens.toMutableList()
+        tokens2.add(EOS)
 
         val words = IntArrayList()
         val labels = IntArrayList()
@@ -105,7 +103,7 @@ class FastText(
             }
         }
 
-        val result = Lists.newArrayList<ScoreLabelPair>()
+        val result = ArrayList<ScoreLabelPair>()
         for (r in mostSimilar) {
             if (r.score != -1f && !sets.contains(r.label)) {
                 result.add(r)
@@ -175,7 +173,7 @@ class FastText(
         getWordVector(buffer, C)
         query += buffer
 
-        val sets = Sets.newHashSet(A, B, C)
+        val sets = hashSetOf(A, B, C)
 
         return findNN(wordVectors, query, k, sets)
     }

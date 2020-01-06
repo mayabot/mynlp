@@ -1,16 +1,8 @@
 package com.mayabot.nlp.fasttext.dictionary
 
-import com.carrotsearch.hppc.IntArrayList
-import com.carrotsearch.hppc.IntIntHashMap
-import com.carrotsearch.hppc.IntIntMap
-import com.carrotsearch.hppc.LongArrayList
-import com.google.common.base.Preconditions.checkArgument
 import com.mayabot.nlp.fasttext.args.ModelArgs
 import com.mayabot.nlp.fasttext.args.ModelName
-import com.mayabot.nlp.fasttext.utils.AutoDataInput
-import com.mayabot.nlp.fasttext.utils.writeInt
-import com.mayabot.nlp.fasttext.utils.writeLong
-import com.mayabot.nlp.fasttext.utils.writeUTF
+import com.mayabot.nlp.fasttext.utils.*
 import java.io.IOException
 import java.nio.ByteBuffer
 import java.nio.channels.FileChannel
@@ -18,7 +10,6 @@ import java.util.*
 import kotlin.collections.HashMap
 import kotlin.math.min
 import kotlin.random.Random
-
 
 const val HASH_C = 116049371
 const val MAX_VOCAB_SIZE = 30000000
@@ -68,7 +59,7 @@ class Dictionary(
 
     private var pdiscard: FloatArray = FloatArray(0)
     var pruneidxSize = -1L
-    private val pruneidx: IntIntMap = IntIntHashMap()
+    private val pruneidx: HashMap<Int,Int> = HashMap()
 
     private val maxn = args.maxn
     private val minn = args.minn
@@ -189,8 +180,8 @@ class Dictionary(
     }
 
     fun getSubwords(id: Int): IntArrayList {
-        checkArgument(id >= 0)
-        checkArgument(id < nwords)
+        check(id >= 0)
+        check(id < nwords)
         return onehotMap[id].subwords
     }
 
@@ -229,15 +220,15 @@ class Dictionary(
 
 
     private fun discard(id: Int, rand: Float): Boolean {
-        checkArgument(id >= 0)
-        checkArgument(id < nwords)
+        check(id >= 0)
+        check(id < nwords)
         return if (args.model == ModelName.sup) false else rand > pdiscard[id]
     }
 
 
     fun getLabel(lid: Int): String {
-        checkArgument(lid >= 0)
-        checkArgument(lid < nlabels)
+        check(lid >= 0)
+        check(lid < nlabels)
         return onehotMap[lid + nwords].word
     }
 
@@ -321,7 +312,7 @@ class Dictionary(
 
         if (pruneidxSize > 0) {
             if (pruneidx.containsKey(id)) {
-                id = pruneidx.get(id)
+                id = pruneidx.getValue(id)
             } else {
                 return
             }
@@ -360,7 +351,7 @@ class Dictionary(
             channel.write(buffer)
         }
 
-        val buffer2 = ByteBuffer.allocate(pruneidx.size() * 4)
+        val buffer2 = ByteBuffer.allocate(pruneidx.size * 4)
         pruneidx.forEach {
             buffer2.putInt(it.key, it.value)
         }

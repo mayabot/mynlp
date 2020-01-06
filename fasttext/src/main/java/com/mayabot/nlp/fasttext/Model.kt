@@ -1,10 +1,9 @@
 package com.mayabot.nlp.fasttext
 
-import com.carrotsearch.hppc.IntArrayList
 import com.mayabot.nlp.fasttext.blas.DenseVector
 import com.mayabot.nlp.fasttext.blas.Matrix
 import com.mayabot.nlp.fasttext.loss.Loss
-import com.mayabot.nlp.fasttext.utils.forEach2
+import com.mayabot.nlp.fasttext.utils.IntArrayList
 import kotlin.random.Random
 
 typealias Predictions = MutableList<ScoreIdPair>
@@ -28,7 +27,7 @@ class Model(
         val hidden = state.hidden
         hidden.zero()
 
-        input.forEach2 { row ->
+        input.forEach { row ->
             wi.addRowToVector(hidden, row)
             //hidden += wi[row]
         }
@@ -88,7 +87,7 @@ class Model(
             grad *= (1.0f / input.size())
         }
 
-        input.forEach2 { i ->
+        input.forEach { i ->
             wi.addVectorToRow(grad, i, 1.0f)
         }
     }

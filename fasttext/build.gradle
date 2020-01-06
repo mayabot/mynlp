@@ -23,9 +23,6 @@ dependencies {
     // kotlin core lib
     compile "org.jetbrains.kotlin:kotlin-stdlib"
 
-    compile group: 'com.google.guava', name: 'guava', version: '19.0'
-    compile group: 'com.carrotsearch', name: 'hppc', version: '0.7.3'
-
     // Test
     testCompile group: 'junit', name: 'junit', version: '4.12'
 

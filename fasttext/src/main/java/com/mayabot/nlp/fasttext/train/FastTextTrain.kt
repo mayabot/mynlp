@@ -1,15 +1,15 @@
 package com.mayabot.nlp.fasttext.train
 
-import com.carrotsearch.hppc.IntArrayList
-import com.google.common.collect.Lists
-import com.google.common.util.concurrent.AtomicDouble
 import com.mayabot.nlp.fasttext.FastText
 import com.mayabot.nlp.fasttext.Model
 import com.mayabot.nlp.fasttext.args.ComputedTrainArgs
 import com.mayabot.nlp.fasttext.args.ModelName
 import com.mayabot.nlp.fasttext.loss.LossName
+import com.mayabot.nlp.fasttext.utils.IntArrayList
 import java.lang.Thread.sleep
 import java.util.concurrent.atomic.AtomicLong
+
+
 
 class FastTextTrain(
         val trainArgs: ComputedTrainArgs,
@@ -17,7 +17,7 @@ class FastTextTrain(
 ) {
 
     private val tokenCount = AtomicLong(0)
-    private val loss = AtomicDouble(-1.0)
+    private val loss = ShareDouble(-1.0)
     private var startTime = System.currentTimeMillis()
 
     var trainException: Exception? = null
@@ -39,7 +39,7 @@ class FastTextTrain(
 
     fun startThreads(sources: List<Iterable<SampleLine>>) {
         val thread = sources.size
-        val threads = Lists.newArrayList<Thread>()
+        val threads = ArrayList<Thread>()
         for (i in 0 until thread) {
             threads.add(Thread(TrainThread(i, sources[i])))
         }
@@ -202,7 +202,7 @@ class FastTextTrain(
     /**
      *
      */
-    private fun printInfo(progress: Float, loss: AtomicDouble, stop: Boolean) {
+    private fun printInfo(progress: Float, loss: ShareDouble, stop: Boolean) {
         var progress = progress
         // clock_t might also only be 32bits wide on some systems
         val t = ((System.currentTimeMillis() - startTime) / 1000).toDouble()
@@ -230,4 +230,10 @@ class FastTextTrain(
         print(sb)
     }
 
+    class ShareDouble(var value: Double) {
+        fun toFloat() = value.toFloat()
+        fun set(v: Double) {
+            value = v
+        }
+    }
 }

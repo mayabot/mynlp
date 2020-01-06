@@ -1,6 +1,5 @@
 package com.mayabot.nlp.fasttext.utils
 
-import com.carrotsearch.hppc.IntArrayList
 import java.util.*
 
 class LongArrayList (

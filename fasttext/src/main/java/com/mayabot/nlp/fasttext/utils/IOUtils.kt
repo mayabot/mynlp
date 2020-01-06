@@ -1,6 +1,5 @@
 package com.mayabot.nlp.fasttext.utils
 
-import com.carrotsearch.hppc.IntArrayList
 import java.io.DataInputStream
 import java.io.File
 import java.io.IOException
@@ -69,16 +68,16 @@ fun ByteBuffer.writeFloatArray(source: FloatArray) {
         this.putFloat(source[i])
     }
 }
-
-inline fun IntArrayList.forEach2(action: (num: Int) -> Unit) {
-    val buffer = this.buffer
-    var i = 0
-    val size = this.size()
-    while (i < size) {
-        action(buffer[i])
-        i++
-    }
-}
+//
+//inline fun IntArrayList.forEach2(action: (num: Int) -> Unit) {
+//    val buffer = this.buffer
+//    var i = 0
+//    val size = this.size()
+//    while (i < size) {
+//        action(buffer[i])
+//        i++
+//    }
+//}
 
 
 operator fun ByteBuffer.set(i: Int, v: Float) {

@@ -1,8 +1,8 @@
 package com.mayabot.nlp.fasttext.loss
 
-import com.carrotsearch.hppc.IntArrayList
 import com.mayabot.nlp.fasttext.Model
 import com.mayabot.nlp.fasttext.blas.Matrix
+import com.mayabot.nlp.fasttext.utils.IntArrayList
 import kotlin.random.Random
 
 
