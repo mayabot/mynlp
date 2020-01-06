@@ -28,7 +28,7 @@ class FastTextTrain(
 
     val ntokens = dict.ntokens
 
-    private val thread = trainArgs.thread
+//    private val thread = trainArgs.thread
 
     private val wantProcessTotalTokens = args.epoch * ntokens
 
@@ -38,6 +38,7 @@ class FastTextTrain(
     private fun progress() = tokenCount.toFloat() / wantProcessTotalTokens
 
     fun startThreads(sources: List<Iterable<SampleLine>>) {
+        val thread = sources.size
         val threads = Lists.newArrayList<Thread>()
         for (i in 0 until thread) {
             threads.add(Thread(TrainThread(i, sources[i])))
