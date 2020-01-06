@@ -210,11 +210,15 @@ class FastText(
     }
 
     fun test(file: File, k: Int = 1, threshold: Float = 0.0f): Meter {
+        return test(FileSampleLineIterable(file),k,threshold)
+    }
+
+    fun test(file: Iterable<SampleLine>, k: Int = 1, threshold: Float = 0.0f): Meter {
         val line = IntArrayList()
         val labels = IntArrayList()
         val meter = Meter()
 //        val state = Model.State(args.dim,dict.nlabels,0)
-        for (sample in FileSampleLineIterable(file)) {
+        for (sample in file) {
             line.clear()
             labels.clear()
             dict.getLine(sample.words, line, labels)
@@ -430,12 +434,11 @@ class FastText(
         @JvmStatic
         fun trainSkipgram(file: File, trainArgs: TrainArgs = TrainArgs()) = train(file, ModelName.sg, trainArgs)
 
+
         @JvmStatic
         fun train(file: File, modelName: ModelName, trainArgs: TrainArgs): FastText {
 
-
             val args = trainArgs.toComputedTrainArgs(modelName)
-            val modelArgs = args.modelArgs
 
             fun prepareSources(): List<Iterable<SampleLine>> {
                 val parent = FileSampleLineIterable(file)
@@ -469,8 +472,14 @@ class FastText(
 
             }
 
-            // 如果文件在50M以内，可以估计行数，超过则不
-            val sources: List<Iterable<SampleLine>> = prepareSources()
+            return train(prepareSources(),modelName,trainArgs)
+        }
+
+        @JvmStatic
+        fun train(sources: List<Iterable<SampleLine>>, modelName: ModelName, trainArgs: TrainArgs): FastText {
+
+            val args = trainArgs.toComputedTrainArgs(modelName)
+            val modelArgs = args.modelArgs
 
             try {
                 val dict = buildFromFile(args, sources, args.maxVocabSize)
