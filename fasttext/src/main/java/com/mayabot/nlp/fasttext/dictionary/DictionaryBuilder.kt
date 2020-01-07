@@ -1,6 +1,6 @@
 package com.mayabot.nlp.fasttext.dictionary
 
-import com.mayabot.nlp.fasttext.args.ComputedTrainArgs
+import com.mayabot.nlp.fasttext.args.Args
 import java.util.ArrayList
 import kotlin.Comparator
 
@@ -44,10 +44,10 @@ class DictionaryBuilder(
      */
     var nlabels: Int = 0
 
-    fun toDictionary(args: ComputedTrainArgs): Dictionary {
+    fun toDictionary(args: Args): Dictionary {
 
         return Dictionary(
-                args = args.modelArgs,
+                args = args,
                 onehotMap = wordIdMap,
                 ntokens = ntokens,
                 nwords = nwords,

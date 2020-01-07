@@ -1,7 +1,6 @@
 package com.mayabot.nlp.fasttext.dictionary
 
-import com.mayabot.nlp.fasttext.args.ComputedTrainArgs
-import com.mayabot.nlp.fasttext.train.FileSampleLineIterable
+import com.mayabot.nlp.fasttext.args.Args
 import com.mayabot.nlp.fasttext.train.SampleLine
 import com.mayabot.nlp.fasttext.utils.logger
 import com.mayabot.nlp.fasttext.utils.loggerln
@@ -15,7 +14,7 @@ import com.mayabot.nlp.fasttext.utils.loggerln
  */
 @ExperimentalUnsignedTypes
 @Throws(Exception::class)
-fun buildFromFile(args: ComputedTrainArgs,
+fun buildFromFile(args: Args,
                   sources: List<Iterable<SampleLine>>,
                   maxVocabSize: Int = 500000,
                   initWordListSize: Int = 5000
@@ -61,7 +60,7 @@ fun buildFromFile(args: ComputedTrainArgs,
     }
 
     // 系统级别的裁剪
-    builder.threshold(args.modelArgs.minCount.toLong(), args.modelArgs.minCountLabel.toLong())
+    builder.threshold(args.minCount.toLong(), args.minCountLabel.toLong())
 
     // 塌缩
     builder.wordIdMap.collapseWordHash2Id()

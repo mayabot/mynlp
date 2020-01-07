@@ -1,8 +1,8 @@
 package com.mayabot.nlp.fasttext
 
-import com.mayabot.nlp.fasttext.args.ModelArgs
+import com.mayabot.nlp.fasttext.args.Args
 import com.mayabot.nlp.fasttext.args.ModelName
-import com.mayabot.nlp.fasttext.args.TrainArgs
+import com.mayabot.nlp.fasttext.args.InputArgs
 import com.mayabot.nlp.fasttext.blas.*
 import com.mayabot.nlp.fasttext.blas.Vector
 import com.mayabot.nlp.fasttext.dictionary.Dictionary
@@ -29,7 +29,7 @@ import kotlin.math.abs
 import kotlin.math.exp
 
 class FastText(
-        val args: ModelArgs,
+        val args: Args,
         val dict: Dictionary,
         val model: Model,
         val quant: Boolean
@@ -425,19 +425,19 @@ class FastText(
     companion object {
 
         @JvmStatic
-        fun trainSupervised(file: File, trainArgs: TrainArgs = TrainArgs()) = train(file, ModelName.sup, trainArgs)
+        fun trainSupervised(file: File, inputArgs: InputArgs = InputArgs()) = train(file, ModelName.sup, inputArgs)
 
         @JvmStatic
-        fun trainCow(file: File, trainArgs: TrainArgs = TrainArgs()) = train(file, ModelName.cbow, trainArgs)
+        fun trainCow(file: File, inputArgs: InputArgs = InputArgs()) = train(file, ModelName.cbow, inputArgs)
 
         @JvmStatic
-        fun trainSkipgram(file: File, trainArgs: TrainArgs = TrainArgs()) = train(file, ModelName.sg, trainArgs)
+        fun trainSkipgram(file: File, inputArgs: InputArgs = InputArgs()) = train(file, ModelName.sg, inputArgs)
 
 
         @JvmStatic
-        fun train(file: File, modelName: ModelName, trainArgs: TrainArgs): FastText {
+        fun train(file: File, modelName: ModelName, inputArgs: InputArgs): FastText {
 
-            val args = trainArgs.toComputedTrainArgs(modelName)
+            val args = inputArgs.parse(modelName)
 
             fun prepareSources(): List<Iterable<SampleLine>> {
                 val parent = FileSampleLineIterable(file)
@@ -471,14 +471,13 @@ class FastText(
 
             }
 
-            return train(prepareSources(),modelName,trainArgs)
+            return train(prepareSources(),modelName,inputArgs)
         }
 
         @JvmStatic
-        fun train(sources: List<Iterable<SampleLine>>, modelName: ModelName, trainArgs: TrainArgs): FastText {
+        fun train(sources: List<Iterable<SampleLine>>, modelName: ModelName, inputArgs: InputArgs): FastText {
 
-            val args = trainArgs.toComputedTrainArgs(modelName)
-            val modelArgs = args.modelArgs
+            val args = inputArgs.parse(modelName)
 
             try {
                 val dict = buildFromFile(args, sources, args.maxVocabSize)
@@ -486,27 +485,26 @@ class FastText(
                 val input = if (args.preTrainedVectors != null) {
                     loadPreTrainVectors(dict, args.preTrainedVectors, args)
                 } else {
-                    floatArrayMatrix(dict.nwords + modelArgs.bucket, modelArgs.dim)
+                    floatArrayMatrix(dict.nwords + args.bucket, args.dim)
                             .apply {
-                                uniform(1.0f / modelArgs.dim)
+                                uniform(1.0f / args.dim)
                             }
                 }
 
                 dict.init()
 
                 val output = floatArrayMatrix(
-                        if (ModelName.sup == args.model) dict.nlabels else dict.nwords,
-                        modelArgs.dim
+                        if (ModelName.sup == args.model) dict.nlabels else dict.nwords, args.dim
                 ).apply {
                     zero()
                 }
 
-                val loss = createLoss(modelArgs, output, args.model, dict)
+                val loss = createLoss(args, output, args.model, dict)
                 val normalizeGradient = args.model == ModelName.sup
 
                 val model = Model(input, output, loss, normalizeGradient)
 
-                val fastText = FastText(modelArgs, dict, model, false)
+                val fastText = FastText(args, dict, model, false)
 
                 FastTextTrain(args, fastText).startThreads(sources)
 
@@ -537,7 +535,7 @@ class FastText(
 
             check(moduleDir.exists() && moduleDir.isDirectory)
 
-            val args = ModelArgs.load(File(moduleDir, "args.bin"))
+            val args = Args.load(File(moduleDir, "args.bin"))
 
             val dict = File(moduleDir, "dict.bin").openDataInputStream().use {
                 Dictionary.loadModel(args, AutoDataInput(it))
@@ -621,7 +619,7 @@ object CppFastTextSupport {
 
             //Args
             val args = run {
-                var args_ = ModelArgs.load(buffer)
+                var args_ = Args.load(buffer)
 
                 if (version == 11 && args_.model == ModelName.sup) {
                     // backward compatibility: old supervised models do not use char ngrams.

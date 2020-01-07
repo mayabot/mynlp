@@ -1,7 +1,7 @@
 package com.mayabot.nlp.fasttext
 
 import com.mayabot.nlp.fasttext.args.ModelName
-import com.mayabot.nlp.fasttext.args.TrainArgs
+import com.mayabot.nlp.fasttext.args.InputArgs
 import com.mayabot.nlp.fasttext.loss.LossName
 import org.junit.Test
 import java.io.File
@@ -26,7 +26,7 @@ class TestSup {
 //        val trainSources = listOf(loadTrainFile("ag.train.txt"))
 //        val testSources = loadTrainFile("ag.test.txt")
 
-        val trainArgs = TrainArgs()
+        val trainArgs = InputArgs()
         trainArgs.loss = lossName
 
         val fastText = FastText.train(trainFile,ModelName.sup,trainArgs)

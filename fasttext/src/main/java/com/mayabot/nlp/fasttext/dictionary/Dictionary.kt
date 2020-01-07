@@ -1,6 +1,6 @@
 package com.mayabot.nlp.fasttext.dictionary
 
-import com.mayabot.nlp.fasttext.args.ModelArgs
+import com.mayabot.nlp.fasttext.args.Args
 import com.mayabot.nlp.fasttext.args.ModelName
 import com.mayabot.nlp.fasttext.utils.*
 import java.io.IOException
@@ -50,7 +50,7 @@ const val EOW = ">"
  */
 @ExperimentalUnsignedTypes
 class Dictionary(
-        val args: ModelArgs,
+        val args: Args,
         val onehotMap: FastWordMap,
         val ntokens: Long,
         val nwords: Int,
@@ -367,7 +367,7 @@ class Dictionary(
     companion object {
 
         @Throws(IOException::class)
-        fun loadModel(args: ModelArgs, buffer: AutoDataInput): Dictionary {
+        fun loadModel(args: Args, buffer: AutoDataInput): Dictionary {
             // wordList.clear();
             // word2int_.clear();
 

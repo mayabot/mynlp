@@ -1,6 +1,6 @@
 package com.mayabot.nlp.fasttext
 
-import com.mayabot.nlp.fasttext.args.TrainArgs
+import com.mayabot.nlp.fasttext.args.InputArgs
 import com.mayabot.nlp.fasttext.loss.LossName
 import java.io.File
 
@@ -9,7 +9,7 @@ val trainFile = File("fasttext/data/agnews/ag.train")
 val testFile = File("fasttext/data/agnews/ag.test")
 fun main() {
 
-    val args = TrainArgs().apply {
+    val args = InputArgs().apply {
         this.loss = LossName.softmax
         lr = 0.1
         dim = 100
