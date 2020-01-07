@@ -1,6 +1,6 @@
 package com.mayabot.nlp.fasttext.train
 
-import com.mayabot.nlp.fasttext.args.ComputedTrainArgs
+import com.mayabot.nlp.fasttext.args.Args
 import com.mayabot.nlp.fasttext.blas.Matrix
 import com.mayabot.nlp.fasttext.blas.floatArrayMatrix
 import com.mayabot.nlp.fasttext.dictionary.Dictionary
@@ -13,7 +13,7 @@ import java.io.File
  */
 @ExperimentalUnsignedTypes
 @Throws(Exception::class)
-fun loadPreTrainVectors(dict: Dictionary, file: File, args: ComputedTrainArgs): Matrix {
+fun loadPreTrainVectors(dict: Dictionary, file: File, args: Args): Matrix {
 
 //    var n: Int = 0
 //    var dim: Int = 0
@@ -23,12 +23,12 @@ fun loadPreTrainVectors(dict: Dictionary, file: File, args: ComputedTrainArgs): 
     if (n == 0 || dim == 0) {
         throw Exception("Error format for " + file.name + ",First line must be rows and dim arg")
     }
-    if (dim != args.modelArgs.dim) {
-        throw Exception("Dimension of pretrained vectors " + dim + " does not match dimension (" + args.modelArgs.dim + ")")
+    if (dim != args.dim) {
+        throw Exception("Dimension of pretrained vectors " + dim + " does not match dimension (" + args.dim + ")")
     }
 
-    val input = floatArrayMatrix(dict.nwords + args.modelArgs.bucket, args.modelArgs.dim)
-    input.uniform(1.0f / args.modelArgs.dim)
+    val input = floatArrayMatrix(dict.nwords + args.bucket, args.dim)
+    input.uniform(1.0f / args.dim)
 
     val words = ArrayList<String>(n)
     file.bufferedReader(Charsets.UTF_8).use { reader ->

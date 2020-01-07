@@ -3,7 +3,7 @@ package com.mayabot.nlp.fasttext.loss
 import com.mayabot.nlp.fasttext.Model
 import com.mayabot.nlp.fasttext.Predictions
 import com.mayabot.nlp.fasttext.ScoreIdPair
-import com.mayabot.nlp.fasttext.args.ModelArgs
+import com.mayabot.nlp.fasttext.args.Args
 import com.mayabot.nlp.fasttext.args.ModelName
 import com.mayabot.nlp.fasttext.blas.DenseVector
 import com.mayabot.nlp.fasttext.blas.Matrix
@@ -22,7 +22,7 @@ fun stdLog(d: Float) = ln(d + 1e-5)
 /**
  * 统一创建loss函数实例
  */
-fun createLoss(args: ModelArgs, output: Matrix, modelName: ModelName, dictionary: Dictionary): Loss {
+fun createLoss(args: Args, output: Matrix, modelName: ModelName, dictionary: Dictionary): Loss {
 
     fun getTargetCounts(): LongArray {
         return if (modelName == ModelName.sup) {

@@ -2,7 +2,7 @@ package com.mayabot.nlp.fasttext.train
 
 import com.mayabot.nlp.fasttext.FastText
 import com.mayabot.nlp.fasttext.Model
-import com.mayabot.nlp.fasttext.args.ComputedTrainArgs
+import com.mayabot.nlp.fasttext.args.Args
 import com.mayabot.nlp.fasttext.args.ModelName
 import com.mayabot.nlp.fasttext.loss.LossName
 import com.mayabot.nlp.fasttext.utils.IntArrayList
@@ -14,7 +14,7 @@ import java.util.concurrent.atomic.AtomicLong
 
 
 class FastTextTrain(
-        val trainArgs: ComputedTrainArgs,
+        val trainArgs: Args,
         val fastText: FastText
 ) {
 
@@ -26,7 +26,7 @@ class FastTextTrain(
 
     val dict = fastText.dict
 
-    val args = trainArgs.modelArgs
+    val args = trainArgs
 
     val ntokens = dict.ntokens
 
