@@ -69,7 +69,7 @@ fun buildFromFile(args: Args,
 //        dictionary.initTableDiscard()
 //        dictionary.initNgrams()
 
-    System.out.printf("\rRead %dM words\n", builder.ntokens / 1000000)
+    loggerln("\rRead %dM words\n".format(builder.ntokens / 1000000))
     loggerln("Number of words:  ${builder.nwords}")
     loggerln("Number of labels: ${builder.nlabels}")
 
