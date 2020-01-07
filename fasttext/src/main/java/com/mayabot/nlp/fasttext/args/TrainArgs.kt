@@ -1,5 +1,6 @@
 package com.mayabot.nlp.fasttext.args
 
+import com.mayabot.nlp.fasttext.args.ComputedTrainArgs.Companion.kUnlimitedModelSize
 import com.mayabot.nlp.fasttext.loss.LossName
 import java.io.File
 
@@ -64,6 +65,90 @@ class TrainArgs {
     var label: String? = null
 
     var maxVocabSize: Int = 500000
+
+    private val manualArgs = HashSet<String>()
+
+    /**
+     * validation file to be used for evaluation
+     */
+    var autotuneValidationFile: File? = null
+
+    /**
+     *  metric objective {f1, f1:labelname}
+     */
+    var autotuneMetric:String = "f1"
+
+    /**
+     * number of predictions used for evaluation
+     */
+    var autotunePredictions:Int = 1
+
+    /**
+     * maximum duration in seconds. default 5 minutes
+     */
+    var autotuneDuration:Int = 60*5
+
+    /**
+     * constraint model file size
+     */
+    var autotuneModelSize:String = ""
+
+    fun hasAutotune(): Boolean{
+        val f = autotuneValidationFile
+        return f!=null && f.exists()
+    }
+    fun isManual(argName:String):Boolean {
+        return manualArgs.contains(argName)
+    }
+
+    fun setManual(argName: String) {
+        manualArgs.add(argName)
+    }
+
+    enum class MetricName{
+        f1score,labelf1score
+    }
+
+    fun getAutotuneMetric():MetricName{
+        if (autotuneMetric.startsWith("f1:")) {
+            return MetricName.labelf1score
+        }else if (autotuneMetric == "f1") {
+            return MetricName.f1score
+        }
+        error("Unknown metric : " + autotuneMetric)
+    }
+    fun getAutotuneMetricLabel(): String {
+        if (getAutotuneMetric() == MetricName.labelf1score) {
+            val label = autotuneMetric.substring(3)
+            if (label.isEmpty()) {
+                error("Empty metric label : " + autotuneMetric)
+            }
+            return label
+        }
+        return ""
+    }
+    fun getAutotuneModelSize(): Long {
+        var modelSize = autotuneModelSize
+        if (modelSize.isEmpty()) {
+            return kUnlimitedModelSize.toLong()
+        }
+        val units = HashMap<Char,Int>()
+        units += 'k' to 1000
+        units += 'K' to 1000
+        units += 'm' to 1000000
+        units += 'M' to 1000000
+        units += 'g' to 1000000000
+        units += 'G' to 1000000000
+
+        var multiplier = 1
+        val lastCharacter = modelSize.last()
+        if (units.containsKey(lastCharacter)) {
+            multiplier = units[lastCharacter]!!
+            modelSize = modelSize.substring(0,modelSize.length - 1)
+        }
+        var size: Long = modelSize.toLong()
+        return size * multiplier
+    }
 
     fun toComputedTrainArgs(model: ModelName) = ComputedTrainArgs(model, this)
 }
@@ -149,5 +234,9 @@ class ComputedTrainArgs(val model: ModelName, trainArgs: TrainArgs) {
         }
 
         temp
+    }
+
+    companion object {
+        val kUnlimitedModelSize = -1.0f
     }
 }

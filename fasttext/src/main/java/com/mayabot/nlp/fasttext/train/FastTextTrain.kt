@@ -6,6 +6,8 @@ import com.mayabot.nlp.fasttext.args.ComputedTrainArgs
 import com.mayabot.nlp.fasttext.args.ModelName
 import com.mayabot.nlp.fasttext.loss.LossName
 import com.mayabot.nlp.fasttext.utils.IntArrayList
+import com.mayabot.nlp.fasttext.utils.logger
+import com.mayabot.nlp.fasttext.utils.loggerln
 import java.lang.Thread.sleep
 import java.util.concurrent.atomic.AtomicLong
 
@@ -56,7 +58,7 @@ class FastTextTrain(
             sleep(100)
             if (loss.toFloat() >= 0) {
                 val progress = progress()
-                print("\r")
+                logger("\r")
                 printInfo(progress, loss, false)
             }
         }
@@ -69,11 +71,11 @@ class FastTextTrain(
             throw it
         }
 
-        print("\r")
+        logger("\r")
         printInfo(1.0f, loss, true)
-        println()
+        loggerln()
 
-        println("Train use time ${System.currentTimeMillis() - startTime} ms")
+        loggerln("Train use time ${System.currentTimeMillis() - startTime} ms")
 
     }
 
@@ -227,7 +229,7 @@ class FastTextTrain(
         sb.append(String.format(" arg.loss: %2.5f", loss.toFloat()))
         if (!stop) sb.append(" ETA: " + etah + "h " + etam + "m " + etas + "s")
 
-        print(sb)
+        logger(sb)
     }
 
     class ShareDouble(var value: Double) {

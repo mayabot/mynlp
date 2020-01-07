@@ -114,9 +114,9 @@ class QuantMatrix(val m: Int,
         }
 
         pq.train(matrix)
-        println("compute_codes...")
+        loggerln("compute_codes...")
         pq.compute_codes(matrix, codes)
-        println("compute_codes success")
+        loggerln("compute_codes success")
     }
 
     private fun quantizeNorm(norms: DenseVector) {

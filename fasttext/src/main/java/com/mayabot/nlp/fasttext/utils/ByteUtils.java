@@ -29,7 +29,7 @@ public class ByteUtils {
 //        for (int i = 0; i < 256; i++) {
 //            byte b = short2Byte((short) i);
 //            short x = byte2UInt(b);
-//            System.out.println(b + " = " + x);
+//            System.out.loggerln(b + " = " + x);
 //        }
 //    }
 }

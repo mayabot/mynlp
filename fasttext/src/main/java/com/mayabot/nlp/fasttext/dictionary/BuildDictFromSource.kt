@@ -3,6 +3,8 @@ package com.mayabot.nlp.fasttext.dictionary
 import com.mayabot.nlp.fasttext.args.ComputedTrainArgs
 import com.mayabot.nlp.fasttext.train.FileSampleLineIterable
 import com.mayabot.nlp.fasttext.train.SampleLine
+import com.mayabot.nlp.fasttext.utils.logger
+import com.mayabot.nlp.fasttext.utils.loggerln
 
 
 /**
@@ -27,7 +29,7 @@ fun buildFromFile(args: ComputedTrainArgs,
 
     var lastMinThreshold = 1L
 
-    println("Read file build dictionary ...")
+    loggerln("Read file build dictionary ...")
 
     var thresholdCount = 0
     fun thresholdBuilder() {
@@ -37,7 +39,7 @@ fun buildFromFile(args: ComputedTrainArgs,
             val before = builder.size
             builder.threshold(minThreshold, minThreshold)
             lastMinThreshold = minThreshold
-            println("word size from ${before} to ${builder.size} , threshold min $minThreshold")
+            loggerln("word size from ${before} to ${builder.size} , threshold min $minThreshold")
             minThreshold++
         }
     }
@@ -47,7 +49,7 @@ fun buildFromFile(args: ComputedTrainArgs,
             sample.words.forEach { token ->
                 builder.add(token)
                 if (builder.ntokens % 1000000 == 0L) {
-                    print("\rRead " + builder.ntokens / 1000000 + "M words")
+                    logger("\rRead " + builder.ntokens / 1000000 + "M words")
                 }
 
                 if (builder.size > mmm) {
@@ -69,17 +71,17 @@ fun buildFromFile(args: ComputedTrainArgs,
 //        dictionary.initNgrams()
 
     System.out.printf("\rRead %dM words\n", builder.ntokens / 1000000)
-    println("Number of words:  ${builder.nwords}")
-    println("Number of labels: ${builder.nlabels}")
+    loggerln("Number of words:  ${builder.nwords}")
+    loggerln("Number of labels: ${builder.nlabels}")
 
-    if (thresholdCount > 0) println("Max threshold count: $lastMinThreshold")
+    if (thresholdCount > 0) loggerln("Max threshold count: $lastMinThreshold")
 
     if (builder.wordIdMap.size == 0) {
         throw RuntimeException("Empty vocabulary. Try a smaller -minCount second.")
     }
 
     val dict = builder.toDictionary(args)
-    println("Number of wordHash2Id: ${dict.onehotMap.wordHash2WordId.size}")
+    loggerln("Number of wordHash2Id: ${dict.onehotMap.wordHash2WordId.size}")
     return dict
 
 }

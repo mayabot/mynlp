@@ -2,6 +2,8 @@ package com.mayabot.nlp.fasttext
 
 import com.mayabot.nlp.fasttext.dictionary.Dictionary
 import com.mayabot.nlp.fasttext.utils.IntArrayList
+import com.mayabot.nlp.fasttext.utils.logger
+import com.mayabot.nlp.fasttext.utils.loggerln
 
 class Meter(
         val metrics: Metrics = Metrics(),
@@ -79,16 +81,16 @@ class Meter(
         if (perLabel) {
             fun writeMetric(name: String, value: Double) {
                 val sb = "$name : ${if (value.isFinite()) "%.6f".format(value) else "--------"} "
-                print(sb)
+                logger(sb)
             }
             for (labelId in 0 until dict.nlabels) {
                 writeMetric("F1-Score", this.f1Score(labelId))
                 writeMetric("Precision", this.precision(labelId))
                 writeMetric("Recall", this.recall(labelId))
-                println(" ${dict.getLabel(labelId)}")
+                loggerln(" ${dict.getLabel(labelId)}")
             }
         }
-        println(writeGeneralMetrics(k))
+        loggerln(writeGeneralMetrics(k))
     }
 
 
