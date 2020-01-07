@@ -15,6 +15,7 @@ import com.mayabot.nlp.fasttext.train.SampleLine
 import com.mayabot.nlp.fasttext.train.loadPreTrainVectors
 import com.mayabot.nlp.fasttext.utils.AutoDataInput
 import com.mayabot.nlp.fasttext.utils.IntArrayList
+import com.mayabot.nlp.fasttext.utils.loggerln
 import com.mayabot.nlp.fasttext.utils.openDataInputStream
 import java.io.DataInputStream
 import java.io.File
@@ -137,7 +138,7 @@ class FastText(
         val s1 = System.currentTimeMillis()
         preComputeWordVectors(matrix)
         val s2 = System.currentTimeMillis()
-        println("Init wordVectors martix use time ${s2 - s1} ms")
+        loggerln("Init wordVectors martix use time ${s2 - s1} ms")
         matrix
     }
 
@@ -227,9 +228,9 @@ class FastText(
 //                if (labels[0] == 1 && predictions[0].id == 1) {
 //
 //                    line.forEach2 {
-//                        println(dict.getWord(it))
+//                        loggerln(dict.getWord(it))
 //                    }
-//                    println("----")
+//                    loggerln("----")
 //                }
             }
         }

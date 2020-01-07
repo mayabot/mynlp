@@ -297,7 +297,7 @@ class Dictionary(
                 if (n >= minn && !(n == 1 && (i == 0 || j == word.length))) {
                     val h = (ngram.toString().fnv1aHash().toLong() % bucket).toInt()
                     if (h < 0) {
-                        System.err.println("computeSubwords h<0: $h on word: $word")
+                       loggerln("computeSubwords h<0: $h on word: $word")
                     }
                     pushHash(ngrams, h)
                 }

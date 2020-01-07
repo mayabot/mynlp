@@ -66,10 +66,10 @@ class ProductQuantizer(val dim: Int, val dsub: Int) {
         val xsliceData = xslice.data
 
 
-        print("Product Quantize 0%")
+        logger("Product Quantize 0%")
         for (m in 0 until nsubq_) {
-            print("\r")
-            print("pq ${((m + 1) * 100.0 / nsubq_).toInt()}%")
+            logger("\r")
+            logger("pq ${((m + 1) * 100.0 / nsubq_).toInt()}%")
 
             if (m == nsubq_ - 1) {
                 d = lastdsub_
@@ -89,7 +89,7 @@ class ProductQuantizer(val dim: Int, val dsub: Int) {
 
             centroidTable[m].kmeans(xslice)
         }
-        print("\n")
+        logger("\n")
     }
 
     /**
