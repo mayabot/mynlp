@@ -35,16 +35,19 @@ class AutotuneStrategy(originalArgs: TrainArgs, seed: Long) {
         val argsCompute = args.toComputedTrainArgs(ModelName.sup)
 
         if (!args.isManual("epoch")) {
-            args.epoch = updateArgGauss(argsCompute.modelArgs.epoch.toDouble(),1.0,100.0,2.8,2.5,t,false,rng)
+            args.epoch = updateArgGauss(
+                    argsCompute.modelArgs.epoch.toDouble(),
+                    1.0,100.0,
+                    2.8,2.5,t,false,rng)
                     .toInt()
         }
 
         if (!args.isManual("lr")) {
-            args.lr = updateArgGauss(argsCompute.lr.toDouble(),1.0,100.0,2.8,2.5,t,false,rng)
+            args.lr = updateArgGauss(argsCompute.lr.toDouble(),0.01,5.0,1.9,1.0,t,false,rng)
         }
 
         if (!args.isManual("dim")) {
-            args.dim = updateArgGauss(argsCompute.modelArgs.dim.toDouble(),1.0,100.0,2.8,2.5,t,false,rng)
+            args.dim = updateArgGauss(argsCompute.modelArgs.dim.toDouble(),1.0,1000.0,1.4,0.3,t,false,rng)
                     .toInt()
         }
 
