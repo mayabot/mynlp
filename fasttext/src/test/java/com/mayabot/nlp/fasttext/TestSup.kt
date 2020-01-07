@@ -3,6 +3,7 @@ package com.mayabot.nlp.fasttext
 import com.mayabot.nlp.fasttext.args.ModelName
 import com.mayabot.nlp.fasttext.args.InputArgs
 import com.mayabot.nlp.fasttext.loss.LossName
+import com.mayabot.nlp.fasttext.utils.disableLog
 import org.junit.Test
 import java.io.File
 
@@ -13,6 +14,7 @@ class TestSup {
 
     @Test
     fun testSub(){
+        disableLog()
         val lossNames = listOf(LossName.softmax,LossName.ns,LossName.hs,LossName.ova)
 
         lossNames.forEach { loss->

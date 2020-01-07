@@ -81,16 +81,16 @@ class Meter(
         if (perLabel) {
             fun writeMetric(name: String, value: Double) {
                 val sb = "$name : ${if (value.isFinite()) "%.6f".format(value) else "--------"} "
-                logger(sb)
+                print(sb)
             }
             for (labelId in 0 until dict.nlabels) {
                 writeMetric("F1-Score", this.f1Score(labelId))
                 writeMetric("Precision", this.precision(labelId))
                 writeMetric("Recall", this.recall(labelId))
-                loggerln(" ${dict.getLabel(labelId)}")
+                println(" ${dict.getLabel(labelId)}")
             }
         }
-        loggerln(writeGeneralMetrics(k))
+        println(writeGeneralMetrics(k))
     }
 
 

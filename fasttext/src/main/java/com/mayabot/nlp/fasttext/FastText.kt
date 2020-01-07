@@ -208,11 +208,11 @@ class FastText(
         return vec
     }
 
-    fun test(file: File, k: Int = 1, threshold: Float = 0.0f): Meter {
-        return test(FileSampleLineIterable(file),k,threshold)
+    fun test(file: File, k: Int = 1, threshold: Float = 0.0f,print: Boolean=true): Meter {
+        return test(FileSampleLineIterable(file),k,threshold,print)
     }
 
-    fun test(file: Iterable<SampleLine>, k: Int = 1, threshold: Float = 0.0f): Meter {
+    fun test(file: Iterable<SampleLine>, k: Int = 1, threshold: Float = 0.0f,print: Boolean = true): Meter {
         val line = IntArrayList()
         val labels = IntArrayList()
         val meter = Meter()
@@ -224,17 +224,9 @@ class FastText(
             if (!labels.isEmpty && !line.isEmpty) {
                 val predictions = predict(k, line, threshold)
                 meter.log(labels, predictions)
-
-//                if (labels[0] == 1 && predictions[0].id == 1) {
-//
-//                    line.forEach2 {
-//                        loggerln(dict.getWord(it))
-//                    }
-//                    loggerln("----")
-//                }
             }
         }
-        meter.print(dict, k, true)
+        if(print) meter.print(dict, k, true)
         return meter
     }
 
