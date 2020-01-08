@@ -7,6 +7,7 @@ import java.io.File
 
 val trainFile = File("fasttext/data/agnews/ag.train")
 val testFile = File("fasttext/data/agnews/ag.test")
+
 fun main() {
 
     val args = InputArgs().apply {
