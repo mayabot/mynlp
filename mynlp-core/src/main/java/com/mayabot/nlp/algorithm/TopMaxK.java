@@ -59,7 +59,7 @@ public class TopMaxK<T> {
             list.add(new Pair<>(idIndex[i], heap[i]));
         }
 
-        Collections.sort(list, (a, b) -> -1 * Float.compare(a.second, b.second));
+        list.sort((a, b) -> -1 * Float.compare(a.second, b.second));
         return list;
     }
 
