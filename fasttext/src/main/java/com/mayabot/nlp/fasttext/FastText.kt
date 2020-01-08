@@ -13,10 +13,7 @@ import com.mayabot.nlp.fasttext.train.FastTextTrain
 import com.mayabot.nlp.fasttext.train.FileSampleLineIterable
 import com.mayabot.nlp.fasttext.train.SampleLine
 import com.mayabot.nlp.fasttext.train.loadPreTrainVectors
-import com.mayabot.nlp.fasttext.utils.AutoDataInput
-import com.mayabot.nlp.fasttext.utils.IntArrayList
-import com.mayabot.nlp.fasttext.utils.loggerln
-import com.mayabot.nlp.fasttext.utils.openDataInputStream
+import com.mayabot.nlp.fasttext.utils.*
 import java.io.DataInputStream
 import java.io.File
 import java.io.IOException
@@ -45,7 +42,7 @@ class FastText(
      * @param k
      * @return
      */
-    fun predict(tokens: List<String>, k: Int, threshold: Float): List<ScoreLabelPair> {
+    fun predict(tokens: Iterable<String>, k: Int, threshold: Float): List<ScoreLabelPair> {
 
         // 要附加一个EOS标记
 
@@ -83,35 +80,28 @@ class FastText(
     }
 
 
-    private fun findNN(wordVectors: DenseMatrix, queryVec: Vector, k: Int, sets: Set<String>): List<ScoreLabelPair> {
+    private fun findNN(wordVectors: DenseMatrix,
+                       queryVec: Vector,
+                       k: Int,
+                       sets: Set<String>): List<ScoreLabelPair> {
 
         var queryNorm = queryVec.norm2()
         if (abs(queryNorm) < 1e-8) {
             queryNorm = 1f
         }
 
-        val mostSimilar = (0 until k).map { ScoreLabelPair(-1f, "") }.toList().toTypedArray()
-        val mastSimilarLast = mostSimilar.size - 1
+        val top = TopMaxK<String>(k+sets.size)
 
         for (i in 0 until dict.nwords) {
             val dp = wordVectors[i] * queryVec / queryNorm
-            val last = mostSimilar[mastSimilarLast]
-            if (dp > last.score) {
-                last.score = dp
-                last.label = dict.getWord(i)
-
-                mostSimilar.sortByDescending { it.score }
+            if(top.canPush(dp)){
+                top.push(dict.getWord(i),dp)
             }
         }
 
-        val result = ArrayList<ScoreLabelPair>()
-        for (r in mostSimilar) {
-            if (r.score != -1f && !sets.contains(r.label)) {
-                result.add(r)
-            }
-        }
-
-        return result
+        return  top.result()
+                .filter { it.second != -1.0f && !sets.contains(it.first) }
+                .map {ScoreLabelPair(it.second,it.first) }.take(k)
     }
 
     private val wordVectors: DenseMatrix by lazy {
@@ -155,6 +145,8 @@ class FastText(
 
     /**
      * Query triplet (A - B + C)?
+     *
+     *
      * @param A
      * @param B
      * @param C
