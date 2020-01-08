@@ -1,10 +1,9 @@
 package com.mayabot.mynlp;
 
-import com.google.common.base.Charsets;
-import com.google.common.io.Files;
-import com.mayabot.mynlp.fasttext.FastText;
-import com.mayabot.mynlp.fasttext.FloatStringPair;
 import com.mayabot.nlp.classification.FasttextClassification;
+import com.mayabot.nlp.fasttext.FastText;
+import com.mayabot.nlp.fasttext.args.InputArgs;
+import com.mayabot.nlp.fasttext.loss.LossName;
 import com.mayabot.nlp.utils.DownloadUtils;
 
 import java.io.File;
@@ -18,10 +17,10 @@ public class HotelCommentExampleTrain {
     public static void main(String[] args) throws Exception {
 
 
-        File trainFile = new File("example.data/hotel-train.txt");
+        File trainFileSource = new File("example.data/hotel-train.txt");
+        File testFileSource= new File("example.data/hotel-test.txt");
 
-
-        if (!trainFile.exists()) {
+        if (!trainFileSource.exists()) {
             File trainZipFile = new File("example.data/hotel-train.txt.zip");
             File testZipFile = new File("example.data/hotel-test.txt.zip");
 
@@ -36,53 +35,30 @@ public class HotelCommentExampleTrain {
             testZipFile.delete();
         }
 
-        FastText modelTrain = FasttextClassification.train(trainFile, 100, 0.05, 20);
+        File trainFile = new File("example.data/hotel-train-seg.txt");
+        File testFile = new File("example.data/hotel-test-seg.txt");
 
-        modelTrain.saveModel("example.data/hotel.model");
-
-
-        //test
-
-        {
-            FastText model = FastText.loadModel("example.data/hotel.model", false);
-
-
-            File testFile = new File("example.data/hotel-test.txt");
-
-            List<String> examples = Files.readLines(testFile, Charsets.UTF_8);
-
-            int total = 0;
-            int success = 0;
-
-            for (int i = 0; i < examples.size(); i++) {
-                String line = examples.get(i);
-
-                String[] parts = line.split(" ");
-
-                String label = null;
-
-                for (String part : parts) {
-                    if (part.startsWith("__label__")) {
-                        label = part;
-                    }
-                }
-
-                FloatStringPair result = FasttextClassification.predictOne(model, line);
-
-                if (result != null) {
-                    if (label.equals(result.second)) {
-                        success++;
-                    }
-                }
-
-                total++;
-            }
-
-            System.out.println("Total " + total);
-            System.out.println("Success " + success);
-
-            System.out.println("正确率 " + String.format("%.2f", success * 100.0 / total) + "%");
+        if (!trainFile.exists()) {
+            FasttextClassification.prepareBySegment(trainFileSource,trainFile);
         }
+        if (!testFile.exists()) {
+            FasttextClassification.prepareBySegment(testFileSource,testFile);
+        }
+
+        InputArgs trainArgs = new InputArgs();
+        trainArgs.setLoss(LossName.hs);
+        trainArgs.setEpoch(10);
+        trainArgs.setDim(100);
+        trainArgs.setLr(0.2);
+
+        FastText fastText = FastText.trainSupervised(trainFile, trainArgs);
+        FastText qFastText = fastText.quantize();
+
+        //fastText.saveModel("example.data/hotel.model");
+
+        fastText.test(testFile,1,0.0f,true);
+        qFastText.test(testFile,1,0.0f,true);
+
     }
 
 }

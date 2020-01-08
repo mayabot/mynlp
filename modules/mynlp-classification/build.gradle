@@ -21,8 +21,8 @@ dependencies {
         exclude module :'mynlp-resource-pos'
         exclude module :'mynlp-resource-ner'
     }
-    
-    compile 'com.mayabot:fastText4j:1.2.2'
+
+    compile project(":fasttext")
 
     testCompile 'junit:junit:4.12'
     testCompile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
