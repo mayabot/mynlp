@@ -7,7 +7,6 @@ import com.mayabot.nlp.fasttext.loss.LossName;
 import com.mayabot.nlp.utils.DownloadUtils;
 
 import java.io.File;
-import java.util.List;
 
 /**
  * 酒店评论的分类测试
