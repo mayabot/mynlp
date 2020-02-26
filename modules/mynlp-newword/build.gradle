@@ -4,9 +4,8 @@ plugins {
 
 description = '高性能新词发现'
 
-
 dependencies {
-    compile (project(":mynlp-segment")) {
+    compile (project(":mynlp")) {
         exclude module:'mynlp-resource-pos'
         exclude module:'mynlp-resource-ner'
     }

@@ -1,7 +1,0 @@
-
-description = '感知机算法，包含训练和解码。'
-
-
-dependencies {
-    compile project(':mynlp-core')
-}

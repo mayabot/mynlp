@@ -14,4 +14,9 @@ class PinyinSplitTest {
                 "lian, he, dian, yin, guan, mo, quan"
         )
     }
+
+    @Test
+    fun test2(){
+        println(PinyinSplits.split("lihailewodeguo"))
+    }
 }

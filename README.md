@@ -57,7 +57,7 @@ mynlp是一个开源高性能、模块化、可扩展的中文NLP工具包。
 
 ### Installation
 
-mynlp多个功能被划分在不同的模块中，下面演示分词模块：
+`mynlp多个功能被划分在不同的模块中，下面演示分词模块：
 
 GRADLE
 ```
@@ -81,7 +81,7 @@ mynlp-classification | 文本分类
 mynlp-lucene | lucene 分析器接口实现
 mynlp-pinyin | 文字转拼音
 mynlp-summary | 文本摘要
-mynlp-transform | 繁简体互转
+mynlp-transform | 繁简体互转`
 
 ### 中文分词示例
 

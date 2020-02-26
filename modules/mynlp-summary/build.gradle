@@ -1,6 +1,6 @@
 description = '文本摘要模块。包括关键字抽取、文本摘要、基于词向量优化摘要'
 
 dependencies {
-    compile project(":mynlp-segment")
+    compile project(":mynlp")
     testCompile 'junit:junit:4.12'
 }

@@ -2,8 +2,10 @@ package com.mayabot.nlp.pinyin.split
 
 import com.mayabot.nlp.Mynlps
 import com.mayabot.nlp.injector.Singleton
-import com.mayabot.nlp.perceptron.Perceptron
+import com.mayabot.nlp.perceptron.PerceptronFileFormat
 import com.mayabot.nlp.perceptron.PerceptronModel
+import com.mayabot.nlp.perceptron.PerceptronModelImpl
+import com.mayabot.nlp.perceptron.PerceptronRunner
 import com.mayabot.nlp.utils.CharNormUtils
 import java.io.File
 
@@ -23,9 +25,9 @@ class PinyinSplitService{
     fun split(text:String) = app.decodeToWordList(text)
 }
 
-class PinyinSplitApp(val model: Perceptron) {
+class PinyinSplitApp(val model: PerceptronModel) {
 
-    private val logic = PinyinSplitDefinition()
+    private val logic = PerceptronRunner(PinyinSplitDefinition())
 
     fun decodeToWordList(sentence: String, convert: Boolean = true): List<String> {
         val result = ArrayList<String>()
@@ -56,11 +58,11 @@ class PinyinSplitApp(val model: Perceptron) {
         const val modelPrefix = "pinyin-split-model"
 
         fun load(file: File):PinyinSplitApp {
-            return PinyinSplitApp(PerceptronModel.load(file))
+            return PinyinSplitApp(PerceptronFileFormat.load(file))
         }
 
         fun loadDefault():PinyinSplitApp{
-            return PinyinSplitApp(PerceptronModel.loadFromNlpResouce(modelPrefix))
+            return PinyinSplitApp(PerceptronFileFormat.loadFromNlpResource(modelPrefix))
         }
     }
 }

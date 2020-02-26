@@ -3,9 +3,11 @@ description = 'mynlp for lucene plugin. compatible lucene version 5.0+'
 
 dependencies {
     compileOnly 'org.apache.lucene:lucene-core:5.0.0'
-    compile(project(':mynlp-segment')){
-        exclude group:'com.mayabot.mynlp.resource'
+    compile(project(':mynlp')){
+        exclude module:'mynlp-resource-pos'
+        exclude module:'mynlp-resource-ner'
     }
+
 
     testCompile group: 'junit', name: 'junit', version: '4.12'
     testCompile 'org.apache.lucene:lucene-core:5.0.0'

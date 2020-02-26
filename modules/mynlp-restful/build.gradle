@@ -11,7 +11,7 @@ ext.ktor_version = '1.2.3'
 
 //apply plugin: 'io.spring.dependency-management'
 
-description = "Mynlp Restfull"
+description = "Mynlp ResetFull API"
 
 mainClassName = 'com.mayabot.mynlp.restful.MynlpRestfullKt'
 
@@ -25,7 +25,7 @@ dependencies{
     implementation "io.ktor:ktor-jackson:$ktor_version"
     compile "io.ktor:ktor-html-builder:$ktor_version"
     implementation("ch.qos.logback:logback-classic:1.2.3")
-    compile (project(":mynlp-segment"))
+    compile (project(":mynlp"))
 //    {
 //        exclude group: "com.mayabot.mynlp.resource"
 //    }
