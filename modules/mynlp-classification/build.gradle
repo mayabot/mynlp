@@ -17,12 +17,12 @@
 description = '文本分类.使用Fasttext算法.'
 
 dependencies {
-    compile (project(":mynlp-segment")) {
+    compile (project(":mynlp")) {
         exclude module :'mynlp-resource-pos'
         exclude module :'mynlp-resource-ner'
     }
 
-    compile project(":fasttext")
+    compile project(":fastText4j")
 
     testCompile 'junit:junit:4.12'
     testCompile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'

@@ -2,7 +2,7 @@ dependencies{
     compileOnly ("org.elasticsearch:elasticsearch:6.0.0"){
         transitive = false
     }
-    compile (project(":mynlp-segment")){
+    compile (project(":mynlp")){
         exclude module :'mynlp-resource-pos'
     }
 

@@ -1,31 +1,18 @@
 package com.mayabot.nlp.pinyin.split
 
 import com.mayabot.nlp.common.FastStringBuilder
-import com.mayabot.nlp.perceptron.EvaluateResult
-import com.mayabot.nlp.perceptron.Perceptron
-import com.mayabot.nlp.perceptron.PerceptronDefinition
-import com.mayabot.nlp.perceptron.wordCorrect
+import com.mayabot.nlp.perceptron.*
 
 /**
  * 把一个完整联系的拼音输入。
  * wanzhengdepinyin => wan zheng de pin yin
  * ﹍
  */
-class PinyinSplitDefinition : PerceptronDefinition<Char, String, CharArray>() {
+class PinyinSplitDefinition : PerceptronDefinition<Char, CharArray>{
 
-    override val labels = listOf("B", "M", "E", "S")
+    override fun labels() = arrayOf("B", "M", "E", "S")
 
-    override fun labelIndex(label: String): Int {
-        return when (label) {
-            "B" -> 0
-            "M" -> 1
-            "E" -> 2
-            "S" -> 3
-            else -> 0
-        }
-    }
-
-    override fun buffer() = FastStringBuilder(4)
+    override fun featureMaxSize() = 4
 
     override fun featureFunction(sentence: CharArray, size: Int, position: Int, buffer: FastStringBuilder, emit: () -> Unit) {
 
@@ -84,7 +71,7 @@ class PinyinSplitDefinition : PerceptronDefinition<Char, String, CharArray>() {
      * "世界 你好" => 世/B 界/E 你/B 好/E
      * B M S E
      */
-    override fun annotateText(text: String): List<Pair<Char, String>> {
+    override fun parseAnnotateText(text: String): List<Pair<Char, String>> {
         return text.splitToSequence('﹍')
                 .flatMap { word ->
                     when (word.length) {
@@ -106,29 +93,39 @@ class PinyinSplitDefinition : PerceptronDefinition<Char, String, CharArray>() {
                     }.asSequence()
                 }.toList()
     }
-}
 
-fun pinyinSplitEvaluateFun(id:Int,model:Perceptron,sampleList:List<String>):EvaluateResult{
-    var count = 0
-    var goldTotal = 0
-    var predTotal = 0
+    override fun evaluateFunction(model: PerceptronModel): EvaluateFunction? {
+        return EvaluateFunction {sampleList->
+            var count = 0
+            var goldTotal = 0
+            var predTotal = 0
 
-    var correct = 0
+            var correct = 0
 
-    val segmenter = PinyinSplitApp(model)
+            val segmenter = PinyinSplitApp(model)
 
-    for (line in sampleList) {
-        val wordArray = line.split("﹍")
-        goldTotal += wordArray.size
+            for (line in sampleList) {
+                val wordArray = line.split("﹍")
+                goldTotal += wordArray.size
 
-        val text = wordArray.joinToString(separator = "")
-        val predArray = segmenter.decodeToWordList(text)
-        predTotal += predArray.size
+                val text = wordArray.joinToString(separator = "")
+                val predArray = segmenter.decodeToWordList(text)
+                predTotal += predArray.size
 
-        correct += wordCorrect(wordArray,predArray)
+                correct += wordCorrect(wordArray,predArray)
 
-        count++
+                count++
+            }
+
+            EvaluateResult(goldTotal, predTotal, correct)
+        }
     }
 
-    return EvaluateResult(goldTotal, predTotal, correct)
+    override fun preProcessInputSequence(input: CharArray): CharArray {
+        return input
+    }
 }
+//
+//fun pinyinSplitEvaluateFun(id:Int, model:PerceptronModel, sampleList:List<String>) : EvaluateResult {
+//
+//}

@@ -1,2 +1,0 @@
-# FastText4j
-
