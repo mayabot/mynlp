@@ -355,10 +355,8 @@ Gradle地址 |依赖| 大小 |功能描述
 `com.mayabot.mynlp.resource:mynlp-resource-cws:1.0.0`| *N* | 62.4M | 感知机分词模型
 `com.mayabot.mynlp.resource:mynlp-resource-custom:1.0.0`| *N* | 2.2M | 补充自定义词库
 
-{{< panel status="notice" title="依赖说明" >}}
-依赖为Y: 表示这些jar资源被`com.mayabot.mynlp:mynlp:{{<version>}}`自动依赖。<br>
-依赖为N: 如果需要，你可以在maven或者Gradle中引入。 
-{{< /panel >}}
+> 依赖为Y: 表示这些jar资源被`com.mayabot.mynlp:mynlp:{{<version>}}`自动依赖。<br>
+> 依赖为N: 如果需要，你可以在maven或者Gradle中引入。 
 
 
 
