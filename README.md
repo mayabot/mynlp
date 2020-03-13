@@ -5,6 +5,7 @@
 [![Latest release](https://img.shields.io/github/release/mayabot/mynlp/all.svg)](https://github.com/mayabot/mynlp/releases/latest)
 
 
+![logo](https://cdn.mayabot.com/mynlp/mynlp-banner.png)
 
 ## 功能与特点：
 - 中文分词
