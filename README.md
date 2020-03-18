@@ -30,7 +30,7 @@
 
 GRADLE
 ```groovy
-compile 'com.mayabot.mynlp:mynlp:{{<version>}}'
+compile 'com.mayabot.mynlp:mynlp:3.1.0'
 ```
 MAVEN
 ```xml
