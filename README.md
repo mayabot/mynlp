@@ -37,7 +37,7 @@ MAVEN
 <dependency>
   <groupId>com.mayabot.mynlp</groupId>
   <artifactId>mynlp</artifactId>
-  <version>{{<version>}}</version>
+  <version>3.1.0</version>
 </dependency>
 ```
 
