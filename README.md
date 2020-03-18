@@ -1,3 +1,5 @@
+
+
 # Mynlp: 高性能、可扩展的中文NLP工具包
 
 ![License](https://img.shields.io/github/license/mayabot/mynlp.svg)
@@ -6,6 +8,8 @@
 
 
 ![logo](https://cdn.mayabot.com/mynlp/mynlp-banner.png)
+
+[在线文档 mynlp.mayabot.com（编辑中）](https://mynlp.mayabot.com/)
 
 ## 功能与特点：
 - 中文分词
