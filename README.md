@@ -11,7 +11,9 @@
 
 [在线文档 mynlp.mayabot.com（编辑中）](https://mynlp.mayabot.com/)
 
-*项目推广中：如果您喜欢、使用或、Clone或发ISSUE时，请先STAR，谢谢*
+**项目推广中：如果您喜欢、使用、Clone、发ISSUE时，请先STAR鼓励，谢谢**
+> 本项目大部分代码使用kotlin编写，[kotlin语法](https://www.kotlincn.net/docs/reference/basic-syntax.html)简单易上手,从java上手很快
+> 采用kotlin的唯一原因是代码可以被大量精简，节省时间！
 
 ## 功能与特点：
 - 中文分词
