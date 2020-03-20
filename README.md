@@ -11,6 +11,8 @@
 
 [在线文档 mynlp.mayabot.com（编辑中）](https://mynlp.mayabot.com/)
 
+*项目推广中：如果您喜欢、使用或、Clone或发ISSUE时，请先STAR，谢谢*
+
 ## 功能与特点：
 - 中文分词
     - 感知机分词
