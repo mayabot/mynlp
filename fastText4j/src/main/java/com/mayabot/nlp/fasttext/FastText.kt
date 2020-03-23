@@ -14,13 +14,13 @@ import com.mayabot.nlp.fasttext.train.FileSampleLineIterable
 import com.mayabot.nlp.fasttext.train.SampleLine
 import com.mayabot.nlp.fasttext.train.loadPreTrainVectors
 import com.mayabot.nlp.fasttext.utils.*
-import java.io.DataInputStream
-import java.io.File
-import java.io.IOException
-import java.io.InputStream
+import java.io.*
 import java.nio.ByteOrder
 import java.text.DecimalFormat
 import java.util.*
+import java.util.zip.ZipEntry
+import java.util.zip.ZipFile
+import java.util.zip.ZipInputStream
 import kotlin.collections.ArrayList
 import kotlin.math.abs
 import kotlin.math.exp
@@ -511,6 +511,72 @@ class FastText(
         fun loadCppModel(ins: InputStream): FastText {
             return CppFastTextSupport.loadCModel(ins)
         }
+
+        /**
+         * 从Zip文件中加载模型
+         */
+        @JvmStatic
+        fun loadModelFormZip(moduleDir: File): FastText? {
+
+            check(moduleDir.exists() && moduleDir.name.endsWith(".zip"))
+
+            val zipFile = ZipFile(moduleDir)
+            val bufferedInputStream = BufferedInputStream(FileInputStream(moduleDir))
+            val zipInputStream = ZipInputStream(bufferedInputStream)
+            var ze: ZipEntry?
+            do {
+                ze = zipInputStream.nextEntry
+                if (ze != null) {
+                    var args:Args? = null
+                    if (ze.name.endsWith("args.bin")){
+                        args = Args.load(AutoDataInput(DataInputStream(zipFile.getInputStream(ze))))
+                    }
+                    var dict: Dictionary? = null
+                    if (ze.name.endsWith("dict.bin")){
+                        args?.let {
+                            dict = DataInputStream(zipFile.getInputStream(ze)).use {dic ->
+                                Dictionary.loadModel(it, AutoDataInput(dic))
+                            }
+                        }
+                    }
+                    var quant = ze.name.endsWith("qinput.matrix")
+                    var input:Any
+                    input = if (quant) {
+                        loadQuantMatrix(AutoDataInput(DataInputStream(zipFile.getInputStream(ze))))
+                    }else{}
+                    input = if(ze.name.endsWith("input.matrix")){
+                        loadDenseMatrix(DataInputStream(zipFile.getInputStream(ze)))
+                    }else{}
+                    if (!quant && dict!!.isPruned()) {
+                        error("Invalid model file.\n" +
+                                "Please download the updated model from www.fasttext.cc.\n" +
+                                "See issue #332 on Github for more information.\n")
+                    }
+
+                    var qoutput = ze.name.endsWith("qoutput.matrix")
+                    var output:Any
+                    output = if (qoutput) {
+                        loadQuantMatrix(AutoDataInput(DataInputStream(zipFile.getInputStream(ze))))
+                    }else{}
+
+                    output = if (ze.name.endsWith("output.matrix")){
+                        loadDenseMatrix(DataInputStream(DataInputStream(zipFile.getInputStream(ze))))
+                    }else{}
+
+                    val loss = args?.let { dict?.let { it1 -> createLoss(it, output as Matrix, args.model, it1) } }
+
+                    val normalizeGradient = args!!.model == ModelName.sup
+
+                    return dict?.let { loss?.let { it1 -> Model(input as Matrix, output as Matrix, it1, normalizeGradient) }?.let { it2 -> FastText(args, it, it2, quant) } }
+                } else {
+                    break
+                }
+            } while (true)
+            return null
+        }
+
+
+
 
         /**
          * 加载Java模型,[moduleDir]是目录
