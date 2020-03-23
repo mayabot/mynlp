@@ -1,8 +1,8 @@
 package com.mayabot.nlp.fasttext
 
 import com.mayabot.nlp.fasttext.args.Args
-import com.mayabot.nlp.fasttext.args.ModelName
 import com.mayabot.nlp.fasttext.args.InputArgs
+import com.mayabot.nlp.fasttext.args.ModelName
 import com.mayabot.nlp.fasttext.blas.*
 import com.mayabot.nlp.fasttext.blas.Vector
 import com.mayabot.nlp.fasttext.dictionary.Dictionary
@@ -21,9 +21,11 @@ import java.util.*
 import java.util.zip.ZipEntry
 import java.util.zip.ZipFile
 import java.util.zip.ZipInputStream
+import javax.xml.crypto.Data
 import kotlin.collections.ArrayList
 import kotlin.math.abs
 import kotlin.math.exp
+
 
 class FastText(
         val args: Args,
@@ -90,18 +92,18 @@ class FastText(
             queryNorm = 1f
         }
 
-        val top = TopMaxK<String>(k+sets.size)
+        val top = TopMaxK<String>(k + sets.size)
 
         for (i in 0 until dict.nwords) {
             val dp = wordVectors[i] * queryVec / queryNorm
-            if(top.canPush(dp)){
-                top.push(dict.getWord(i),dp)
+            if (top.canPush(dp)) {
+                top.push(dict.getWord(i), dp)
             }
         }
 
-        return  top.result()
+        return top.result()
                 .filter { it.second != -1.0f && !sets.contains(it.first) }
-                .map {ScoreLabelPair(it.second,it.first) }.take(k)
+                .map { ScoreLabelPair(it.second, it.first) }.take(k)
     }
 
     private val wordVectors: DenseMatrix by lazy {
@@ -200,11 +202,11 @@ class FastText(
         return vec
     }
 
-    fun test(file: File, k: Int = 1, threshold: Float = 0.0f,print: Boolean=true): Meter {
-        return test(FileSampleLineIterable(file),k,threshold,print)
+    fun test(file: File, k: Int = 1, threshold: Float = 0.0f, print: Boolean = true): Meter {
+        return test(FileSampleLineIterable(file), k, threshold, print)
     }
 
-    fun test(file: Iterable<SampleLine>, k: Int = 1, threshold: Float = 0.0f,print: Boolean = true): Meter {
+    fun test(file: Iterable<SampleLine>, k: Int = 1, threshold: Float = 0.0f, print: Boolean = true): Meter {
         val line = IntArrayList()
         val labels = IntArrayList()
         val meter = Meter()
@@ -218,7 +220,7 @@ class FastText(
                 meter.log(labels, predictions)
             }
         }
-        if(print) meter.print(dict, k, true)
+        if (print) meter.print(dict, k, true)
         return meter
     }
 
@@ -455,7 +457,7 @@ class FastText(
 
             }
 
-            return train(prepareSources(),modelName,inputArgs)
+            return train(prepareSources(), modelName, inputArgs)
         }
 
         @JvmStatic
@@ -503,10 +505,12 @@ class FastText(
                 }
             }
         }
+
         @JvmStatic
         fun loadCppModel(file: File): FastText {
             return CppFastTextSupport.load(file)
         }
+
         @JvmStatic
         fun loadCppModel(ins: InputStream): FastText {
             return CppFastTextSupport.loadCModel(ins)
@@ -519,64 +523,82 @@ class FastText(
         fun loadModelFormZip(moduleDir: File): FastText? {
 
             check(moduleDir.exists() && moduleDir.name.endsWith(".zip"))
-
-            val zipFile = ZipFile(moduleDir)
             val bufferedInputStream = BufferedInputStream(FileInputStream(moduleDir))
             val zipInputStream = ZipInputStream(bufferedInputStream)
             var ze: ZipEntry?
+            var list: MutableList<String> = ArrayList()
             do {
                 ze = zipInputStream.nextEntry
                 if (ze != null) {
-                    var args:Args? = null
-                    if (ze.name.endsWith("args.bin")){
-                        args = Args.load(AutoDataInput(DataInputStream(zipFile.getInputStream(ze))))
-                    }
-                    var dict: Dictionary? = null
-                    if (ze.name.endsWith("dict.bin")){
-                        args?.let {
-                            dict = DataInputStream(zipFile.getInputStream(ze)).use {dic ->
-                                Dictionary.loadModel(it, AutoDataInput(dic))
-                            }
-                        }
-                    }
-                    var quant = ze.name.endsWith("qinput.matrix")
-                    var input:Any
-                    input = if (quant) {
-                        loadQuantMatrix(AutoDataInput(DataInputStream(zipFile.getInputStream(ze))))
-                    }else{}
-                    input = if(ze.name.endsWith("input.matrix")){
-                        loadDenseMatrix(DataInputStream(zipFile.getInputStream(ze)))
-                    }else{}
-                    if (!quant && dict!!.isPruned()) {
-                        error("Invalid model file.\n" +
-                                "Please download the updated model from www.fasttext.cc.\n" +
-                                "See issue #332 on Github for more information.\n")
-                    }
-
-                    var qoutput = ze.name.endsWith("qoutput.matrix")
-                    var output:Any
-                    output = if (qoutput) {
-                        loadQuantMatrix(AutoDataInput(DataInputStream(zipFile.getInputStream(ze))))
-                    }else{}
-
-                    output = if (ze.name.endsWith("output.matrix")){
-                        loadDenseMatrix(DataInputStream(DataInputStream(zipFile.getInputStream(ze))))
-                    }else{}
-
-                    val loss = args?.let { dict?.let { it1 -> createLoss(it, output as Matrix, args.model, it1) } }
-
-                    val normalizeGradient = args!!.model == ModelName.sup
-
-                    return dict?.let { loss?.let { it1 -> Model(input as Matrix, output as Matrix, it1, normalizeGradient) }?.let { it2 -> FastText(args, it, it2, quant) } }
+                    list.add(ze.toString())
                 } else {
                     break
                 }
             } while (true)
-            return null
+
+            var args: Args? = null
+            var dict: Dictionary? = null
+            var quantMatrix: Any? = null
+            var quantMatrix1: Any? =null
+            var qinput:Boolean = false
+                    for (s in list) {
+                if (s.endsWith("args.bin")) {
+                    val inputStream = inputStream(moduleDir, s)
+                    args = Args.load(AutoDataInput(DataInputStream(inputStream)))
+                }
+                if (s.endsWith("dict.bin")) {
+                    val inputStream = inputStream(moduleDir,s)
+                    args?.let {
+                        dict = DataInputStream(inputStream).use {da ->
+                            Dictionary.loadModel(it, AutoDataInput(DataInputStream(da)))
+                        }
+                    }
+                }
+                qinput = s.endsWith("qinput.matrix")
+                if (qinput){
+                    val inputStream = inputStream(moduleDir,s)
+                    val loadQuantMatrix = loadQuantMatrix(AutoDataInput((DataInputStream(inputStream))))
+                    quantMatrix = loadQuantMatrix
+                }
+                val inputmatrix = s.endsWith("input.matrix")
+                if (inputmatrix){
+                    val inputStream = inputStream(moduleDir,s)
+                    val loadDenseMatrix = loadDenseMatrix(inputStream)
+                    quantMatrix = loadDenseMatrix
+                }
+
+                val qoutput = s.endsWith("qoutput.matrix")
+                if (qoutput){
+                    val inputStream = inputStream(moduleDir,s)
+                    var loadQuantMatrix = loadQuantMatrix(AutoDataInput((DataInputStream(inputStream))))
+                    quantMatrix1 = loadQuantMatrix
+                }
+                val output = s.endsWith("output.matrix")
+                if (output){
+                    val inputStream = inputStream(moduleDir,s)
+                    var loadDenseMatrix = loadDenseMatrix(inputStream)
+                    quantMatrix1 = loadDenseMatrix
+                }
+            }
+            val loss = args?.let { dict?.let { it1 -> createLoss(it, quantMatrix1 as Matrix, args.model, it1) } }
+
+            val normalizeGradient = args?.model == ModelName.sup
+
+            return args?.let { dict?.let { it1 -> loss?.let { it2 -> Model(quantMatrix as Matrix, quantMatrix1 as Matrix, it2, normalizeGradient) }?.let { it3 -> FastText(it, it1, it3, qinput) } } }
         }
 
-
-
+        @Throws(IOException::class)
+        fun inputStream(file: File, resourceName: String): InputStream? {
+            val zipFile = ZipFile(file)
+            val entry: ZipEntry = zipFile.getEntry(resourceName)
+            return object : BufferedInputStream(zipFile.getInputStream(entry), 4 * 1024 * 4) {
+                @Throws(IOException::class)
+                override fun close() {
+                    super.close()
+                    zipFile.close()
+                }
+            }
+        }
 
         /**
          * 加载Java模型,[moduleDir]是目录

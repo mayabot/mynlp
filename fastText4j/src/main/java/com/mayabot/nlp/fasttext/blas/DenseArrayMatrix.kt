@@ -5,12 +5,13 @@ import com.mayabot.nlp.fasttext.utils.readInt
 import com.mayabot.nlp.fasttext.utils.writeInt
 import java.io.DataInputStream
 import java.io.File
+import java.io.InputStream
 import java.nio.ByteBuffer
 import java.nio.channels.FileChannel
 import java.util.*
 
 
-fun loadDenseMatrix(inputStream: DataInputStream): DenseMatrix {
+fun loadDenseMatrix(inputStream: InputStream?): DenseMatrix {
     val dataInput = AutoDataInput(DataInputStream(inputStream))
     val rows = dataInput.readInt()
     val cols = dataInput.readInt()
