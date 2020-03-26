@@ -3,11 +3,24 @@ package com.mayabot.nlp.fasttext.blas
 import com.mayabot.nlp.fasttext.utils.AutoDataInput
 import com.mayabot.nlp.fasttext.utils.readInt
 import com.mayabot.nlp.fasttext.utils.writeInt
+import java.io.DataInputStream
 import java.io.File
+import java.io.InputStream
 import java.nio.ByteBuffer
 import java.nio.channels.FileChannel
 import java.util.*
 
+
+fun loadDenseMatrix(inputStream: InputStream?): DenseMatrix {
+    val dataInput = AutoDataInput(DataInputStream(inputStream))
+    val rows = dataInput.readInt()
+    val cols = dataInput.readInt()
+    val floatArray = FloatArray(rows * cols)
+    for (i in 0 until rows * cols) {
+        floatArray[i] = dataInput.readFloat()
+    }
+    return floatArrayMatrix(rows, cols, floatArray)
+}
 
 fun loadDenseMatrix(file: File, mmap: Boolean): DenseMatrix {
     fun pages(total: Long, size: Int): Int = ((total + size.toLong() - 1) / size.toLong()).toInt()
