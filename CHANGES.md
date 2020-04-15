@@ -9,3 +9,6 @@
     - 新增OneVsAiLoss损失函数
     - 新增test接口
     - fix预测结果数量少一个的bug
+    
+# 3.1.1
+- fix 标点符号过滤bug
