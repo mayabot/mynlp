@@ -40,21 +40,27 @@ public class PunctuationFilter extends BaseFilterLexerReader implements Predicat
 
     /**
      * 如果是标点符号，返回false，表示排除
+     * <p>
+     * fix 长度大于1是，应该三个字符全都是标点才判断为标点
      *
      * @param term
      * @return boolean
      */
     @Override
     public boolean test(WordTerm term) {
-        if (term.word.length() == 1) {
+        int wordLen = term.word.length();
+        if (wordLen == 0) {
+            return false;
+        }
+        if (wordLen == 1) {
             return !Characters.isPunctuation(term.word.charAt(0));
-        } else if (term.word.length() == 2) {
-            return !Characters.isPunctuation(term.word.charAt(0)) &&
-                    !Characters.isPunctuation(term.word.charAt(1));
+        } else if (wordLen == 2) {
+            return !(Characters.isPunctuation(term.word.charAt(0)) &&
+                    Characters.isPunctuation(term.word.charAt(1)));
         } else {
-            return !Characters.isPunctuation(term.word.charAt(0)) &&
-                    !Characters.isPunctuation(term.word.charAt(1)) &&
-                    !Characters.isPunctuation(term.word.charAt(2));
+            return !(Characters.isPunctuation(term.word.charAt(0)) &&
+                    Characters.isPunctuation(term.word.charAt(1)) &&
+                    Characters.isPunctuation(term.word.charAt(2)));
         }
     }
 
