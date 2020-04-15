@@ -1,13 +1,11 @@
 package com.mayabot.nlp.fasttext;
 
-import com.mayabot.nlp.fasttext.args.InputArgs;
-import com.mayabot.nlp.fasttext.args.ModelName;
-import com.mayabot.nlp.fasttext.loss.LossName;
-
-import java.io.File;
-
 public class Java {
     public static void main(String[] args) {
+
+//        FastText fastText = FastText.loadModelFormZip(new File("data/agnews/model.zip"));
+//
+//        System.out.println();
 
 //        File trainFile = new File("data/agnews/ag.train");
 //        InputArgs inputArgs = new InputArgs();
