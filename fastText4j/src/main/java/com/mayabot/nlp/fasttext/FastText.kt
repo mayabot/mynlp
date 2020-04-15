@@ -14,14 +14,13 @@ import com.mayabot.nlp.fasttext.train.FileSampleLineIterable
 import com.mayabot.nlp.fasttext.train.SampleLine
 import com.mayabot.nlp.fasttext.train.loadPreTrainVectors
 import com.mayabot.nlp.fasttext.utils.*
-import java.io.*
+import java.io.DataInputStream
+import java.io.File
+import java.io.IOException
+import java.io.InputStream
 import java.nio.ByteOrder
 import java.text.DecimalFormat
 import java.util.*
-import java.util.zip.ZipEntry
-import java.util.zip.ZipFile
-import java.util.zip.ZipInputStream
-import javax.xml.crypto.Data
 import kotlin.collections.ArrayList
 import kotlin.math.abs
 import kotlin.math.exp
@@ -515,90 +514,125 @@ class FastText(
         fun loadCppModel(ins: InputStream): FastText {
             return CppFastTextSupport.loadCModel(ins)
         }
+//
+//        /**
+//         * 从Zip文件中加载模型
+//         * [file]指向一个模型的压缩文件
+//         */
+//        @JvmStatic
+//        fun loadModelFormZip(file: File): FastText? {
+//
+//            val zins = ZipInputStream(file.inputStream().buffered())
+//
+//            fun ZipEntry.matchFileName(name: String) = this.name.endsWith(name)
+//
+//            fun autoDataInput(ins:InputStream) = AutoDataInput(DataInputStream(ins))
+//
+//            zins.nextEntry
+//
+//            var args: Args? = null
+//            var dict: Dictionary? = null
+//            var quantMatrix: Any? = null
+//            var quantMatrix1: Any? =null
+//            var qinput:Boolean = false
+//
+//            var entry = zins.nextEntry
+//            while (entry != null){
+//
+//                if(!entry.isDirectory){
+//                    when{
+//                        entry.matchFileName("model/args.bin") -> {
+//                            args = Args.load(autoDataInput(zins))
+//                        }
+//                        entry.matchFileName("model/dict.bin") -> {
+//                            args = Args.load(autoDataInput(zins))
+//                        }
+//                    }
+//                }
+//
+//                entry = zins.nextEntry
+//            }
+//
+//            TODO()
+//
+//            check(file.exists() && file.name.endsWith(".zip"))
+//
+//            fun inputStream(file: File, resourceName: String): InputStream? {
+//                val zipFile = ZipFile(file)
+//                val entry = zipFile.getEntry(resourceName)
+//                return object : BufferedInputStream(zipFile.getInputStream(entry), 4 * 1024 * 4) {
+//                    @Throws(IOException::class)
+//                    override fun close() {
+//                        super.close()
+//                        zipFile.close()
+//                    }
+//                }
+//            }
+//
+//
+//
+//            file.inputStream().buffered()
+//            val bufferedInputStream = BufferedInputStream(FileInputStream(file))
+//            val zipInputStream = ZipInputStream(bufferedInputStream)
+//            var ze: ZipEntry?
+//            var list: MutableList<String> = ArrayList()
+//            do {
+//                ze = zipInputStream.nextEntry
+//                if (ze != null) {
+//                    list.add(ze.toString())
+//                } else {
+//                    break
+//                }
+//            } while (true)
+//
+//
+//
+//            for (s in list) {
+//                if (s.endsWith("args.bin")) {
+//                    val inputStream = inputStream(file, s)
+//                    args = Args.load(AutoDataInput(DataInputStream(inputStream)))
+//                }
+//                if (s.endsWith("dict.bin")) {
+//                    val inputStream = inputStream(file,s)
+//                    args?.let {
+//                        dict = DataInputStream(inputStream).use {da ->
+//                            Dictionary.loadModel(it, AutoDataInput(DataInputStream(da)))
+//                        }
+//                    }
+//                }
+//                qinput = s.endsWith("qinput.matrix")
+//                if (qinput){
+//                    val inputStream = inputStream(file,s)
+//                    val loadQuantMatrix = loadQuantMatrix(AutoDataInput((DataInputStream(inputStream))))
+//                    quantMatrix = loadQuantMatrix
+//                }
+//                val inputmatrix = s.endsWith("input.matrix")
+//                if (inputmatrix){
+//                    val inputStream = inputStream(file,s)
+//                    val loadDenseMatrix = loadDenseMatrix(inputStream)
+//                    quantMatrix = loadDenseMatrix
+//                }
+//
+//                val qoutput = s.endsWith("qoutput.matrix")
+//                if (qoutput){
+//                    val inputStream = inputStream(file,s)
+//                    var loadQuantMatrix = loadQuantMatrix(AutoDataInput((DataInputStream(inputStream))))
+//                    quantMatrix1 = loadQuantMatrix
+//                }
+//                val output = s.endsWith("output.matrix")
+//                if (output){
+//                    val inputStream = inputStream(file,s)
+//                    var loadDenseMatrix = loadDenseMatrix(inputStream)
+//                    quantMatrix1 = loadDenseMatrix
+//                }
+//            }
+//            val loss = args?.let { dict?.let { it1 -> createLoss(it, quantMatrix1 as Matrix, args.model, it1) } }
+//
+//            val normalizeGradient = args?.model == ModelName.sup
+//
+//            return args?.let { dict?.let { it1 -> loss?.let { it2 -> Model(quantMatrix as Matrix, quantMatrix1 as Matrix, it2, normalizeGradient) }?.let { it3 -> FastText(it, it1, it3, qinput) } } }
+//        }
 
-        /**
-         * 从Zip文件中加载模型
-         */
-        @JvmStatic
-        fun loadModelFormZip(moduleDir: File): FastText? {
-
-            check(moduleDir.exists() && moduleDir.name.endsWith(".zip"))
-            val bufferedInputStream = BufferedInputStream(FileInputStream(moduleDir))
-            val zipInputStream = ZipInputStream(bufferedInputStream)
-            var ze: ZipEntry?
-            var list: MutableList<String> = ArrayList()
-            do {
-                ze = zipInputStream.nextEntry
-                if (ze != null) {
-                    list.add(ze.toString())
-                } else {
-                    break
-                }
-            } while (true)
-
-            var args: Args? = null
-            var dict: Dictionary? = null
-            var quantMatrix: Any? = null
-            var quantMatrix1: Any? =null
-            var qinput:Boolean = false
-                    for (s in list) {
-                if (s.endsWith("args.bin")) {
-                    val inputStream = inputStream(moduleDir, s)
-                    args = Args.load(AutoDataInput(DataInputStream(inputStream)))
-                }
-                if (s.endsWith("dict.bin")) {
-                    val inputStream = inputStream(moduleDir,s)
-                    args?.let {
-                        dict = DataInputStream(inputStream).use {da ->
-                            Dictionary.loadModel(it, AutoDataInput(DataInputStream(da)))
-                        }
-                    }
-                }
-                qinput = s.endsWith("qinput.matrix")
-                if (qinput){
-                    val inputStream = inputStream(moduleDir,s)
-                    val loadQuantMatrix = loadQuantMatrix(AutoDataInput((DataInputStream(inputStream))))
-                    quantMatrix = loadQuantMatrix
-                }
-                val inputmatrix = s.endsWith("input.matrix")
-                if (inputmatrix){
-                    val inputStream = inputStream(moduleDir,s)
-                    val loadDenseMatrix = loadDenseMatrix(inputStream)
-                    quantMatrix = loadDenseMatrix
-                }
-
-                val qoutput = s.endsWith("qoutput.matrix")
-                if (qoutput){
-                    val inputStream = inputStream(moduleDir,s)
-                    var loadQuantMatrix = loadQuantMatrix(AutoDataInput((DataInputStream(inputStream))))
-                    quantMatrix1 = loadQuantMatrix
-                }
-                val output = s.endsWith("output.matrix")
-                if (output){
-                    val inputStream = inputStream(moduleDir,s)
-                    var loadDenseMatrix = loadDenseMatrix(inputStream)
-                    quantMatrix1 = loadDenseMatrix
-                }
-            }
-            val loss = args?.let { dict?.let { it1 -> createLoss(it, quantMatrix1 as Matrix, args.model, it1) } }
-
-            val normalizeGradient = args?.model == ModelName.sup
-
-            return args?.let { dict?.let { it1 -> loss?.let { it2 -> Model(quantMatrix as Matrix, quantMatrix1 as Matrix, it2, normalizeGradient) }?.let { it3 -> FastText(it, it1, it3, qinput) } } }
-        }
-
-        @Throws(IOException::class)
-        fun inputStream(file: File, resourceName: String): InputStream? {
-            val zipFile = ZipFile(file)
-            val entry: ZipEntry = zipFile.getEntry(resourceName)
-            return object : BufferedInputStream(zipFile.getInputStream(entry), 4 * 1024 * 4) {
-                @Throws(IOException::class)
-                override fun close() {
-                    super.close()
-                    zipFile.close()
-                }
-            }
-        }
 
         /**
          * 加载Java模型,[moduleDir]是目录
