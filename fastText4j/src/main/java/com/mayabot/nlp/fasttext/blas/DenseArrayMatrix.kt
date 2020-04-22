@@ -11,8 +11,7 @@ import java.nio.channels.FileChannel
 import java.util.*
 
 
-fun loadDenseMatrix(inputStream: InputStream?): DenseMatrix {
-    val dataInput = AutoDataInput(DataInputStream(inputStream))
+fun loadDenseMatrix(dataInput: AutoDataInput): DenseMatrix {
     val rows = dataInput.readInt()
     val cols = dataInput.readInt()
     val floatArray = FloatArray(rows * cols)
@@ -20,6 +19,11 @@ fun loadDenseMatrix(inputStream: InputStream?): DenseMatrix {
         floatArray[i] = dataInput.readFloat()
     }
     return floatArrayMatrix(rows, cols, floatArray)
+}
+
+fun loadDenseMatrix(inputStream: InputStream?): DenseMatrix {
+    val dataInput = AutoDataInput(DataInputStream(inputStream))
+    return loadDenseMatrix(dataInput)
 }
 
 fun loadDenseMatrix(file: File, mmap: Boolean): DenseMatrix {
@@ -113,7 +117,7 @@ class DenseArrayMatrix(row: Int,
         }
     }
 
-    override fun save(file: File) {
+    override fun save(channel: FileChannel) {
 
         fun write(channel: FileChannel) {
             val byteBuffer = ByteBuffer.allocateDirect(col * 4)
@@ -130,10 +134,37 @@ class DenseArrayMatrix(row: Int,
             }
         }
 
+        channel.writeInt(row)
+        channel.writeInt(col)
+        write(channel)
+
+    }
+
+    override fun save(file: File) {
+
+//        fun write(channel: FileChannel) {
+//            val byteBuffer = ByteBuffer.allocateDirect(col * 4)
+//            val asFloatBuffer = byteBuffer.asFloatBuffer()
+//
+//            for (row in 0 until row) {
+//                asFloatBuffer.clear()
+//                asFloatBuffer.put(data, row * col, col)
+//
+//                byteBuffer.position(0)
+//                byteBuffer.limit(col * 4)
+//
+//                channel.write(byteBuffer)
+//            }
+//        }
+//
+//        file.outputStream().channel.use { channel ->
+//            channel.writeInt(row)
+//            channel.writeInt(col)
+//            write(channel)
+//        }
+
         file.outputStream().channel.use { channel ->
-            channel.writeInt(row)
-            channel.writeInt(col)
-            write(channel)
+            save(channel)
         }
 
     }
@@ -222,6 +253,13 @@ class ByteBufferMatrix(row: Int, col: Int, val data: ByteBuffer) : BasicDenseMat
     }
 
     override fun save(file: File) {
+        file.outputStream().channel.use { channel ->
+            save(channel)
+        }
+    }
+
+    override fun save(channel: FileChannel) {
+
         fun write(channel: FileChannel) {
             data.position(0)
             data.limit(data.capacity())
@@ -229,11 +267,9 @@ class ByteBufferMatrix(row: Int, col: Int, val data: ByteBuffer) : BasicDenseMat
             channel.write(data)
         }
 
-        file.outputStream().channel.use { channel ->
-            channel.writeInt(row)
-            channel.writeInt(col)
-            write(channel)
-        }
+        channel.writeInt(row)
+        channel.writeInt(col)
+        write(channel)
     }
 
     private fun index(i: Int, j: Int): Int {
@@ -290,6 +326,10 @@ class AreaByteBufferMatrix(row: Int, col: Int, val data: List<ByteBuffer>) : Bas
 
     override fun save(file: File) {
         TODO("not implemented")
+    }
+
+    override fun save(channel: FileChannel) {
+        TODO("Not yet implemented")
     }
 
     override fun set(i: Int, j: Int, v: Float) {

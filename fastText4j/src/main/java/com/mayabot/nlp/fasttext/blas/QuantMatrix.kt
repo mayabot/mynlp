@@ -2,6 +2,7 @@ package com.mayabot.nlp.fasttext.blas
 
 import com.mayabot.nlp.fasttext.utils.*
 import java.io.File
+import java.nio.channels.FileChannel
 
 fun buildQMatrix(mat: DenseMatrix,
                  dsub: Int = 2,
@@ -161,18 +162,22 @@ class QuantMatrix(val m: Int,
 
     override fun save(file: File) {
         file.outputStream().channel.use { channel ->
-            with(channel) {
-                writeBoolean(qnorm)
-                writeLong(m.toLong())
-                writeLong(n.toLong())
-                writeInt(codeSize)
-                writeShortArray(codes)
+            save(channel)
+        }
+    }
 
-                pq.save(channel)
-                if (qnorm) {
-                    writeShortArray(normCodes)
-                    npq.save(channel)
-                }
+    override fun save(channel: FileChannel) {
+        with(channel) {
+            writeBoolean(qnorm)
+            writeLong(m.toLong())
+            writeLong(n.toLong())
+            writeInt(codeSize)
+            writeShortArray(codes)
+
+            pq.save(channel)
+            if (qnorm) {
+                writeShortArray(normCodes)
+                npq.save(channel)
             }
         }
     }

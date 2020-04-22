@@ -12,3 +12,11 @@
     
 # 3.1.1
 - fix 标点符号过滤bug
+
+# 3.1.2
+- FastText 模型保存为单个文件，也可以从单个文件加载
+```kotlin
+fastText.saveModelToSingleFile(File("fastText4j/data/model.fjbin"))
+
+FastText.loadModelFromSingleFile(File("fastText4j/data/model.fjbin"))
+```

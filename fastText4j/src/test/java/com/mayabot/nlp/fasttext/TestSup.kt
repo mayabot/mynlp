@@ -1,10 +1,9 @@
 package com.mayabot.nlp.fasttext
 
-import com.mayabot.nlp.fasttext.args.ModelName
 import com.mayabot.nlp.fasttext.args.InputArgs
+import com.mayabot.nlp.fasttext.args.ModelName
 import com.mayabot.nlp.fasttext.loss.LossName
 import com.mayabot.nlp.fasttext.utils.disableLog
-import org.junit.Test
 import java.io.File
 
 class TestSup {
@@ -22,6 +21,7 @@ class TestSup {
             }
         }
     }
+
 
     fun test(lossName: LossName) : Boolean {
 //        val trainSources = listOf(loadTrainFile("ag.train.txt"))

@@ -19,5 +19,6 @@ public class Java {
 //        model.test(new File("data/agnews/ag.test"),1,0,true);
 //
 //        model.predict()
+
     }
 }

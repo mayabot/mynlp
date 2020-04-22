@@ -318,7 +318,7 @@ class FastText(
 
 
     /**
-     * 保存为自有的文件格式(多文件）
+     * 保存为自有的文件格式(文件夹多文件）
      */
     @Throws(Exception::class)
     fun saveModel(file: String) {
@@ -344,6 +344,28 @@ class FastText(
         val qOutputFlag = if (output is QuantMatrix) "q" else ""
         output.save(File(path, "${qOutputFlag}output.matrix"))
 
+    }
+
+    /**
+     * 保存文件到单一文件
+     */
+    fun saveModelToSingleFile(file: File) {
+        if (!file.exists()) {
+            file.createNewFile()
+        }
+        assert(file.isFile)
+
+        file.outputStream().channel.use { channel ->
+            args.save(channel)
+            dict.save(channel)
+
+            channel.writeBoolean(input is QuantMatrix)
+            channel.writeBoolean(output is QuantMatrix)
+
+            input.save(channel)
+            output.save(channel)
+
+        }
     }
 
     /**
@@ -514,7 +536,7 @@ class FastText(
         fun loadCppModel(ins: InputStream): FastText {
             return CppFastTextSupport.loadCModel(ins)
         }
-//
+
 //        /**
 //         * 从Zip文件中加载模型
 //         * [file]指向一个模型的压缩文件
@@ -633,6 +655,47 @@ class FastText(
 //            return args?.let { dict?.let { it1 -> loss?.let { it2 -> Model(quantMatrix as Matrix, quantMatrix1 as Matrix, it2, normalizeGradient) }?.let { it3 -> FastText(it, it1, it3, qinput) } } }
 //        }
 
+        /**
+         * 从单体文件中加载
+         */
+        @JvmStatic
+        fun loadModelFromSingleFile(file: File): FastText {
+            assert(file.exists() && file.isFile)
+
+            file.inputStream().buffered().use { ins ->
+                val adi = AutoDataInput(DataInputStream(ins))
+
+                val args = Args.load(adi)
+                val dict = Dictionary.loadModel(args, adi)
+                val quantInput = adi.readBoolean()
+                val quantOutput = adi.readBoolean()
+
+                val inputMatrix = if (quantInput) {
+                    loadQuantMatrix(adi)
+                } else {
+                    loadDenseMatrix(adi)
+                }
+
+                if (!quantInput && dict.isPruned()) {
+                    error("Invalid model file.\n" +
+                            "Please download the updated model from www.fasttext.cc.\n" +
+                            "See issue #332 on Github for more information.\n")
+                }
+
+                val output = if (quantOutput) {
+                    loadQuantMatrix(adi)
+                } else {
+                    loadDenseMatrix(adi)
+                }
+
+                val loss = createLoss(args, output, args.model, dict)
+
+                val normalizeGradient = args.model == ModelName.sup
+
+                return FastText(args, dict, Model(inputMatrix, output, loss, normalizeGradient), quantInput)
+            }
+
+        }
 
         /**
          * 加载Java模型,[moduleDir]是目录

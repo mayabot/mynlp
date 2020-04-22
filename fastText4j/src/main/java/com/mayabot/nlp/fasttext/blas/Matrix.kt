@@ -2,6 +2,7 @@ package com.mayabot.nlp.fasttext.blas
 
 import java.io.File
 import java.io.Serializable
+import java.nio.channels.FileChannel
 
 /**
  * Float矩阵
@@ -24,6 +25,8 @@ interface Matrix : Serializable {
     fun addRowToVector(target: Vector, i: Int, a: Double? = null)
 
     fun save(file: File)
+
+    fun save(channel: FileChannel)
 
 
 }
