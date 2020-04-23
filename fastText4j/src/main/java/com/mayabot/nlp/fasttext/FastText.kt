@@ -655,14 +655,8 @@ class FastText(
 //            return args?.let { dict?.let { it1 -> loss?.let { it2 -> Model(quantMatrix as Matrix, quantMatrix1 as Matrix, it2, normalizeGradient) }?.let { it3 -> FastText(it, it1, it3, qinput) } } }
 //        }
 
-        /**
-         * 从单体文件中加载
-         */
-        @JvmStatic
-        fun loadModelFromSingleFile(file: File): FastText {
-            assert(file.exists() && file.isFile)
-
-            file.inputStream().buffered().use { ins ->
+        fun loadModelFromSingleFile(ins: InputStream): FastText {
+            ins.buffered().use { ins ->
                 val adi = AutoDataInput(DataInputStream(ins))
 
                 val args = Args.load(adi)
@@ -693,6 +687,18 @@ class FastText(
                 val normalizeGradient = args.model == ModelName.sup
 
                 return FastText(args, dict, Model(inputMatrix, output, loss, normalizeGradient), quantInput)
+            }
+        }
+
+        /**
+         * 从单体文件中加载
+         */
+        @JvmStatic
+        fun loadModelFromSingleFile(file: File): FastText {
+            assert(file.exists() && file.isFile)
+
+            file.inputStream().use { ins ->
+                return loadModelFromSingleFile(ins)
             }
 
         }
