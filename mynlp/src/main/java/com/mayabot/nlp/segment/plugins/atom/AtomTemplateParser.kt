@@ -1,6 +1,6 @@
 package com.mayabot.nlp.segment.plugins.atom
 
-import com.google.common.collect.Lists
+import com.mayabot.nlp.utils.CartesianList
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -58,7 +58,8 @@ fun parseTemplate(template: String): List<String> {
         }
     }
 
-    return Lists.cartesianProduct(list).map {
+
+    return CartesianList.create(list).map {
         it.joinToString(separator = "")
     }
 }

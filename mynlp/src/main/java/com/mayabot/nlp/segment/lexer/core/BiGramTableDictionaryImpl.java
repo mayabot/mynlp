@@ -166,8 +166,7 @@ public class BiGramTableDictionaryImpl extends BaseNlpResourceExternalizable imp
 
     @Override
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
-        this.matrix = new CSRSparseMatrix();
-        this.matrix.readExternal(in);
+        this.matrix = CSRSparseMatrix.readExternal(in);
     }
 
     /**

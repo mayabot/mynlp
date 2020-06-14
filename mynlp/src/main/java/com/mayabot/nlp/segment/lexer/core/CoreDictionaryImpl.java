@@ -15,7 +15,6 @@
  */
 package com.mayabot.nlp.segment.lexer.core;
 
-import com.google.common.base.CharMatcher;
 import com.google.common.base.Charsets;
 import com.google.common.base.Splitter;
 import com.google.common.hash.Hasher;
@@ -103,7 +102,7 @@ public class CoreDictionaryImpl extends BaseNlpResourceExternalizable implements
         int maxFreq = 0;
 
 
-        Splitter splitter = Splitter.on(CharMatcher.breakingWhitespace()).omitEmptyStrings().trimResults();
+        Splitter splitter = Splitter.on(' ').omitEmptyStrings().trimResults();
 
         try (CharSourceLineReader reader = UseLines.lineReader(dictResource.inputStream())) {
             while (reader.hasNext()) {

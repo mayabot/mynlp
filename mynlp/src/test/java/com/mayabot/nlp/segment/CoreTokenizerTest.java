@@ -87,7 +87,7 @@ public class CoreTokenizerTest {
     public void testDate() {
         Lexer tokenizer = Lexers.core();
 
-        String line = "2017年|的|第一|个|夏天|是|2017-10-12"; // 目标 是 第几套 房
+        String line = "2017年|的|第一个|夏天|是|2017-10-12"; // 目标 是 第几套 房
 
         TokenizerTestHelp.test(tokenizer, line);
 

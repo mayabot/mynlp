@@ -60,9 +60,9 @@ public class CSRSparseMatrix implements Serializable {
     }
 
 
-    public CSRSparseMatrix() {
-
-    }
+//    public CSRSparseMatrix() {
+//
+//    }
 
     public CSRSparseMatrix(TreeBasedTable<Integer, Integer, Integer> table, int totalRow) {
         int size = table.size();
@@ -113,13 +113,12 @@ public class CSRSparseMatrix implements Serializable {
 
     }
 
-    public void readExternal(ObjectInput in) throws IOException {
+    public static CSRSparseMatrix readExternal(ObjectInput in) throws IOException {
 
-        this.columnIndices = DataInOutputUtils.readIntArray(in);
-        rowOffset = DataInOutputUtils.readIntArray(in);
-        values = DataInOutputUtils.readIntArray(in);
-
-//        this.collBitSet = (BitSet) in.readObject();
+        int[] columnIndices = DataInOutputUtils.readIntArray(in);
+        int[] rowOffset = DataInOutputUtils.readIntArray(in);
+        int[] values = DataInOutputUtils.readIntArray(in);
+        return new CSRSparseMatrix(rowOffset, columnIndices, values);
     }
 
     /**
