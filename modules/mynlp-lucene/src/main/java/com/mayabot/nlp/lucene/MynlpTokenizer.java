@@ -88,7 +88,8 @@ final public class MynlpTokenizer extends Tokenizer {
 
             positionAttr.setPositionIncrement(next.getPosInc());
             termAtt.setEmpty().append(next.word);
-            offsetAtt.setOffset(next.offset, next.offset + next.length());
+            offsetAtt.setOffset(correctOffset(next.offset), correctOffset(next.offset + next.length()));
+//            offsetAtt.setOffset(next.offset, next.offset + next.length());
 
 //            if (mode == IterableMode.GRAPH) {
 //                if (next.hasSubword()) {
