@@ -14,11 +14,17 @@ import java.util.function.Consumer
  */
 class SentenceCollector : WordTermCollector {
 
+    /**
+     * 从wordnet中计算出子词的方法。
+     */
     override var pickUpSubword: WordTermCollector.PickUpSubword? = null
 
+    /**
+     * 给一个初始化wordnet的机会，填充更多的可能性
+     */
     override var fillSubword: WordTermCollector.FillSubword? = null
 
-    override fun collect(txtChars:CharArray?,wordnet: Wordnet, wordPath: Wordpath, consumer: Consumer<WordTerm>) {
+    override fun collect(txtChars: CharArray?, wordnet: Wordnet, wordPath: Wordpath, consumer: Consumer<WordTerm>) {
 
         val vertexIterator = wordPath.iteratorVertex()
 
@@ -41,9 +47,8 @@ class SentenceCollector : WordTermCollector {
 
             val pick = pickUpSubword
 
-            if (pick != null && term.length() >= 3) {
-                pick.pickup(term, wordnet, wordPath)
-            }
+            //给当前的term计算子词
+            pick?.pickup(term, wordnet, wordPath)
 
             consumer.accept(term)
         }

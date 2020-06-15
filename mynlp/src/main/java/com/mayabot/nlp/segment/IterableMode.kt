@@ -74,7 +74,9 @@ class AtomIterable(val wrap: Iterable<WordTerm>) : Iterable<WordTerm> {
 
 
 class AtomIterator(val from: Iterator<WordTerm>) : AbstractIterator<WordTerm>() {
+
     var buffer: LinkedList<WordTerm>? = null
+
     override fun computeNext() {
         val b = buffer
         if (b != null) {
@@ -87,13 +89,13 @@ class AtomIterator(val from: Iterator<WordTerm>) : AbstractIterator<WordTerm>() 
         }
 
         if (from.hasNext()) {
-            val next = from.next()
-            if (next.hasSubword()) {
-                val x = LinkedList(next.subword)
-                buffer = x
-                setNext(x.poll()!!)
+            val term = from.next()
+            if (term.hasSubword()) {
+                val subwords = LinkedList(term.subword)
+                buffer = subwords
+                setNext(subwords.poll()!!)
             } else {
-                setNext(next)
+                setNext(term)
             }
         } else {
             done()
