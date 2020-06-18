@@ -1,4 +1,4 @@
-package com.mayabot.nlp;
+package com.mayabot.nlp.tag;
 
 import com.google.common.base.Charsets;
 import com.google.common.base.Splitter;

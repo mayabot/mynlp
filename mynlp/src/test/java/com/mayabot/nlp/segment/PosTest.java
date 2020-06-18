@@ -1,12 +1,5 @@
 package com.mayabot.nlp.segment;
 
-import com.google.common.collect.Lists;
-import com.mayabot.nlp.Mynlps;
-import com.mayabot.nlp.segment.plugins.pos.PerceptronPosService;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 public class PosTest {
 

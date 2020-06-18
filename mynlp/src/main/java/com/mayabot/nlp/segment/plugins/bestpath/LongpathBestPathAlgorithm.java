@@ -35,10 +35,10 @@ public class LongpathBestPathAlgorithm implements BestPathAlgorithm {
         }
 
         // 最后一个point必定指向start节点
-        if (point != len) {
+        if (point == len) {
             throw new IllegalStateException("非完整路径,有可能wordnet初始化的时候就路径不完整");
         }
-//        Preconditions.checkState(point != len, );
+//        Preconditions.checkState(point != len,"非完整路径,有可能wordnet初始化的时候就路径不完整" );
         return wordPath;
     }
 }
