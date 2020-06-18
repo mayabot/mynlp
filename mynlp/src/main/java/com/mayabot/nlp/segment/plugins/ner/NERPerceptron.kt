@@ -1,6 +1,5 @@
 package com.mayabot.nlp.segment.plugins.ner
 
-import com.google.common.collect.Lists
 import com.mayabot.nlp.common.FastStringBuilder
 import com.mayabot.nlp.hppc.IntArrayList
 import com.mayabot.nlp.perceptron.*
@@ -43,7 +42,7 @@ class NERPerceptron(val model: PerceptronModel, private val labels: List<String>
 
     fun decodeVertexList(sentence: List<Vertex>): List<String> {
         val buffer = FastStringBuilder(100)
-        val result = Lists.newArrayListWithExpectedSize<String>(sentence.size)
+        val result = ArrayList<String>(sentence.size)
 
         val featureList = ArrayList<IntArrayList>(sentence.size)
         for (i in 0 until sentence.size) {
@@ -528,7 +527,7 @@ class NerSamples(val targetPos: Set<String>, val labelMap: Map<String, Int>, val
 object NERCorpus {
     @JvmStatic
     fun main(args: Array<String>) {
-        val files = Lists.newArrayList<File>()
+        val files = ArrayList<File>()
         files += File("data.work/cncorpus").allFiles()
         files += File("data.work/pku").allFiles()
 

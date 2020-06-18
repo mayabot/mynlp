@@ -16,8 +16,6 @@
 
 package com.mayabot.nlp.utils;
 
-import com.google.common.base.CharMatcher;
-
 /**
  * @author jimichan
  */
@@ -191,17 +189,17 @@ public class Characters {
         return false;
     }
 
-    public static final CharMatcher PUNCTUATION = new CharMatcher() {
-        @Override
-        public boolean matches(char c) {
-            return isPunctuation(c);
-        }
-
-        @Override
-        public String toString() {
-            return "CharMatcher.PUNCTUATION";
-        }
-    };
+//    public static final CharMatcher PUNCTUATION = new CharMatcher() {
+//        @Override
+//        public boolean matches(char c) {
+//            return isPunctuation(c);
+//        }
+//
+//        @Override
+//        public String toString() {
+//            return "CharMatcher.PUNCTUATION";
+//        }
+//    };
 
     public static boolean isASCII(char c) {
         return c <= 127;

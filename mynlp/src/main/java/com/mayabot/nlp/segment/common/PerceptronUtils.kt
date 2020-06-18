@@ -1,7 +1,6 @@
 package com.mayabot.nlp.segment.common
 
 
-import com.google.common.base.Splitter
 import java.io.File
 
 
@@ -39,14 +38,14 @@ fun File.allFiles(): List<File> {
 
 //陈/nr 汝烨/nr 压题/vn 照片/n ：/w [绵阳/ns 高新技术/n 产业/n 开发区/n]nt 内/f [长虹/nz 家电城/n]ns 一角/n 。/w
 
-val splitter = Splitter.on(" ").omitEmptyStrings().trimResults()!!
+//val splitter = Splitter.on(" ").omitEmptyStrings().trimResults()!!
 
 fun String.parseToWords(): List<PkuWord> {
     if (this.isEmpty()) {
         return listOf()
     }
     val result = ArrayList<PkuWord>()
-    val words = splitter.split(this)
+    val words = this.split(" ").filter { it.isNotEmpty() }
     var bigWord: PkuWord? = null
 
     for (word in words) {

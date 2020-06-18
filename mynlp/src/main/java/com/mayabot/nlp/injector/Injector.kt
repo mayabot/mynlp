@@ -15,8 +15,9 @@ private fun <T> makeKey(clazz: Class<T>, tag: String): String {
     return "${clazz.name}-$tag"
 }
 
+@Suppress("UNCHECKED_CAST")
 class InjectorImpl(
-        val bindMap: HashMap<String, BeanFactory>
+        private val bindMap: HashMap<String, BeanFactory>
 
 ) : Injector {
 
@@ -28,12 +29,12 @@ class InjectorImpl(
 
     override fun <T> getInstance(
             clazz: Class<T>,
-            name: String
+            tag: String
     ): T? {
 
         val injector = this
 
-        val key = makeKey(clazz, name)
+        val key = makeKey(clazz, tag)
 
         var beanFactory = bindMap[key]
 
@@ -48,7 +49,7 @@ class InjectorImpl(
             return beanFactory.create(this) as T
         }
 
-        if (name == "") {
+        if (tag == "") {
             beanFactory = makeAtomBeanFactory(clazz)
         }
 

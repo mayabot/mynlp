@@ -1,0 +1,10 @@
+
+description = '没有资源默认依赖'
+
+dependencies {
+    compile(project(':mynlp')){
+        exclude module:'mynlp-resource-pos'
+        exclude module:'mynlp-resource-ner'
+        exclude module:'mynlp-resource-coredict'
+    }
+}

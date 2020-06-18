@@ -16,7 +16,8 @@
 
 package com.mayabot.nlp.utils;
 
-import com.google.common.collect.AbstractIterator;
+
+import kotlin.collections.AbstractIterator;
 
 import java.io.BufferedReader;
 
@@ -29,13 +30,16 @@ public class CharSourceLineReader extends AbstractIterator<String> implements Au
     }
 
     @Override
-    protected String computeNext() {
+    protected void computeNext() {
         try {
             String line = reader.readLine();
             if (line == null) {
-                return endOfData();
+                done();
+                return;
             } else {
-                return line;
+                setNext(line);
+                return;
+//                return line;
             }
         } catch (Exception e) {
             throw new RuntimeException(e);

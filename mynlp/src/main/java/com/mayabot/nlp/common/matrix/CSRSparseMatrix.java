@@ -90,6 +90,7 @@ public class CSRSparseMatrix implements Serializable {
                 values[point] = entry.getValue();
             }
         }
+
         int x = 0;
         for (int i = 0; i < this.rowOffset.length; i++) {
             int p = this.rowOffset[i];
@@ -108,13 +109,9 @@ public class CSRSparseMatrix implements Serializable {
         DataInOutputUtils.writeIntArray(this.getColumnIndices(), out);
         DataInOutputUtils.writeIntArray(this.getRowOffset(), out);
         DataInOutputUtils.writeIntArray(this.getValues(), out);
-
-//        out.writeObject(collBitSet);
-
     }
 
     public static CSRSparseMatrix readExternal(ObjectInput in) throws IOException {
-
         int[] columnIndices = DataInOutputUtils.readIntArray(in);
         int[] rowOffset = DataInOutputUtils.readIntArray(in);
         int[] values = DataInOutputUtils.readIntArray(in);

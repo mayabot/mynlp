@@ -13,65 +13,45 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.mayabot.nlp.segment;
+package com.mayabot.nlp.segment
 
-import com.google.common.collect.Iterables;
-import com.mayabot.nlp.common.FastCharReader;
-import com.mayabot.nlp.common.ParagraphReader;
-import com.mayabot.nlp.common.ParagraphReaderSmart;
-import com.mayabot.nlp.common.ParagraphReaderString;
-import com.mayabot.nlp.segment.reader.LexerIterator;
-import org.jetbrains.annotations.NotNull;
-
-import java.io.Reader;
-import java.util.Iterator;
-import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
+import com.mayabot.nlp.common.FastCharReader
+import com.mayabot.nlp.common.ParagraphReader
+import com.mayabot.nlp.common.ParagraphReaderSmart
+import com.mayabot.nlp.common.ParagraphReaderString
+import com.mayabot.nlp.segment.reader.LexerIterator
+import java.io.Reader
+import java.util.stream.Stream
+import java.util.stream.StreamSupport
 
 /**
  * WordTerm序列。表示一个未知长度的WordTerm序列，对应Reader的输出对象。
  *
  * @author jimichan
  */
-public final class WordTermSequence implements Iterable<WordTerm> {
+class WordTermSequence(
+        private val source: Iterator<WordTerm>
+) : Iterable<WordTerm> {
 
-    private final Iterator<WordTerm> source;
+    constructor(source: Iterable<WordTerm>) : this(source.iterator())
+    constructor(lexer: Lexer, paragraphReader: ParagraphReader) : this(LexerIterator(lexer, paragraphReader))
+    constructor(lexer: Lexer, reader: Reader) : this(LexerIterator(lexer, ParagraphReaderSmart(FastCharReader(reader, 128), 1024)))
+    constructor(lexer: Lexer, text: String) : this(LexerIterator(lexer, ParagraphReaderString(text)))
 
-    public WordTermSequence(Iterator<WordTerm> source) {
-        this.source = source;
+    override fun iterator(): Iterator<WordTerm> {
+        return source
     }
 
-    public WordTermSequence(Iterable<WordTerm> source) {
-        this(source.iterator());
+    fun toWordSequence(): Iterable<String> {
+        return this.asSequence().map { it.word }.asIterable()
     }
 
-    public WordTermSequence(Lexer lexer, ParagraphReader paragraphReader) {
-        this(new LexerIterator(lexer, paragraphReader));
+    fun stream(): Stream<WordTerm> {
+        return StreamSupport.stream(spliterator(), false)
     }
 
-    public WordTermSequence(Lexer lexer, Reader reader) {
-        this(new LexerIterator(lexer, new ParagraphReaderSmart(new FastCharReader(reader, 128), 1024)));
+    fun toSentence(): Sentence {
+        return Sentence.of(this)
     }
 
-    public WordTermSequence(Lexer lexer, String text) {
-        this(new LexerIterator(lexer, new ParagraphReaderString(text)));
-    }
-
-    @NotNull
-    @Override
-    public Iterator<WordTerm> iterator() {
-        return source;
-    }
-
-    public Iterable<String> toWordSequence() {
-        return Iterables.transform(this, wordTerm -> wordTerm != null ? wordTerm.getWord() : null);
-    }
-
-    public Stream<WordTerm> stream() {
-        return StreamSupport.stream(spliterator(), false);
-    }
-
-    public Sentence toSentence() {
-        return Sentence.of(this);
-    }
 }

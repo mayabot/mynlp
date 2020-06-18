@@ -15,14 +15,10 @@
  */
 package com.mayabot.nlp.segment.plugins.personname;
 
-import com.google.common.collect.ImmutableList;
-import com.mayabot.nlp.collection.dat.DoubleArrayTrieStringIntMap;
 import com.mayabot.nlp.segment.Nature;
 import com.mayabot.nlp.segment.WordpathProcessor;
 import com.mayabot.nlp.segment.common.BaseSegmentComponent;
-import com.mayabot.nlp.segment.plugins.customwords.CustomDictionary;
 import com.mayabot.nlp.segment.wordnet.Vertex;
-import com.mayabot.nlp.segment.wordnet.Wordnet;
 import com.mayabot.nlp.segment.wordnet.Wordpath;
 
 import java.util.List;

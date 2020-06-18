@@ -16,8 +16,6 @@
 //
 //package com.mayabot.nlp.segment.crf.tokenizer;
 //
-//import com.google.inject.Inject;
-//import com.google.inject.Singleton;
 //import com.mayabot.nlp.segment.WordSplitAlgorithm;
 //import com.mayabot.nlp.segment.common.BaseSegmentComponent;
 //import com.mayabot.nlp.segment.wordnet.Vertex;

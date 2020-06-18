@@ -1,8 +1,8 @@
 package com.mayabot.nlp.segment.plugins.ner;
 
-import com.google.common.collect.Lists;
 import com.mayabot.nlp.MynlpEnv;
 import com.mayabot.nlp.Mynlps;
+import com.mayabot.nlp.common.Lists;
 import com.mayabot.nlp.injector.Singleton;
 import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;

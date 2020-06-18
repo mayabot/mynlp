@@ -1,6 +1,5 @@
 package com.mayabot.nlp.segment.plugins.personname;
 
-import com.google.common.io.Files;
 import com.mayabot.nlp.MynlpEnv;
 import com.mayabot.nlp.injector.Singleton;
 import com.mayabot.nlp.logging.InternalLogger;
@@ -34,7 +33,9 @@ public class PerceptronPersonNameService {
         File temp = new File(mynlp.getCacheDir(), "ner");
 
         File featureDatFile = new File(temp, featureResource.hash() + ".personName.dat");
-        Files.createParentDirs(featureDatFile);
+        if (!featureDatFile.getParentFile().exists()) {
+            featureDatFile.getParentFile().mkdirs();
+        }
 
         if (!featureDatFile.exists()) {
             FeatureSet featureSet = FeatureSet.readFromText(new BufferedInputStream(featureResource.inputStream()));

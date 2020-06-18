@@ -16,7 +16,6 @@
 
 package com.mayabot.nlp.segment.lexer.core;
 
-import com.google.common.io.Files;
 import com.mayabot.nlp.MynlpEnv;
 import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
@@ -96,7 +95,7 @@ abstract class BaseNlpResourceExternalizable implements Externalizable {
                 long t3 = System.currentTimeMillis();
 
                 try (ObjectOutputStream outputStream =
-                             new ObjectOutputStream(new BufferedOutputStream(Files.asByteSink(cache).openStream(), 64 * 1024))) {
+                             new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(cache), 64 * 1024))) {
                     writeExternal(outputStream);
                     outputStream.flush();
                 }

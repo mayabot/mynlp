@@ -19,4 +19,8 @@
 fastText.saveModelToSingleFile(File("fastText4j/data/model.fjbin"))
 
 FastText.loadModelFromSingleFile(File("fastText4j/data/model.fjbin"))
+
 ```
+
+# 3.1.5
+去除Gauva依赖，mynlp只依赖kotlin运行时

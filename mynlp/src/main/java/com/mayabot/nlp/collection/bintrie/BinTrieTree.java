@@ -17,12 +17,10 @@
 
 package com.mayabot.nlp.collection.bintrie;
 
-import com.google.common.collect.AbstractIterator;
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Sets;
 import com.mayabot.nlp.collection.Trie;
 import com.mayabot.nlp.hppc.CharObjectHashMap;
 import com.mayabot.nlp.hppc.CharObjectMap;
+import kotlin.collections.AbstractIterator;
 
 import java.util.*;
 import java.util.Map.Entry;
@@ -222,11 +220,11 @@ public class BinTrieTree<T> implements Trie<T>, BinTrieNode<T> {
     public Set<Entry<String, T>> prefixSearch(String key) {
         BinTrieNode<T> node = findNode(key);
         if (node == null) {
-            return ImmutableSet.of();
+            return Collections.emptySet();
         }
         NodeHolder holder = new NodeHolder();
         IteratorKeys ite = new IteratorKeys(holder, (AbstractTrieNode<T>) node, key);
-        Set<Entry<String, T>> set = Sets.newHashSet();
+        Set<Entry<String, T>> set = new HashSet();
         while (ite.hasNext()) {
             String k = ite.next();
             AbstractTrieNode<T> v = holder.node;
@@ -266,9 +264,6 @@ public class BinTrieTree<T> implements Trie<T>, BinTrieNode<T> {
 
         // 初始化堆栈
         if (childrenMap != null) {
-//			for (CharObjectCursor<AbstractTrieNode<T>> c : childrenMap) {
-//				stack.push(c.value);
-//			}
             for (AbstractTrieNode<T> node : childrenMap.values()) {
                 stack.push(node);
             }
@@ -287,7 +282,6 @@ public class BinTrieTree<T> implements Trie<T>, BinTrieNode<T> {
 
             List<AbstractTrieNode<T>> chl = node.getChildren();
             if (chl != null) {
-                // stack.addAll(node.getChildren());
                 node.getChildren().forEach(x -> stack.push(x));// 改成放到栈顶
             }
         }
@@ -326,15 +320,19 @@ public class BinTrieTree<T> implements Trie<T>, BinTrieNode<T> {
             }
 
             @Override
-            protected Entry<String, T> computeNext() {
+            protected void computeNext() {
                 if (!ite.hasNext()) {
-                    return endOfData();
+                    done();
+                    return;
                 }
                 String key = ite.next();
                 if (key != null) {
-                    return new AbstractMap.SimpleEntry<>(key, (T) holder.node.value);
+                    setNext(new AbstractMap.SimpleEntry<>(key, (T) holder.node.value));
+                    return;
                 }
-                return endOfData();
+
+                done();
+                return;
             }
         };
     }
@@ -381,10 +379,11 @@ public class BinTrieTree<T> implements Trie<T>, BinTrieNode<T> {
 
 
         @Override
-        protected String computeNext() {
+        protected void computeNext() {
 
             if (stack.isEmpty()) {
-                return endOfData();
+                done();
+                return;
             }
 
             String n = _next();
@@ -394,15 +393,17 @@ public class BinTrieTree<T> implements Trie<T>, BinTrieNode<T> {
                 n = _next();
 
                 if (n != null) {
-                    return n;
+                    setNext(n);
+                    return;
                 }
 
                 if (stack.isEmpty()) {
-                    return endOfData();
+                    done();
+                    return;
                 }
             }
 
-            return n;
+            setNext(n);
         }
 
         private String _next() {

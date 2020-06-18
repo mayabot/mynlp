@@ -1,13 +1,15 @@
 package com.mayabot.nlp.utils;
 
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
-
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static com.mayabot.nlp.common.Guava.mutiadd;
 
 /**
  * @author jimichan
@@ -16,15 +18,16 @@ public class MynlpFactories {
 
     public static final String GuiceModule = "GuiceModule";
 
-    public static Multimap<String, Class> load() throws Exception {
 
-        HashMultimap<String, Class> map = HashMultimap.create();
+    public static Map<String, List<Class>> load() throws Exception {
+
+        Map<String, List<Class>> map = new HashMap<>();
 
         {
             String[] split1 = System.getProperty(GuiceModule, "").trim().split(",");
             for (String k : split1) {
                 if (!k.isEmpty()) {
-                    map.put(GuiceModule, Class.forName(k));
+                    mutiadd(map, GuiceModule, Class.forName(k));
                 }
             }
         }
@@ -44,7 +47,7 @@ public class MynlpFactories {
                 String[] split = line.split("=");
 
                 if (split.length == 2) {
-                    map.put(split[0].trim(), Class.forName(split[1].trim()));
+                    mutiadd(map, split[0].trim(), Class.forName(split[1].trim()));
                 }
 
                 line = reader.readLine();

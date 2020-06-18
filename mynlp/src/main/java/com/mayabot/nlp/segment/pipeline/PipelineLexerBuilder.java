@@ -16,10 +16,9 @@
 
 package com.mayabot.nlp.segment.pipeline;
 
-import com.google.common.base.Preconditions;
-import com.google.common.collect.Lists;
 import com.mayabot.nlp.Mynlp;
 import com.mayabot.nlp.Mynlps;
+import com.mayabot.nlp.common.Lists;
 import com.mayabot.nlp.segment.*;
 import com.mayabot.nlp.segment.common.DefaultCharNormalize;
 import com.mayabot.nlp.segment.lexer.core.CoreLexerPlugin;
@@ -66,12 +65,12 @@ public class PipelineLexerBuilder implements LexerBuilder {
     /**
      * 切词器管线
      */
-    private LinkedList<WordSplitAlgorithm> wordSplitAlgorithmList = Lists.newLinkedList();
+    private LinkedList<WordSplitAlgorithm> wordSplitAlgorithmList = new LinkedList();
 
     /**
      * 逻辑Pipeline
      */
-    private LinkedList<WordpathProcessor> pipeLine = Lists.newLinkedList();
+    private LinkedList<WordpathProcessor> pipeLine = new LinkedList();
 
     /**
      * 保存后置监听器逻辑
@@ -100,7 +99,9 @@ public class PipelineLexerBuilder implements LexerBuilder {
 
     public final void install(
             @NotNull PipelineLexerPlugin module) {
-        Preconditions.checkNotNull(module);
+        if (module == null) {
+            throw new NullPointerException();
+        }
         module.install(this);
     }
 
@@ -246,7 +247,10 @@ public class PipelineLexerBuilder implements LexerBuilder {
      * @return PipelineLexerBuilder
      */
     public PipelineLexerBuilder setBestPathAlgorithm(BestPathAlgorithm bestPathAlgorithm) {
-        this.bestPathAlgorithm = Preconditions.checkNotNull(bestPathAlgorithm);
+        if (bestPathAlgorithm == null) {
+            throw new NullPointerException();
+        }
+        this.bestPathAlgorithm = bestPathAlgorithm;
         return this;
     }
 

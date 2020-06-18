@@ -1,6 +1,6 @@
 package com.mayabot.nlp.segment.lexer.core;
 
-import com.google.common.collect.Lists;
+import com.mayabot.nlp.common.Lists;
 import com.mayabot.nlp.segment.Nature;
 
 import java.util.List;

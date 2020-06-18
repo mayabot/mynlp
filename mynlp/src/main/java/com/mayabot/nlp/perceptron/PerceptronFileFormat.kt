@@ -67,13 +67,11 @@ object PerceptronFileFormat {
     }
 
     @JvmStatic
-    @JvmOverloads
     fun loadWithFeatureBin(parameterBin: InputStream, featureBin: InputStream): PerceptronModel {
         return load(parameterBin, featureBin, null)
     }
 
     @JvmStatic
-    @JvmOverloads
     fun loadWithFeatureTxt(parameterBin: InputStream, featureTxt: InputStream): PerceptronModel {
         return load(parameterBin, null, featureTxt)
     }
@@ -85,7 +83,6 @@ object PerceptronFileFormat {
      * 使用这种加载方式，是可以对模型进行压缩的。
      */
     @JvmStatic
-    @JvmOverloads
     fun load(dir: File): PerceptronModel {
         fun loadIfExit(name: String): File? {
             val f = File(dir, name)

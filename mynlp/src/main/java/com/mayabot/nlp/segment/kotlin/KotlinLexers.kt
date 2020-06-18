@@ -1,6 +1,5 @@
 package com.mayabot.nlp.segment.kotlin
 
-import com.google.common.io.Files
 import com.mayabot.nlp.segment.Lexers
 import com.mayabot.nlp.segment.Sentence
 import java.io.File
@@ -17,7 +16,10 @@ fun File.segment(outPath: String) {
     val lexerReader = defaultLexer.reader()
 
     val file = File(outPath)
-    Files.createParentDirs(file)
+
+    if (!file.parentFile.exists()) {
+        file.parentFile.mkdirs()
+    }
 
     val lines = inputStream().bufferedReader().lines()
 

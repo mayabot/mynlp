@@ -16,14 +16,13 @@
 
 package com.mayabot.nlp.segment.plugins.customwords;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Maps;
-import com.google.common.io.Files;
 import com.mayabot.nlp.collection.dat.DoubleArrayTrieStringIntMap;
+import com.mayabot.nlp.common.Guava;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.util.List;
 import java.util.TreeMap;
 
 /**
@@ -38,9 +37,9 @@ public class FileCustomDictionary implements CustomDictionary {
     private DoubleArrayTrieStringIntMap trie;
 
     public FileCustomDictionary(File file, Charset charset) throws IOException {
-        TreeMap<String, Integer> dict = Maps.newTreeMap();
+        TreeMap<String, Integer> dict = new TreeMap();
 
-        ImmutableList<String> lines = Files.asCharSource(file, charset).readLines();
+        List<String> lines = Guava.readLines(file, charset);
 
         for (String line : lines) {
 

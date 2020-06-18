@@ -16,14 +16,14 @@
 
 package com.mayabot.nlp.segment.wordnet;
 
-import com.google.common.collect.AbstractIterator;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Iterables;
+import com.mayabot.nlp.common.Guava;
 import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
 import com.mayabot.nlp.segment.Nature;
+import kotlin.collections.AbstractIterator;
 
 import java.util.BitSet;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.function.Consumer;
 
@@ -67,11 +67,12 @@ public class Wordpath {
      */
     public Iterable<Vertex> getBestPathWithBE() {
         //FIXME 此处可以优化
-        Iterable<Vertex> b = ImmutableList.of(wordnet.getBeginRow().getFirst());
-        Iterable<Vertex> m = this::iteratorVertex;
-        Iterable<Vertex> e = ImmutableList.of(wordnet.getEndRow().getFirst());
 
-        return Iterables.concat(b, m, e);
+        Iterable<Vertex> b = Collections.singletonList(wordnet.getBeginRow().getFirst());
+        Iterable<Vertex> m = this::iteratorVertex;
+        Iterable<Vertex> e = Collections.singletonList(wordnet.getEndRow().getFirst());
+
+        return Guava.concatIterables(b, m, e);
     }
 
     /**
@@ -86,12 +87,14 @@ public class Wordpath {
 
 
             @Override
-            protected Vertex computeNext() {
+            protected void computeNext() {
 
                 boolean hasNext = pointer.next();
 
                 if (!hasNext) {
-                    return endOfData();
+                    done();
+                    return;
+//                    return endOfData();
                 }
 
                 final int from = pointer.getFrom();
@@ -100,18 +103,21 @@ public class Wordpath {
                 Vertex theVertex = wordnet.getVertex(from, len);
 
                 if (theVertex == null) {
-                   // System.out.println(wordnet.toMoreString());
+                    // System.out.println(wordnet.toMoreString());
                     //@ RepairWordnetProcessor 这里去修复了这个错误，到时要在之前去调用
 //                    logger.error("row: " + from + " len " + len + " select is null"
 //                            +"\nInput ");
-                    Vertex tmp = wordnet.put(from,len);
+                    Vertex tmp = wordnet.put(from, len);
                     tmp.nature = Nature.x;
 
-                    return tmp;
+                    setNext(tmp);
+                    return;
+//                    return tmp;
 //                    throw new IllegalStateException("row: " + from + " len " + len + " select is null");
                 }
 
-                return theVertex;
+                setNext(theVertex);
+                return;
             }
         };
     }

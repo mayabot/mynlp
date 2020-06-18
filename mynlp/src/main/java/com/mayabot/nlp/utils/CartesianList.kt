@@ -11,108 +11,90 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
+package com.mayabot.nlp.utils
 
-package com.mayabot.nlp.utils;
-
-import com.google.common.annotations.GwtCompatible;
-import com.google.common.collect.ImmutableList;
-import com.google.common.math.IntMath;
-
-import java.util.AbstractList;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.RandomAccess;
-
-import static com.google.common.base.Preconditions.checkElementIndex;
-
+import java.util.*
 
 /**
+ * 计算笛卡尔
  * @author Louis Wasserman
  */
-@GwtCompatible
-final public class CartesianList<E> extends AbstractList<List<E>> implements RandomAccess {
+class CartesianList<E>(axes: List<List<E>>) : AbstractList<List<E>>(), RandomAccess {
 
-  private transient final ImmutableList<List<E>> axes;
-  private transient final int[] axesSizeProduct;
+    @Transient
+    private val axes: List<List<E>> = axes
 
-  public static <E> List<List<E>> create(List<? extends List<? extends E>> lists) {
-    ImmutableList.Builder<List<E>> axesBuilder =
-            new ImmutableList.Builder<List<E>>();
-    for (List<? extends E> list : lists) {
-      List<E> copy = ImmutableList.copyOf(list);
-      if (copy.isEmpty()) {
-        return ImmutableList.of();
-      }
-      axesBuilder.add(copy);
+    @Transient
+    private val axesSizeProduct: IntArray
+
+
+    init {
+        val axesSizeProduct = IntArray(axes.size + 1)
+        axesSizeProduct[axes.size] = 1
+        try {
+            for (i in axes.size - 1 downTo 0) {
+                axesSizeProduct[i] = axesSizeProduct[i + 1] * axes.get(i).size
+            }
+        } catch (e: ArithmeticException) {
+            throw IllegalArgumentException(
+                    "Cartesian product too large; must have size at most Integer.MAX_VALUE")
+        }
+        this.axesSizeProduct = axesSizeProduct
     }
-    return new CartesianList<E>(axesBuilder.build());
-  }
 
-  CartesianList(ImmutableList<List<E>> axes) {
-    this.axes = axes;
-    int[] axesSizeProduct = new int[axes.size() + 1];
-    axesSizeProduct[axes.size()] = 1;
-    try {
-      for (int i = axes.size() - 1; i >= 0; i--) {
-        axesSizeProduct[i] =
-                IntMath.checkedMultiply(axesSizeProduct[i + 1], axes.get(i).size());
-      }
-    } catch (ArithmeticException e) {
-      throw new IllegalArgumentException(
-              "Cartesian product too large; must have size at most Integer.MAX_VALUE");
+
+    private fun getAxisIndexForProductIndex(index: Int, axis: Int): Int {
+        return index / axesSizeProduct[axis + 1] % axes.get(axis).size
     }
-    this.axesSizeProduct = axesSizeProduct;
-  }
-
-  private int getAxisIndexForProductIndex(int index, int axis) {
-    return (index / axesSizeProduct[axis + 1]) % axes.get(axis).size();
-  }
-
-  @Override
-  public List<E> get(final int index) {
-    checkElementIndex(index, size());
-    return new AbstractList<E>() {
-
-      @Override
-      public int size() {
-        return axes.size();
-      }
-
-      @Override
-      public E get(int axis) {
-        checkElementIndex(axis, size());
-        int axisIndex = getAxisIndexForProductIndex(index, axis);
-        return axes.get(axis).get(axisIndex);
-      }
 
 
-      boolean isPartialView() {
-        return true;
-      }
-    };
-  }
+    override fun get(index: Int): List<E> {
 
-  @Override
-  public int size() {
-    return axesSizeProduct[0];
-  }
+        check(index in 0 until size)
 
-  @Override
-  public boolean contains(Object o) {
-    if (!(o instanceof List)) {
-      return false;
+        return object : AbstractList<E>() {
+
+            override val size: Int
+                get() = axes.size
+
+            override fun get(index: Int): E? {
+                check(index in 0 until size)
+                val axisIndex = getAxisIndexForProductIndex(index, index)
+                return axes[index][axisIndex]
+            }
+
+            val isPartialView: Boolean
+                get() = true
+        }
     }
-    List<?> list = (List<?>) o;
-    if (list.size() != axes.size()) {
-      return false;
+
+    override val size: Int
+        get() = axesSizeProduct[0]
+
+    companion object {
+        fun <E> create(lists: List<List<E>>): List<List<E>> {
+
+            val axesBuilder = ArrayList<List<E>>()
+            for (list in lists) {
+                val copy: List<E> = list.toList()
+                if (copy.isEmpty()) {
+                    return emptyList()
+                }
+                axesBuilder.add(copy)
+            }
+            return CartesianList(axesBuilder.toList())
+        }
     }
-    ListIterator<?> itr = list.listIterator();
-    while (itr.hasNext()) {
-      int index = itr.nextIndex();
-      if (!axes.get(index).contains(itr.next())) {
-        return false;
-      }
+
+}
+
+fun main() {
+    val list = CartesianList.create(listOf(
+            listOf("a", "b"),
+            listOf("2", "3", "1"),
+            listOf("J", "Y", "B")
+    ))
+    list.forEach {
+        println(it)
     }
-    return true;
-  }
 }

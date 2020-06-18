@@ -15,7 +15,6 @@
  */
 package com.mayabot.nlp.common;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Table;
 
 import java.util.*;
@@ -53,7 +52,7 @@ public class QuickStringDoubleTable {
     }
 
     /**
-     * 这个方法执行速度应该想飞一样
+     * 这个方法执行速度应该飞一样
      *
      * @param row
      * @param col

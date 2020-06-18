@@ -16,11 +16,10 @@
 
 package com.mayabot.nlp.resources;
 
-import com.google.common.io.ByteSource;
-import com.google.common.io.Resources;
 import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -43,8 +42,7 @@ public class URLNlpResource implements NlpResource {
 
     @Override
     public InputStream inputStream() throws IOException {
-        ByteSource byteSource = Resources.asByteSource(url);
-        return byteSource.openBufferedStream();
+        return new BufferedInputStream(url.openStream());
     }
 
     @Override

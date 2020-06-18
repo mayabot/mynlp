@@ -15,7 +15,6 @@
  */
 package com.mayabot.nlp.perceptron
 
-import com.google.common.base.Splitter
 import com.mayabot.nlp.utils.CharNormUtils
 
 
@@ -53,15 +52,17 @@ fun segmentEvaluateFunction(
         var predTotal = 0
         var correct = 0
 
-        val splitter = Splitter.on(split).omitEmptyStrings()
 
-        if(verbose) System.out.print("Evaluating 0%")
+        //val splitter = Splitter.on(split).omitEmptyStrings()
+
+        if (verbose) System.out.print("Evaluating 0%")
 
         val t1 = System.currentTimeMillis()
 
         var count = 0
         for (line in evaluateSample) {
-            val wordArray = splitter.splitToList(CharNormUtils.convert(line))
+
+            val wordArray = CharNormUtils.convert(line).split(split).filter { it.isNotBlank() }
             goldTotal += wordArray.size
 
             val text = wordArray.joinToString(separator = "")

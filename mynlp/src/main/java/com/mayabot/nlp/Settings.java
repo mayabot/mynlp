@@ -16,27 +16,18 @@
 
 package com.mayabot.nlp;
 
-import com.google.common.base.Splitter;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.common.io.Files;
-import com.google.common.io.Resources;
+import com.mayabot.nlp.common.Guava;
 import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
 
 import java.io.File;
 import java.io.InputStream;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 import java.util.function.Supplier;
 
 /**
  * 系统属性 mynlp.conf 可以配置配置文件加载的目录,默认当前工作目录的conf
  * <p>
- * TODO 读取过的属性,就不能再次修改了。
  *
  * @author jimichan
  */
@@ -46,14 +37,14 @@ public class Settings {
 
     private Map<String, String> settings;
 
-    public final static Settings EMPTY = new Settings(Maps.newHashMap());
+    public final static Settings EMPTY = new Settings(new HashMap());
 
     Settings(Map<String, String> settings) {
-        this.settings = Maps.newHashMap(settings);
+        this.settings = new HashMap(settings);
     }
 
     Settings(Settings settings) {
-        this.settings = Maps.newHashMap(settings.settings);
+        this.settings = new HashMap(settings.settings);
     }
 
     public <T> T get(SettingItem<T> setting) {
@@ -83,18 +74,19 @@ public class Settings {
      * @return Settings
      */
     public static Settings merge(Settings... settings) {
-        Map<String, String> all = Maps.newHashMap();
+        Map<String, String> all = new HashMap();
         for (Settings setting : settings) {
             if (setting == null) {
                 continue;
             }
             all.putAll(setting.settings);
         }
-        return new Settings(ImmutableMap.copyOf(all));
+        ;
+        return new Settings(Collections.unmodifiableMap(all));
     }
 
     public static Settings createEmpty() {
-        return new Settings(ImmutableMap.of());
+        return new Settings(Collections.emptyMap());
     }
 
     public static Settings create(Map<String, String> settings) {
@@ -139,8 +131,8 @@ public class Settings {
         if (obj == null) {
             return null;
         }
-
-        return Splitter.on(',').omitEmptyStrings().trimResults().splitToList(obj);
+        return Guava.split(obj, ",");
+//        return Splitter.on(',').omitEmptyStrings().trimResults().splitToList(obj);
     }
 
 
@@ -152,15 +144,22 @@ public class Settings {
             prefix += ".";
         }
         String _prefix = prefix;
-        Map<String, String> sub = Maps.filterKeys(settings, key -> key.startsWith(_prefix));
 
-        HashMap<String, String> result = Maps.newHashMap();
+        Map<String, String> sub = new HashMap<>();
+        settings.entrySet().forEach(entry -> {
+            if (entry.getKey().startsWith(_prefix)) {
+                sub.put(entry.getKey(), entry.getValue());
+            }
+        });
+//                Maps.filterKeys(settings, key -> key.startsWith(_prefix));
+
+        HashMap<String, String> result = new HashMap();
 
         for (Map.Entry<String, String> entry : sub.entrySet()) {
             result.put(entry.getKey().substring(_prefix.length()), entry.getValue());
         }
 
-        return new Settings(ImmutableMap.copyOf(result));
+        return new Settings(Collections.unmodifiableMap(result));
     }
 
 
@@ -264,13 +263,14 @@ public class Settings {
      */
     public static Settings defaultSystemSettings() {
         @SuppressWarnings("unchecked")
-        List<Supplier<InputStream>> list = Lists.newArrayList(
+        List<Supplier<InputStream>> list = com.mayabot.nlp.common.Lists.newArrayList(
                 () -> {
                     try {
                         File file = new File("mynlp.properties");
                         if (file.exists() && file.canRead()) {
                             logger.info("read settings from " + file);
-                            return Files.asByteSource(file).openBufferedStream();
+                            return Guava.openBufIns(file);
+//                            return Files.asByteSource(file).openBufferedStream();
                         }
                     } catch (Exception e) {
                         return null;
@@ -279,7 +279,8 @@ public class Settings {
                 },
                 () -> {
                     try {
-                        InputStream inputStream = Resources.getResource("mynlp.properties").openStream();
+//                        InputStream inputStream = Resources.getResource("mynlp.properties").openStream();
+                        InputStream inputStream = Guava.openResource("mynlp.properties");
                         logger.info("read settings from classpath://mynlp.properties");
                         return inputStream;
                     } catch (Exception e) {
@@ -293,7 +294,8 @@ public class Settings {
                         File file = new File(userHome, "mynlp.properties");
                         if (file.exists() && file.canRead()) {
                             logger.info("read settings from " + file);
-                            return Files.asByteSource(file).openBufferedStream();
+                            return Guava.openBufIns(file);
+//                            return Files.asByteSource(file).openBufferedStream();
                         }
                     } catch (Exception e) {
                         return null;
@@ -302,9 +304,11 @@ public class Settings {
                 }
         );
 
-        Map<String, String> map = Maps.newHashMap();
+        Map<String, String> map = new HashMap();
 
-        for (Supplier<InputStream> supplier : Lists.reverse(list)) {
+        Collections.reverse(list);
+
+        for (Supplier<InputStream> supplier : list) {
             InputStream in = supplier.get();
             if (in != null) {
                 Properties properties = new Properties();

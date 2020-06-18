@@ -16,7 +16,7 @@
 
 package com.mayabot.nlp.segment.plugins.pos;
 
-import com.google.common.collect.Lists;
+import com.mayabot.nlp.common.Lists;
 import com.mayabot.nlp.injector.Singleton;
 import com.mayabot.nlp.segment.Nature;
 import com.mayabot.nlp.segment.WordpathProcessor;
@@ -25,7 +25,6 @@ import com.mayabot.nlp.segment.wordnet.Vertex;
 import com.mayabot.nlp.segment.wordnet.Wordpath;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**

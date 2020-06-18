@@ -1,6 +1,4 @@
-package com.mayabot.nlp.kotlin
-
-import com.mayabot.nlp.Mynlp
+package com.mayabot.nlp
 
 inline fun <reified T> Mynlp.getInstance(): T {
     return this.getInstance(T::class.java)

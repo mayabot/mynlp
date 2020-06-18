@@ -17,9 +17,8 @@
 package com.mayabot.nlp.segment.pipeline;
 
 import com.google.common.base.Joiner;
-import com.google.common.base.Preconditions;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
+import com.mayabot.nlp.common.Guava;
+import com.mayabot.nlp.common.Lists;
 import com.mayabot.nlp.segment.*;
 import com.mayabot.nlp.segment.plugins.collector.WordTermCollector;
 import com.mayabot.nlp.segment.wordnet.BestPathAlgorithm;
@@ -29,6 +28,7 @@ import com.mayabot.nlp.utils.Characters;
 import com.mayabot.nlp.utils.StringUtils;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -77,9 +77,9 @@ public class PipelineLexer implements Lexer {
         this.charNormalizes = charNormalizes.toArray(new CharNormalize[0]);
         this.keepChar = keepChar;
 
-        Preconditions.checkNotNull(bestPathAlgorithm);
-        Preconditions.checkNotNull(this.initer);
-        Preconditions.checkNotNull(pipeline);
+        Guava.checkNotNull(bestPathAlgorithm);
+        Guava.checkNotNull(this.initer);
+        Guava.checkNotNull(pipeline);
     }
 
     @Override
@@ -144,9 +144,8 @@ public class PipelineLexer implements Lexer {
 
     }
 
-
     public List<WordpathProcessor> getPipeline() {
-        return ImmutableList.copyOf(pipeline);
+        return Collections.unmodifiableList(Lists.newArrayList(pipeline));
     }
 
     public WordTermCollector getCollector() {

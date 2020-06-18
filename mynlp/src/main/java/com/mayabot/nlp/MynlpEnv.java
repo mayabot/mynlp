@@ -15,12 +15,11 @@
  */
 package com.mayabot.nlp;
 
-import com.google.common.base.Charsets;
-import com.google.common.collect.ImmutableList;
 import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
 import com.mayabot.nlp.resources.NlpResource;
 import com.mayabot.nlp.resources.NlpResourceFactory;
+import kotlin.text.Charsets;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -28,6 +27,8 @@ import java.io.File;
 import java.nio.charset.Charset;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -57,7 +58,7 @@ public class MynlpEnv {
     MynlpEnv(File dataDir, File cacheDir, List<NlpResourceFactory> resourceFactory, Settings settings) {
         this.dataDir = dataDir;
         this.cacheDir = cacheDir;
-        this.resourceFactory = ImmutableList.copyOf(resourceFactory);
+        this.resourceFactory = Collections.unmodifiableList(new ArrayList<>(resourceFactory));
         this.settings = settings;
     }
 

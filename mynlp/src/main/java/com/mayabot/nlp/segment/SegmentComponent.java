@@ -15,8 +15,6 @@
  */
 package com.mayabot.nlp.segment;
 
-import com.google.common.primitives.Ints;
-
 /**
  * 分词组件需要有个Name和设置是否启用的
  * <p>
@@ -55,6 +53,6 @@ public interface SegmentComponent extends Comparable<SegmentComponent> {
 
     @Override
     default int compareTo(SegmentComponent o) {
-        return Ints.compare(this.getOrder(), o.getOrder());
+        return Integer.compare(this.getOrder(), o.getOrder());
     }
 }

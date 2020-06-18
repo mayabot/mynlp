@@ -16,14 +16,14 @@
 
 package com.mayabot.nlp.segment.wordnet;
 
-import com.google.common.collect.AbstractIterator;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
+import com.mayabot.nlp.common.Lists;
+import kotlin.collections.AbstractIterator;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * 代表一个槽位的行.
@@ -197,7 +197,7 @@ public final class VertexRow implements Iterable<Vertex> {
     }
 
     public Set<Integer> keys() {
-        Set<Integer> set = Sets.newTreeSet();
+        Set<Integer> set = new TreeSet();
         for (Vertex x = first; x != null; x = x.next) {
             set.add(x.length);
         }
@@ -336,13 +336,15 @@ public final class VertexRow implements Iterable<Vertex> {
             Vertex point = first;
 
             @Override
-            protected Vertex computeNext() {
+            protected void computeNext() {
                 if (point == null) {
-                    return endOfData();
+                    done();
+                    return;
                 } else {
                     Vertex old = point;
                     point = old.next;
-                    return old;
+                    setNext(old);
+                    return;
                 }
             }
         };

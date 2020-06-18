@@ -16,8 +16,7 @@
 
 package com.mayabot.nlp.resources;
 
-import com.google.common.hash.Hashing;
-import com.google.common.io.ByteSource;
+import com.mayabot.nlp.common.EncryptionUtil;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -38,15 +37,15 @@ public interface NlpResource {
      * @return String
      */
     default String hash() {
-        ByteSource byteSource = new ByteSource() {
-            @Override
-            public InputStream openStream() throws IOException {
-                return inputStream();
-            }
-        };
 
         try {
-            return byteSource.hash(Hashing.murmur3_32()).toString();
+            InputStream inputStream = inputStream();
+
+            try {
+                return EncryptionUtil.md5(inputStream);
+            } finally {
+                inputStream.close();
+            }
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

@@ -15,11 +15,11 @@
  */
 package com.mayabot.nlp.segment;
 
-import com.google.common.base.Joiner;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
+import com.mayabot.nlp.common.Guava;
+import com.mayabot.nlp.common.Lists;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Stream;
@@ -49,15 +49,15 @@ public final class Sentence implements Iterable<WordTerm> {
     }
 
     private Sentence(Iterable<WordTerm> words) {
-        this.words = Lists.newArrayList(words);
+        this.words = com.mayabot.nlp.common.Lists.newArrayList(words);
     }
 
     private Sentence() {
-        this.words = ImmutableList.of();
+        this.words = Collections.EMPTY_LIST;
     }
 
     public String toPlainString() {
-        return Joiner.on(' ').join(toWordList());
+        return Guava.join(toWordList(), " ");
     }
 
     public String pkuFormat() {

@@ -1,6 +1,5 @@
 package com.mayabot.nlp.segment.plugins.bestpath;
 
-import com.google.common.base.Preconditions;
 import com.mayabot.nlp.segment.wordnet.BestPathAlgorithm;
 import com.mayabot.nlp.segment.wordnet.VertexRow;
 import com.mayabot.nlp.segment.wordnet.Wordnet;
@@ -36,7 +35,10 @@ public class LongpathBestPathAlgorithm implements BestPathAlgorithm {
         }
 
         // 最后一个point必定指向start节点
-        Preconditions.checkState(point != len, "非完整路径,有可能wordnet初始化的时候就路径不完整");
+        if (point != len) {
+            throw new IllegalStateException("非完整路径,有可能wordnet初始化的时候就路径不完整");
+        }
+//        Preconditions.checkState(point != len, );
         return wordPath;
     }
 }

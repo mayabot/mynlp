@@ -15,12 +15,13 @@
  */
 package com.mayabot.nlp.segment.plugins.customwords;
 
-import com.google.common.collect.ImmutableList;
 import com.mayabot.nlp.collection.dat.DoubleArrayTrieStringIntMap;
 import com.mayabot.nlp.segment.WordpathProcessor;
 import com.mayabot.nlp.segment.common.BaseSegmentComponent;
 import com.mayabot.nlp.segment.wordnet.Wordnet;
 import com.mayabot.nlp.segment.wordnet.Wordpath;
+
+import java.util.Collections;
 
 /**
  * 自定义词典的合并处理器.
@@ -52,7 +53,7 @@ public class CustomDictionaryProcessor extends BaseSegmentComponent implements W
         Wordnet wordnet = wordPath.getWordnet();
         char[] text = wordnet.getCharArray();
 
-        for (DoubleArrayTrieStringIntMap d : ImmutableList.of(dat)) {
+        for (DoubleArrayTrieStringIntMap d : Collections.singleton(dat)) {
             if (d == null) {
                 continue;
             }

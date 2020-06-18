@@ -1,6 +1,6 @@
 package com.mayabot.nlp.resources;
 
-import com.google.common.base.Charsets;
+import kotlin.text.Charsets;
 
 import java.nio.charset.Charset;
 
