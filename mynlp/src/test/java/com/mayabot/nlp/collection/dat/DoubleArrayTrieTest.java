@@ -30,7 +30,7 @@ public class DoubleArrayTrieTest {
             }
         }
 
-        DoubleArrayTrieMap trie = new DoubleArrayTrieMap(map);
+        DoubleArrayTrieMap<String> trie = new DoubleArrayTrieMap<String>(map);
 
         return trie;
     }

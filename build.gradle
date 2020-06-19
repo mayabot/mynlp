@@ -17,6 +17,7 @@ allprojects {
 }
 
 subprojects {
+
     if (project.path == ":modules") {
         return
     }
@@ -177,7 +178,9 @@ if (JavaVersion.current().isJava8Compatible()) {
             options.encoding = "UTF-8"
             options.compilerArgs += ["-Xdoclint:none", "-Xlint:none", "-nowarn"]
         }
-
+//        tasks.withType(JavaCompile) {
+//            options.compilerArgs << "-Xlint:unchecked"
+//        }
         tasks.withType(Javadoc) {
             options {
                 encoding "UTF-8"

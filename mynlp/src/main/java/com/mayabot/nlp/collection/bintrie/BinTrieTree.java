@@ -222,9 +222,9 @@ public class BinTrieTree<T> implements Trie<T>, BinTrieNode<T> {
         if (node == null) {
             return Collections.emptySet();
         }
-        NodeHolder holder = new NodeHolder();
+        NodeHolder<T> holder = new NodeHolder<>();
         IteratorKeys ite = new IteratorKeys(holder, (AbstractTrieNode<T>) node, key);
-        Set<Entry<String, T>> set = new HashSet();
+        Set<Entry<String, T>> set = new HashSet<>();
         while (ite.hasNext()) {
             String k = ite.next();
             AbstractTrieNode<T> v = holder.node;
@@ -292,7 +292,7 @@ public class BinTrieTree<T> implements Trie<T>, BinTrieNode<T> {
      *
      * @return Iterator
      */
-    public Iterator<String> keys(NodeHolder holder) {
+    public Iterator<String> keys(NodeHolder<T> holder) {
         return new IteratorKeys(holder);
     }
 
@@ -300,10 +300,10 @@ public class BinTrieTree<T> implements Trie<T>, BinTrieNode<T> {
         return new IteratorKeys(null);
     }
 
-    public static class NodeHolder {
-        AbstractTrieNode node;
+    public static class NodeHolder<T> {
+        AbstractTrieNode<T> node;
 
-        public AbstractTrieNode getNode() {
+        public AbstractTrieNode<T> getNode() {
             return node;
         }
 
@@ -311,11 +311,11 @@ public class BinTrieTree<T> implements Trie<T>, BinTrieNode<T> {
 
     public Iterable<Entry<String, T>> entry() {
         return () -> new AbstractIterator<Entry<String, T>>() {
-            NodeHolder holder;
+            NodeHolder<T> holder;
             Iterator<String> ite;
 
             {
-                holder = new NodeHolder();
+                holder = new NodeHolder<>();
                 ite = keys(holder);
             }
 
@@ -327,7 +327,7 @@ public class BinTrieTree<T> implements Trie<T>, BinTrieNode<T> {
                 }
                 String key = ite.next();
                 if (key != null) {
-                    setNext(new AbstractMap.SimpleEntry<>(key, (T) holder.node.value));
+                    setNext(new AbstractMap.SimpleEntry<>(key, holder.node.value));
                     return;
                 }
 
@@ -343,9 +343,9 @@ public class BinTrieTree<T> implements Trie<T>, BinTrieNode<T> {
 
         char[] buffer = new char[Short.MAX_VALUE];
 
-        NodeHolder holder;
+        NodeHolder<T> holder;
 
-        IteratorKeys(NodeHolder holder) {
+        IteratorKeys(NodeHolder<T> holder) {
             this.holder = holder;
             // 初始化堆栈
             if (childrenMap != null) {
@@ -364,7 +364,7 @@ public class BinTrieTree<T> implements Trie<T>, BinTrieNode<T> {
             stack.forEach(x -> x.level = 1);
         }
 
-        IteratorKeys(NodeHolder holder, AbstractTrieNode<T> initNode, String prefix) { //指定了初始化节点
+        IteratorKeys(NodeHolder<T> holder, AbstractTrieNode<T> initNode, String prefix) { //指定了初始化节点
             this.holder = holder;
             stack.push(initNode);
             stack.forEach(x -> x.level = (short) prefix.length()); //FIXME 此处需要多测试

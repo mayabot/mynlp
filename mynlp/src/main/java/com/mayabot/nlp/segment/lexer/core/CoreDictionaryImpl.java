@@ -15,12 +15,10 @@
  */
 package com.mayabot.nlp.segment.lexer.core;
 
-import com.google.common.base.Charsets;
-import com.google.common.base.Splitter;
-import com.google.common.hash.Hasher;
-import com.google.common.hash.Hashing;
 import com.mayabot.nlp.MynlpEnv;
 import com.mayabot.nlp.collection.dat.DoubleArrayTrieStringIntMap;
+import com.mayabot.nlp.common.EncryptionUtil;
+import com.mayabot.nlp.common.Guava;
 import com.mayabot.nlp.injector.Singleton;
 import com.mayabot.nlp.logging.InternalLogger;
 import com.mayabot.nlp.logging.InternalLoggerFactory;
@@ -102,13 +100,13 @@ public class CoreDictionaryImpl extends BaseNlpResourceExternalizable implements
         int maxFreq = 0;
 
 
-        Splitter splitter = Splitter.on(' ').omitEmptyStrings().trimResults();
+        //Splitter splitter = Splitter.on(' ').omitEmptyStrings().trimResults();
 
         try (CharSourceLineReader reader = UseLines.lineReader(dictResource.inputStream())) {
             while (reader.hasNext()) {
                 String line = reader.next();
 
-                List<String> param = splitter.splitToList(line);
+                List<String> param = Guava.split(line, " ");
                 if (param.size() == 2) {
                     Integer count = Integer.valueOf(param.get(1));
                     map.put(param.get(0), count);
@@ -157,15 +155,17 @@ public class CoreDictionaryImpl extends BaseNlpResourceExternalizable implements
         if (version == null) {
             version = "";
         }
-        Hasher hasher = Hashing.murmur3_32().newHasher().
-                putString(version, Charsets.UTF_8).
-                putString("v2", Charsets.UTF_8);
+//        Hasher hasher = Hashing.murmur3_32().newHasher().
+//                putString(version, Charsets.UTF_8).
+//                putString("v2", Charsets.UTF_8);
+        StringBuilder sb = new StringBuilder();
+        sb.append(version).append("v2");
 
         if (coreDictPatch != null) {
-            hasher.putString(coreDictPatch.dictVersion(), Charsets.UTF_8);
+            sb.append(coreDictPatch.dictVersion());
         }
 
-        return hasher.hash().toString();
+        return EncryptionUtil.md5(sb.toString());
     }
 
     @Override

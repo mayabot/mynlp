@@ -1,6 +1,6 @@
 package com.mayabot.nlp.segment.utils;
 
-import com.google.common.base.Joiner;
+import com.mayabot.nlp.common.Guava;
 import com.mayabot.nlp.segment.Lexer;
 import org.junit.Assert;
 
@@ -23,7 +23,8 @@ public class TokenizerTestHelp {
 
         String input = text.replace("|", "");
 
-        String out = Joiner.on("|").join(tokenizer.scan(input).toWordList());
+
+        String out = Guava.join(tokenizer.scan(input).toWordList(), "|");
 
         Assert.assertTrue("Out is " + out + " ,Input " + text, text.equalsIgnoreCase(out));
     }

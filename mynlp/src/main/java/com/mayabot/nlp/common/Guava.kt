@@ -3,6 +3,9 @@ package com.mayabot.nlp.common
 import java.io.File
 import java.net.URL
 import java.nio.charset.Charset
+import java.util.*
+import java.util.regex.Pattern
+import kotlin.collections.ArrayList
 
 
 fun checkNotNull(obj: Any?) {
@@ -21,6 +24,11 @@ object Guava {
 
     @JvmStatic
     fun split(text: String, sp: String): List<String> {
+        return text.split(sp).filter { it.isNotEmpty() }.map { it.trim() }
+    }
+
+    @JvmStatic
+    fun split(text: String, sp: Pattern): List<String> {
         return text.split(sp).filter { it.isNotEmpty() }.map { it.trim() }
     }
 
@@ -132,13 +140,40 @@ object Lists {
 object Maps{
 
     @JvmStatic
-    fun <A,B> newHashMap() : HashMap<A,B>{
-        return java.util.HashMap<A,B>()
+    fun <A, B> newHashMap(): HashMap<A, B> {
+        return java.util.HashMap<A, B>()
     }
 
     @JvmStatic
-    fun <A,B> newHashMap(from:Map<A,B>) : HashMap<A,B>{
-        return java.util.HashMap<A,B>(from)
+    fun <A, B> newHashMap(from: Map<A, B>): HashMap<A, B> {
+        return java.util.HashMap<A, B>(from)
     }
 
+}
+
+//TreeMap<Integer, TreeMap<Integer,Integer>>
+class TreeBasedTable<R, C, V> {
+    private val map = TreeMap<R, TreeMap<C, V>>()
+
+    fun put(row: R, col: C, v: V) {
+        val rowmap = map.getOrPut(row) { TreeMap() }
+        rowmap[col] = v
+    }
+
+    /**
+     * Returns the number of row key / column key / value mappings in the table.
+     */
+    fun size(): Int {
+        var count = 0
+        map.values.forEach { count += it.size }
+        return count
+    }
+
+    fun rowKeySet(): Set<R> {
+        return map.keys.toSet()
+    }
+
+    fun row(row: R): TreeMap<C, V>? {
+        return map[row]
+    }
 }

@@ -129,7 +129,7 @@ public class DoubleArrayTrieMap<T> implements Trie<T> {
         return new DATMapMatcherInner(dat.matcher(text, offset));
     }
 
-    class DATMapMatcherInner<T> implements DATMapMatcher<T> {
+    class DATMapMatcherInner implements DATMapMatcher<T> {
 
         DATMatcher datMater;
 
@@ -158,7 +158,7 @@ public class DoubleArrayTrieMap<T> implements Trie<T> {
             if (index == -1) {
                 return null;
             } else {
-                return (T) values.get(index);
+                return values.get(index);
             }
         }
 

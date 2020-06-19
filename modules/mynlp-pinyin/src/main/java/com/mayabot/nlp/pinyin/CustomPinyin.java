@@ -1,18 +1,16 @@
 package com.mayabot.nlp.pinyin;
 
-import com.google.common.base.Charsets;
-import com.google.common.collect.Maps;
-import com.google.common.hash.Hasher;
-import com.google.common.hash.Hashing;
+import com.mayabot.nlp.common.EncryptionUtil;
 
 import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * @author jimichan
  */
 public class CustomPinyin {
 
-    private Map<String, String> map = Maps.newTreeMap();
+    private Map<String, String> map = new TreeMap<>();
 
     public void put(String text, String pinyin) {
         map.put(text, pinyin);
@@ -31,13 +29,17 @@ public class CustomPinyin {
             return "";
         }
 
-        Hasher hasher = Hashing.md5().newHasher();
+        StringBuilder sb = new StringBuilder();
+
+//        Hasher hasher = Hashing.md5().newHasher();
 
         map.forEach((key, value) -> {
-            hasher.putString(key, Charsets.UTF_8);
-            hasher.putString(value, Charsets.UTF_8);
+            sb.append(key).append(value);
+//            hasher.putString(key, Charsets.UTF_8);
+//            hasher.putString(value, Charsets.UTF_8);
         });
 
-        return hasher.hash().toString();
+        return EncryptionUtil.md5(sb.toString());
+//        return hasher.hash().toString();
     }
 }

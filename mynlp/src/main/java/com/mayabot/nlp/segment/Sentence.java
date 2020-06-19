@@ -53,7 +53,7 @@ public final class Sentence implements Iterable<WordTerm> {
     }
 
     private Sentence() {
-        this.words = Collections.EMPTY_LIST;
+        this.words = Collections.emptyList();
     }
 
     public String toPlainString() {

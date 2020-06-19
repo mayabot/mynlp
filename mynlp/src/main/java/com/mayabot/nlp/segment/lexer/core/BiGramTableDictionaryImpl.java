@@ -16,14 +16,10 @@
 
 package com.mayabot.nlp.segment.lexer.core;
 
-import com.google.common.base.Charsets;
-import com.google.common.base.Preconditions;
-import com.google.common.base.Splitter;
-import com.google.common.collect.TreeBasedTable;
-import com.google.common.hash.Hasher;
-import com.google.common.hash.Hashing;
-import com.google.common.primitives.Ints;
 import com.mayabot.nlp.MynlpEnv;
+import com.mayabot.nlp.common.EncryptionUtil;
+import com.mayabot.nlp.common.Guava;
+import com.mayabot.nlp.common.TreeBasedTable;
 import com.mayabot.nlp.common.matrix.CSRSparseMatrix;
 import com.mayabot.nlp.injector.Singleton;
 import com.mayabot.nlp.logging.InternalLogger;
@@ -80,15 +76,16 @@ public class BiGramTableDictionaryImpl extends BaseNlpResourceExternalizable imp
 
     @Override
     public String sourceVersion() {
-        Hasher hasher = Hashing.murmur3_32().newHasher().
-                putString(mynlp.hashResource(path), Charsets.UTF_8).
-                putString("v2", Charsets.UTF_8);
+
+        StringBuilder sb = new StringBuilder();
+        sb.append(mynlp.hashResource(path));
+        sb.append("v2");
 
         if (coreDictPatch != null) {
-            hasher.putString(coreDictPatch.biGramVersion(), Charsets.UTF_8);
+            sb.append(coreDictPatch.biGramVersion());
         }
 
-        return hasher.hash().toString();
+        return EncryptionUtil.md5(sb.toString());
 
     }
 
@@ -97,11 +94,11 @@ public class BiGramTableDictionaryImpl extends BaseNlpResourceExternalizable imp
 
         NlpResource source = mynlp.loadResource(path);
 
-        Preconditions.checkNotNull(source);
+        if (source == null) throw new NullPointerException();
 
-        TreeBasedTable<Integer, Integer, Integer> table = TreeBasedTable.create();
+        TreeBasedTable table = new TreeBasedTable();
 
-        Splitter splitter = Splitter.on(" ").omitEmptyStrings().trimResults();
+//        Splitter splitter = Splitter.on(" ").omitEmptyStrings().trimResults();
 
         String firstWord = null;
         int count = 0;
@@ -117,8 +114,8 @@ public class BiGramTableDictionaryImpl extends BaseNlpResourceExternalizable imp
                 if (line.startsWith("\t")) {
                     int firstWh = line.indexOf(" ");
                     String numString = line.substring(1, firstWh);
-                    int num = Ints.tryParse(numString);
-                    List<String> words = splitter.splitToList(line.substring(firstWh + 1));
+                    int num = Integer.parseInt(numString);
+                    List<String> words = Guava.split(line.substring(firstWh + 1), " ");
 
                     String wordA = firstWord;
                     int idA = coreDictionary.wordId(wordA);

@@ -65,12 +65,12 @@ public class PipelineLexerBuilder implements LexerBuilder {
     /**
      * 切词器管线
      */
-    private LinkedList<WordSplitAlgorithm> wordSplitAlgorithmList = new LinkedList();
+    private LinkedList<WordSplitAlgorithm> wordSplitAlgorithmList = new LinkedList<>();
 
     /**
      * 逻辑Pipeline
      */
-    private LinkedList<WordpathProcessor> pipeLine = new LinkedList();
+    private LinkedList<WordpathProcessor> pipeLine = new LinkedList<>();
 
     /**
      * 保存后置监听器逻辑
@@ -130,7 +130,7 @@ public class PipelineLexerBuilder implements LexerBuilder {
                 keepOriCharOutput);
     }
 
-    private boolean instanceOf(Object subObj, Class parent) {
+    private boolean instanceOf(Object subObj, Class<?> parent) {
         Class sub = subObj.getClass();
         return parent.equals(sub) ||
                 parent.isAssignableFrom(sub);
@@ -139,6 +139,7 @@ public class PipelineLexerBuilder implements LexerBuilder {
     /**
      * 调用后置监听器
      */
+    @SuppressWarnings(value = {"unchecked"})
     private void callListener() {
         for (ConsumerPair pair : configListener) {
             //WordTermCollector

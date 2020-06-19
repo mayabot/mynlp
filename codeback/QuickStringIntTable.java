@@ -15,7 +15,6 @@
  */
 package com.mayabot.nlp.common;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Table;
 
 import java.util.ArrayList;

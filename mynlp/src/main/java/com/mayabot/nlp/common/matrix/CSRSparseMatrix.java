@@ -16,8 +16,7 @@
 
 package com.mayabot.nlp.common.matrix;
 
-import com.google.common.collect.Table;
-import com.google.common.collect.TreeBasedTable;
+import com.mayabot.nlp.common.TreeBasedTable;
 import com.mayabot.nlp.utils.DataInOutputUtils;
 
 import java.io.IOException;
@@ -153,7 +152,7 @@ public class CSRSparseMatrix implements Serializable {
 
 
     public static void main(String[] args) {
-        TreeBasedTable<Integer, Integer, Integer> table = TreeBasedTable.create();
+        TreeBasedTable<Integer, Integer, Integer> table = new TreeBasedTable();
 
         table.put(2, 0, 6);
         table.put(3, 2, 4);
@@ -165,13 +164,12 @@ public class CSRSparseMatrix implements Serializable {
 
         CSRSparseMatrix csr = new CSRSparseMatrix(table, 5);
 
-        for (Table.Cell<Integer, Integer, Integer> cell : table.cellSet()) {
-            if (csr.get(cell.getRowKey(), cell.getColumnKey()) == cell.getValue()) {
-                System.out.println(String.format("%d->%d = %d", cell.getRowKey(), cell.getColumnKey(), cell.getValue()));
-            } else {
-                System.out.println("ERROR");
-            }
-        }
+        System.out.println(csr.get(2, 0) == 6);
+        System.out.println(csr.get(3, 2) == 4);
+        System.out.println(csr.get(0, 0) == 5);
+        System.out.println(csr.get(0, 3) == 2);
+        System.out.println(csr.get(4, 1) == 2);
+        System.out.println(csr.get(4, 4) == 9);
 
 
     }

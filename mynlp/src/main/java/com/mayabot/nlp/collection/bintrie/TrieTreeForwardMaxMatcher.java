@@ -177,8 +177,8 @@ public class TrieTreeForwardMaxMatcher<T> implements TrieTreeMatcher<T> {
                     return _p[i];
                 }
             } else if (param instanceof List) {
-                List<String> list = (List<String>) param;
-                return list.get(i);
+                List list = (List) param;
+                return list.get(i).toString();
             }
         }
         return null;

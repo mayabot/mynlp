@@ -12,7 +12,9 @@ public class LuceneAnalyzerTest {
     @Test
     public void test() throws Exception {
         MynlpAnalyzer analyzer = new MynlpAnalyzer(
-                Lexers.core().filterReader(true, true)
+                Lexers.coreBuilder()
+                        .build()
+                        .filterReader(true, true)
         );
 
         TokenStream tokenStream = analyzer.tokenStream("title", "商品和服务，上海市副市长，Git有很多优势，其中之一就是远程操作非常简便。本文详细介绍5个Git命令，它们的概念和用法，理解了这些内容，你就会完全掌握Git远程操作。");

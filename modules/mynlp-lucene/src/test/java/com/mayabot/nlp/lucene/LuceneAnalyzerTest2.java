@@ -12,7 +12,7 @@ public class LuceneAnalyzerTest2 {
     @Test
     public void test() throws Exception {
         MynlpAnalyzer analyzer = new MynlpAnalyzer(
-                Lexers.core().filterReader(true, true)
+                Lexers.coreBuilder().build().filterReader(true, true)
         );
 
         TokenStream tokenStream = analyzer.tokenStream("title", "俞正声主持召开全国政协第五十三次主席会议");

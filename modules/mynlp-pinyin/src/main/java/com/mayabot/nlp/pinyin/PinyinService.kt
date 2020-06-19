@@ -16,7 +16,6 @@
 
 package com.mayabot.nlp.pinyin
 
-import com.google.common.collect.Lists
 import com.mayabot.nlp.MynlpEnv
 import com.mayabot.nlp.SettingItem.string
 import com.mayabot.nlp.injector.Singleton
@@ -37,7 +36,7 @@ class PinyinService constructor(private val mynlp: MynlpEnv) : BasePinyinDiction
     }
 
     internal override fun load(): TreeMap<String, Array<Pinyin>> {
-        val list = Lists.newArrayList<NlpResource>()
+        val list = ArrayList<NlpResource?>()
 
         list.add(mynlp.loadResource(mynlp.get(pinyinSetting)))
 
@@ -47,7 +46,7 @@ class PinyinService constructor(private val mynlp: MynlpEnv) : BasePinyinDiction
         }
 
         val map = TreeMap<String, Array<Pinyin>>()
-        for (dictResource in list) {
+        for (dictResource in list.filterNotNull()) {
 
             dictResource.inputStream()
                     .bufferedReader()

@@ -16,7 +16,6 @@
 
 package com.mayabot.nlp.segment.pipeline;
 
-import com.google.common.base.Joiner;
 import com.mayabot.nlp.common.Guava;
 import com.mayabot.nlp.common.Lists;
 import com.mayabot.nlp.segment.*;
@@ -157,10 +156,13 @@ public class PipelineLexer implements Lexer {
         StringBuilder sb = new StringBuilder();
         sb.append("PipelineTokenizer\n\n");
         sb.append("BestPathAlgorithm = " + bestPathAlgorithm.getClass().getSimpleName()).append("\n");
-        sb.append("CharNormalize = " + Joiner.on(",").join(Lists.newArrayList(charNormalizes).stream().map(it -> it.getClass().getSimpleName()).collect(Collectors.toList()))).append("\n");
+        sb.append("CharNormalize = " + Guava.join(
+                Lists.newArrayList(charNormalizes).stream().map(it -> it.getClass().getSimpleName()).collect(Collectors.toList()),
+                ",")
+        ).append("\n");
         sb.append("WordTermCollector = " + collector.getClass().getSimpleName() + "\n");
 
-        sb.append("WordSplitAlgorithm = " + Joiner.on(",").join(Lists.newArrayList(initer).stream().map(it -> it.getClass().getSimpleName()).collect(Collectors.toList()))).append("\n");
+        sb.append("WordSplitAlgorithm = " + Guava.join(Lists.newArrayList(initer).stream().map(it -> it.getClass().getSimpleName()).collect(Collectors.toList()), ",")).append("\n");
         sb.append("WordpathProcessor = \n");
         for (WordpathProcessor processor : pipeline) {
             sb.append("\t" + processor.getClass().getSimpleName()).append("\n");

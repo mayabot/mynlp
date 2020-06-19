@@ -16,7 +16,6 @@
 
 package com.mayabot.nlp.pinyin;
 
-import com.google.common.primitives.Ints;
 import com.mayabot.nlp.collection.ahocorasick.AhoCoraickDoubleArrayTrieBuilder;
 import com.mayabot.nlp.collection.ahocorasick.AhoCorasickDoubleArrayTrie;
 import com.mayabot.nlp.logging.InternalLogger;
@@ -132,7 +131,7 @@ public abstract class BasePinyinDictionary {
             Pinyin[] pinyins = new Pinyin[split.length];
 
             for (int i = 0; i < split.length; i++) {
-                Integer xx = Ints.tryParse(split[i]);
+                Integer xx = Integer.parseInt(split[i]);
                 Pinyin pinyin = pinyinByOrdinal[xx];
                 pinyins[i] = pinyin;
             }

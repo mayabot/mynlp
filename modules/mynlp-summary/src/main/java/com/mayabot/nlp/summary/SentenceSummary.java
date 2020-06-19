@@ -1,8 +1,7 @@
 package com.mayabot.nlp.summary;
 
-import com.google.common.base.Joiner;
-import com.google.common.base.Splitter;
-import com.google.common.collect.Lists;
+import com.mayabot.nlp.common.Guava;
+import com.mayabot.nlp.common.Lists;
 import com.mayabot.nlp.segment.LexerReader;
 import com.mayabot.nlp.segment.Lexers;
 
@@ -16,8 +15,8 @@ import java.util.regex.Pattern;
  */
 public class SentenceSummary {
 
-    private static Splitter lineSplitter = Splitter.on(Pattern.compile("[\r\n]")).omitEmptyStrings().trimResults();
-    private static Splitter sentenceSplitter = Splitter.on(Pattern.compile("[，,。:：“”？?！!；;]")).omitEmptyStrings().trimResults();
+    private static Pattern lineSplitter = Pattern.compile("[\r\n]");
+    private static Pattern sentenceSplitter = Pattern.compile("[，,。:：“”？?！!；;]");
 
     private LexerReader lexerReader = Lexers.core().filterReader(true, true);
 
@@ -50,7 +49,7 @@ public class SentenceSummary {
         resultList = permutation(resultList, sentenceList);
         resultList = pickSentences(resultList, max);
 
-        return Joiner.on('。').join(resultList);
+        return Guava.join(resultList, "。");
     }
 
     /**
@@ -105,8 +104,8 @@ public class SentenceSummary {
     private List<String> splitSentence(String document) {
         List<String> sentences = Lists.newArrayList();
 
-        lineSplitter.split(document).forEach(line ->
-                sentences.addAll(sentenceSplitter.splitToList(line))
+        Guava.split(document, lineSplitter).forEach(line ->
+                sentences.addAll(Guava.split(line, sentenceSplitter))
         );
 
         return sentences;
@@ -120,22 +119,6 @@ public class SentenceSummary {
         });
 
         return sentences;
-    }
-
-    public static Splitter getLineSplitter() {
-        return lineSplitter;
-    }
-
-    public static void setLineSplitter(Splitter lineSplitter) {
-        SentenceSummary.lineSplitter = lineSplitter;
-    }
-
-    public static Splitter getSentenceSplitter() {
-        return sentenceSplitter;
-    }
-
-    public static void setSentenceSplitter(Splitter sentenceSplitter) {
-        SentenceSummary.sentenceSplitter = sentenceSplitter;
     }
 
     public LexerReader getLexerReader() {

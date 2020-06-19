@@ -17,7 +17,7 @@
 
 package com.mayabot.mynlp.es;
 
-import com.google.common.collect.Lists;
+import com.mayabot.nlp.common.Lists;
 import org.apache.lucene.analysis.Analyzer;
 import org.elasticsearch.SpecialPermission;
 import org.elasticsearch.common.settings.Setting;

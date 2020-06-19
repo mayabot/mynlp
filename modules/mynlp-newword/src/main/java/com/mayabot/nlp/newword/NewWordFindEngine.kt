@@ -1,9 +1,8 @@
 package com.mayabot.nlp.newword
 
-import com.google.common.collect.Lists
-import com.google.common.collect.Maps
 import com.mayabot.nlp.Mynlps
 import com.mayabot.nlp.collection.dat.DoubleArrayTrieMap
+import com.mayabot.nlp.common.Lists
 import com.mayabot.nlp.common.ParagraphReaderSmart
 import com.mayabot.nlp.segment.lexer.core.CoreDictionaryImpl
 import com.mayabot.nlp.utils.Characters
@@ -66,7 +65,7 @@ class NewWordFindEngine(
     /**
      * 候选词典. 主要用来第二轮代替hashmap，判断存在
      */
-    private var dict = DoubleArrayTrieMap<String>(Maps.newTreeMap(sortedMapOf("a" to "")))
+    private var dict = DoubleArrayTrieMap<String>(TreeMap(sortedMapOf("a" to "")))
 
     var verbose = true
 

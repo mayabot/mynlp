@@ -46,7 +46,12 @@ public final class Mynlp {
     }
 
     public <T> T getInstance(Class<T> clazz) {
-        return injector.getInstance(clazz);
+        try {
+            return injector.getInstance(clazz);
+        } catch (Exception e) {
+
+            throw new RuntimeException("Mynlp getInstance of " + clazz + " Error!", e);
+        }
     }
 
     public Injector getInjector() {

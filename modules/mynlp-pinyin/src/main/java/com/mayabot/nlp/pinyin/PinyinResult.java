@@ -16,13 +16,13 @@
 
 package com.mayabot.nlp.pinyin;
 
-import com.google.common.base.Joiner;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Lists;
+import com.mayabot.nlp.common.Lists;
 import com.mayabot.nlp.pinyin.model.Pinyin;
 import com.mayabot.nlp.utils.Characters;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -91,15 +91,21 @@ public class PinyinResult {
     }
 
     private static Pattern pattern = Pattern.compile("(^zh|^ch|^sh|iang$|ang$|ing$|eng$|uang$)");
-    private static ImmutableMap<String, String> fuzzyMap = ImmutableMap.<String, String>builder()
-            .put("zh", "z")
-            .put("ch", "c")
-            .put("sh", "s")
-            .put("eng", "en")
-            .put("ang", "an")
-            .put("ing", "in")
-            .put("iang", "ian")
-            .put("uang", "uan").build();
+
+    private static Map<String, String> fuzzyMap = fmap();
+
+    private static Map<String, String> fmap() {
+        HashMap<String, String> map = new HashMap<>();
+        map.put("zh", "z");
+        map.put("ch", "c");
+        map.put("sh", "s");
+        map.put("eng", "en");
+        map.put("ang", "an");
+        map.put("ing", "in");
+        map.put("iang", "ian");
+        map.put("uang", "uan");
+        return map;
+    }
 
     public static void main(String[] args) {
 
@@ -189,12 +195,32 @@ public class PinyinResult {
     }
 
     public String asString(String splitter) {
-        return Joiner.on(splitter).skipNulls().join(asList());
+        return joinSkipNull(asList(), splitter);
     }
 
     public String asHeadString(String splitter) {
-        return Joiner.on(splitter).skipNulls().join(asHeadList());
+        return joinSkipNull(asHeadList(), splitter);
     }
+
+    private String joinSkipNull(List list, String splitter) {
+        StringBuilder sb = new StringBuilder();
+
+        boolean first = true;
+        for (Object x : list) {
+            if (x != null) {
+                if (first) {
+                    first = false;
+                } else {
+                    if (splitter != "") {
+                        sb.append(splitter);
+                    }
+                }
+                sb.append(x);
+            }
+        }
+        return sb.toString();
+    }
+
 
     public String asHeadString() {
         return asHeadString(" ");

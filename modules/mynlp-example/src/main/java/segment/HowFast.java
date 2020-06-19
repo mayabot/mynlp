@@ -1,6 +1,6 @@
 package segment;
 
-import com.google.common.base.Joiner;
+import com.mayabot.nlp.common.Guava;
 import com.mayabot.nlp.segment.Lexer;
 import com.mayabot.nlp.segment.LexerReader;
 import com.mayabot.nlp.segment.Lexers;
@@ -33,7 +33,7 @@ public class HowFast {
 
         List<String> lines = Files.readAllLines(file.toPath()).stream().filter(it -> !it.isEmpty()).collect(Collectors.toList());
 
-        String text = Joiner.on("\n").join(lines);
+        String text = Guava.join(lines, "\n");
 
         Lexer lexer = Lexers.builder()
                 .basic().core()

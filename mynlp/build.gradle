@@ -21,8 +21,7 @@ dependencies {
     // kotlin core lib
     compile "org.jetbrains.kotlin:kotlin-stdlib"
 
-    // guava
-    compile group: 'com.google.guava', name: 'guava', version: '18.0'
+
 
     // logs
     compileOnly(group: "org.slf4j", name: "slf4j-api", version: "1.7.21")
