@@ -38,18 +38,18 @@
 
 GRADLE
 ```groovy
-compile 'com.mayabot.mynlp:mynlp:3.1.0'
+compile 'com.mayabot.mynlp:mynlp:3.1.5'
 ```
 MAVEN
 ```xml
 <dependency>
   <groupId>com.mayabot.mynlp</groupId>
   <artifactId>mynlp</artifactId>
-  <version>3.1.0</version>
+  <version>3.1.5</version>
 </dependency>
 ```
 
-> 'com.mayabot.mynlp:mynlp:3.1.0' 中包含主要功能和部分词典资源的依赖。
+> 'com.mayabot.mynlp:mynlp:3.1.5' 中包含主要功能和部分词典资源的依赖。
 >
 > 其他功能如拼音、fasttext等被独立打包、按需依赖。
 
@@ -134,7 +134,7 @@ System.out.println(lexer.scan("逛吃行动小组成立"));
 <dependency>
   <groupId>com.mayabot.mynlp</groupId>
   <artifactId>mynlp-pinyin</artifactId>
-  <version>3.1.0</version>
+  <version>3.1.5</version>
 </dependency>
 ```
 
@@ -183,7 +183,7 @@ System.out.println(PinyinSplits.split("nizhidaowozaishuoshenmema"));
 <dependency>
   <groupId>com.mayabot.mynlp</groupId>
   <artifactId>fastText4j</artifactId>
-  <version>3.1.0</version>
+  <version>3.1.5</version>
 </dependency>
 ```
 
@@ -219,7 +219,7 @@ FastText model = FastText.trainSupervised(trainFile, inputArgs);
 <dependency>
   <groupId>com.mayabot.mynlp</groupId>
   <artifactId>mynlp-classification</artifactId>
-  <version>3.1.0</version>
+  <version>3.1.5</version>
 </dependency>
 ```
 mynlp采用fasttext算法提供文本分类功能，你可以训练、评估自己的分类模型。
@@ -288,7 +288,7 @@ R@1	0.920
 <dependency>
   <groupId>com.mayabot.mynlp</groupId>
   <artifactId>mynlp-transform</artifactId>
-  <version>3.1.0</version>
+  <version>3.1.5</version>
 </dependency>
 ```
 
@@ -310,7 +310,7 @@ System.out.println(t2s.transform("軟件和體育的藝術"));
 <dependency>
   <groupId>com.mayabot.mynlp</groupId>
   <artifactId>mynlp-summary</artifactId>
-  <version>3.1.0</version>
+  <version>3.1.5</version>
 </dependency>
 
 文本摘要包含了两个简单TextRank的实现。
@@ -318,7 +318,7 @@ System.out.println(t2s.transform("軟件和體育的藝術"));
 <dependency>
   <groupId>com.mayabot.mynlp</groupId>
   <artifactId>mynlp-summary</artifactId>
-  <version>3.1.0</version>
+  <version>3.1.5</version>
 </dependency>
 ```
 
