@@ -24,12 +24,12 @@ object Guava {
 
     @JvmStatic
     fun split(text: String, sp: String): List<String> {
-        return text.split(sp).filter { it.isNotEmpty() }.map { it.trim() }
+        return text.split(sp).map { it.trim() }.filter { it.isNotEmpty() }
     }
 
     @JvmStatic
     fun split(text: String, sp: Pattern): List<String> {
-        return text.split(sp).filter { it.isNotEmpty() }.map { it.trim() }
+        return text.split(sp).map { it.trim() }.filter { it.isNotEmpty() }
     }
 
     @JvmStatic
