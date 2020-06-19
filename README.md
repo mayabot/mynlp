@@ -3,8 +3,9 @@
 # Mynlp: 高性能、可扩展的中文NLP工具包
 
 ![License](https://img.shields.io/github/license/mayabot/mynlp.svg)
-[![Maven Central](https://img.shields.io/maven-metadata/v/http/central.maven.org/maven2/com/mayabot/mynlp/mynlp/maven-metadata.xml.svg)](http://mvnrepository.com/artifact/com.mayabot.mynlp)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.mayabot.mynlp/mynlp/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.mayabot.mynlp/mynlp)
 [![Latest release](https://img.shields.io/github/release/mayabot/mynlp/all.svg)](https://github.com/mayabot/mynlp/releases/latest)
+
 
 
 ![logo](https://cdn.mayabot.com/mynlp/mynlp-banner.png)
