@@ -59,7 +59,7 @@ class Dictionary(
 
     private var pdiscard: FloatArray = FloatArray(0)
     var pruneidxSize = -1L
-    private val pruneidx: HashMap<Int,Int> = HashMap()
+    private var pruneidx: HashMap<Int, Int> = HashMap()
 
     private val maxn = args.maxn
     private val minn = args.minn
@@ -404,6 +404,9 @@ class Dictionary(
 
             dict.initTableDiscard()
             dict.initNgrams()
+
+            dict.pruneidxSize = pruneidxSize
+            dict.pruneidx = pruneidx
 
             dict.onehotMap.initWordHash2WordId()
 
