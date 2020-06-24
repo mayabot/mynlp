@@ -1,6 +1,9 @@
 package com.mayabot.nlp.lucene;
 
+import com.mayabot.nlp.segment.FluentLexerBuilder;
+import com.mayabot.nlp.segment.Lexer;
 import com.mayabot.nlp.segment.Lexers;
+import com.mayabot.nlp.segment.WordTermIterableMode;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.analysis.tokenattributes.OffsetAttribute;
@@ -11,11 +14,20 @@ public class LuceneAnalyzerTest2 {
 
     @Test
     public void test() throws Exception {
-        MynlpAnalyzer analyzer = new MynlpAnalyzer(
-                Lexers.coreBuilder().build().filterReader(true, true)
+        FluentLexerBuilder builder = Lexers.coreBuilder();
+
+        FluentLexerBuilder.CollectorBlock collector = builder.collector();
+        collector.indexPickup().done();
+
+        Lexer lexer = builder.build();
+
+        System.out.println(lexer);
+
+        MynlpAnalyzer analyzer = new MynlpAnalyzer(lexer.filterReader(true, true),
+                WordTermIterableMode.ATOM
         );
 
-        TokenStream tokenStream = analyzer.tokenStream("title", "俞正声主持召开全国政协第五十三次主席会议");
+        TokenStream tokenStream = analyzer.tokenStream("title", "北京大学");
         tokenStream.reset();
 
         StringBuffer sb = new StringBuffer();

@@ -16,14 +16,11 @@
 package com.mayabot.nlp.perceptron
 
 
-import com.mayabot.nlp.MynlpEnv
-import com.mayabot.nlp.Mynlps
 import com.mayabot.nlp.algorithm.TopIntMinK
 import com.mayabot.nlp.collection.dat.DoubleArrayTrie
 import com.mayabot.nlp.hppc.IntArrayList
 import java.io.DataOutputStream
 import java.io.File
-import java.io.InputStream
 import java.util.*
 
 /**

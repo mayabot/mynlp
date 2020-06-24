@@ -98,7 +98,7 @@ constructor(
 
         if (nextWord != null) {
             buffer.clear()
-            buffer.append(nextWord);
+            buffer.append(nextWord)
             buffer.append('♂')
             emit()
         }

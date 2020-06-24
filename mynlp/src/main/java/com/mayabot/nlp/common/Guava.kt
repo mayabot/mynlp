@@ -1,6 +1,7 @@
 package com.mayabot.nlp.common
 
 import java.io.File
+import java.io.InputStream
 import java.net.URL
 import java.nio.charset.Charset
 import java.util.*
@@ -36,7 +37,7 @@ object Guava {
     fun openBufIns(file: File) = file.inputStream().buffered()
 
     @JvmStatic
-    fun openResource(name: String) = Guava::class.java.classLoader.getResourceAsStream(name)
+    fun openResource(name: String): InputStream? = Guava::class.java.classLoader.getResourceAsStream(name)
 
 
     /**

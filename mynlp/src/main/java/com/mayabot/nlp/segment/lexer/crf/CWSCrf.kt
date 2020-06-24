@@ -19,7 +19,6 @@ import com.mayabot.nlp.hppc.IntArrayList
 import com.mayabot.nlp.perceptron.FeatureSet
 import com.mayabot.nlp.perceptron.PerceptronFileFormat
 import com.mayabot.nlp.perceptron.PerceptronModel
-import com.mayabot.nlp.perceptron.PerceptronModelImpl
 import com.mayabot.nlp.segment.lexer.crf.FeatureTemplateGroup.Companion.BOS
 import com.mayabot.nlp.segment.lexer.crf.FeatureTemplateGroup.Companion.EOS
 import com.mayabot.nlp.utils.CharNormUtils

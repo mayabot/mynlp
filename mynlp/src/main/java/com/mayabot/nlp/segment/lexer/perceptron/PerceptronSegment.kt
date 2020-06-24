@@ -17,7 +17,6 @@ package com.mayabot.nlp.segment.lexer.perceptron
 
 import com.mayabot.nlp.perceptron.PerceptronFileFormat
 import com.mayabot.nlp.perceptron.PerceptronModel
-import com.mayabot.nlp.perceptron.PerceptronModelImpl
 import com.mayabot.nlp.perceptron.PerceptronRunner
 import java.io.File
 import java.io.InputStream

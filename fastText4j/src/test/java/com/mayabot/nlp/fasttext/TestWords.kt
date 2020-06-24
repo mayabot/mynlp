@@ -12,7 +12,6 @@ fun main() {
 
     val k = fastText.nearestNeighbor("上海",5)
 
-
     println(k)
     println(fastText.analogies("柏林","德国","法国",5))
 

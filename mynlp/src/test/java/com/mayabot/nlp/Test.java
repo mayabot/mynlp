@@ -5,7 +5,7 @@ import com.mayabot.nlp.segment.Lexers;
 
 public class Test {
     public static void main(String[] args) {
-        String text = "本科未毕业可以当和尚吗?";
+        String text = "技术和服务";
 
         Lexer lexer = Lexers.perceptron();
 

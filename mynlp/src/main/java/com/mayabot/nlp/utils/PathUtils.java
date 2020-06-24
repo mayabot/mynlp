@@ -73,7 +73,7 @@ public final class PathUtils {
      * a path against an existing one!
      */
     public static Path get(URI uri) {
-        if (uri.getScheme().equalsIgnoreCase("file")) {
+        if ("file".equalsIgnoreCase(uri.getScheme())) {
             return DEFAULT.provider().getPath(uri);
         } else {
             return Paths.get(uri);

@@ -94,7 +94,9 @@ public class BiGramTableDictionaryImpl extends BaseNlpResourceExternalizable imp
 
         NlpResource source = mynlp.loadResource(path);
 
-        if (source == null) throw new NullPointerException();
+        if (source == null) {
+            throw new NullPointerException();
+        }
 
         TreeBasedTable table = new TreeBasedTable();
 

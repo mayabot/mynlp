@@ -69,7 +69,7 @@ public class SettingItem<T> {
         SettingItem<Boolean> setting = new SettingItem<>();
         setting.key = key;
         setting.defaultValue = value + "";
-        setting.parse = v -> v.equalsIgnoreCase("true");
+        setting.parse = v -> "true".equalsIgnoreCase(v);
         return setting;
     }
 }

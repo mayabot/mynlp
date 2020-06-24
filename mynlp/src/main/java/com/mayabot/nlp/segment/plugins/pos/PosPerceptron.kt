@@ -3,7 +3,6 @@ package com.mayabot.nlp.segment.plugins.pos
 import com.mayabot.nlp.perceptron.PerceptronModel
 import com.mayabot.nlp.perceptron.PerceptronRunner
 import com.mayabot.nlp.segment.Nature
-import com.mayabot.nlp.segment.wordnet.Vertex
 import java.io.File
 
 /**

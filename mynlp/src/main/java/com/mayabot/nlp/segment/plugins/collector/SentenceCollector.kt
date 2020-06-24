@@ -36,7 +36,7 @@ class SentenceCollector : WordTermCollector {
             val word = if(txtChars==null){
                 vertex.realWord()
             }else {
-                String(txtChars, vertex.offset(), vertex.length);
+                String(txtChars, vertex.offset(), vertex.length)
             }
 
             val term = WordTerm(word, vertex.nature, vertex.offset())
