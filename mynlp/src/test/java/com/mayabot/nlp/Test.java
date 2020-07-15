@@ -5,9 +5,9 @@ import com.mayabot.nlp.segment.Lexers;
 
 public class Test {
     public static void main(String[] args) {
-        String text = "技术和服务";
+        String text = "A系统“9000000004,hello";
 
-        Lexer lexer = Lexers.perceptron();
+        Lexer lexer = Lexers.core();
 
         lexer.scan(text).forEach(x -> {
             System.out.println(x);

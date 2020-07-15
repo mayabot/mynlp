@@ -59,7 +59,10 @@ fun parseTemplate(template: String): List<String> {
     }
 
 
-    return CartesianList.create(list).map {
+    val clist = CartesianList.create(list)
+
+    val result = clist.map {
         it.joinToString(separator = "")
     }
+    return result
 }
