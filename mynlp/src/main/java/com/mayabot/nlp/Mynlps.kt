@@ -112,3 +112,7 @@ object Mynlps {
     }
 
 }
+
+inline fun <reified T> Mynlp.getInstance(): T {
+    return this.getInstance(T::class.java)
+}

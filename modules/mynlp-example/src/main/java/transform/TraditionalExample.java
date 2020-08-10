@@ -1,7 +1,7 @@
 package transform;
 
-import com.mayabot.nlp.transform.Traditional2Simplified;
-import com.mayabot.nlp.transform.TransformService;
+import com.mayabot.nlp.module.trans.Traditional2Simplified;
+import com.mayabot.nlp.module.trans.TransformService;
 
 public class TraditionalExample {
     public static void main(String[] args) {

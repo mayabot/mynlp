@@ -1,7 +1,5 @@
-package com.mayabot.nlp.segment.kotlin
+package com.mayabot.nlp.segment
 
-import com.mayabot.nlp.segment.Lexers
-import com.mayabot.nlp.segment.Sentence
 import java.io.File
 
 private val defaultLexer = Lexers.core()

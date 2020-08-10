@@ -1,7 +1,8 @@
 package pinyin;
 
-import com.mayabot.nlp.pinyin.PinyinResult;
-import com.mayabot.nlp.pinyin.Pinyins;
+
+import com.mayabot.nlp.module.pinyin.PinyinResult;
+import com.mayabot.nlp.module.pinyin.Pinyins;
 
 public class PinyinExample {
     public static void main(String[] args) {
