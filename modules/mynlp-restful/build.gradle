@@ -41,7 +41,3 @@ compileKotlin {
         jvmTarget = '1.8'
     }
 }
-//
-//bootJar {
-//    launchScript()
-//}

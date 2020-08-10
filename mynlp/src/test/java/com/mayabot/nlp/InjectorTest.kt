@@ -1,7 +1,6 @@
 package com.mayabot.nlp
 
 import com.mayabot.nlp.common.injector.*
-import com.mayabot.nlp.injector.*
 
 
 interface DbService {
