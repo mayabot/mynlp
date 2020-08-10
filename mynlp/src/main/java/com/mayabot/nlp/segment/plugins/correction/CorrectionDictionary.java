@@ -13,17 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.mayabot.nlp.segment.plugins.correction;
 
-description = '文本分类.使用Fasttext算法.'
+import com.mayabot.nlp.algorithm.collection.dat.DoubleArrayTrieMap;
+import com.mayabot.nlp.common.injector.ImplementedBy;
 
-dependencies {
-    compile (project(":mynlp")) {
-        exclude module :'mynlp-resource-pos'
-        exclude module :'mynlp-resource-ner'
-    }
+/**
+ * 分词纠错词典结构.
+ * 对外提供一个DoubleArrayTrie
+ *
+ * @author jimichan
+ */
+@ImplementedBy(DefaultCorrectionDictionary.class)
+public interface CorrectionDictionary {
 
-    compile project(":fastText4j")
+    DoubleArrayTrieMap<CorrectionWord> getTrie();
 
-    testCompile 'junit:junit:4.12'
-    testCompile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
 }
