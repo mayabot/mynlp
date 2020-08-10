@@ -16,9 +16,9 @@
 
 package com.mayabot.nlp.segment.reader;
 
+import com.mayabot.nlp.common.utils.Characters;
 import com.mayabot.nlp.segment.LexerReader;
 import com.mayabot.nlp.segment.WordTerm;
-import com.mayabot.nlp.utils.Characters;
 
 import java.util.function.Predicate;
 

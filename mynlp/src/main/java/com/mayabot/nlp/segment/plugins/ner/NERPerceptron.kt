@@ -1,7 +1,8 @@
 package com.mayabot.nlp.segment.plugins.ner
 
 import com.mayabot.nlp.common.FastStringBuilder
-import com.mayabot.nlp.hppc.IntArrayList
+import com.mayabot.nlp.common.hppc.IntArrayList
+import com.mayabot.nlp.common.utils.CharNormUtils
 import com.mayabot.nlp.perceptron.*
 import com.mayabot.nlp.segment.Nature
 import com.mayabot.nlp.segment.WordAndNature
@@ -11,7 +12,6 @@ import com.mayabot.nlp.segment.common.allFiles
 import com.mayabot.nlp.segment.common.parseToFlatWords
 import com.mayabot.nlp.segment.common.parseToWords
 import com.mayabot.nlp.segment.wordnet.Vertex
-import com.mayabot.nlp.utils.CharNormUtils
 import java.io.File
 import java.io.InputStream
 import java.util.*

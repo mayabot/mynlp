@@ -1,6 +1,6 @@
 package com.mayabot.nlp.segment.plugins.atom
 
-import com.mayabot.nlp.utils.CartesianList
+import com.mayabot.nlp.common.utils.CartesianList
 import java.util.*
 import kotlin.collections.ArrayList
 

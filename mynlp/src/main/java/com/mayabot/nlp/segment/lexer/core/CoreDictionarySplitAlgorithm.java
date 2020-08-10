@@ -1,6 +1,6 @@
 package com.mayabot.nlp.segment.lexer.core;
 
-import com.mayabot.nlp.collection.dat.DoubleArrayTrieStringIntMap.DATMapMatcherInt;
+import com.mayabot.nlp.algorithm.collection.dat.DoubleArrayTrieStringIntMap.DATMapMatcherInt;
 import com.mayabot.nlp.segment.WordSplitAlgorithm;
 import com.mayabot.nlp.segment.common.BaseSegmentComponent;
 import com.mayabot.nlp.segment.wordnet.Vertex;

@@ -15,7 +15,7 @@
  */
 package com.mayabot.nlp.segment.plugins.customwords;
 
-import com.mayabot.nlp.collection.dat.DoubleArrayTrieStringIntMap;
+import com.mayabot.nlp.algorithm.collection.dat.DoubleArrayTrieStringIntMap;
 import com.mayabot.nlp.segment.WordpathProcessor;
 import com.mayabot.nlp.segment.common.BaseSegmentComponent;
 import com.mayabot.nlp.segment.wordnet.Wordnet;

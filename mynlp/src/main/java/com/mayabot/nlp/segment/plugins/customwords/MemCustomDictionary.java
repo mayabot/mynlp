@@ -15,7 +15,7 @@
  */
 package com.mayabot.nlp.segment.plugins.customwords;
 
-import com.mayabot.nlp.collection.dat.DoubleArrayTrieStringIntMap;
+import com.mayabot.nlp.algorithm.collection.dat.DoubleArrayTrieStringIntMap;
 
 import java.util.TreeMap;
 

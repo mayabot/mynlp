@@ -1,5 +1,6 @@
 package com.mayabot.nlp.collection.dat;
 
+import com.mayabot.nlp.algorithm.collection.dat.DoubleArrayTrieMap;
 import org.junit.Assert;
 import org.junit.Test;
 

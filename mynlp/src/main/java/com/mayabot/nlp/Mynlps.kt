@@ -16,7 +16,7 @@
 
 package com.mayabot.nlp
 
-import com.mayabot.nlp.logging.InternalLoggerFactory
+import com.mayabot.nlp.common.logging.InternalLoggerFactory
 import java.security.AccessController
 import java.security.PrivilegedAction
 import java.util.function.Consumer

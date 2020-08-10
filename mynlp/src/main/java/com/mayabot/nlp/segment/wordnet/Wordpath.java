@@ -17,8 +17,8 @@
 package com.mayabot.nlp.segment.wordnet;
 
 import com.mayabot.nlp.common.Guava;
-import com.mayabot.nlp.logging.InternalLogger;
-import com.mayabot.nlp.logging.InternalLoggerFactory;
+import com.mayabot.nlp.common.logging.InternalLogger;
+import com.mayabot.nlp.common.logging.InternalLoggerFactory;
 import com.mayabot.nlp.segment.Nature;
 import kotlin.collections.AbstractIterator;
 

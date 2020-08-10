@@ -1,13 +1,13 @@
 package com.mayabot.nlp.segment.plugins.personname;
 
 import com.mayabot.nlp.MynlpEnv;
-import com.mayabot.nlp.injector.Singleton;
-import com.mayabot.nlp.logging.InternalLogger;
-import com.mayabot.nlp.logging.InternalLoggerFactory;
+import com.mayabot.nlp.common.injector.Singleton;
+import com.mayabot.nlp.common.logging.InternalLogger;
+import com.mayabot.nlp.common.logging.InternalLoggerFactory;
+import com.mayabot.nlp.common.resources.NlpResource;
+import com.mayabot.nlp.common.utils.CharNormUtils;
 import com.mayabot.nlp.perceptron.FeatureSet;
-import com.mayabot.nlp.resources.NlpResource;
 import com.mayabot.nlp.segment.plugins.ner.PerceptronNerService;
-import com.mayabot.nlp.utils.CharNormUtils;
 
 import java.io.BufferedInputStream;
 import java.io.File;

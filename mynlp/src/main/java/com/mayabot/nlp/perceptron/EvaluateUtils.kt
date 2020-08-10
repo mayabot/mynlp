@@ -15,7 +15,7 @@
  */
 package com.mayabot.nlp.perceptron
 
-import com.mayabot.nlp.utils.CharNormUtils
+import com.mayabot.nlp.common.utils.CharNormUtils
 
 
 /**

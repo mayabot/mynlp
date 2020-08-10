@@ -17,8 +17,8 @@
 package com.mayabot.nlp;
 
 import com.mayabot.nlp.common.Guava;
-import com.mayabot.nlp.logging.InternalLogger;
-import com.mayabot.nlp.logging.InternalLoggerFactory;
+import com.mayabot.nlp.common.logging.InternalLogger;
+import com.mayabot.nlp.common.logging.InternalLoggerFactory;
 
 import java.io.File;
 import java.io.InputStream;

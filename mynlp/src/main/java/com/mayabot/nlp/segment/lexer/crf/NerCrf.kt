@@ -15,7 +15,7 @@
  */
 package com.mayabot.nlp.segment.lexer.crf
 
-import com.mayabot.nlp.hppc.IntArrayList
+import com.mayabot.nlp.common.hppc.IntArrayList
 import com.mayabot.nlp.perceptron.FeatureSet
 import com.mayabot.nlp.perceptron.PerceptronFileFormat
 import com.mayabot.nlp.perceptron.PerceptronModel

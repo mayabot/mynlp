@@ -1,7 +1,7 @@
 package com.mayabot.nlp.segment.lexer.perceptron
 
 import com.mayabot.nlp.MynlpEnv
-import com.mayabot.nlp.injector.Singleton
+import com.mayabot.nlp.common.injector.Singleton
 
 @Singleton
 class PerceptronSegmentPatch

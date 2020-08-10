@@ -1,10 +1,10 @@
 package com.mayabot.nlp.segment.plugins.atom
 
 import com.mayabot.nlp.Mynlps
-import com.mayabot.nlp.collection.dat.DoubleArrayTrieStringIntMap
-import com.mayabot.nlp.collection.dat.FastDatCharSet
-import com.mayabot.nlp.injector.ImplementedBy
-import com.mayabot.nlp.injector.Singleton
+import com.mayabot.nlp.algorithm.collection.dat.DoubleArrayTrieStringIntMap
+import com.mayabot.nlp.algorithm.collection.dat.FastDatCharSet
+import com.mayabot.nlp.common.injector.ImplementedBy
+import com.mayabot.nlp.common.injector.Singleton
 import com.mayabot.nlp.segment.Nature
 import com.mayabot.nlp.segment.WordSplitAlgorithm
 import com.mayabot.nlp.segment.common.BaseSegmentComponent

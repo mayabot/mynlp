@@ -1,18 +1,16 @@
 package com.mayabot.nlp.segment.plugins.pos;
 
 import com.mayabot.nlp.MynlpEnv;
-import com.mayabot.nlp.injector.Singleton;
-import com.mayabot.nlp.logging.InternalLogger;
-import com.mayabot.nlp.logging.InternalLoggerFactory;
+import com.mayabot.nlp.common.injector.Singleton;
+import com.mayabot.nlp.common.logging.InternalLogger;
+import com.mayabot.nlp.common.logging.InternalLoggerFactory;
 import com.mayabot.nlp.perceptron.PerceptronFileFormat;
 import com.mayabot.nlp.perceptron.PerceptronModel;
-import com.mayabot.nlp.perceptron.PerceptronModelImpl;
 import com.mayabot.nlp.segment.Nature;
 import com.mayabot.nlp.segment.WordTerm;
 import com.mayabot.nlp.segment.wordnet.Vertex;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**

@@ -17,8 +17,8 @@
 package com.mayabot.nlp.segment.lexer.core;
 
 import com.mayabot.nlp.MynlpEnv;
-import com.mayabot.nlp.logging.InternalLogger;
-import com.mayabot.nlp.logging.InternalLoggerFactory;
+import com.mayabot.nlp.common.logging.InternalLogger;
+import com.mayabot.nlp.common.logging.InternalLoggerFactory;
 
 import java.io.*;
 

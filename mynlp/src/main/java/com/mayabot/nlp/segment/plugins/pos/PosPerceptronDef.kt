@@ -1,12 +1,12 @@
 package com.mayabot.nlp.segment.plugins.pos
 
 import com.mayabot.nlp.common.FastStringBuilder
+import com.mayabot.nlp.common.utils.CharNormUtils
+import com.mayabot.nlp.common.utils.Characters
 import com.mayabot.nlp.perceptron.EvaluateFunction
 import com.mayabot.nlp.perceptron.PerceptronDefinition
 import com.mayabot.nlp.perceptron.PerceptronModel
 import com.mayabot.nlp.segment.Nature
-import com.mayabot.nlp.utils.CharNormUtils
-import com.mayabot.nlp.utils.Characters
 
 object InnerPos {
     val natures = Nature.values().filter {

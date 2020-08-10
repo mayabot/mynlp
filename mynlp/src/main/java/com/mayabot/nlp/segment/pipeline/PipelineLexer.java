@@ -18,13 +18,13 @@ package com.mayabot.nlp.segment.pipeline;
 
 import com.mayabot.nlp.common.Guava;
 import com.mayabot.nlp.common.Lists;
+import com.mayabot.nlp.common.utils.Characters;
+import com.mayabot.nlp.common.utils.StringUtils;
 import com.mayabot.nlp.segment.*;
 import com.mayabot.nlp.segment.plugins.collector.WordTermCollector;
 import com.mayabot.nlp.segment.wordnet.BestPathAlgorithm;
 import com.mayabot.nlp.segment.wordnet.Wordnet;
 import com.mayabot.nlp.segment.wordnet.Wordpath;
-import com.mayabot.nlp.utils.Characters;
-import com.mayabot.nlp.utils.StringUtils;
 
 import java.util.Arrays;
 import java.util.Collections;

@@ -1,10 +1,10 @@
 package classification;
 
-import com.mayabot.nlp.classification.FasttextClassification;
+import com.mayabot.nlp.common.utils.DownloadUtils;
 import com.mayabot.nlp.fasttext.FastText;
 import com.mayabot.nlp.fasttext.args.InputArgs;
 import com.mayabot.nlp.fasttext.loss.LossName;
-import com.mayabot.nlp.utils.DownloadUtils;
+import com.mayabot.nlp.module.classification.FasttextClassification;
 
 import java.io.File;
 

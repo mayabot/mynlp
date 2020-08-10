@@ -7,10 +7,7 @@ import com.mayabot.nlp.segment.lexer.core.CoreLexerPlugin
 import com.mayabot.nlp.segment.lexer.perceptron.PerceptronSegmentPlugin
 import com.mayabot.nlp.segment.pipeline.PipelineLexerBuilder
 import com.mayabot.nlp.segment.pipeline.PipelineLexerPlugin
-import com.mayabot.nlp.segment.plugins.collector.DictBasedFillSubword
-import com.mayabot.nlp.segment.plugins.collector.IndexPickUpSubword
-import com.mayabot.nlp.segment.plugins.collector.SentenceCollector
-import com.mayabot.nlp.segment.plugins.collector.WordTermCollector
+import com.mayabot.nlp.segment.plugins.collector.*
 import com.mayabot.nlp.segment.plugins.customwords.CustomDictionary
 import com.mayabot.nlp.segment.plugins.customwords.CustomDictionaryPlugin
 import com.mayabot.nlp.segment.plugins.ner.NerPlugin
@@ -105,17 +102,16 @@ open class FluentLexerBuilder : LexerBuilder {
         fun smartPickup(block: (x: WordTermCollector.PickUpSubword) -> Unit
                         = { _ -> Unit }
         ): CollectorBlock {
-            try {
-                // 松散绑定name = smart的Bean，在企业版中提供
-                val p = Mynlps.get()
-                        .injector
-                        .getInstance(WordTermCollector.PickUpSubword::class.java,"smart")!!
-                block(p)
-                collector.pickUpSubword = p
-            } catch (e: Exception) {
-                Mynlps.logger.warn("企业版才可以调用这个方法", e)
-                throw e
-            }
+//            try {
+//                val p = Mynlps.get()
+//                        .injector
+//                        .getInstance(WordTermCollector.PickUpSubword::class.java,"smart")!!
+            val p = SmartPickUpSubword()
+            block(p)
+            collector.pickUpSubword = p
+//            } catch (e: Exception) {
+//                throw e
+//            }
 
             return this
         }

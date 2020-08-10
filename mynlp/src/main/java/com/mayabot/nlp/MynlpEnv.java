@@ -15,10 +15,10 @@
  */
 package com.mayabot.nlp;
 
-import com.mayabot.nlp.logging.InternalLogger;
-import com.mayabot.nlp.logging.InternalLoggerFactory;
-import com.mayabot.nlp.resources.NlpResource;
-import com.mayabot.nlp.resources.NlpResourceFactory;
+import com.mayabot.nlp.common.logging.InternalLogger;
+import com.mayabot.nlp.common.logging.InternalLoggerFactory;
+import com.mayabot.nlp.common.resources.NlpResource;
+import com.mayabot.nlp.common.resources.NlpResourceFactory;
 import kotlin.text.Charsets;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

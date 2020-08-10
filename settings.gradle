@@ -15,21 +15,15 @@
  */
 
 rootProject.name = 'mynlp'
-
 List projects = [
         'mynlp',
-        'fastText4j',
-        'modules:mynlp-restful',
-        'modules:mynlp-pinyin',
-        'modules:mynlp-transform',
-        'modules:mynlp-classification',
-        'modules:mynlp-newword',
-        'modules:mynlp-summary',
+        'modules:mynlp-experimental',
         'modules:mynlp-example',
-        'modules:mynlp-lucene',
+        'modules:mynlp-restful',
         'modules:mynlp-elasticsearch6',
-        'modules:mynlp-no-res'
+        'modules:mynlp-with-res'
 ]
+
 
 include projects.toArray(new String[0])
 

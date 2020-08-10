@@ -1,8 +1,8 @@
 package com.mayabot.mynlp.es;
 
 
-import com.mayabot.nlp.lucene.MynlpAnalyzer;
-import com.mayabot.nlp.lucene.MynlpTokenizer;
+import com.mayabot.nlp.module.lucene.MynlpAnalyzer;
+import com.mayabot.nlp.module.lucene.MynlpTokenizer;
 import org.apache.lucene.analysis.Analyzer;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.env.Environment;

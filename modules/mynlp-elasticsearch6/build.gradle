@@ -6,7 +6,7 @@ dependencies{
         exclude module :'mynlp-resource-pos'
     }
 
-    compile project(':modules:mynlp-lucene')
+    compile project(':modules:mynlp-with-res')
 
     compileOnly 'org.apache.lucene:lucene-core:5.0.0'
 }

@@ -16,7 +16,7 @@
 
 package com.mayabot.nlp.segment.lexer.core;
 
-import com.mayabot.nlp.injector.Singleton;
+import com.mayabot.nlp.common.injector.Singleton;
 import com.mayabot.nlp.segment.wordnet.*;
 
 /**

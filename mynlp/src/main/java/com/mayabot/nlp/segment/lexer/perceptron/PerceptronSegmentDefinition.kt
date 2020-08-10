@@ -1,8 +1,11 @@
 package com.mayabot.nlp.segment.lexer.perceptron
 
 import com.mayabot.nlp.common.FastStringBuilder
-import com.mayabot.nlp.perceptron.*
-import com.mayabot.nlp.utils.CharNormUtils
+import com.mayabot.nlp.common.utils.CharNormUtils
+import com.mayabot.nlp.perceptron.EvaluateFunction
+import com.mayabot.nlp.perceptron.PerceptronDefinition
+import com.mayabot.nlp.perceptron.PerceptronModel
+import com.mayabot.nlp.perceptron.segmentEvaluateFunction
 
 
 class PerceptronSegmentDefinition : PerceptronDefinition<Char, CharArray> {

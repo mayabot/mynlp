@@ -25,7 +25,10 @@ class POSPerceptron(
 
 
     init {
-         learn("[m]/x 章/q")
+        //learn("[m]/x 章/q")
+        // [m]代表数字，但是这个转换逻辑现在在代码里面找不到了
+        // 而且[] 会被转换为中文书名号《》，肯定哪里错了
+        // 导致这个特征在FeatureSet中找不到，导致很大
     }
 
     fun decodeNature(sentence: List<String>): List<Nature> {

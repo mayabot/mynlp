@@ -17,7 +17,7 @@
 package com.mayabot.nlp.common.matrix;
 
 import com.mayabot.nlp.common.TreeBasedTable;
-import com.mayabot.nlp.utils.DataInOutputUtils;
+import com.mayabot.nlp.common.utils.DataInOutputUtils;
 
 import java.io.IOException;
 import java.io.ObjectInput;

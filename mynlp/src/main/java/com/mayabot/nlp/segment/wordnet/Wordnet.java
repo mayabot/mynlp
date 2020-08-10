@@ -16,8 +16,8 @@
 
 package com.mayabot.nlp.segment.wordnet;
 
+import com.mayabot.nlp.common.utils.CustomCharSequence;
 import com.mayabot.nlp.segment.common.VertexHelper;
-import com.mayabot.nlp.utils.CustomCharSequence;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;

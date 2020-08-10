@@ -1,7 +1,7 @@
 package com.mayabot.nlp.segment.common;
 
+import com.mayabot.nlp.common.utils.CharNormUtils;
 import com.mayabot.nlp.segment.CharNormalize;
-import com.mayabot.nlp.utils.CharNormUtils;
 
 /**
  * 大小转小写。

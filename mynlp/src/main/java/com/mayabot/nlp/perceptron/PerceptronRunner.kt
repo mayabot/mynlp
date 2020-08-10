@@ -2,7 +2,7 @@ package com.mayabot.nlp.perceptron
 
 
 import com.mayabot.nlp.common.FastStringBuilder
-import com.mayabot.nlp.hppc.IntArrayList
+import com.mayabot.nlp.common.hppc.IntArrayList
 import java.io.File
 
 /**

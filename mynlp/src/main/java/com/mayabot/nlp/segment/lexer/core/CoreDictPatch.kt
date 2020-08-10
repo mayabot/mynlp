@@ -1,6 +1,6 @@
 package com.mayabot.nlp.segment.lexer.core
 
-import com.mayabot.nlp.injector.Singleton
+import com.mayabot.nlp.common.injector.Singleton
 import org.jetbrains.annotations.Nullable
 
 
@@ -19,8 +19,10 @@ data class BiGram(
 )
 
 //FIXME  @Nullable自己实现的，需要注意这个注解，运行注入空，默认不行
+//FIXME coreDictPatch 声明为属性，是否能自动注入
 @Singleton
 class CoreDictPathWrap {
+
     @Nullable
     val coreDictPatch: CoreDictPatch? = null
 }

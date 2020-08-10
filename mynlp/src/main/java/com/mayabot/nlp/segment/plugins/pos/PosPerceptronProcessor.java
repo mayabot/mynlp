@@ -17,7 +17,7 @@
 package com.mayabot.nlp.segment.plugins.pos;
 
 import com.mayabot.nlp.common.Lists;
-import com.mayabot.nlp.injector.Singleton;
+import com.mayabot.nlp.common.injector.Singleton;
 import com.mayabot.nlp.segment.Nature;
 import com.mayabot.nlp.segment.WordpathProcessor;
 import com.mayabot.nlp.segment.common.BaseSegmentComponent;

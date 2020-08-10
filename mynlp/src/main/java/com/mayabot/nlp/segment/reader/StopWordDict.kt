@@ -2,9 +2,9 @@ package com.mayabot.nlp.segment.reader
 
 import com.mayabot.nlp.MynlpEnv
 import com.mayabot.nlp.Mynlps
-import com.mayabot.nlp.collection.dat.DoubleArrayTrieMap
-import com.mayabot.nlp.injector.ImplementedBy
-import com.mayabot.nlp.injector.Singleton
+import com.mayabot.nlp.algorithm.collection.dat.DoubleArrayTrieMap
+import com.mayabot.nlp.common.injector.ImplementedBy
+import com.mayabot.nlp.common.injector.Singleton
 import java.util.*
 
 const val StopWordDictPath = "stopwords.txt"

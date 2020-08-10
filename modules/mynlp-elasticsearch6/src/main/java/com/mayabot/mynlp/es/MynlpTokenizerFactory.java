@@ -1,6 +1,6 @@
 package com.mayabot.mynlp.es;
 
-import com.mayabot.nlp.lucene.MynlpTokenizer;
+import com.mayabot.nlp.module.lucene.MynlpTokenizer;
 import org.apache.lucene.analysis.Tokenizer;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.env.Environment;

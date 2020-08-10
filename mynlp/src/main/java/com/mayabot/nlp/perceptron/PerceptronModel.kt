@@ -17,8 +17,8 @@ package com.mayabot.nlp.perceptron
 
 
 import com.mayabot.nlp.algorithm.TopIntMinK
-import com.mayabot.nlp.collection.dat.DoubleArrayTrie
-import com.mayabot.nlp.hppc.IntArrayList
+import com.mayabot.nlp.algorithm.collection.dat.DoubleArrayTrie
+import com.mayabot.nlp.common.hppc.IntArrayList
 import java.io.DataOutputStream
 import java.io.File
 import java.util.*

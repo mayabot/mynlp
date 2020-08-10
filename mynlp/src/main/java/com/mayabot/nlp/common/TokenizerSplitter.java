@@ -16,7 +16,7 @@
 
 package com.mayabot.nlp.common;
 
-import com.mayabot.nlp.utils.Characters;
+import com.mayabot.nlp.common.utils.Characters;
 
 import java.util.ArrayList;
 import java.util.List;

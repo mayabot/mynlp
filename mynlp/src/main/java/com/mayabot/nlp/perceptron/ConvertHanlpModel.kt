@@ -1,6 +1,6 @@
 package com.mayabot.nlp.perceptron
 
-import com.mayabot.nlp.collection.dat.DoubleArrayTrie
+import com.mayabot.nlp.algorithm.collection.dat.DoubleArrayTrie
 import java.io.DataInputStream
 import java.io.File
 

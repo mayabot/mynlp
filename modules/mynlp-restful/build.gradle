@@ -25,10 +25,7 @@ dependencies{
     implementation "io.ktor:ktor-jackson:$ktor_version"
     compile "io.ktor:ktor-html-builder:$ktor_version"
     implementation("ch.qos.logback:logback-classic:1.2.3")
-    compile (project(":mynlp"))
-//    {
-//        exclude group: "com.mayabot.mynlp.resource"
-//    }
+    compile (project(":modules:mynlp-with-res"))
 }
  
 shadowJar {
@@ -37,18 +34,6 @@ shadowJar {
     }
 }
 
-//
-//dependencies {
-//    compile 'org.springframework.boot:spring-boot-starter-web'
-//    compile 'com.fasterxml.jackson.module:jackson-module-kotlin'
-//
-//    // mynlp
-//    compile project(":mynlp-segment")
-//    compile project(":modules:mynlp-classification")
-//    compile project(":modules:mynlp-pinyin")
-//    compile project(":modules:mynlp-summary")
-//    compile project(":modules:mynlp-transform")
-//}
 
 compileKotlin {
     kotlinOptions {

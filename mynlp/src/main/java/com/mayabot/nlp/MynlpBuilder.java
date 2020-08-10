@@ -17,16 +17,16 @@ package com.mayabot.nlp;
 
 import com.mayabot.nlp.common.GuavaKt;
 import com.mayabot.nlp.common.Lists;
-import com.mayabot.nlp.injector.AbstractModule;
-import com.mayabot.nlp.injector.Injector;
-import com.mayabot.nlp.injector.Module;
-import com.mayabot.nlp.logging.InternalLogger;
-import com.mayabot.nlp.logging.InternalLoggerFactory;
-import com.mayabot.nlp.resources.ClasspathNlpResourceFactory;
-import com.mayabot.nlp.resources.FileNlpResourceFactory;
-import com.mayabot.nlp.resources.JarNlpResourceFactory;
-import com.mayabot.nlp.resources.NlpResourceFactory;
-import com.mayabot.nlp.utils.MynlpFactories;
+import com.mayabot.nlp.common.injector.AbstractModule;
+import com.mayabot.nlp.common.injector.Injector;
+import com.mayabot.nlp.common.injector.Module;
+import com.mayabot.nlp.common.logging.InternalLogger;
+import com.mayabot.nlp.common.logging.InternalLoggerFactory;
+import com.mayabot.nlp.common.resources.ClasspathNlpResourceFactory;
+import com.mayabot.nlp.common.resources.FileNlpResourceFactory;
+import com.mayabot.nlp.common.resources.JarNlpResourceFactory;
+import com.mayabot.nlp.common.resources.NlpResourceFactory;
+import com.mayabot.nlp.common.utils.MynlpFactories;
 
 import java.io.File;
 import java.io.IOException;
@@ -37,7 +37,7 @@ import java.security.PrivilegedAction;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.mayabot.nlp.injector.InjectorKt.createInjector;
+import static com.mayabot.nlp.common.injector.InjectorKt.createInjector;
 
 /**
  * Mynlp构建器
