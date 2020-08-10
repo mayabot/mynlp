@@ -4,7 +4,6 @@ import com.mayabot.nlp.common.Pair;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Collections;
 
 import static java.lang.Math.min;
 

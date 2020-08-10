@@ -7,9 +7,6 @@ import com.mayabot.nlp.segment.lexer.core.CoreDictionaryImpl;
 import com.mayabot.nlp.segment.wordnet.Vertex;
 import com.mayabot.nlp.segment.wordnet.Wordnet;
 
-import static com.mayabot.nlp.segment.lexer.perceptron.PerceptronSegment.E;
-import static com.mayabot.nlp.segment.lexer.perceptron.PerceptronSegment.S;
-
 /**
  * 基于核心词典的基础切词器
  *
