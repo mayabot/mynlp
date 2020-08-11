@@ -19,6 +19,8 @@ import com.mayabot.nlp.common.logging.InternalLogger;
 import com.mayabot.nlp.common.logging.InternalLoggerFactory;
 import com.mayabot.nlp.common.resources.NlpResource;
 import com.mayabot.nlp.common.resources.NlpResourceFactory;
+import com.mayabot.nlp.common.utils.DictResDesc;
+import com.mayabot.nlp.common.utils.DictResources;
 import kotlin.text.Charsets;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -104,20 +106,37 @@ public class MynlpEnv {
      */
     public @NotNull
     NlpResource loadResource(String resourcePath, Charset charset) {
-        // TODO wiki path need
+
         if (resourcePath == null || resourcePath.trim().isEmpty()) {
             throw new RuntimeException("resourcePath is null");
         }
 
         return AccessController.doPrivileged((PrivilegedAction<NlpResource>) () -> {
-            String wiki = "https://github.com/mayabot/mynlp/wiki/resources";
-            NlpResource resource = getNlpResource(resourcePath, charset);
+            NlpResource resource = loadNlpResource(resourcePath, charset);
 
             if (resource == null) {
+                StringBuilder info = new StringBuilder();
+                info.append("\n\n没有找到资源 " + resourcePath + " ，");
+                if (DictResources.INSTANCE.getMap().containsKey(resourcePath)) {
+                    DictResDesc desc = DictResources.INSTANCE.getMap().get(resourcePath);
+                    info.append("需要添加依赖 " + desc.getArtifactId() + ".jar\n\n");
+                    info.append("Maven:\n\n");
+                    info.append("<dependency>\n" +
+                            "    <groupId>" + desc.getGroup() + "</groupId>\n" +
+                            "    <artifactId>" + desc.getArtifactId() + "</artifactId>\n" +
+                            "    <version>" + desc.getVersion() + "</version>\n" +
+                            "</dependency>\n\n");
+                    info.append("或者 Gradle:\n\n");
+                    info.append("compile '" + desc.getGroup() + ":" + desc.getArtifactId() + ":" + desc.getVersion() + "'\n");
+                    info.append("\n");
+                }
+                //logger.error(info.toString());
+
                 throw new RuntimeException(
-                        "Not Found Resource " + resourcePath
+                        info.toString()
                 );
             }
+
             return resource;
         });
 
@@ -140,7 +159,13 @@ public class MynlpEnv {
         return null;
     }
 
-
+    /**
+     * 加载资源，如果不存在，返回null，不抛出异常
+     *
+     * @param resourcePath
+     * @param charset
+     * @return
+     */
     public @Nullable
     NlpResource tryLoadResource(String resourcePath, Charset charset) {
         return AccessController.doPrivileged((PrivilegedAction<NlpResource>) () -> {
@@ -148,21 +173,33 @@ public class MynlpEnv {
                 return null;
             }
 
-            return getNlpResource(resourcePath, charset);
+            return loadNlpResource(resourcePath, charset);
         });
     }
 
+    /**
+     * 加载资源，如果不存在，返回null，不抛出异常
+     *
+     * @param resourcePath
+     * @return
+     */
     public @Nullable
     NlpResource tryLoadResource(String resourcePath) {
         return this.tryLoadResource(resourcePath, Charsets.UTF_8);
     }
 
+    /**
+     * 加载资源，如果不存在，返回null，不抛出异常
+     *
+     * @param resourceNameSetting
+     * @return
+     */
     public @Nullable
     NlpResource tryLoadResource(SettingItem<String> resourceNameSetting) {
         return this.tryLoadResource(settings.get(resourceNameSetting), Charsets.UTF_8);
     }
 
-    private synchronized NlpResource getNlpResource(String resourceName, Charset charset) {
+    private synchronized NlpResource loadNlpResource(String resourceName, Charset charset) {
         NlpResource resource = null;
         long t1 = System.currentTimeMillis();
         for (NlpResourceFactory factory : resourceFactory) {
@@ -173,6 +210,7 @@ public class MynlpEnv {
                     string = "../.." + string.substring(string.length() - 60);
                 }
                 long t2 = System.currentTimeMillis();
+
                 logger.info("load resource {} ,use time {} ms", string, t2 - t1);
                 break;
             }
@@ -190,41 +228,4 @@ public class MynlpEnv {
         return cacheDir;
     }
 
-//
-//    /**
-//     * 从url地址下载jar文件，保存到data目录下
-//     */
-//    public synchronized File download(String fileName) {
-//        return AccessController.doPrivileged((PrivilegedAction<File>) () -> {
-//
-//            File file = new File(dataDir, fileName);
-//
-//            if (file.exists()) {
-//                return file;
-//            }
-//
-//            try {
-//                String url = downloadBaseUrl + fileName;
-//
-//                DownloadUtils.download(url, file);
-//
-//                System.out.println("Downloaded " + fileName + " , save to " + file);
-//
-//                if (file.exists()) {
-//                    return file;
-//                }
-//
-//            } catch (Exception e) {
-//                System.err.println("Download " + (downloadBaseUrl + fileName) + " error!!!\n");
-//                e.printStackTrace();
-//
-//                file.delete();
-//                //下载失败 退出系统
-//                //System.exit(0);
-//            }
-//
-//            return null;
-//        });
-//
-//    }
 }

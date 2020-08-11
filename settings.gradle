@@ -20,7 +20,6 @@ List projects = [
         'modules:mynlp-experimental',
         'modules:mynlp-example',
         'modules:mynlp-restful',
-        'modules:mynlp-elasticsearch6',
         'modules:mynlp-with-res'
 ]
 
