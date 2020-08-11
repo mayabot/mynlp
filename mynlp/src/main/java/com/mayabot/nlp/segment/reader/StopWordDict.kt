@@ -7,7 +7,18 @@ import com.mayabot.nlp.common.injector.ImplementedBy
 import com.mayabot.nlp.common.injector.Singleton
 import java.util.*
 
+/**
+ * 系统默认自带的停用词表
+ */
 const val StopWordDictPath = "stopwords.txt"
+
+/**
+ * 格式
+ * + word
+ * - wordb
+ * 用来控制对默认停用词表的增加和删除
+ */
+const val MergeStopWordDictPath = "merge_stopwords.txt"
 
 /**
  * 停用词接口
@@ -97,6 +108,28 @@ class SystemStopWordDict constructor(val env: MynlpEnv) : StopWordDict {
     }
 
     private fun loadStopword(): Set<String> {
+        val wordSet = loadStopword2().toMutableSet()
+
+        // 如果存在merge_stopwords.txt资源的话
+        val resource = env.tryLoadResource(MergeStopWordDictPath)
+        resource?.let { re ->
+            re.inputStream().bufferedReader().readLines().forEach { line_ ->
+                val line = line_.trim()
+                if (line.isNotBlank()) {
+                    if (line.startsWith("+")) {
+                        wordSet += line.substring(1).trim()
+                    } else if (line.startsWith("-")) {
+                        wordSet -= line.substring(1).trim()
+                    }
+                }
+            }
+        }
+
+        return wordSet
+    }
+
+
+    private fun loadStopword2(): Set<String> {
 
         try {
             val resource = env.tryLoadResource(StopWordDictPath)

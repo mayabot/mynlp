@@ -17,10 +17,9 @@
 rootProject.name = 'mynlp'
 List projects = [
         'mynlp',
-        'modules:mynlp-experimental',
-        'modules:mynlp-example',
-        'modules:mynlp-restful',
-        'modules:mynlp-with-res'
+        'mynlp-experimental',
+        'mynlp-example',
+        'mynlp-all'
 ]
 
 

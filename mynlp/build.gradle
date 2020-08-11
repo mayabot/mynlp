@@ -38,7 +38,7 @@ dependencies {
     testCompile 'org.apache.lucene:lucene-core:5.0.0'
 
     // 核心词典
-    //testImplementation 'com.mayabot.mynlp.resource:mynlp-resource-coredict:1.0.0'
+    testImplementation 'com.mayabot.mynlp.resource:mynlp-resource-coredict:1.0.0'
     // 词性标注
     testImplementation 'com.mayabot.mynlp.resource:mynlp-resource-pos:1.0.0'
     // 命名实体
