@@ -9,7 +9,12 @@ image:https://img.shields.io/github/release/mayabot/mynlp/all.svg[link=https://g
 image::https://cdn.mayabot.com/mynlp/mynlp-banner.png[,500,align=center,link=https://mynlp.mayabot.com]
 
 [NOTE]
-访问完整在线文档link:https://mynlp.mayabot.com/[mynlp.mayabot.com/在线文档]
+访问完整在线文档link:https://mynlp.mayabot.com/[ mynlp.mayabot.com]
+
+[NOTE]
+====
+STAR、CLONE、ISSUE就是对项目最好的支持！谢谢！
+====
 
 == 安装
 
