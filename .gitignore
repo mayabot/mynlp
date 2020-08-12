@@ -84,3 +84,4 @@ public
 docs/public
 doc/*.html
 doc/*.pdf
+*.html
