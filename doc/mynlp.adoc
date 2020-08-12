@@ -1,0 +1,30 @@
+= Mynlp技术参考手册
+Jimi <jimi@mayabot.com>
+:doctype: book
+:toc: left
+:toc-title: 目录
+:toclevels: 5
+:version: 3.1.7
+:icons: font
+
+== Mynlp介绍
+
+MYNLP是一个Java实现的高性能、柔性API、可扩展的中文NLP工具包。
+
+.功能
+- 感知机分词
+- CORE二元语言模型&词典分词
+- 词性标注
+- 通用感知机
+- 命名实体识别（人名、地名、组织机构名）
+- fastText
+- 文本分类
+- 新词发现
+- 拼音转换&切分
+- 简繁体转换
+
+include::started.adoc[]
+
+include::fasttext.adoc[]
+
+include::other.adoc[]

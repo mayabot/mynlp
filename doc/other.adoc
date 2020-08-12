@@ -1,0 +1,106 @@
+== 其他
+
+=== 日志
+
+mynlp是被当做组件引入到不同的系统中，会识别当前系统使用的日志组件，进行日志输出。 这样设计的目的是兼容你项目的环境的日志配置文件 ，避免多个不同日志系统的冲突。
+
+支持如下日志组件：
+
+[cols="4,6"]
+|===
+|日志组件 |说明
+
+|JdkLogger
+|java.util.logging.Logger
+
+|Log4JLogger
+|log4j 1.x
+
+|Log4J2Logger
+|log4j 2.x，logback
+
+|Slf4JLogger
+|slf4j
+|===
+
+Mynlp使用了一个Logger抽象层，系统运行时去Classpath查找各种Logger的实现类，如果找到了就会使用对应的实现。 所以你可以自由地选择Logger实现。无需配置，自动检测适配。
+
+比如在你的工程中使用logback依赖：
+
+----
+compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
+----
+
+mynlp会自动使用logback输出日志。
+
+<<<
+
+=== 资源加载
+
+默认情况下，词典和模型文件都是通过JAR发布的，自然就是从classpath加载资源。
+
+实际上为了支持各种使用场景，mynlp包含三个资源加载器： - File - JARFile - classpath
+
+当你通过maven依赖导入资源文件jar后，classpath加载器会加载到这些资源。
+
+==== mynlp.data
+
+${mynlp.data}指定了文件加载根目录。
+
+资源加载器File和JARFile是从${mynlp.data}指定的目录去加载资源文件， 默认 ${mynlp.data} = ~/mynlp.data
+
+假设加载资源路径`core-dict/CoreDict.txt`,
+
+[source,java]
+----
+mynlpEnv.loadResource("core-dict/CoreDict.txt")
+----
+
+.资源尝试加载路径
+- FileLoader 尝试访问 ~/mynlp.data/core-dict/CoreDict.txt
+- JARFile 尝试访问 ~/mynlp.data/*.jar/core-dict/CoreDict.txt
+
+===== 设置mynlp.data目录
+
+1.通过API设置
+
+[source,java]
+----
+Mynlps.install((Consumer<MynlpBuilder>) it->
+it.setDataDir("/path")
+);
+----
+
+2.Java虚拟机系统属性
+
+-Dmynlp.data.dir=/path
+
+==== 自定义NlpResourceFactory
+
+如果你的资源存储在数据库、网络中，可以通过自定义NlpResourceFactory实现来实现。
+
+.NlpResourceFactory接口定义如下
+[source,java]
+----
+public interface NlpResourceFactory {
+
+    /**
+     * 加载资源
+     *
+     * @param resourceName 格式为 dict/abc.dict
+     * @param charset      字符集
+     * @return 如果资源不存在那么返回NULL
+     */
+    NlpResource load(String resourceName, Charset charset);
+----
+
+自定义的NlpResourceFactory安装：
+
+[source,java]
+----
+Mynlps.install(mynlpBuilder -> {
+            mynlpBuilder.addResourceFactory(yourNlpResourceFactory);
+        });
+----
+
+`Mynlps.install`需要在系统启动初始化时调用。

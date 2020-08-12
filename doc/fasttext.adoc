@@ -1,0 +1,150 @@
+:icons: font
+
+== fastText
+
+FastText4j是java&kotlin开发的fasttext算法库。link:https://github.com/facebookresearch/fastText[Fasttext] 是由facebookresearch开发的一个文本分类和词向量的库。
+
+.Feature:
+* 100%由kotlin&java实现
+* 良好的API
+* 兼容官方原版的预训练模型
+* 支持训练&评估模型
+* 支持自有模型存储格式
+* 支持使用MMAP快速加载大模型
+
+=== 模型训练
+
+==== 训练分类模型
+
+.分类模型训练示例
+[source,java]
+----
+File trainFile = new File("data/agnews/ag.train");
+InputArgs inputArgs = new InputArgs();
+inputArgs.setLoss(LossName.softmax);
+inputArgs.setLr(0.1);
+inputArgs.setDim(100);
+inputArgs.setEpoch(20);
+
+FastText model = FastText.trainSupervised(trainFile, inputArgs);
+----
+
+.主要参数说明：
+* loss 损失函数
+** hs 分层softmax.比完全softmax慢一点。 分层softmax是完全softmax损失的近似值，它允许有效地训练大量类。 还请注意，这种损失函数被认为是针对不平衡的label class，即某些label比其他label更多出现在样本。 如果您的数据集每个label的示例数量均衡，则值得尝试使用负采样损失（-loss ns -neg 100）。
+** ns NegativeSamplingLoss 负采样
+** softmax default for Supervised model
+** ova one-vs-all 可用于多分类.“OneVsAll” loss function for multi-label classification, which corresponds to the sum of binary cross-entropy computed independently for each label.
+* lr 学习率
+* dim 向量维度
+* epoch 迭代次数
+
+*训练数据格式:*
+
+训练数据是个纯文本文件，每一行一条数据，词之间使用空格分开，每一行必须包含至少一个label标签。默认 情况下，是一个带\__label__前缀的字符串。
+
+....
+ __label__tag1  saints rally to beat 49ers the new orleans saints survived it all hurricane ivan
+ __label__积极  这个 商品 很 好 用 。
+....
+
+==== 乘积量化压缩
+
+    分类的模型可以压缩模型体积
+
+[source,java]
+----
+//load from java format
+FastText qmodel = model.quantize(2, false, false);
+----
+
+==== 词向量训练
+
+支持cow和Skipgram两种模型
+
+[source,java]
+----
+FastText.trainCow(file,inputArgs)
+//Or
+FastText.trainSkipgram(file,inputArgs)
+----
+
+=== 模型评估
+
+[source,java]
+----
+File trainFile = new File("data/agnews/ag.train");
+InputArgs inputArgs = new InputArgs();
+inputArgs.setLoss(LossName.softmax);
+inputArgs.setLr(0.1);
+inputArgs.setDim(100);
+
+FastText model = FastText.trainSupervised(trainFile, inputArgs);
+
+model.test(new File("data/agnews/ag.test"),1,0,true);
+----
+
+.output:
+....
+F1-Score : 0.968954 Precision : 0.960683 Recall : 0.977368  __label__2
+F1-Score : 0.882043 Precision : 0.882508 Recall : 0.881579  __label__3
+F1-Score : 0.890173 Precision : 0.888772 Recall : 0.891579  __label__4
+F1-Score : 0.917353 Precision : 0.926463 Recall : 0.908421  __label__1
+N	7600
+P@1	0.915
+R@1	0.915
+....
+
+=== 保存模型文件
+
+[source,java]
+----
+FastText model = FastText.trainSupervised(trainFile, inputArgs);
+model.saveModel(new File("path/data.model"));
+----
+
+=== 加载模型
+
+[source,java]
+----
+//load from java format
+FastText model = FastText.Companion.loadModel(new File(""),false);
+----
+
+[source,java]
+----
+//load from c++ format
+FastText model = FastText.Companion.loadCppModel(new File("path/wiki.bin"))
+----
+
+=== 功能API
+
+==== 预测分类
+
+[source,java]
+----
+List<ScoreLabelPair> result = model.predict(Arrays.asList("fastText 在 预测 标签 时 使用 了 非线性 激活 函数".split(" ")), 5,0);
+----
+
+==== 词向量近邻
+
+[source,java]
+----
+List<ScoreLabelPair> result = model.nearestNeighbor("中国",5);
+----
+
+==== 类比
+
+By giving three words A, B and C, return the nearest words in terms of semantic distance and their similarity list, under the condition of (A - B + C).
+
+[source,java]
+----
+List<ScoreLabelPair> result = fastText.analogies("国王","皇后","男",5);
+----
+
+=== 资源
+
+.Official pre-trained model
+- Recent state-of-the-art https://fasttext.cc/docs/en/english-vectors.html[English word vectors]
+- Word vectors for https://github.com/facebookresearch/fastText/blob/master/docs/crawl-vectors.md[157 languages trained on Wikipedia and Crawl]
+- Models for https://fasttext.cc/docs/en/language-identification.html#content[language identification] and https://fasttext.cc/docs/en/supervised-models.html#content[various supervised tasks].

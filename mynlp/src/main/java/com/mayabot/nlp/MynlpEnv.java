@@ -164,7 +164,7 @@ public class MynlpEnv {
      *
      * @param resourcePath
      * @param charset
-     * @return
+     * @return 如果不存在，返回null，不抛出异常
      */
     public @Nullable
     NlpResource tryLoadResource(String resourcePath, Charset charset) {
@@ -181,7 +181,7 @@ public class MynlpEnv {
      * 加载资源，如果不存在，返回null，不抛出异常
      *
      * @param resourcePath
-     * @return
+     * @return 如果不存在，返回null，不抛出异常
      */
     public @Nullable
     NlpResource tryLoadResource(String resourcePath) {
@@ -192,7 +192,7 @@ public class MynlpEnv {
      * 加载资源，如果不存在，返回null，不抛出异常
      *
      * @param resourceNameSetting
-     * @return
+     * @return 如果不存在，返回null，不抛出异常
      */
     public @Nullable
     NlpResource tryLoadResource(SettingItem<String> resourceNameSetting) {
