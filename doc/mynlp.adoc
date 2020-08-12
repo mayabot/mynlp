@@ -9,6 +9,7 @@ Jimi <jimi@mayabot.com>
 
 == Mynlp介绍
 
+image::https://cdn.mayabot.com/mynlp/mynlp-banner.png[Logo,400,]
 MYNLP是一个Java实现的高性能、柔性API、可扩展的中文NLP工具包。
 
 .功能
@@ -23,8 +24,18 @@ MYNLP是一个Java实现的高性能、柔性API、可扩展的中文NLP工具�
 - 拼音转换&切分
 - 简繁体转换
 
+.欢迎关注微信公众号，获取最新动态和相关文章
+image::images/weixin.jpeg[weixin,150,,,align="center"]
+
 include::started.adoc[]
 
 include::fasttext.adoc[]
 
 include::other.adoc[]
+
+== 致谢以下优秀开源项目
+
+- HanLP
+- ansj_seg
+
+mynlp实现参考了他们算法实现和部分代码
