@@ -2136,37 +2136,590 @@
             }
         }
     </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body class="article">
 <div id="header">
     <h1>Mynlp: 高性能、可扩展的中文NLP工具包</h1>
+    <div id="toc" class="toc">
+        <div id="toctitle">目录</div>
+        <ul class="sectlevel1">
+            <li><a href="#_快速入门">快速入门</a>
+                <ul class="sectlevel2">
+                    <li><a href="#_安装">安装</a></li>
+                    <li><a href="#_词典和模型资源">词典和模型资源</a></li>
+                    <li><a href="#_基本用法">基本用法</a></li>
+                </ul>
+            </li>
+            <li><a href="#_致谢以下优秀开源项目">致谢以下优秀开源项目</a></li>
+        </ul>
+    </div>
 </div>
 <div id="content">
-    <div class="paragraph">
-        <p><span class="image"><img src="https://img.shields.io/github/license/mayabot/mynlp.svg" alt="mynlp"></span>
-            <span class="image"><a class="image"
-                                   href="https://maven-badges.herokuapp.com/maven-central/com.mayabot.mynlp/mynlp"><img
-                    src="https://maven-badges.herokuapp.com/maven-central/com.mayabot.mynlp/mynlp/badge.svg"
-                    alt="badge"></a></span>
-            <span class="image"><a class="image" href="https://github.com/mayabot/mynlp/releases/latest"><img
-                    src="https://img.shields.io/github/release/mayabot/mynlp/all.svg" alt="all"></a></span></p>
-    </div>
-    <div class="imageblock text-center">
-        <div class="content">
-            <img src="https://cdn.mayabot.com/mynlp/mynlp-banner.png" alt="mynlp banner" width="500">
+    <div id="preamble">
+        <div class="sectionbody">
+            <div class="paragraph">
+                <p><span class="image"><img src="https://img.shields.io/github/license/mayabot/mynlp.svg"
+                                            alt="mynlp"></span>
+                    <span class="image"><a class="image"
+                                           href="https://maven-badges.herokuapp.com/maven-central/com.mayabot.mynlp/mynlp"><img
+                            src="https://maven-badges.herokuapp.com/maven-central/com.mayabot.mynlp/mynlp/badge.svg"
+                            alt="badge"></a></span>
+                    <span class="image"><a class="image" href="https://github.com/mayabot/mynlp/releases/latest"><img
+                            src="https://img.shields.io/github/release/mayabot/mynlp/all.svg" alt="all"></a></span></p>
+            </div>
+            <div class="imageblock text-center">
+                <div class="content">
+                    <img src="https://cdn.mayabot.com/mynlp/mynlp-banner.png" alt="mynlp banner" width="500">
+                </div>
+            </div>
+            <div class="paragraph">
+                <p>点击访问<a href="https://mynlp.mayabot.com/">mynlp.mayabot.com/在线文档</a></p>
+            </div>
         </div>
     </div>
-    <div class="paragraph">
-        <p>![logo]</p>
+    <div class="sect1">
+        <h2 id="_快速入门">快速入门</h2>
+        <div class="sectionbody">
+            <div class="paragraph">
+                <p>该章节介绍如何安装和简单使用mynlp的基础功能。</p>
+            </div>
+            <div class="sect2">
+                <h3 id="_安装">安装</h3>
+                <div class="paragraph">
+                    <p>mynlp已经发布在Maven中央仓库中，所以只需要在Maven或者Gradle中引入mynlp.jar依赖即可。</p>
+                </div>
+                <div class="listingblock">
+                    <div class="title">Gradle</div>
+                    <div class="content">
+                        <pre>compile 'com.mayabot.mynlp:mynlp:3.2.0'</pre>
+                    </div>
+                </div>
+                <div class="listingblock">
+                    <div class="title">Maven</div>
+                    <div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span style="color:#070;font-weight:bold">&lt;dependency&gt;</span>
+  <span style="color:#070;font-weight:bold">&lt;groupId&gt;</span>com.mayabot.mynlp<span
+            style="color:#070;font-weight:bold">&lt;/groupId&gt;</span>
+  <span style="color:#070;font-weight:bold">&lt;artifactId&gt;</span>mynlp<span style="color:#070;font-weight:bold">&lt;/artifactId&gt;</span>
+  <span style="color:#070;font-weight:bold">&lt;version&gt;</span>3.2.0<span style="color:#070;font-weight:bold">&lt;/version&gt;</span>
+<span style="color:#070;font-weight:bold">&lt;/dependency&gt;</span></code></pre>
+                    </div>
+                </div>
+                <div class="paragraph">
+                    <p>因为资源文件较大，所以mynlp.jar包默认不包括资源文件（词典和模型文件）依赖。</p>
+                </div>
+                <div class="paragraph">
+                    <p>懒人方案，通过引用mynlp-all依赖默认提供的资源词典，满足大部分需求。</p>
+                </div>
+                <div class="listingblock">
+                    <div class="title">依赖 mynlp-all</div>
+                    <div class="content">
+                        <pre>compile 'com.mayabot.mynlp:mynlp-all:3.2.0'</pre>
+                    </div>
+                </div>
+            </div>
+            <div class="sect2">
+                <h3 id="_词典和模型资源">词典和模型资源</h3>
+                <table class="tableblock frame-all grid-all stretch">
+                    <caption class="title">Table 1. 词典&amp;模型资源列表</caption>
+                    <colgroup>
+                        <col style="width: 50%;">
+                        <col style="width: 8.3333%;">
+                        <col style="width: 8.3333%;">
+                        <col style="width: 33.3334%;">
+                    </colgroup>
+                    <thead>
+                    <tr>
+                        <th class="tableblock halign-left valign-top">Gradle 坐标</th>
+                        <th class="tableblock halign-center valign-top">mynlp-all依赖</th>
+                        <th class="tableblock halign-center valign-top">文件大小</th>
+                        <th class="tableblock halign-left valign-top">说明</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td class="tableblock halign-left valign-top"><p class="tableblock">
+                            com.mayabot.mynlp.resource:mynlp-resource-coredict:1.0.0</p></td>
+                        <td class="tableblock halign-center valign-top"><p class="tableblock">Y</p></td>
+                        <td class="tableblock halign-center valign-top"><p class="tableblock">18.2M</p></td>
+                        <td class="tableblock halign-left valign-top"><p class="tableblock">核心词典（20w+词，500w+二元）</p></td>
+                    </tr>
+                    <tr>
+                        <td class="tableblock halign-left valign-top"><p class="tableblock">
+                            com.mayabot.mynlp.resource:mynlp-resource-pos:1.0.0</p></td>
+                        <td class="tableblock halign-center valign-top"><p class="tableblock">Y</p></td>
+                        <td class="tableblock halign-center valign-top"><p class="tableblock">17.5M</p></td>
+                        <td class="tableblock halign-left valign-top"><p class="tableblock">词性标注模型（感知机模型）</p></td>
+                    </tr>
+                    <tr>
+                        <td class="tableblock halign-left valign-top"><p class="tableblock">
+                            com.mayabot.mynlp.resource:mynlp-resource-ner:1.0.0</p></td>
+                        <td class="tableblock halign-center valign-top"><p class="tableblock">Y</p></td>
+                        <td class="tableblock halign-center valign-top"><p class="tableblock">13.4M</p></td>
+                        <td class="tableblock halign-left valign-top"><p class="tableblock">命名实体识别（人名识别、其他NER）</p></td>
+                    </tr>
+                    <tr>
+                        <td class="tableblock halign-left valign-top"><p class="tableblock">
+                            com.mayabot.mynlp.resource:mynlp-resource-pinyin:1.1.0</p></td>
+                        <td class="tableblock halign-center valign-top"><p class="tableblock">Y</p></td>
+                        <td class="tableblock halign-center valign-top"><p class="tableblock">272K</p></td>
+                        <td class="tableblock halign-left valign-top"><p class="tableblock">拼音词典、拼音切分模型</p></td>
+                    </tr>
+                    <tr>
+                        <td class="tableblock halign-left valign-top"><p class="tableblock">
+                            com.mayabot.mynlp.resource:mynlp-resource-transform:1.0.0</p></td>
+                        <td class="tableblock halign-center valign-top"><p class="tableblock">Y</p></td>
+                        <td class="tableblock halign-center valign-top"><p class="tableblock">478K</p></td>
+                        <td class="tableblock halign-left valign-top"><p class="tableblock">繁简体词典</p></td>
+                    </tr>
+                    <tr>
+                        <td class="tableblock halign-left valign-top"><p class="tableblock">
+                            com.mayabot.mynlp.resource:mynlp-resource-cws:1.0.0</p></td>
+                        <td class="tableblock halign-center valign-top"><p class="tableblock">N</p></td>
+                        <td class="tableblock halign-center valign-top"><p class="tableblock">62.4M</p></td>
+                        <td class="tableblock halign-left valign-top"><p class="tableblock">感知机分词模型</p></td>
+                    </tr>
+                    <tr>
+                        <td class="tableblock halign-left valign-top"><p class="tableblock">
+                            com.mayabot.mynlp.resource:mynlp-resource-custom:1.0.0</p></td>
+                        <td class="tableblock halign-center valign-top"><p class="tableblock">N</p></td>
+                        <td class="tableblock halign-center valign-top"><p class="tableblock">2.19M</p></td>
+                        <td class="tableblock halign-left valign-top"><p class="tableblock">自定义扩展词库</p></td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div style="page-break-after: always;"></div>
+                <div class="paragraph">
+                    <p>根据实际的需要，按需引入资源包。</p>
+                </div>
+                <div class="listingblock">
+                    <div class="title">一个Gradle引用的例子</div>
+                    <div class="content">
+<pre class="CodeRay highlight"><code>compile 'com.mayabot.mynlp:mynlp:3.2.0'
+
+// 核心词典
+implementation 'com.mayabot.mynlp.resource:mynlp-resource-coredict:1.0.0'
+
+// 词性标注
+implementation 'com.mayabot.mynlp.resource:mynlp-resource-pos:1.0.0'
+
+// 命名实体
+implementation 'com.mayabot.mynlp.resource:mynlp-resource-ner:1.0.0'
+
+// 拼音
+implementation 'com.mayabot.mynlp.resource:mynlp-resource-pinyin:1.1.0'
+
+// 繁简体转换
+implementation 'com.mayabot.mynlp.resource:mynlp-resource-transform:1.0.0'
+
+// 感知机分词模型
+//   implementation 'com.mayabot.mynlp.resource:mynlp-resource-cws:1.0.0'
+
+// 自定义扩展词库
+//   implementation 'com.mayabot.mynlp.resource:mynlp-resource-custom:1.0.0'</code></pre>
+                    </div>
+                </div>
+            </div>
+            <div class="sect2">
+                <h3 id="_基本用法">基本用法</h3>
+                <div class="sect3">
+                    <h4 id="_中文分词">中文分词</h4>
+                    <div class="paragraph">
+                        <p>Lexer是一个词法分析器的接口，通过Builder可以构建不同功能的分词器。</p>
+                    </div>
+                    <div class="exampleblock">
+                        <div class="content">
+                            <div class="paragraph">
+                                <p>词法分析包括分词、词性标注、实体识别。</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="sect4">
+                        <h5 id="_core分词器">CORE分词器</h5>
+                        <div class="paragraph">
+                            <p>CORE分词器是基于词典和二元语言模型的分词算法实现。</p>
+                        </div>
+                        <div class="listingblock">
+                            <div class="title">CORE分词器</div>
+                            <div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">Lexer lexer = Lexers.coreBuilder()      <i class="conum"
+                                                                                                 data-value="1"></i><b>(1)</b>
+                     .withPos()      <i class="conum" data-value="2"></i><b>(2)</b>
+                     .withPersonName()  <i class="conum" data-value="3"></i><b>(3)</b>
+                     .build();
+
+Sentence sentence = lexer.scan(<span style="background-color:hsla(0,100%,50%,0.05)"><span
+            style="color:#710">&quot;</span><span style="color:#D20">mynlp是mayabot开源的中文NLP工具包。</span><span
+            style="color:#710">&quot;</span></span>);
+
+<span style="color:#0a8;font-weight:bold">System</span>.out.println(sentence.toList());</code></pre>
+                            </div>
+                        </div>
+                        <div class="colist arabic">
+                            <table>
+                                <tr>
+                                    <td><i class="conum" data-value="1"></i><b>1</b></td>
+                                    <td>CORE分词器构建器</td>
+                                </tr>
+                                <tr>
+                                    <td><i class="conum" data-value="2"></i><b>2</b></td>
+                                    <td>开启词性标注功能</td>
+                                </tr>
+                                <tr>
+                                    <td><i class="conum" data-value="3"></i><b>3</b></td>
+                                    <td>开启人名识别功能</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="literalblock">
+                            <div class="title">输出：</div>
+                            <div class="content">
+                                <pre>[mynlp/x, 是/v, mayabot/x, 开源/v, 的/u, 中文/nz, nlp/x, 工具包/n, 。/w]</pre>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="sect4">
+                        <h5 id="_感知机分词">感知机分词</h5>
+                        <div class="paragraph">
+                            <p>感知机分词器是基于BEMS标注的，结构化感知机分词算法实现。</p>
+                        </div>
+                        <div class="listingblock">
+                            <div class="title">感知机分词器：</div>
+                            <div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">Lexer lexer = Lexers
+                .perceptronBuilder()<i class="conum" data-value="1"></i><b>(1)</b>
+                .withPos()
+                .withPersonName()
+                .withNer()<i class="conum" data-value="2"></i><b>(2)</b>
+                .build();
+
+<span style="color:#0a8;font-weight:bold">System</span>.out.println(lexer.scan(<span
+            style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span
+            style="color:#D20">2001年，他还在纽约医学院工作时，在英国学术刊物《自然》上发表一篇论文</span><span style="color:#710">&quot;</span></span>));</code></pre>
+                            </div>
+                        </div>
+                        <div class="colist arabic">
+                            <table>
+                                <tr>
+                                    <td><i class="conum" data-value="1"></i><b>1</b></td>
+                                    <td>感知机分词器</td>
+                                </tr>
+                                <tr>
+                                    <td><i class="conum" data-value="2"></i><b>2</b></td>
+                                    <td>开启命名实体识别</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="literalblock">
+                            <div class="title">输出：</div>
+                            <div class="content">
+                                <pre>2001年/t ,/w 他/r 还/d 在/p 纽约医学院/nt 工作/n 时/t ,/w 在/p 英国/ns 学术/n 刊物/n 《/w 自然/d 》/w 上/f 发表/v 一/m 篇/q 论文/n</pre>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="sect4">
+                        <h5 id="_pipeline插件示例">Pipeline插件示例</h5>
+                        <div class="paragraph">
+                            <p>Lexer是基于Pipeline结构实现的，通过Plugin机制可以任意扩展Lexer的功能和行为。下面的实例演示了自定义词典的插件。</p>
+                        </div>
+                        <div class="listingblock">
+                            <div class="title">Lexer自定义扩展插件示例</div>
+                            <div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">MemCustomDictionary dictionary = <span
+        style="color:#080;font-weight:bold">new</span> MemCustomDictionary();<i class="conum"
+                                                                                data-value="1"></i><b>(1)</b>
+dictionary.addWord(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span
+            style="color:#D20">逛吃</span><span style="color:#710">&quot;</span></span>);
+dictionary.rebuild(); <i class="conum" data-value="2"></i><b>(2)</b>
+
+FluentLexerBuilder builder = Lexers.coreBuilder()
+        .withPos()
+        .withPersonName();
+
+builder.with(<span style="color:#080;font-weight:bold">new</span> CustomDictionaryPlugin(dictionary));<i class="conum"
+                                                                                                         data-value="3"></i><b>(3)</b>
+
+Lexer lexer = builder.build();
+
+<span style="color:#0a8;font-weight:bold">System</span>.out.println(lexer.scan(<span
+            style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span
+            style="color:#D20">逛吃行动小组成立</span><span style="color:#710">&quot;</span></span>));</code></pre>
+                            </div>
+                        </div>
+                        <div class="colist arabic">
+                            <table>
+                                <tr>
+                                    <td><i class="conum" data-value="1"></i><b>1</b></td>
+                                    <td>一个自定义词典的实现</td>
+                                </tr>
+                                <tr>
+                                    <td><i class="conum" data-value="2"></i><b>2</b></td>
+                                    <td>词典需要rebuild生效</td>
+                                </tr>
+                                <tr>
+                                    <td><i class="conum" data-value="3"></i><b>3</b></td>
+                                    <td>配置CustomDictionaryPlugin插件</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="sect3">
+                    <h4 id="_拼音转换">拼音转换</h4>
+                    <div class="sect4">
+                        <h5 id="_中文转拼音">中文转拼音</h5>
+                        <div class="listingblock">
+                            <div class="title">转换中文到对应的拼音</div>
+                            <div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">PinyinResult result = Pinyins.convert(<span
+        style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">招商银行,推出朝朝盈理财产品</span><span
+        style="color:#710">&quot;</span></span>);
+
+<span style="color:#0a8;font-weight:bold">System</span>.out.println(result.asString());<i class="conum"
+                                                                                          data-value="1"></i><b>(1)</b>
+<span style="color:#0a8;font-weight:bold">System</span>.out.println(result.asHeadString(<span
+            style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span
+            style="color:#D20">,</span><span style="color:#710">&quot;</span></span>));<i class="conum"
+                                                                                          data-value="2"></i><b>(2)</b>
+
+result.fuzzy(<span style="color:#069">true</span>);<i class="conum" data-value="3"></i><b>(3)</b>
+<span style="color:#0a8;font-weight:bold">System</span>.out.println(result.fuzzy(<span style="color:#069">true</span>).asString());
+
+result.keepPunctuation(<span style="color:#069">true</span>);<i class="conum" data-value="4"></i><b>(4)</b>
+<span style="color:#777">//result.keepAlpha(true);</span>
+<span style="color:#777">//result.keepNum(true);</span>
+<span style="color:#777">//result.keepOthers(true);</span>
+
+<span style="color:#0a8;font-weight:bold">System</span>.out.println(result.asString());</code></pre>
+                            </div>
+                        </div>
+                        <div class="colist arabic">
+                            <table>
+                                <tr>
+                                    <td><i class="conum" data-value="1"></i><b>1</b></td>
+                                    <td>完整拼音字符串</td>
+                                </tr>
+                                <tr>
+                                    <td><i class="conum" data-value="2"></i><b>2</b></td>
+                                    <td>只输出拼音首字母，逗号分隔</td>
+                                </tr>
+                                <tr>
+                                    <td><i class="conum" data-value="3"></i><b>3</b></td>
+                                    <td>输出模糊拼音后鼻音等</td>
+                                </tr>
+                                <tr>
+                                    <td><i class="conum" data-value="4"></i><b>4</b></td>
+                                    <td>保留标点</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="literalblock">
+                            <div class="title">输出：</div>
+                            <div class="content">
+<pre>zhao shang yin hang tui chu chao chao ying li cai chan pin
+z,s,y,h,t,c,c,c,y,l,c,c,p
+zao sang yin han tui cu cao cao yin li cai can pin
+zao sang yin han , tui cu cao cao yin li cai can pin</pre>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="sect4">
+                        <h5 id="_拼音流切分">拼音流切分</h5>
+                        <div class="paragraph">
+                            <p>拼音流切分是指，将连续的拼音字母切分为一个一个原子单位。</p>
+                        </div>
+                        <div class="listingblock">
+                            <div class="title">拼音流切分</div>
+                            <div class="content">
+                                <pre class="CodeRay highlight"><code data-lang="java"><span
+                                        style="color:#0a8;font-weight:bold">System</span>.out.println(PinyinSplits.split(<span
+                                        style="background-color:hsla(0,100%,50%,0.05)"><span
+                                        style="color:#710">&quot;</span><span style="color:#D20">nizhidaowozaishuoshenmema</span><span
+                                        style="color:#710">&quot;</span></span>));</code></pre>
+                            </div>
+                        </div>
+                        <div class="literalblock">
+                            <div class="title">输出:</div>
+                            <div class="content">
+                                <pre>[ni, zhi, dao, wo, zai, shuo, shen, me, ma]</pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="sect3">
+                    <h4 id="_文本分类">文本分类</h4>
+                    <div class="paragraph">
+                        <p>mynlp采用fasttext算法提供文本分类功能，你可以训练、评估自己的分类模型。</p>
+                    </div>
+                    <div class="paragraph">
+                        <p>训练数据是个纯文本文件，每一行一条数据，词之间使用空格分开，每一行必须包含至少一个label标签。默认 情况下，是一个带`<em>label</em>`前缀的字符串。</p>
+                    </div>
+                    <div class="literalblock">
+                        <div class="content">
+<pre>__label__tag1  saints rally to beat 49ers the new orleans saints survived it all hurricane ivan
+
+__label__积极  这个 商品 很 好 用 。</pre>
+                        </div>
+                    </div>
+                    <div class="paragraph">
+                        <p>所以你的训练语料需要提前进行分词预处理。</p>
+                    </div>
+                    <div class="paragraph">
+                        <p>在这里查看<a
+                                href="https://github.com/mayabot/mynlp/blob/master/modules/mynlp-classification/src/test/java/com/mayabot/mynlp/HotelCommentExampleTrain.java">HotelCommentExampleTrain.java</a>
+                        </p>
+                    </div>
+                    <div class="listingblock">
+                        <div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span style="color:#777">// 训练参数</span>
+InputArgs trainArgs = <span style="color:#080;font-weight:bold">new</span> InputArgs();
+trainArgs.setLoss(LossName.hs);
+trainArgs.setEpoch(<span style="color:#00D">10</span>);
+trainArgs.setDim(<span style="color:#00D">100</span>);
+trainArgs.setLr(<span style="color:#60E">0.2</span>);
+
+FastText fastText = FastText.trainSupervised(trainFile, trainArgs);<i class="conum" data-value="1"></i><b>(1)</b>
+
+FastText qFastText = fastText.quantize(); <i class="conum" data-value="2"></i><b>(2)</b>
+
+<span style="color:#777">//fastText.saveModel(&quot;example.data/hotel.model&quot;);</span><i class="conum"
+                                                                                              data-value="3"></i><b>(3)</b>
+
+fastText.test(testFile,<span style="color:#00D">1</span>,<span style="color:#60E">0.0f</span>,<span style="color:#069">true</span>);<i
+            class="conum" data-value="4"></i><b>(4)</b>
+<span style="color:#0a8;font-weight:bold">System</span>.out.println(<span
+            style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span
+            style="color:#D20">--------------</span><span style="color:#710">&quot;</span></span>);
+qFastText.test(testFile,<span style="color:#00D">1</span>,<span style="color:#60E">0.0f</span>,<span style="color:#069">true</span>);</code></pre>
+                        </div>
+                    </div>
+                    <div class="colist arabic">
+                        <table>
+                            <tr>
+                                <td><i class="conum" data-value="1"></i><b>1</b></td>
+                                <td>训练一个分类模型</td>
+                            </tr>
+                            <tr>
+                                <td><i class="conum" data-value="2"></i><b>2</b></td>
+                                <td>使用乘积量化压缩模型</td>
+                            </tr>
+                            <tr>
+                                <td><i class="conum" data-value="3"></i><b>3</b></td>
+                                <td>保存模型文件</td>
+                            </tr>
+                            <tr>
+                                <td><i class="conum" data-value="4"></i><b>4</b></td>
+                                <td>使用测试数据评估模型</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="literalblock">
+                        <div class="title">输出</div>
+                        <div class="content">
+<pre>Read file build dictionary ...
+Read 0M words
+
+Number of words:  14339
+Number of labels: 2
+Number of wordHash2Id: 19121
+Progress: 100.00% words/sec/thread: Infinity arg.loss: 0.22259
+Train use time 790 ms
+pq 100%
+compute_codes...
+compute_codes success
+F1-Score : 0.915167 Precision : 0.903553 Recall : 0.927083  __label__neg
+F1-Score : 0.919708 Precision : 0.931034 Recall : 0.908654  __label__pos
+N	400
+P@1	0.918
+R@1	0.918
+
+--------------
+
+F1-Score : 0.917526 Precision : 0.908163 Recall : 0.927083  __label__neg
+F1-Score : 0.922330 Precision : 0.931373 Recall : 0.913462  __label__pos
+N	400
+P@1	0.920
+R@1	0.920</pre>
+                        </div>
+                    </div>
+                </div>
+                <div class="sect3">
+                    <h4 id="_简繁转换">简繁转换</h4>
+                    <div class="listingblock">
+                        <div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">Simplified2Traditional s2t = TransformService.simplified2Traditional();
+<span style="color:#0a8;font-weight:bold">System</span>.out.println(s2t.transform(<span
+            style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span
+            style="color:#D20">软件和体育的艺术</span><span style="color:#710">&quot;</span></span>));
+
+Traditional2Simplified t2s = TransformService.traditional2Simplified();
+<span style="color:#0a8;font-weight:bold">System</span>.out.println(t2s.transform(<span
+            style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span
+            style="color:#D20">軟件和體育的藝術</span><span style="color:#710">&quot;</span></span>));</code></pre>
+                        </div>
+                    </div>
+                    <div class="literalblock">
+                        <div class="title">输出</div>
+                        <div class="content">
+<pre>軟件和體育的藝術
+软件和体育的艺术</pre>
+                        </div>
+                    </div>
+                </div>
+                <div class="sect3">
+                    <h4 id="_简单文本摘要">简单文本摘要</h4>
+                    <div class="paragraph">
+                        <p>文本摘要包含了两个简单TextRank的实现。</p>
+                    </div>
+                    <div class="listingblock">
+                        <div class="title">关键字摘要</div>
+                        <div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">KeywordSummary keywordSummary = <span
+        style="color:#080;font-weight:bold">new</span> KeywordSummary();
+keywordSummary.keyword(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span
+            style="color:#D20">text</span><span style="color:#710">&quot;</span></span>,<span
+            style="color:#00D">10</span>);</code></pre>
+                        </div>
+                    </div>
+                    <div class="listingblock">
+                        <div class="title">句子摘要</div>
+                        <div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">SentenceSummary sentenceSummary = <span
+        style="color:#080;font-weight:bold">new</span> SentenceSummary();
+<span style="color:#0a8;font-weight:bold">List</span>&lt;<span style="color:#0a8;font-weight:bold">String</span>&gt; result = sentenceSummary.summarySentences(document, <span
+            style="color:#00D">10</span>);</code></pre>
+                        </div>
+                    </div>
+                    <div class="paragraph">
+                        <p>KeywordSummary和SentenceSummary内置了默认的分词实现，你可以配置自定义的Lexer对象,参加具体文档。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="paragraph">
-        <p>[在线文档 mynlp.mayabot.com（编辑中）](<a href="https://mynlp.mayabot.com/"
-                                            class="bare">https://mynlp.mayabot.com/</a>)</p>
+    <div class="sect1">
+        <h2 id="_致谢以下优秀开源项目">致谢以下优秀开源项目</h2>
+        <div class="sectionbody">
+            <div class="ulist">
+                <ul>
+                    <li>
+                        <p>HanLP</p>
+                    </li>
+                    <li>
+                        <p>ansj_seg</p>
+                    </li>
+                </ul>
+            </div>
+            <div class="paragraph">
+                <p>mynlp实现参考了他们算法实现和部分代码</p>
+            </div>
+        </div>
     </div>
 </div>
 <div id="footer">
     <div id="footer-text">
-        Last updated 2020-08-12 22:26:40 +0800
+        Last updated 2020-08-12 22:31:17 +0800
     </div>
 </div>
 </body>

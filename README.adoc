@@ -1,6 +1,8 @@
 = Mynlp: 高性能、可扩展的中文NLP工具包
 :version: 3.2.0
 :icons: font
+:toc: auto
+:toc-title: 目录
 
 image:https://img.shields.io/github/license/mayabot/mynlp.svg[]
 image:https://maven-badges.herokuapp.com/maven-central/com.mayabot.mynlp/mynlp/badge.svg[link=https://maven-badges.herokuapp.com/maven-central/com.mayabot.mynlp/mynlp]
