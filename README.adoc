@@ -6,9 +6,10 @@ image:https://img.shields.io/github/license/mayabot/mynlp.svg[]
 image:https://maven-badges.herokuapp.com/maven-central/com.mayabot.mynlp/mynlp/badge.svg[link=https://maven-badges.herokuapp.com/maven-central/com.mayabot.mynlp/mynlp]
 image:https://img.shields.io/github/release/mayabot/mynlp/all.svg[link=https://github.com/mayabot/mynlp/releases/latest]
 
-image::https://cdn.mayabot.com/mynlp/mynlp-banner.png[,500,align=center]
+image::https://cdn.mayabot.com/mynlp/mynlp-banner.png[,500,align=center,link=https://mynlp.mayabot.com]
 
-点击访问完整在线文档link:https://mynlp.mayabot.com/[mynlp.mayabot.com/在线文档]
+[NOTE]
+访问完整在线文档link:https://mynlp.mayabot.com/[mynlp.mayabot.com/在线文档]
 
 == 安装
 
