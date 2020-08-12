@@ -10,7 +10,7 @@ image:https://img.shields.io/github/release/mayabot/mynlp/all.svg[link=https://g
 
 image::https://cdn.mayabot.com/mynlp/mynlp-banner.png[,500,align=center]
 
-点击访问link:https://mynlp.mayabot.com/[mynlp.mayabot.com/在线文档]
+点击访问完整在线文档link:https://mynlp.mayabot.com/[mynlp.mayabot.com/在线文档]
 
 == 快速入门
 
@@ -360,6 +360,10 @@ List<String> result = sentenceSummary.summarySentences(document, 10);
 ----
 
 KeywordSummary和SentenceSummary内置了默认的分词实现，你可以配置自定义的Lexer对象,参加具体文档。
+
+== 访问完整在线文档
+
+link:https://mynlp.mayabot.com/[mynlp.mayabot.com]
 
 == 致谢以下优秀开源项目
 
