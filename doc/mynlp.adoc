@@ -6,6 +6,7 @@ Jimi <jimi@mayabot.com>
 :toclevels: 5
 :version: 3.1.7
 :icons: font
+:docinfo: shared,private-footer
 
 == Mynlp介绍
 

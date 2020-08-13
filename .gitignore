@@ -85,3 +85,5 @@ docs/public
 doc/*.html
 doc/*.pdf
 *.html
+
+!/doc/mynlp-docinfo-footer.html
