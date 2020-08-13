@@ -7,6 +7,7 @@ Jimi <jimi@mayabot.com>
 :version: 3.1.7
 :icons: font
 :docinfo: shared,private-footer
+:imagesdir: images
 
 == Mynlp介绍
 
@@ -26,9 +27,13 @@ MYNLP是一个Java实现的高性能、柔性API、可扩展的中文NLP工具�
 - 简繁体转换
 
 .欢迎关注微信公众号，获取最新动态和相关文章
-image::images/weixin.jpeg[weixin,150,,,align="center"]
+image::weixin.jpeg[weixin,150,,,align="center"]
 
 include::started.adoc[]
+
+include::segment/lexer.adoc[]
+include::segment/AtomSplit.adoc[]
+include::segment/lexer2.adoc[]
 
 include::fasttext.adoc[]
 
