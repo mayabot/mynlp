@@ -97,25 +97,54 @@ R@1	0.915
 
 === 保存模型文件
 
+保存为自定义多文件格式：
+
 [source,java]
 ----
 FastText model = FastText.trainSupervised(trainFile, inputArgs);
 model.saveModel(new File("path/data.model"));
 ----
 
+为了方便生成环境发布，保存为自定义单文件格式：
+
+[source,java]
+----
+model.saveModelToSingleFile(new File("path/abc.model"));
+----
+
 === 加载模型
+
+从多文件模型文件格式加载：
 
 [source,java]
 ----
 //load from java format
-FastText model = FastText.Companion.loadModel(new File(""),false);
+FastText model = FastText.loadModel(new File("xxx"),false);
 ----
+
+从单文件模型加载：
 
 [source,java]
 ----
-//load from c++ format
-FastText model = FastText.Companion.loadCppModel(new File("path/wiki.bin"))
+//load from java format
+FastText model = FastText.loadModelFromSingleFile(file);//<1>
+//OR
+FastText model = FastText.loadModelFromSingleFile(inputStream);//<2>
 ----
+<1> 指定文件路径加载模型
+<2> 直接从InputStream加载模型，方便应用程序从classpath加载模型
+
+C++原版模型加载
+
+[source,java]
+----
+
+FastText model = FastText.loadCppModel(modelFile)//<1>
+//OR
+ FastText.loadCppModel(inputStrem)//<2>
+----
+<1> 指定文件路径加载模型
+<2> 直接从InputStream加载模型，方便应用程序从classpath加载模型
 
 === 功能API
 
