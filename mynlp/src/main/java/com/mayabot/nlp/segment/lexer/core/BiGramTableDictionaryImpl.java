@@ -52,9 +52,9 @@ public class BiGramTableDictionaryImpl extends BaseNlpResourceExternalizable imp
     protected InternalLogger logger = InternalLoggerFactory.getInstance(this.getClass());
 
     @Nullable
-    private final CoreDictionaryImpl coreDictionary;
+    private final CoreDictionary coreDictionary;
 
-    public BiGramTableDictionaryImpl(CoreDictionaryImpl coreDictionary,
+    public BiGramTableDictionaryImpl(CoreDictionary coreDictionary,
                                      MynlpEnv mynlp,
                                      CoreDictPathWrap coreDictPathWrap) throws Exception {
         super(mynlp);

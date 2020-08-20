@@ -16,8 +16,9 @@
 
 package com.mayabot.nlp.module.pinyin
 
+import com.mayabot.nlp.MynlpConfigs.pinyinExtDicSetting
+import com.mayabot.nlp.MynlpConfigs.pinyinSetting
 import com.mayabot.nlp.MynlpEnv
-import com.mayabot.nlp.SettingItem.string
 import com.mayabot.nlp.common.injector.Singleton
 import com.mayabot.nlp.common.resources.NlpResource
 import com.mayabot.nlp.module.pinyin.model.Pinyin
@@ -69,17 +70,6 @@ class PinyinService constructor(private val mynlp: MynlpEnv) : BasePinyinDiction
         return map
     }
 
-    companion object {
-
-        @JvmStatic
-        val version = "1.0.0"
-
-        @JvmStatic
-        val pinyinSetting = string("pinyin.dict", "mynlp-pinyin.txt")
-
-        @JvmStatic
-        val pinyinExtDicSetting = string("pinyin.ext.dict", null)
-    }
 
     override fun toString(): String {
         return super.toString()

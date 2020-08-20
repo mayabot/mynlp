@@ -64,27 +64,14 @@ public class MynlpEnv {
         this.settings = settings;
     }
 
-
-    public Settings getSettings() {
-        return settings;
-    }
-
-    public void set(String key, String value) {
-        settings.put(key, value);
-    }
-
-    public @Nullable
-    String get(String setting) {
-        return settings.get(setting);
-    }
-
-    public String get(String setting, @NotNull String defaultValue) {
-        return settings.get(setting, defaultValue);
-    }
-
     public <T> T get(SettingItem<T> setting) {
         return settings.get(setting);
     }
+
+    public <T> List<String> getAsList(SettingItem<String> setting) {
+        return settings.getAsList(setting);
+    }
+
 
     /**
      * 加载资源

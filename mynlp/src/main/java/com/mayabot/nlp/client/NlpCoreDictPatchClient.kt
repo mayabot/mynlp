@@ -1,13 +1,13 @@
 package com.mayabot.nlp.client
 
+import com.mayabot.nlp.MynlpConfigs
 import com.mayabot.nlp.MynlpEnv
 import com.mayabot.nlp.segment.lexer.core.BiGram
 import com.mayabot.nlp.segment.lexer.core.CoreDictPatch
 
+class NlpCoreDictPatchClient(mynlpEnv: MynlpEnv) : CoreDictPatch {
 
-class NlpCoreDictPatchClient(val mynlpEnv: MynlpEnv) : CoreDictPatch {
-
-    val server = mynlpEnv.settings.get("mynlp.server", "").trim()
+    val server = mynlpEnv.get(MynlpConfigs.server).trim()
 
     init {
         if (server.isNotBlank()) {

@@ -1,6 +1,7 @@
 package com.mayabot.nlp.common.injector
 
 import org.jetbrains.annotations.Nullable
+import java.util.concurrent.ConcurrentHashMap
 
 // 单例标记注解
 // 默认实现注解
@@ -9,7 +10,27 @@ import org.jetbrains.annotations.Nullable
 interface Injector {
     fun <T> getInstance(clazz: Class<T>): T?
     fun <T> getInstance(clazz: Class<T>, tag: String): T?
+
+    fun cache(): ConcurrentHashMap<Class<*>, Any>
+
+    companion object {
+        @JvmStatic
+        fun create(modules: List<Module> = emptyList()): Injector {
+            val mergeMap = ConcurrentHashMap<String, BeanFactory>()
+            modules.forEach {
+                it.configure()
+                val map = it.result()
+                map.forEach { (t, u) ->
+                    mergeMap[t] = u
+                }
+            }
+
+            return InjectorImpl(mergeMap)
+        }
+    }
 }
+
+inline fun <reified T> Injector.getInstance() = this.getInstance(T::class.java)
 
 private fun <T> makeKey(clazz: Class<T>, tag: String): String {
     return "${clazz.name}-$tag"
@@ -17,14 +38,17 @@ private fun <T> makeKey(clazz: Class<T>, tag: String): String {
 
 @Suppress("UNCHECKED_CAST")
 class InjectorImpl(
-        private val bindMap: HashMap<String, BeanFactory>
-
+        private val bindMap: ConcurrentHashMap<String, BeanFactory>
 ) : Injector {
+
+    private val singletonCache = ConcurrentHashMap<Class<*>, Any>()
+
+    override fun cache() = singletonCache
 
     override fun <T> getInstance(
             clazz: Class<T>
     ): T? {
-        return this.getInstance(clazz,"")
+        return this.getInstance(clazz, "")
     }
 
     override fun <T> getInstance(
@@ -84,35 +108,7 @@ class InjectorImpl(
 val NULLBeanFactory = InstanceBeanFactory(Unit)
 
 
-fun createInjector(modules: List<Module>): Injector {
-    val mergeMap = HashMap<String, BeanFactory>()
-    modules.forEach {
-        it.configure()
-        val map = it.result()
-        map.forEach { (t, u) ->
-            mergeMap[t] = u
-        }
-    }
 
-    return InjectorImpl(mergeMap)
-}
-
-class CacheBeanFactory(val from: BeanFactory) : BeanFactory {
-
-    var value: Any? = null
-
-    override fun create(injector: Injector): Any {
-        val the = value
-        return if (the == null) {
-            val h = from.create(injector)
-            value = h
-            h
-        } else {
-            the
-        }
-
-    }
-}
 
 class InstanceBeanFactory(val obj: Any) : BeanFactory {
     override fun create(injector: Injector): Any {
@@ -129,8 +125,6 @@ class TargetClassFactory(val clazz: Class<*>) : BeanFactory {
 
     var singleton = clazz.declaredAnnotations.any { it is Singleton }
 
-    var cacheValue:Any? = null
-
     init {
         if (clazz.isInterface) {
             throw java.lang.RuntimeException("$clazz must not be interface")
@@ -143,13 +137,16 @@ class TargetClassFactory(val clazz: Class<*>) : BeanFactory {
 
 
     override fun create(injector: Injector): Any {
+
+
         if (singleton) {
-            val x = cacheValue
+            val singletonCache = injector.cache()
+            val x = singletonCache[clazz]
             if (x == null) {
                 val c2 = create2(injector)
-                cacheValue = c2
+                singletonCache[clazz] = c2
                 return c2
-            }else{
+            } else {
                 return x
             }
         }else{
@@ -158,9 +155,9 @@ class TargetClassFactory(val clazz: Class<*>) : BeanFactory {
     }
 
     private fun create2(injector: Injector): Any {
+        println("Create for class " + clazz)
         // class，如果存在唯一一个构造函数
         // 如果构造函数里面的参数是Nullable的，那么autoBind=false
-
 
         if (constructors.isEmpty()) {
             return clazz.newInstance()!!
@@ -200,9 +197,17 @@ interface Module {
     fun result(): Map<String, BeanFactory>
 }
 
+fun createModule(block: AbstractModule.() -> Unit): Module {
+    return object : AbstractModule() {
+        override fun configure() {
+            this.block()
+        }
+    }
+}
+
 abstract class AbstractModule : Module {
 
-    val bindMap = HashMap<String, BeanFactory>()
+    private val bindMap = HashMap<String, BeanFactory>()
 
     fun <T, X : T> bind(clazz: Class<T>): BindCallback<X> {
         return BindCallback(makeKey(clazz, ""))
@@ -214,7 +219,9 @@ abstract class AbstractModule : Module {
 
     override fun result() = bindMap
 
-    inner class BindCallback<in X>(val key: String) {
+    inner class BindCallback<in X>(
+            private val key: String) {
+
         fun toInstance(obj: X) {
             bindMap[key] = InstanceBeanFactory(obj as Any)
         }

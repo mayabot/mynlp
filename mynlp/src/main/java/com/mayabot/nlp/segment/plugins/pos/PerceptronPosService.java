@@ -31,7 +31,7 @@ public class PerceptronPosService {
     public PerceptronPosService(MynlpEnv mynlp) throws Exception {
         long t1 = System.currentTimeMillis();
 
-        PerceptronModel model = PerceptronFileFormat.loadFromNlpResource("pos-model");
+        PerceptronModel model = PerceptronFileFormat.loadFromNlpResource("pos-model", mynlp);
         this.perceptron = new POSPerceptron(model);
         long t2 = System.currentTimeMillis();
 

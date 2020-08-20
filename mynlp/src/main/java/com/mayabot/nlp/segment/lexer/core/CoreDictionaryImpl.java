@@ -201,11 +201,13 @@ public class CoreDictionaryImpl extends BaseNlpResourceExternalizable implements
      * @param wordID
      * @return 词频
      */
+    @Override
     public int wordFreq(int wordID) {
         return trie.get(wordID);
     }
 
 
+    @Override
     public int wordId(CharSequence key) {
         return trie.indexOf(key);
     }
@@ -214,6 +216,7 @@ public class CoreDictionaryImpl extends BaseNlpResourceExternalizable implements
         return trie.indexOf(key, pos, len, nodePos);
     }
 
+    @Override
     public int wordId(char[] chars, int pos, int len) {
         return trie.indexOf(chars, pos, len);
     }
@@ -229,6 +232,7 @@ public class CoreDictionaryImpl extends BaseNlpResourceExternalizable implements
      * @param key
      * @return 是否包含
      */
+    @Override
     public boolean contains(String key) {
         return trie.indexOf(key) >= 0;
     }
@@ -239,6 +243,7 @@ public class CoreDictionaryImpl extends BaseNlpResourceExternalizable implements
      * @param word
      * @return 下标Id
      */
+    @Override
     public int getWordID(String word) {
         return trie.indexOf(word);
     }
@@ -248,6 +253,7 @@ public class CoreDictionaryImpl extends BaseNlpResourceExternalizable implements
         return trie.match(text, offset);
     }
 
+    @Override
     public int size() {
         return trie.size();
     }

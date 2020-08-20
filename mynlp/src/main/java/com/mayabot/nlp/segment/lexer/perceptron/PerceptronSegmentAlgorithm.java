@@ -3,7 +3,7 @@ package com.mayabot.nlp.segment.lexer.perceptron;
 import com.mayabot.nlp.segment.Nature;
 import com.mayabot.nlp.segment.WordSplitAlgorithm;
 import com.mayabot.nlp.segment.common.BaseSegmentComponent;
-import com.mayabot.nlp.segment.lexer.core.CoreDictionaryImpl;
+import com.mayabot.nlp.segment.lexer.core.CoreDictionary;
 import com.mayabot.nlp.segment.wordnet.Vertex;
 import com.mayabot.nlp.segment.wordnet.Wordnet;
 
@@ -16,9 +16,9 @@ public class PerceptronSegmentAlgorithm extends BaseSegmentComponent implements 
 
     private final PerceptronSegment perceptron;
     private PerceptronsSegmentService service;
-    private CoreDictionaryImpl coreDictionary;
+    private CoreDictionary coreDictionary;
 
-    public PerceptronSegmentAlgorithm(PerceptronsSegmentService service, CoreDictionaryImpl coreDictionary) {
+    public PerceptronSegmentAlgorithm(PerceptronsSegmentService service, CoreDictionary coreDictionary) {
         super(LEVEL1);
         this.service = service;
         this.coreDictionary = coreDictionary;

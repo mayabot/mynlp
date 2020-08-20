@@ -2,7 +2,6 @@ package com.mayabot.nlp.segment
 
 import com.mayabot.nlp.Mynlps
 import com.mayabot.nlp.segment.lexer.core.CoreDictionary
-import com.mayabot.nlp.segment.lexer.core.CoreDictionaryImpl
 import com.mayabot.nlp.segment.lexer.core.CoreLexerPlugin
 import com.mayabot.nlp.segment.lexer.perceptron.PerceptronSegmentPlugin
 import com.mayabot.nlp.segment.pipeline.PipelineLexerBuilder
@@ -117,7 +116,7 @@ open class FluentLexerBuilder : LexerBuilder {
         }
 
         @JvmOverloads
-        fun fillSubwordDict(dbcms: CoreDictionary = Mynlps.instanceOf(CoreDictionaryImpl::class.java)): CollectorBlock {
+        fun fillSubwordDict(dbcms: CoreDictionary = Mynlps.instanceOf(CoreDictionary::class.java)): CollectorBlock {
             collector.fillSubword = DictBasedFillSubword(dbcms)
             return this
         }

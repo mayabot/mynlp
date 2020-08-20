@@ -31,7 +31,6 @@
 package com.mayabot.nlp.segment.plugins.correction;
 
 import com.mayabot.nlp.MynlpEnv;
-import com.mayabot.nlp.SettingItem;
 import com.mayabot.nlp.algorithm.collection.dat.DoubleArrayTrieMap;
 import com.mayabot.nlp.common.injector.Singleton;
 import com.mayabot.nlp.common.logging.InternalLogger;
@@ -42,6 +41,7 @@ import com.mayabot.nlp.common.utils.CharSourceLineReader;
 import java.util.List;
 import java.util.TreeMap;
 
+import static com.mayabot.nlp.MynlpConfigs.correctionDict;
 import static com.mayabot.nlp.common.resources.UseLines.lineReader;
 
 
@@ -61,7 +61,7 @@ public class DefaultCorrectionDictionary implements CorrectionDictionary {
 
     static InternalLogger logger = InternalLoggerFactory.getInstance(DefaultCorrectionDictionary.class);
 
-    public final static SettingItem<String> correctionDict = SettingItem.string("correction.dict", "dictionary/correction.txt");
+
 
 
     private DoubleArrayTrieMap<CorrectionWord> doubleArrayTrie;
@@ -72,15 +72,15 @@ public class DefaultCorrectionDictionary implements CorrectionDictionary {
         return doubleArrayTrie;
     }
 
-    public DefaultCorrectionDictionary(MynlpEnv mynlp) throws Exception {
+    public DefaultCorrectionDictionary(MynlpEnv env) throws Exception {
 
-        List<String> resourceUrls = mynlp.getSettings().getAsList(correctionDict);
+        List<String> resourceUrls = env.getAsList(correctionDict);
 
         if (resourceUrls.isEmpty()) {
             return;
         }
 
-        loadFromRealData(mynlp, resourceUrls);
+        loadFromRealData(env, resourceUrls);
     }
 
     public void loadFromRealData(MynlpEnv mynlp, List<String> resourceUrls) throws Exception {

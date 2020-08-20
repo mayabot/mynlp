@@ -19,12 +19,12 @@ package com.mayabot.nlp
 import com.mayabot.nlp.common.logging.InternalLoggerFactory
 import java.security.AccessController
 import java.security.PrivilegedAction
+import java.util.*
 import java.util.function.Consumer
 
 
 /**
- * Mynlp包含一个guice实现的IOC容器，管理Mynlp所有的资源。
- * 在项目Mynlp对象应该作为单例，不需要重复创建。
+ * Mynlps 单例对象。默认提供一个全局单例mynlp对象
  *
  * @author jimichan
  */
@@ -39,6 +39,10 @@ object Mynlps {
 
     private val mynlp: Mynlp by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
         inited = true
+        createMynlp()
+    }
+
+    private fun createMynlp(): Mynlp {
         val builder = MynlpBuilder()
 
         AccessController.doPrivileged(PrivilegedAction<Unit> {
@@ -47,7 +51,7 @@ object Mynlps {
             }
         })
 
-        builder.build()
+        return builder.build()
     }
 
     /**
@@ -62,10 +66,22 @@ object Mynlps {
         initList += consumer
     }
 
+    @JvmStatic
+    fun config(consumer: Consumer<MynlpBuilder>) {
+        this.install(consumer)
+    }
+
     fun install(consumer: (MynlpBuilder) -> Unit) {
+        if (inited) {
+            throw RuntimeException("必须在调用Mynlp.get之前调用")
+        }
         initList += Consumer<MynlpBuilder> {
             consumer(it)
         }
+    }
+
+    fun config(consumer: (MynlpBuilder) -> Unit) {
+        this.install(consumer)
     }
 
     /**
@@ -76,12 +92,34 @@ object Mynlps {
      */
     @JvmStatic
     fun setDataDir(dataDir: String) {
-        if (inited) {
-            throw RuntimeException("必须在调用Mynlp.get之前调用")
+        install { it.dataDir = dataDir }
+    }
+
+    @JvmStatic
+    fun setCacheDir(dir: String) {
+        install { it.cacheDir = dir }
+    }
+
+    @JvmStatic
+    fun set(settingItem: SettingItem<*>, value: String) {
+        install { it.set(settingItem, value) }
+    }
+
+    @JvmStatic
+    fun set(key: String, value: String) {
+        install { it.set(key, value) }
+    }
+
+    @JvmStatic
+    fun loadSettingFromProperties(properties: Properties) {
+        install {
+            properties.keys.forEach { key ->
+                val value = properties.getProperty(key.toString())!!
+                if (key.toString().isNotBlank() && value.isNotBlank()) {
+                    it.set(key.toString(), value)
+                }
+            }
         }
-        AccessController.doPrivileged(PrivilegedAction<Unit> {
-            System.setProperty("mynlp.data.dir", dataDir)
-        })
     }
 
     /**

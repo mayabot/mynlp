@@ -5,7 +5,7 @@ import com.mayabot.nlp.algorithm.collection.dat.DoubleArrayTrieMap
 import com.mayabot.nlp.common.Lists
 import com.mayabot.nlp.common.ParagraphReaderSmart
 import com.mayabot.nlp.common.utils.Characters
-import com.mayabot.nlp.segment.lexer.core.CoreDictionaryImpl
+import com.mayabot.nlp.segment.lexer.core.CoreDictionary
 import java.io.StringReader
 import java.util.*
 import kotlin.math.log2
@@ -28,7 +28,7 @@ class NewWordFindEngine(
 
     var docCount = 0
 
-    val coreDictionary = Mynlps.instanceOf(CoreDictionaryImpl::class.java)
+    val coreDictionary = Mynlps.instanceOf(CoreDictionary::class.java)
 
     /**
      * 语料中总共有多少字

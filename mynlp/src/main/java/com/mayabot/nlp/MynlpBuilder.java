@@ -37,8 +37,6 @@ import java.security.PrivilegedAction;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.mayabot.nlp.common.injector.InjectorKt.createInjector;
-
 /**
  * Mynlp构建器
  *
@@ -61,7 +59,7 @@ public class MynlpBuilder {
 
     private ArrayList<NlpResourceFactory> resourceFactoryList = new ArrayList<>();
 
-    private Settings settings = Settings.defaultSystemSettings();
+    private Settings settings = Settings.createEmpty();
 
     private Map<Class, Object> injectInstance = new HashMap<>();
 
@@ -81,16 +79,15 @@ public class MynlpBuilder {
 
                 if (dataDir == null) {
                     //通过JVM系统属性配置 -Dmynlp.data=/path/data
-
                     if (System.getProperty("mynlp.data.dir") != null) {
                         dataDir = System.getProperty("mynlp.data.dir");
                     }
                 }
-                if (dataDir == null) {
-                    // 在全局配置文件中 data.dir 可以指定dir目录，默认是当前工作目录下面的data
-
-                    dataDir = settings.get("data.dir", null);
-                }
+//                if (dataDir == null) {
+//                    // 在全局配置文件中 data.dir 可以指定dir目录，默认是当前工作目录下面的data
+//
+//                    dataDir = settings.get("data.dir", null);
+//                }
 
                 // 默认的位置
                 if (dataDir == null) {
@@ -107,9 +104,9 @@ public class MynlpBuilder {
 
                 logger.info("Mynlp data dir is " + dataDirFile.getAbsolutePath() + ",exists " + dataDirFile.exists());
 
-                if (settings.get("cache.dir") != null) {
-                    cacheDir = settings.get("cache.dir");
-                }
+//                if (settings.get("cache.dir") != null) {
+//                    cacheDir = settings.get("cache.dir");
+//                }
 
                 File cacheDirFile;
                 if (cacheDir == null) {
@@ -158,7 +155,7 @@ public class MynlpBuilder {
         //加载模块，在配置文件中声明的
         modules.addAll(loadModules(mynlpEnv));
 
-        return createInjector(modules);
+        return Injector.create(modules);
     }
 
     private List<Module> loadModules(MynlpEnv mynlp) {
@@ -214,24 +211,20 @@ public class MynlpBuilder {
         return this;
     }
 
-    public Settings getSettings() {
-        return settings;
-    }
+//    public Settings getSettings() {
+//        return settings;
+//    }
 
     public MynlpBuilder set(String key, String value) {
-        getSettings().put(key, value);
+        settings.put(key, value);
         return this;
     }
 
     public MynlpBuilder set(SettingItem key, String value) {
-        getSettings().put(key, value);
+        settings.put(key, value);
         return this;
     }
 
-    public MynlpBuilder setSettings(Settings settings) {
-        this.settings = settings;
-        return this;
-    }
 
     public <T> MynlpBuilder bind(Class<T> clazz, T object) {
         this.injectInstance.put(clazz, object);

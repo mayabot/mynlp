@@ -53,11 +53,7 @@ dependencies {
    testImplementation 'com.mayabot.mynlp.resource:mynlp-resource-custom:1.0.0'
 }
 
-//skip Test tasks
-gradle.taskGraph.whenReady {
-    tasks.each { task ->
-        if (task.name.contains("test")) {
-            task.enabled = false
-        }
-    }
+test{
+    // 默认单个Test的内存是500M左右
+    maxHeapSize("1g")
 }

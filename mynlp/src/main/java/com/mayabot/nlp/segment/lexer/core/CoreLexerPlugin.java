@@ -18,7 +18,7 @@ public class CoreLexerPlugin implements PipelineLexerPlugin {
     }
 
     public CoreLexerPlugin(Mynlp mynlp) {
-        this.dictionaryMatcher = mynlp.getInstance(CoreDictionaryImpl.class);
+        this.dictionaryMatcher = mynlp.getInstance(CoreDictionary.class);
     }
 
     public CoreLexerPlugin() {

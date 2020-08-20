@@ -2,6 +2,7 @@ package com.mayabot.nlp.segment.lexer.core;
 
 import com.mayabot.nlp.algorithm.collection.dat.DoubleArrayTrieStringIntMap.DATMapMatcherInt;
 import com.mayabot.nlp.common.injector.ImplementedBy;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author jimichan
@@ -26,4 +27,16 @@ public interface CoreDictionary {
     int totalFreq();
 
     void refresh() throws Exception;
+
+    int wordId(char[] chars, int pos, int len);
+
+    int wordId(CharSequence word);
+
+    public int wordFreq(int wordID);
+
+    boolean contains(@NotNull String word);
+
+    int getWordID(String word);
+
+    int size();
 }

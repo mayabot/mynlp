@@ -1,6 +1,43 @@
 package com.mayabot.nlp
 
 import com.mayabot.nlp.common.injector.*
+import org.junit.Assert.assertTrue
+import org.junit.Test
+
+class InjectTest {
+
+
+    @Test
+    fun testSingleton() {
+        val injector = Injector.create(listOf(
+                createModule {
+                    bind(UserDao::class.java).toClass(UserDaoImpl::class.java)
+                }
+        ))
+        val dao: UserDao? = injector.getInstance()!!
+        val dao2: UserDao? = injector.getInstance()!!
+
+        assertTrue(dao === dao2)
+    }
+
+    @Test
+    fun testSingleton2() {
+        val injector = Injector.create()
+        val dao: UserDao = injector.getInstance()!!
+        val dao2: UserDao = injector.getInstance(UserDaoImpl::class.java)!!
+
+        println(dao)
+        println(dao2)
+        assertTrue(dao === dao2)
+    }
+
+}
+
+@ImplementedBy(UserDaoImpl::class)
+interface UserDao
+
+@Singleton
+class UserDaoImpl : UserDao
 
 
 interface DbService {
@@ -52,7 +89,7 @@ fun main() {
         }
     }
 
-    val injector = createInjector(models)
+    val injector = Injector.create(models)
 
     val controller = injector.getInstance(SprintUIController::class.java)!!
 

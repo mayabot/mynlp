@@ -159,9 +159,13 @@ class PerceptronModelImpl(
     override fun featureSet() = featureSet
 
     override fun makeSureParameter(featureId: Int) {
-        val newSize = (featureId + 1) * labelCount
+
+        var newSize = (featureId + 1) * labelCount
+
         if (newSize > parameter.size) {
-            parameter = parameter.copyOf(newSize)
+            val pad = 1000
+            newSize = (featureId + pad) * labelCount
+            parameter = Arrays.copyOf(parameter, newSize)
         }
     }
 

@@ -1,7 +1,7 @@
 package com.mayabot.nlp.segment.lexer.perceptron;
 
+import com.mayabot.nlp.MynlpConfigs;
 import com.mayabot.nlp.MynlpEnv;
-import com.mayabot.nlp.SettingItem;
 import com.mayabot.nlp.common.injector.Singleton;
 import com.mayabot.nlp.common.logging.InternalLogger;
 import com.mayabot.nlp.common.logging.InternalLoggerFactory;
@@ -18,9 +18,6 @@ public class PerceptronsSegmentService {
 
     private PerceptronSegment ps;
 
-    public static final String cswModel = "cws-model";
-
-    public static final SettingItem<String> cwsModelItem = SettingItem.string("cws.model", cswModel);
 
     static InternalLogger logger = InternalLoggerFactory.getInstance(PerceptronNerService.class);
 
@@ -28,7 +25,7 @@ public class PerceptronsSegmentService {
                                      PerceptronSegmentPatch perceptronSegmentPatch) throws Exception {
 
         //cws-model or cws-hanlp-model
-        String modelName = mynlp.getSettings().get(cwsModelItem);
+        String modelName = mynlp.get(MynlpConfigs.cwsModelItem);
 
         long t1 = System.currentTimeMillis();
         NlpResource parameterResource = mynlp.loadResource(modelName + "/parameter.bin");

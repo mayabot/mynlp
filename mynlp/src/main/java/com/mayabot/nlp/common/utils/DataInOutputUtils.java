@@ -19,15 +19,108 @@ package com.mayabot.nlp.common.utils;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
-public interface DataInOutputUtils {
+public class DataInOutputUtils {
+
+    public static final int ic1 = 1123992342;
+    public static final int ic2 = 832718121;
+    public static final int ic3 = 957462342;
+
+    static int[] nullMagic = new int[]{ic1, ic2, ic3};
 
 
-    static void writeIntArray(int[][] array, DataOutput output) throws IOException {
+    /**
+     * 计算了分页数量
+     *
+     * @param total
+     * @param itemPerPage
+     * @return
+     */
+    private static int pages(int total, int itemPerPage) {
+        return (total + itemPerPage - 1) / itemPerPage;
+    }
+
+    final static int perPage = 1024 * 4;
+
+    public static void writeIntArray(int[] array, DataOutput output) throws IOException {
+        if (array == null) {
+            array = nullMagic;
+        }
+
+        //每个int对应4个字节
+        int totalByte = array.length * 4;
+
+        output.writeInt(totalByte);
+
+
+        // 用分页的思想
+        int pages = pages(array.length, perPage);
+
+        for (int page = 0; page < pages; page++) {
+            int from = page * perPage;
+            int to = from + perPage;
+            byte[] bytes = MyInts.toByteArray(array, from, to);
+            output.write(bytes);
+        }
+    }
+
+
+    public static int[] readIntArray(DataInput input) throws IOException {
+        int len = input.readInt();
+
+        if (len == 12) {
+            byte[] result = new byte[len];
+            input.readFully(result);
+            int[] ints = MyInts.fromByteArrayToArray(result);
+            if (ints.length == 3 && ints[0] == ic1 && ints[1] == ic2 && ints[2] == ic3) {
+                return null;
+            } else {
+                return ints;
+            }
+        } else {
+            int[] array = new int[len / 4];
+            final int pageSize = perPage * 4;
+            int pages = pages(len, pageSize);
+            byte[] buffer = new byte[pageSize];
+            int[] intBuffer = new int[perPage];
+            int point = 0;
+
+            for (int page = 0; page < pages; page++) {
+                int from = page * pageSize;
+                int to = Math.min(from + pageSize, len);
+                int length = to - from;
+
+                int intCount = length / 4;
+
+                input.readFully(buffer, 0, length);
+
+                MyInts.fromByteArrayToArray(buffer, intBuffer, length);
+
+                System.arraycopy(intBuffer, 0, array, point, intCount);
+
+                point += intCount;
+            }
+            return array;
+        }
+    }
+
+
+//   public static int[] readIntArray(ByteBuffer buffer) {
+//        int size = buffer.getInt() / 4;
+//        int[] ints = new int[size];
+//        buffer.asIntBuffer().get(ints);
+//        buffer.position(buffer.position() + size * 4);
+//        if (ints.length == 3 && ints[0] == 1123992342 && ints[1] == ic2 && ints[2] == ic3) {
+//            return null;
+//        }
+//        return ints;
+//    }
+
+
+    public static void writeIntArray(int[][] array, DataOutput output) throws IOException {
 
         int line = array.length;
         output.writeInt(line);
@@ -37,7 +130,7 @@ public interface DataInOutputUtils {
         }
     }
 
-    static int[][] readDoubleIntArray(DataInput input) throws IOException {
+    public static int[][] readDoubleIntArray(DataInput input) throws IOException {
         int line = input.readInt();
         int[][] result = new int[line][];
 
@@ -47,64 +140,7 @@ public interface DataInOutputUtils {
         return result;
     }
 
-
-    static int[] readIntArray(DataInput input) throws IOException {
-        int len = input.readInt();
-        byte[] result = new byte[len];
-        input.readFully(result);
-
-        int[] ints = MyInts.fromByteArrayToArray(result);
-        if (ints.length == 3 && ints[0] == 1123992342 && ints[1] == 832718121 && ints[2] == 957462342) {
-            return null;
-        }
-        return ints;
-    }
-
-
-    static int[] readIntArray(ByteBuffer buffer) {
-        int size = buffer.getInt() / 4;
-        int[] ints = new int[size];
-        buffer.asIntBuffer().get(ints);
-        buffer.position(buffer.position() + size * 4);
-        if (ints.length == 3 && ints[0] == 1123992342 && ints[1] == 832718121 && ints[2] == 957462342) {
-            return null;
-        }
-        return ints;
-    }
-
-    int[] nullMagic = new int[]{1123992342, 832718121, 957462342};
-
-    static void writeIntArray(int[] array, DataOutput output) throws IOException {
-        if (array == null) {
-            array = nullMagic;
-        }
-        byte[] bytes = MyInts.toByteArray(array);
-        output.writeInt(bytes.length);
-        output.write(bytes);
-    }
-
-
-    static ArrayList<String> readStringArrayList(DataInput input) throws IOException {
-        int size = input.readInt();
-        ArrayList<String> result = new ArrayList<>(size);
-
-        for (int i = 0; i < size; i++) {
-            result.add(input.readUTF());
-        }
-        return result;
-    }
-
-    static void writeStringArrayList(ArrayList<String> list, DataOutput output) throws IOException {
-
-        output.writeInt(list.size());
-
-        for (int i = 0; i < list.size(); i++) {
-            output.writeUTF(list.get(i));
-        }
-    }
-
-
-    static <T> ArrayList<T> readArrayList(DataInput input, Function<DataInput, T> reader) throws IOException {
+    public static <T> ArrayList<T> readArrayList(DataInput input, Function<DataInput, T> reader) throws IOException {
 
         int size = input.readInt();
         ArrayList<T> result = new ArrayList<>(size);
@@ -117,7 +153,7 @@ public interface DataInOutputUtils {
     }
 
 
-    static <T> void writeArrayList(
+    public static <T> void writeArrayList(
             ArrayList<T> list, BiConsumer<T, DataOutput> consumer, DataOutput output) throws IOException {
 
         output.writeInt(list.size());
@@ -126,6 +162,5 @@ public interface DataInOutputUtils {
             consumer.accept(val, output);
         }
     }
-
 
 }

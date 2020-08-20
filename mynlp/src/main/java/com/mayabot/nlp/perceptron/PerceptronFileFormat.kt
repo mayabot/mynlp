@@ -16,7 +16,6 @@
 package com.mayabot.nlp.perceptron
 
 import com.mayabot.nlp.MynlpEnv
-import com.mayabot.nlp.Mynlps
 import java.io.DataInputStream
 import java.io.File
 import java.io.InputStream
@@ -48,11 +47,11 @@ object PerceptronFileFormat {
 
     @JvmStatic
     @JvmOverloads
-    fun loadFromNlpResource(prefix: String, nlpEnv: MynlpEnv = Mynlps.get().env): PerceptronModel {
+    fun loadFromNlpResource(prefix: String, nlpEnv: MynlpEnv): PerceptronModel {
 
         val parameter = nlpEnv.loadResource("$prefix/parameter.bin")
         val fd = nlpEnv.tryLoadResource("$prefix/feature.dat")
-        val feature =  fd ?: nlpEnv.loadResource("$prefix/feature.txt")
+        val feature = fd ?: nlpEnv.loadResource("$prefix/feature.txt")
 
         check(parameter != null && feature != null)
 
@@ -118,6 +117,7 @@ object PerceptronFileFormat {
             labelCount = input.readInt()
 
             val pSize = input.readInt()
+
             parameter = FloatArray(pSize)
 
             val buffer = ByteArray(4 * 1024 * 4)

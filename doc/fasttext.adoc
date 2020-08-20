@@ -1,5 +1,4 @@
 :icons: font
-
 == fastText
 
 FastText4j是java&kotlin开发的fasttext算法库。link:https://github.com/facebookresearch/fastText[Fasttext] 是由facebookresearch开发的一个文本分类和词向量的库。

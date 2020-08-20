@@ -17,7 +17,6 @@
 package com.mayabot.nlp.segment.plugins.customwords;
 
 import com.mayabot.nlp.MynlpEnv;
-import com.mayabot.nlp.SettingItem;
 import com.mayabot.nlp.algorithm.collection.dat.DoubleArrayTrieStringIntMap;
 import com.mayabot.nlp.common.injector.Singleton;
 import com.mayabot.nlp.common.logging.InternalLogger;
@@ -29,6 +28,8 @@ import com.mayabot.nlp.common.utils.CharSourceLineReader;
 
 import java.util.List;
 import java.util.TreeMap;
+
+import static com.mayabot.nlp.MynlpConfigs.dictPathSetting;
 
 /**
  * 用户自定义词典
@@ -46,12 +47,10 @@ public class DefaultCustomDictionary implements CustomDictionary {
 
     private boolean isNormalization = false;
 
-    public static final SettingItem<String> dictPathSetting = SettingItem.string(
-            "custom.dictionary.path", "custom-dict/CustomDictionary.txt");
 
-    public DefaultCustomDictionary(MynlpEnv mynlp) throws Exception {
+    public DefaultCustomDictionary(MynlpEnv env) throws Exception {
 
-        List<String> resourceUrls = mynlp.getSettings().getAsList(dictPathSetting);
+        List<String> resourceUrls = env.getAsList(dictPathSetting);
 
         if (resourceUrls == null || resourceUrls.isEmpty()) {
             return;
@@ -63,7 +62,7 @@ public class DefaultCustomDictionary implements CustomDictionary {
         TreeMap<String, Integer> map = new TreeMap<>();
 
         for (String url : resourceUrls) {
-            NlpResource resource = mynlp.tryLoadResource(url);
+            NlpResource resource = env.tryLoadResource(url);
 
             if (resource == null) {
                 logger.warn("miss resource "+url);

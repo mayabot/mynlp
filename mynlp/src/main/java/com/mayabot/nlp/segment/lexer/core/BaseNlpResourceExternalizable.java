@@ -78,7 +78,7 @@ abstract class BaseNlpResourceExternalizable implements Externalizable {
 
                 success = true;
                 loadFromBin = true;
-                logger.info(cache.getName() + " restore from cache file success, use time " + (t2 - t1) + " ms");
+                logger.info(cache.getName() + " restore from cache file " + cache.getName() + " success, use time " + (t2 - t1) + " ms");
             } catch (Exception e) {
                 logger.warn("restore from cache " + cache.getAbsolutePath(), e);
             }

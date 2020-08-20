@@ -7,6 +7,10 @@ Jimi <jimi@mayabot.com>
 :icons: font
 :docinfo: shared,private-footer
 :imagesdir: images
+:source-highlighter: highlightjs
+:source-indent: 1
+:source-language: java
+:highlightjsdir: highlight
 
 == Mynlp介绍
 

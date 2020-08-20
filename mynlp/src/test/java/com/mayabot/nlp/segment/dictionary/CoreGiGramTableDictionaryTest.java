@@ -18,7 +18,7 @@ package com.mayabot.nlp.segment.dictionary;
 
 import com.mayabot.nlp.Mynlps;
 import com.mayabot.nlp.segment.lexer.core.BiGramTableDictionaryImpl;
-import com.mayabot.nlp.segment.lexer.core.CoreDictionaryImpl;
+import com.mayabot.nlp.segment.lexer.core.CoreDictionary;
 import org.junit.Test;
 
 public class CoreGiGramTableDictionaryTest {
@@ -26,7 +26,7 @@ public class CoreGiGramTableDictionaryTest {
     @Test
     public void test() {
         BiGramTableDictionaryImpl table = Mynlps.instanceOf(BiGramTableDictionaryImpl.class);
-        CoreDictionaryImpl dic = Mynlps.instanceOf(CoreDictionaryImpl.class);
+        CoreDictionary dic = Mynlps.instanceOf(CoreDictionary.class);
 
         int v1 = dic.getWordID("君主制");//48801
         int v2 = dic.getWordID("国家");//55157

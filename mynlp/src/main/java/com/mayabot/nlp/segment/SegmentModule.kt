@@ -15,6 +15,7 @@
  */
 package com.mayabot.nlp.segment
 
+import com.mayabot.nlp.MynlpConfigs
 import com.mayabot.nlp.MynlpEnv
 import com.mayabot.nlp.client.NlpCoreDictPatchClient
 import com.mayabot.nlp.common.injector.AbstractModule
@@ -23,7 +24,7 @@ import com.mayabot.nlp.segment.lexer.core.CoreDictPatch
 class SegmentModule(private val env: MynlpEnv) : AbstractModule() {
 
     override fun configure() {
-        if (env.settings.get("mynlp.server", "").isNotBlank()) {
+        if (env.get(MynlpConfigs.server).isNotBlank()) {
             bind(CoreDictPatch::class.java).toClass(NlpCoreDictPatchClient::class.java)
         }
     }
