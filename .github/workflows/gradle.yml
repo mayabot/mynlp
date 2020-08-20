@@ -1,6 +1,8 @@
 name: Java CI
 
-on: [push]
+on:
+  schedule:
+    - cron: '0 8 * * *'
 
 jobs:
   build:
@@ -14,4 +16,4 @@ jobs:
       with:
         java-version: 1.8
     - name: Build with Gradle
-      run: ./gradlew -x test build
+      run: ./gradlew build
