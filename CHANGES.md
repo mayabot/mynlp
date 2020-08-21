@@ -1,5 +1,9 @@
 # 3.2.1
 - kotlin update to 1.4.0
+- fixbug： injector 单例在key不一致的情况下单例实例化两个对象
+- 清理了Setting，彻底去除配置文件
+- fix junit test内存溢出的问题
+
 # 3.2.0
 
 - 代码结构做出改变，合并到mynlp单一项目

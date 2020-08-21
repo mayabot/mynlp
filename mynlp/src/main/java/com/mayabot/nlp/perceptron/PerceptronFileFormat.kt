@@ -46,7 +46,6 @@ object PerceptronFileFormat {
     }
 
     @JvmStatic
-    @JvmOverloads
     fun loadFromNlpResource(prefix: String, nlpEnv: MynlpEnv): PerceptronModel {
 
         val parameter = nlpEnv.loadResource("$prefix/parameter.bin")
