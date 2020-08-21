@@ -1,3 +1,6 @@
+# 3.2.2
+- 增加QuickReplacer和Highlight功能
+
 # 3.2.1
 - kotlin update to 1.4.0
 - fixbug： injector 单例在key不一致的情况下单例实例化两个对象

@@ -34,11 +34,11 @@ image::weixin.jpeg[weixin,150,,,align="center"]
 
 include::started.adoc[]
 
-include::segment/lexer.adoc[]
-include::segment/AtomSplit.adoc[]
-include::segment/lexer2.adoc[]
+include::lexer.adoc[]
 
 include::fasttext.adoc[]
+
+include::advanced.adoc[]
 
 include::other.adoc[]
 
