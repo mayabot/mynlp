@@ -8,7 +8,7 @@ import com.mayabot.nlp.segment.plugins.atom.AtomSplitAlgorithm;
 public class PerceptronSegmentPlugin implements PipelineLexerPlugin {
 
     @Override
-    public void install(PipelineLexerBuilder builder) {
+    public void init(PipelineLexerBuilder builder) {
 
         //切词算法
         builder.addWordSplitAlgorithm(PerceptronSegmentAlgorithm.class);

@@ -26,7 +26,7 @@ public class CoreLexerPlugin implements PipelineLexerPlugin {
     }
 
     @Override
-    public void install(PipelineLexerBuilder builder) {
+    public void init(PipelineLexerBuilder builder) {
 
         builder.setBestPathComputer(ViterbiBestPathAlgorithm.class);
 

@@ -28,9 +28,26 @@ open class FluentLexerBuilder : LexerBuilder {
         return builder.build()
     }
 
-    val builder = PipelineLexerBuilder.builder()
+    private val builder = PipelineLexerBuilder.builder()
 
-    fun basic() = BasicBlock()
+    fun install(plugin: PipelineLexerPlugin) {
+        builder.install(plugin)
+    }
+
+    fun core(): FluentLexerBuilder {
+        builder.install(CoreLexerPlugin())
+        return this@FluentLexerBuilder
+    }
+
+    fun coreByDict(dict: CoreDictionary): FluentLexerBuilder {
+        builder.install(CoreLexerPlugin(dict))
+        return this@FluentLexerBuilder
+    }
+
+    fun perceptron(): FluentLexerBuilder {
+        builder.install(PerceptronSegmentPlugin())
+        return this@FluentLexerBuilder
+    }
 
     fun withPos(): FluentLexerBuilder {
         builder.install(PosPlugin())
@@ -91,7 +108,6 @@ open class FluentLexerBuilder : LexerBuilder {
         @JvmOverloads
         fun indexPickup(minWordLen: Int = 2): CollectorBlock {
             val indexd = IndexPickUpSubword()
-//
             indexd.minWordLength = minWordLen
             collector.pickUpSubword = indexd
             return this
@@ -101,17 +117,9 @@ open class FluentLexerBuilder : LexerBuilder {
         fun smartPickup(block: (x: WordTermCollector.PickUpSubword) -> Unit
                         = { _ -> Unit }
         ): CollectorBlock {
-//            try {
-//                val p = Mynlps.get()
-//                        .injector
-//                        .getInstance(WordTermCollector.PickUpSubword::class.java,"smart")!!
             val p = SmartPickUpSubword()
             block(p)
             collector.pickUpSubword = p
-//            } catch (e: Exception) {
-//                throw e
-//            }
-
             return this
         }
 
@@ -131,24 +139,6 @@ open class FluentLexerBuilder : LexerBuilder {
             return this@FluentLexerBuilder
         }
     }
-
-    inner class BasicBlock {
-        fun core(): FluentLexerBuilder {
-            builder.install(CoreLexerPlugin())
-            return this@FluentLexerBuilder
-        }
-
-        fun coreByDict(dict: CoreDictionary): FluentLexerBuilder {
-            builder.install(CoreLexerPlugin(dict))
-            return this@FluentLexerBuilder
-        }
-
-        fun cws(): FluentLexerBuilder {
-            builder.install(PerceptronSegmentPlugin())
-            return this@FluentLexerBuilder
-        }
-    }
-
 
 }
 

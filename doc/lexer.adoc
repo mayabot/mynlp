@@ -1,61 +1,54 @@
-== 词法分析
+:imagesdir: images
 
-=== Lexer
+== 中文分词、词性标注、命名实体
 
-=== Wordnet
+=== lexer架构
 
-//:imagesdir: ../images
+分词、词性、命名实体这三个任务一起被称为 `词法分析` ，mynlp中使用Lexer接口这个功能进行定义。
 
-分词系统中需要一个数据结构来表达一段文字来多种分词可能性。距离来说"商品和服务"，"商品/和服/务"就是其中一个 错误的切分可能。 各种分词算法的目标就是找出最合理的切分方法。
+Lexer负责对有限短的文本（一句话、一个段落）进行词法分析。
 
-image::wordnet-g.png[词图篱笆网络,600]
+nlp中有各种各样的分词算法，mynlp并没有为每个算法定义一个分词器类，而是使用Pipeline方式进行组装。
 
-站在每个字的角度来看，会有一个或多个跳转路径。从Start节点到End节点中必定存在一个最优路径，这个路径就是 分词结果了。但是上图如果利用Node和Edge的数据结构来表达的话，性能和方便程度都很差。
+.Pipeline架构图
+image::lexer.png[width=600]
 
-Wordnet是经典的数据结构，mynlp用链表的方式实现了一个高效的Wordnet类。
+.接口描述
+- WordSplitAlgorithm: 基础切词算法，词典、感知机、CRF等等
+- WordpathProcessor: 对Wordpath进行调整或计算词性等操作
+- BestPathAlgorithm: 从Wordnet中选择最优路径
+- WordTermCollector: 分词收集器，可以进行索引分词、子词再切分等操作 ---
 
+.WordSplitAlgorithm接口以及实现类
+image::WordSplitAlgorithm.png[width=600]
 
-image::wordnet.png[,600]
-每个数字节点，表示一个边，也表示从当前这个字构成的词的长度。
+.WordpathProcessor接口以及实现类
+image::WordpathProcessor.png[width=700]
 
-对应的Java数据为：
+=== PipelineBuilder
 
-image::wordnet-ds.png[,600]
+=== CharNormalize
 
-每个字对应一个`VertexRow`,每个VertexRow指向一个Vertex链表，其中Vertex链表中的数字大小**一定是不可重复且有序的**。
+=== WordSplitAlgorithm
 
-分词的基本逻辑就是填充Wordnet，使用路径选算法从多种可能性选出最佳的分词路径。
+==== CORE
 
-=== Wordpath
+==== 感知机
 
-类Wordpath表示一个路径，如果路径不在变化，那么也就无所谓采用什么数据结构。但是在Pipeline中，不同的组件和算法还需要对这个 **唯一的路径再进行修改**。会涉及到很多`联合`、`打破-再联合`等操作。在List的基础上操作起来，代码非常复杂且不容易理解。
+==== ATOM
 
-这里我们使用BitSet来表示唯一分词路径。
+=== WordpathProcessor
 
-image::wordpath.png[,600]
+==== 人名识别
 
-图中的字之间的斜线，表示要切断。我们用bitset中和字对应的Index，设置为true。 比如"提高"是一个词，那么设置bitset的下标1为true。
+==== NER
 
-就是这么简单，使用这种数据结构的好处是，combine或者划词的操作非常简单，而且内存上消耗非常非常低。
+==== 分词纠错
 
-=== How do
+==== 自定义词典
 
-[source,java]
-----
-MemCustomDictionary memCustomDictionary = new MemCustomDictionary();
+=== WordTermCollector
 
-FluentLexerBuilder builder = Lexers.coreBuilder();
+=== 扩展插件
 
-builder.with(new CustomDictionaryPlugin(memCustomDictionary));
-
-Lexer tokenizer = builder.build();
-
-System.out.println(tokenizer);
-
-System.out.println(tokenizer.scan("欢迎来到松江临港科技城"));
-
-memCustomDictionary.addWord("临港科技城");
-memCustomDictionary.rebuild();
-
-System.out.println(tokenizer.scan("欢迎来到松江临港科技城"));
-----
+=== 自定义分词粒度插件示例

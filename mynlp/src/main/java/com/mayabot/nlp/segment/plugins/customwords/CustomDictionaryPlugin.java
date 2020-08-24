@@ -18,7 +18,7 @@ public class CustomDictionaryPlugin implements PipelineLexerPlugin {
 
 
     @Override
-    public void install(PipelineLexerBuilder builder) {
+    public void init(PipelineLexerBuilder builder) {
         builder.addProcessor(new CustomDictionaryProcessor(customDictionary));
     }
 

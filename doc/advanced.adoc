@@ -35,3 +35,5 @@ image::wordpath.png[,600]
 图中的字之间的斜线，表示要切断。我们用bitset中和字对应的Index，设置为true。 比如"提高"是一个词，那么设置bitset的下标1为true。
 
 就是这么简单，使用这种数据结构的好处是，combine或者划词的操作非常简单，而且内存上消耗非常非常低。
+
+=== Injector IOC容器

@@ -19,7 +19,7 @@ public class PersonNamePlugin implements PipelineLexerPlugin {
     public static final String key = "__person_name__";
 
     @Override
-    public void install(PipelineLexerBuilder builder) {
+    public void init(PipelineLexerBuilder builder) {
         builder.addWordSplitAlgorithm(PersonNameAlgorithm.class);
         builder.addProcessor(PersonNameProcessor.class);
     }

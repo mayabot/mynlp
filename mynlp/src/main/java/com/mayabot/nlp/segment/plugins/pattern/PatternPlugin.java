@@ -23,7 +23,7 @@ public class PatternPlugin implements PipelineLexerPlugin {
     }
 
     @Override
-    public void install(PipelineLexerBuilder builder) {
+    public void init(PipelineLexerBuilder builder) {
         builder.addProcessor(new PatternWordpathProcessor(pattern));
     }
 

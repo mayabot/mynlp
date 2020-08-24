@@ -21,7 +21,6 @@ import com.mayabot.nlp.Mynlps;
 import com.mayabot.nlp.common.Lists;
 import com.mayabot.nlp.segment.*;
 import com.mayabot.nlp.segment.common.DefaultCharNormalize;
-import com.mayabot.nlp.segment.lexer.core.CoreLexerPlugin;
 import com.mayabot.nlp.segment.lexer.core.ViterbiBestPathAlgorithm;
 import com.mayabot.nlp.segment.plugins.collector.SentenceCollector;
 import com.mayabot.nlp.segment.plugins.collector.WordTermCollector;
@@ -96,13 +95,8 @@ public class PipelineLexerBuilder implements LexerBuilder {
         this.bestPathAlgorithm = mynlp.getInstance(ViterbiBestPathAlgorithm.class);
     }
 
-
-    public final void install(
-            @NotNull PipelineLexerPlugin module) {
-        if (module == null) {
-            throw new NullPointerException();
-        }
-        module.install(this);
+    public void install(PipelineLexerPlugin plugin) {
+        plugin.init(this);
     }
 
     @Override
@@ -110,7 +104,7 @@ public class PipelineLexerBuilder implements LexerBuilder {
 
         // 默认core的分词算法
         if (wordSplitAlgorithmList.isEmpty()) {
-            install(new CoreLexerPlugin());
+            throw new IllegalStateException("Miss wordSplitAlgorithm");
         }
 
         callListener();

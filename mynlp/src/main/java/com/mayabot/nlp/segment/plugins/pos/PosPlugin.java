@@ -11,7 +11,7 @@ import com.mayabot.nlp.segment.pipeline.PipelineLexerPlugin;
 public class PosPlugin implements PipelineLexerPlugin {
 
     @Override
-    public void install(PipelineLexerBuilder builder) {
+    public void init(PipelineLexerBuilder builder) {
         builder.addProcessor(PosPerceptronProcessor.class);
     }
 }

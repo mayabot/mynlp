@@ -37,8 +37,7 @@ public class Lexers {
     }
 
     public static FluentLexerBuilder coreBuilder() {
-        return builder()
-                .basic().core();
+        return builder().core();
     }
 
     public static Lexer perceptron() {
@@ -46,8 +45,7 @@ public class Lexers {
     }
 
     public static FluentLexerBuilder perceptronBuilder() {
-        return builder()
-                .basic().cws();
+        return builder().perceptron();
     }
 
     @Deprecated()

@@ -1,0 +1,85 @@
+== 综合模块
+
+=== 拼音
+
+=== 文本分类
+
+=== 繁简体转换
+
+[source,java]
+----
+Simplified2Traditional s2t = TransformService.simplified2Traditional();
+System.out.println(s2t.transform("软件和体育的艺术"));
+
+Traditional2Simplified t2s = TransformService.traditional2Simplified();
+System.out.println(t2s.transform("軟件和體育的藝術"));
+
+----
+
+=== 摘要
+
+文本摘要包含了两个简单TextRank的实现。
+
+.关键字摘要
+[source,java]
+----
+KeywordSummary keywordSummary = new KeywordSummary();
+keywordSummary.keyword("text",10);
+----
+
+.句子摘要
+[source,java]
+----
+SentenceSummary sentenceSummary = new SentenceSummary();
+List<String> result = sentenceSummary.summarySentences(document, 10);
+----
+
+=== 相似度
+
+还没开发。
+
+=== 高亮与关键字替换
+
+对文本关键字进行高亮。
+
+[source,java]
+----
+List<String> keywords = new ArrayList<>();
+
+keywords.add("居住证");
+keywords.add("居住");
+
+Highlighter highlighter = new Highlighter(keywords);//<1>
+
+String text = "居住在上海需要办理居住证";
+String text = highlighter.replace(text);
+----
+<1> Highlighter对象可重复使用
+
+Highlighter内部使用了Trie结构，所以replace的时间复杂度和keywords的数量几乎无关，只对原始text扫描一次。 替换过程采用前向最大匹配算法。
+
+另外还可以通过 `QuickReplacer` 类来自定义替换内容。
+
+[source,java]
+----
+List<String> keywords = new ArrayList<>();
+
+keywords.add("居住证");
+keywords.add("居住");
+
+QuickReplacer quickReplacer = new QuickReplacer(keywords);
+
+String result = quickReplacer.replace("居住在上海需要办理居住证",
+        (Function<String, String>) word -> "<a href='xxx'>"+word+"</a>");
+----
+
+Kotlin便捷扩展函数
+
+[source,kotlin]
+----
+"居住在上海需要办理居住证".highlight(listOf("居住证","居住"))
+----
+
+=== 新词发现
+
+这个文档怎么写

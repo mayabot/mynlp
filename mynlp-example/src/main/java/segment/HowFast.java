@@ -36,7 +36,7 @@ public class HowFast {
         String text = Guava.join(lines, "\n");
 
         Lexer lexer = Lexers.builder()
-                .basic().core()
+                .core()
                 .build();
 
         LexerReader analyzer = lexer.reader();

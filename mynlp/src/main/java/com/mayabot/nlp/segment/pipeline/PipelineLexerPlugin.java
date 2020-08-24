@@ -19,5 +19,5 @@ package com.mayabot.nlp.segment.pipeline;
  * @author jimichan
  */
 public interface PipelineLexerPlugin {
-    void install(PipelineLexerBuilder builder);
+    void init(PipelineLexerBuilder builder);
 }

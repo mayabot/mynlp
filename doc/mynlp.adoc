@@ -36,7 +36,11 @@ include::started.adoc[]
 
 include::lexer.adoc[]
 
+include::perceptron.adoc[]
+
 include::fasttext.adoc[]
+
+include::modules.adoc[]
 
 include::advanced.adoc[]
 

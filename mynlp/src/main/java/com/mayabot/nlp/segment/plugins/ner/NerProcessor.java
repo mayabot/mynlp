@@ -30,7 +30,7 @@ public class NerProcessor extends BaseSegmentComponent implements WordpathProces
     }
 
     @Override
-    public void install(PipelineLexerBuilder pipelineLexerBuilder) {
+    public void init(PipelineLexerBuilder pipelineLexerBuilder) {
         pipelineLexerBuilder.addProcessor(this);
     }
 

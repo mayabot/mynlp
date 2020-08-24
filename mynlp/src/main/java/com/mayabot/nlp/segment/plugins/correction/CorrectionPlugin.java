@@ -9,7 +9,7 @@ import com.mayabot.nlp.segment.pipeline.PipelineLexerPlugin;
 public class CorrectionPlugin implements PipelineLexerPlugin {
 
     @Override
-    public void install(PipelineLexerBuilder builder) {
+    public void init(PipelineLexerBuilder builder) {
         builder.addProcessor(CorrectionWordpathProcessor.class);
     }
 
