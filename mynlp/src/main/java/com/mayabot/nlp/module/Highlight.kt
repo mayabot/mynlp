@@ -19,12 +19,6 @@ class QuickReplacer(words: List<String>) {
                     .build(words.map { it to "1" }.toMap())
 
     fun replace(text: String, replace: (String) -> String): String {
-        return this.replace(text, Function {
-            replace(it)
-        })
-    }
-
-    fun replace(text: String, replace: Function<String, String>): String {
         val matcher = dict.newForwardMatcher(text)
 
         // 如若没有匹配，那么直接返回text
@@ -38,7 +32,39 @@ class QuickReplacer(words: List<String>) {
             if (offset - point > 0) {
                 sb.append(text.substring(point, offset))
             }
-            sb.append(replace.apply(m))
+            val rep = replace(m)
+            if (rep.isNotEmpty()) {
+                sb.append(rep)
+            }
+            point = matcher.offset + m.length
+            m = matcher.next()
+        }
+
+        if (point < text.length) {
+            sb.append(text.substring(point, text.length))
+        }
+
+        return sb.toString()
+    }
+
+    fun replaceForJava(text: String, replace: Function<String, String>): String {
+        val matcher = dict.newForwardMatcher(text)
+
+        // 如若没有匹配，那么直接返回text
+        var m: String? = matcher.next() ?: return text
+
+        val sb = StringBuilder()
+        var point = 0
+
+        while (m != null) {
+            val offset = matcher.offset
+            if (offset - point > 0) {
+                sb.append(text.substring(point, offset))
+            }
+            val rep = replace.apply(m)
+            if (rep.length != 0) {
+                sb.append(rep)
+            }
             point = matcher.offset + m.length
             m = matcher.next()
         }

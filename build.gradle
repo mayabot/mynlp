@@ -7,8 +7,8 @@ apply plugin: 'eclipse'
 
 description = "mynlp是mayabot开源的中文自然语言处理工具集"
 
-def buildVersion = "3.2.2"
-def snapShot = true
+def buildVersion = "3.2.2-beta2"
+def snapShot = false
 
 allprojects {
     repositories {

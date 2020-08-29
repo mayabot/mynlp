@@ -155,7 +155,6 @@ class TargetClassFactory(val clazz: Class<*>) : BeanFactory {
     }
 
     private fun create2(injector: Injector): Any {
-        println("Create for class " + clazz)
         // class，如果存在唯一一个构造函数
         // 如果构造函数里面的参数是Nullable的，那么autoBind=false
 

@@ -31,7 +31,6 @@ import com.mayabot.nlp.common.utils.MynlpFactories;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
-import java.nio.file.Paths;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.*;
@@ -110,11 +109,15 @@ public class MynlpBuilder {
 
                 File cacheDirFile;
                 if (cacheDir == null) {
+                    String userHome = System.getProperty("user.home");
 
-                    File tmpDir = Paths.get(System.getProperty("java.io.tmpdir")).toFile();
-                    String userName = System.getProperty("user.name");
+                    if (new File(userHome + "/.mynlp.data").exists()) {
+                        cacheDir = userHome + "/.mynlp.data";
+                    } else {
+                        cacheDir = userHome + "/mynlp.data";
+                    }
 
-                    cacheDirFile = ensureDir(new File(tmpDir, "mynlp-" + userName));
+                    cacheDirFile = ensureDir(new File(cacheDir, "cache"));
 
                 } else {
 

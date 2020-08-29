@@ -1,1 +1,14 @@
-== 结构化感知机框架
+== 结构化平均感知机框架
+
+什么是结构化平均感知机框架？请阅读这一篇文章link:http://www.hankcs.com/nlp/segment/implementation-of-word-segmentation-device-java-based-on-structured-average-perceptron.html[《基于结构化平均感知机的分词器Java实现》]
+
+在这里我们用结构化平均感知机框架来解决序列化标注问题，例如BMES标注。因为BMES这四个TAG之前是有转移关系的， 所以肯定是结构化预测问题。
+
+mynlp提供了通用的AP框架，方便实现各种自定义标签、特征函数、语料格式。
+
+你只需告知感知机框架三件事情：
+
+- 特征提取函数
+- label编码
+- 原始语料如果转换为(输入=标签)二元组
+

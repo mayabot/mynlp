@@ -41,7 +41,6 @@ example.data
 **/*.iml
 *.ipr
 
-**/hash
 
 data.work/
 **/model/dependency
