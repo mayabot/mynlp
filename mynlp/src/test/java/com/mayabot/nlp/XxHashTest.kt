@@ -8,6 +8,6 @@ class XxHashTest {
     @Test
     fun test() {
         //7958582187431989116
-        println(LongHashFunction.xx().hashString("要闻汲取奋力前行力量李强龚正等参观我们众志成城上海防控新冠肺炎疫情主题展览"))
+        println(LongHashFunction.xx().hashChars("要闻汲取奋力前行力量李强龚正等参观我们众志成城上海防控新冠肺炎疫情主题展览"))
     }
 }

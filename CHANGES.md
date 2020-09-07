@@ -1,5 +1,7 @@
 # 3.2.2
 - 增加QuickReplacer和Highlight功能
+- murmur3
+- text hash use xxHash
 
 # 3.2.1
 - kotlin update to 1.4.0

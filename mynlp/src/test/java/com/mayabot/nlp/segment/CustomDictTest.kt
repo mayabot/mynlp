@@ -9,13 +9,13 @@ class CustomDictTest {
     @Test
     fun test() {
         val mem = MemCustomDictionary()
-//        mem.addWord("居转户");
+        mem.addWord("科学之门");
         mem.rebuild()
 
         val lexer = Lexers.coreBuilder()
                 .withCustomDictionary(mem)
                 .build()
 
-        println(lexer.scan("居转户"))
+        println(lexer.scan("科学之门"))
     }
 }

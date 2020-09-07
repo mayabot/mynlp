@@ -19,7 +19,10 @@ description = '中文分词'
 dependencies {
 
     // kotlin core lib
-    compile "org.jetbrains.kotlin:kotlin-stdlib"
+    compile ("org.jetbrains.kotlin:kotlin-stdlib") {
+        exclude module:"kotlin-stdlib-jdk7"
+        exclude module:"kotlin-stdlib-jdk8"
+    }
 
     compileOnly 'org.apache.lucene:lucene-core:5.0.0'
 
@@ -30,12 +33,15 @@ dependencies {
     compileOnly(group: "log4j", name: "log4j", version: "1.2.17")
 
 
+    compileOnly 'net.openhft:zero-allocation-hashing:0.12'
     compileOnly group: 'org.fusesource.jansi', name: 'jansi', version: '1.16'
     
     testCompile 'junit:junit:4.12'
     testCompile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
     testCompile 'com.mayabot.mynlp.resource:mynlp-resource-cws:1.0.0'
     testCompile 'org.apache.lucene:lucene-core:5.0.0'
+
+    testImplementation 'net.openhft:zero-allocation-hashing:0.12'
 
     // 核心词典
     testImplementation 'com.mayabot.mynlp.resource:mynlp-resource-coredict:1.0.0'
@@ -51,6 +57,8 @@ dependencies {
    testImplementation 'com.mayabot.mynlp.resource:mynlp-resource-cws:1.0.0'
     // 自定义扩展词库
    testImplementation 'com.mayabot.mynlp.resource:mynlp-resource-custom:1.0.0'
+
+
 }
 
 test{
