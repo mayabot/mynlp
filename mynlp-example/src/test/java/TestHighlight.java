@@ -14,7 +14,7 @@ public class TestHighlight {
 
         QuickReplacer quickReplacer = new QuickReplacer(keywords);
 
-        String result = quickReplacer.replace("居住在上海需要办理居住证",
+        String result = quickReplacer.replaceForJava("居住在上海需要办理居住证",
                 (Function<String, String>) word -> "<a href='xxx'>" + word + "</a>");
 
         System.out.println(result);

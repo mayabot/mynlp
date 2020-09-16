@@ -171,3 +171,6 @@ object TextHash {
 
 fun String.titleHash1() = TextHash.hash1(this)
 fun String.titleHash2() = TextHash.hash2(this)
+
+fun String.textHash1() = TextHash.hash1(this)
+fun String.textHash2() = TextHash.hash2(this)
