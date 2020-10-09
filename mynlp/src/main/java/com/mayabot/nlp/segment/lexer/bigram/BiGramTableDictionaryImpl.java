@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.mayabot.nlp.segment.lexer.core;
+package com.mayabot.nlp.segment.lexer.bigram;
 
 import com.mayabot.nlp.MynlpEnv;
 import com.mayabot.nlp.common.EncryptionUtil;
@@ -41,7 +41,7 @@ import java.util.List;
  * @author jimichan
  */
 @Singleton
-public class BiGramTableDictionaryImpl extends BaseNlpResourceExternalizable implements BiGramTableDictionary {
+public class BiGramTableDictionaryImpl extends BaseExternalizable implements BiGramTableDictionary {
 
     private final MynlpEnv mynlp;
     private final CoreDictPatch coreDictPatch;

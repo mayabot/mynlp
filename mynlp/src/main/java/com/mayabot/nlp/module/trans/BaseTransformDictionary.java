@@ -1,7 +1,6 @@
 package com.mayabot.nlp.module.trans;
 
 import com.mayabot.nlp.Mynlp;
-import com.mayabot.nlp.Mynlps;
 import com.mayabot.nlp.algorithm.collection.ahocorasick.AhoCoraickDoubleArrayTrieBuilder;
 import com.mayabot.nlp.algorithm.collection.ahocorasick.AhoCorasickDoubleArrayTrie;
 import com.mayabot.nlp.common.resources.UseLines;
@@ -26,7 +25,7 @@ public abstract class BaseTransformDictionary {
 
         try {
 
-            Mynlp mynlp = Mynlps.get();
+            Mynlp mynlp = Mynlp.singleton();
 
             CharSourceLineReader charSourceLineReader =
                     UseLines.lineReader(mynlp.getEnv().loadResource(resourceName).inputStream());

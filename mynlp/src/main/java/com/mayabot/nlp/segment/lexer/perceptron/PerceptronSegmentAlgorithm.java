@@ -3,7 +3,7 @@ package com.mayabot.nlp.segment.lexer.perceptron;
 import com.mayabot.nlp.segment.Nature;
 import com.mayabot.nlp.segment.WordSplitAlgorithm;
 import com.mayabot.nlp.segment.common.BaseSegmentComponent;
-import com.mayabot.nlp.segment.lexer.core.CoreDictionary;
+import com.mayabot.nlp.segment.lexer.bigram.CoreDictionary;
 import com.mayabot.nlp.segment.wordnet.Vertex;
 import com.mayabot.nlp.segment.wordnet.Wordnet;
 

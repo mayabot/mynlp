@@ -15,11 +15,14 @@
  */
 package com.mayabot.nlp.segment;
 
+import com.mayabot.nlp.Mynlp;
+
 /**
  * Lexer系列便捷方法。
  *
  * @author jimichan
  */
+@Deprecated
 public class Lexers {
 
     /**
@@ -27,7 +30,7 @@ public class Lexers {
      * @since 3.0.0
      */
     public static FluentLexerBuilder builder() {
-        return FluentLexerBuilder.builder();
+        return Mynlp.singleton().lexerBuilder();
     }
 
     public static Lexer core() {
@@ -46,11 +49,6 @@ public class Lexers {
 
     public static FluentLexerBuilder perceptronBuilder() {
         return builder().perceptron();
-    }
-
-    @Deprecated()
-    public static FluentLexerBuilder fluent() {
-        return FluentLexerBuilder.builder();
     }
 
 }

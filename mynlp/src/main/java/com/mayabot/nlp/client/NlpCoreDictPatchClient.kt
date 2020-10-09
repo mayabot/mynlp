@@ -2,8 +2,8 @@ package com.mayabot.nlp.client
 
 import com.mayabot.nlp.MynlpConfigs
 import com.mayabot.nlp.MynlpEnv
-import com.mayabot.nlp.segment.lexer.core.BiGram
-import com.mayabot.nlp.segment.lexer.core.CoreDictPatch
+import com.mayabot.nlp.segment.lexer.bigram.BiGram
+import com.mayabot.nlp.segment.lexer.bigram.CoreDictPatch
 
 class NlpCoreDictPatchClient(mynlpEnv: MynlpEnv) : CoreDictPatch {
 

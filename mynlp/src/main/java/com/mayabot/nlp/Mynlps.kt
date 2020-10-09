@@ -17,69 +17,48 @@
 package com.mayabot.nlp
 
 import com.mayabot.nlp.common.logging.InternalLoggerFactory
-import java.security.AccessController
-import java.security.PrivilegedAction
-import java.util.*
 import java.util.function.Consumer
-
 
 /**
  * Mynlps 单例对象。默认提供一个全局单例mynlp对象
  *
  * @author jimichan
  */
+@Deprecated("Use Mynlp")
 object Mynlps {
 
     @JvmStatic
+    @Deprecated("")
     val logger = InternalLoggerFactory.getInstance("com.mayabot.nlp.Mynlps")!!
-
-    private val initList = arrayListOf<Consumer<MynlpBuilder>>()
-
-    private var inited = false
-
-    private val mynlp: Mynlp by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
-        inited = true
-        createMynlp()
-    }
-
-    private fun createMynlp(): Mynlp {
-        val builder = MynlpBuilder()
-
-        AccessController.doPrivileged(PrivilegedAction<Unit> {
-            initList.forEach {
-                it.accept(builder)
-            }
-        })
-
-        return builder.build()
-    }
 
     /**
      * 其他任何Mynlp方式之前调用，通过回调MynlpBuilder进行系统设置。
      * @param consumer 设置MynlpBuilder
      */
     @JvmStatic
+    @Deprecated("")
     fun install(consumer: Consumer<MynlpBuilder>) {
-        if (inited) {
-            throw RuntimeException("必须在调用Mynlp.get之前调用")
+        Mynlp.init {
+            consumer.accept(it)
         }
-        initList += consumer
     }
 
+    @Deprecated("")
     @JvmStatic
     fun config(consumer: Consumer<MynlpBuilder>) {
-        this.install(consumer)
+        Mynlp.init {
+            consumer.accept(it)
+        }
     }
 
+    @Deprecated("")
     fun install(consumer: (MynlpBuilder) -> Unit) {
-        if (inited) {
-            throw RuntimeException("必须在调用Mynlp.get之前调用")
-        }
-        initList += Consumer<MynlpBuilder> {
+        Mynlp.init {
             consumer(it)
         }
     }
 
+    @Deprecated("")
     fun config(consumer: (MynlpBuilder) -> Unit) {
         this.install(consumer)
     }
@@ -91,35 +70,27 @@ object Mynlps {
      * @param dataDir 数据目录。默认在当前用户目录下.mynlp.data文件夹
      */
     @JvmStatic
+    @Deprecated("")
     fun setDataDir(dataDir: String) {
-        install { it.dataDir = dataDir }
+        Mynlp.setDataDir(dataDir)
     }
 
     @JvmStatic
+    @Deprecated("")
     fun setCacheDir(dir: String) {
-        install { it.cacheDir = dir }
+        Mynlp.setCacheDir(dir)
     }
 
     @JvmStatic
+    @Deprecated("")
     fun set(settingItem: SettingItem<*>, value: String) {
         install { it.set(settingItem, value) }
     }
 
     @JvmStatic
+    @Deprecated("")
     fun set(key: String, value: String) {
         install { it.set(key, value) }
-    }
-
-    @JvmStatic
-    fun loadSettingFromProperties(properties: Properties) {
-        install {
-            properties.keys.forEach { key ->
-                val value = properties.getProperty(key.toString())!!
-                if (key.toString().isNotBlank() && value.isNotBlank()) {
-                    it.set(key.toString(), value)
-                }
-            }
-        }
     }
 
     /**
@@ -127,9 +98,11 @@ object Mynlps {
      * @return Mynlp
      */
     @JvmStatic
+    @Deprecated(message = "use mynlp", replaceWith = ReplaceWith("Mynlp.singleton()"))
     fun get(): Mynlp {
-        return mynlp
+        return Mynlp.singleton()
     }
+
 
     /**
      * 返回Mynlp容器中指定class的Bean。
@@ -139,18 +112,14 @@ object Mynlps {
      * @return 返回实例Bean
     </T> */
     @JvmStatic
+    @Deprecated("")
     fun <T> instanceOf(clazz: Class<T>): T {
-        return AccessController.doPrivileged(PrivilegedAction<T> {
-            mynlp.getInstance(clazz)
-        })
+        return Mynlp.getInstance(clazz)
     }
 
+    @Deprecated("")
     inline fun <reified T> instanceOf(): T {
-        return instanceOf(T::class.java)
+        return Mynlp.getInstance(T::class.java)
     }
 
-}
-
-inline fun <reified T> Mynlp.getInstance(): T {
-    return this.getInstance(T::class.java)
 }

@@ -16,6 +16,7 @@
 
 package com.mayabot.nlp.segment;
 
+import com.mayabot.nlp.segment.lexer.bigram.CoreDictionarySplitAlgorithm;
 import com.mayabot.nlp.segment.lexer.perceptron.PerceptronSegmentAlgorithm;
 import com.mayabot.nlp.segment.plugins.atom.AtomSplitAlgorithm;
 import com.mayabot.nlp.segment.wordnet.Wordnet;
@@ -35,7 +36,7 @@ import org.jetbrains.annotations.NotNull;
  * @author jimichan
  * @see AtomSplitAlgorithm
  * @see PerceptronSegmentAlgorithm
- * @see com.mayabot.nlp.segment.lexer.core.CoreDictionarySplitAlgorithm
+ * @see CoreDictionarySplitAlgorithm
  * @see com.mayabot.nlp.segment.plugins.personname.PersonNameAlgorithm
  */
 public interface WordSplitAlgorithm extends SegmentComponent {

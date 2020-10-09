@@ -1,4 +1,4 @@
-package com.mayabot.nlp.segment.lexer.core;
+package com.mayabot.nlp.segment.lexer.bigram;
 
 import com.mayabot.nlp.algorithm.collection.dat.DoubleArrayTrieStringIntMap.DATMapMatcherInt;
 import com.mayabot.nlp.common.injector.ImplementedBy;

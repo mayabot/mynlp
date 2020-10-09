@@ -19,7 +19,7 @@ import com.mayabot.nlp.MynlpConfigs
 import com.mayabot.nlp.MynlpEnv
 import com.mayabot.nlp.client.NlpCoreDictPatchClient
 import com.mayabot.nlp.common.injector.AbstractModule
-import com.mayabot.nlp.segment.lexer.core.CoreDictPatch
+import com.mayabot.nlp.segment.lexer.bigram.CoreDictPatch
 
 class SegmentModule(private val env: MynlpEnv) : AbstractModule() {
 

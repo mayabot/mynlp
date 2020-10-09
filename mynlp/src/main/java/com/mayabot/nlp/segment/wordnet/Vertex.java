@@ -18,7 +18,7 @@ package com.mayabot.nlp.segment.wordnet;
 
 import com.mayabot.nlp.segment.Nature;
 import com.mayabot.nlp.segment.WordAndNature;
-import com.mayabot.nlp.segment.lexer.core.DictionaryAbsWords;
+import com.mayabot.nlp.segment.lexer.bigram.DictionaryAbsWords;
 
 /**
  * WordNode中的一个节点。顶点 它同时实现了LinkedList中节点的功能指针

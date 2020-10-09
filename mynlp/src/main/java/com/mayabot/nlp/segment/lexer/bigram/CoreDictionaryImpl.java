@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.mayabot.nlp.segment.lexer.core;
+package com.mayabot.nlp.segment.lexer.bigram;
 
 import com.mayabot.nlp.MynlpEnv;
 import com.mayabot.nlp.algorithm.collection.dat.DoubleArrayTrieStringIntMap;
@@ -46,7 +46,7 @@ import java.util.TreeMap;
  * @author jimichan
  */
 @Singleton
-public class CoreDictionaryImpl extends BaseNlpResourceExternalizable implements CoreDictionary {
+public class CoreDictionaryImpl extends BaseExternalizable implements CoreDictionary {
 
     private final MynlpEnv env;
     private InternalLogger logger = InternalLoggerFactory.getInstance(CoreDictionaryImpl.class);

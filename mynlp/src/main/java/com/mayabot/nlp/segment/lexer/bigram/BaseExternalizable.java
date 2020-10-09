@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.mayabot.nlp.segment.lexer.core;
+package com.mayabot.nlp.segment.lexer.bigram;
 
 import com.mayabot.nlp.MynlpEnv;
 import com.mayabot.nlp.common.logging.InternalLogger;
@@ -28,11 +28,11 @@ import java.io.*;
  *
  * @author jimichan
  */
-abstract class BaseNlpResourceExternalizable implements Externalizable {
+abstract class BaseExternalizable implements Externalizable {
 
     private MynlpEnv env;
 
-    public BaseNlpResourceExternalizable(MynlpEnv env) {
+    public BaseExternalizable(MynlpEnv env) {
         this.env = env;
     }
 

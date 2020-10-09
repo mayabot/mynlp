@@ -1,13 +1,7 @@
 package com.mayabot.nlp;
 
-import com.mayabot.nlp.segment.Lexers;
-
 public class Test {
     public static void main(String[] args) {
-        Lexers.builder()
-                .core()
-                .withPos()
-                .withNer()
-                .withPersonName();
+        System.out.println(Mynlp.segment("你好和上午好"));
     }
 }

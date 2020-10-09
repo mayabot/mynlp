@@ -1,6 +1,6 @@
 package com.mayabot.nlp.segment.lexer.perceptron;
 
-import com.mayabot.nlp.segment.lexer.core.ViterbiBestPathAlgorithm;
+import com.mayabot.nlp.segment.lexer.bigram.ViterbiBestPathAlgorithm;
 import com.mayabot.nlp.segment.pipeline.PipelineLexerBuilder;
 import com.mayabot.nlp.segment.pipeline.PipelineLexerPlugin;
 import com.mayabot.nlp.segment.plugins.atom.AtomSplitAlgorithm;

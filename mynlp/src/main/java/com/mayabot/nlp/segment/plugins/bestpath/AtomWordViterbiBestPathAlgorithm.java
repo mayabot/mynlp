@@ -18,8 +18,8 @@ package com.mayabot.nlp.segment.plugins.bestpath;
 
 import com.mayabot.nlp.common.injector.Singleton;
 import com.mayabot.nlp.segment.common.VertexHelper;
-import com.mayabot.nlp.segment.lexer.core.BiGramTableDictionary;
-import com.mayabot.nlp.segment.lexer.core.CoreDictionary;
+import com.mayabot.nlp.segment.lexer.bigram.BiGramTableDictionary;
+import com.mayabot.nlp.segment.lexer.bigram.CoreDictionary;
 import com.mayabot.nlp.segment.wordnet.Vertex;
 import com.mayabot.nlp.segment.wordnet.VertexRow;
 import com.mayabot.nlp.segment.wordnet.Wordnet;

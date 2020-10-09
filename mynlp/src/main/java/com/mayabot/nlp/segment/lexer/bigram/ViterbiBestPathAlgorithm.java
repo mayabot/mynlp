@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.mayabot.nlp.segment.lexer.core;
+package com.mayabot.nlp.segment.lexer.bigram;
 
 import com.mayabot.nlp.common.injector.Singleton;
 import com.mayabot.nlp.segment.wordnet.*;

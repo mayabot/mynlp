@@ -17,8 +17,8 @@
 package com.mayabot.nlp.segment.dictionary;
 
 import com.mayabot.nlp.Mynlps;
-import com.mayabot.nlp.segment.lexer.core.BiGramTableDictionaryImpl;
-import com.mayabot.nlp.segment.lexer.core.CoreDictionary;
+import com.mayabot.nlp.segment.lexer.bigram.BiGramTableDictionaryImpl;
+import com.mayabot.nlp.segment.lexer.bigram.CoreDictionary;
 import org.junit.Test;
 
 public class CoreGiGramTableDictionaryTest {

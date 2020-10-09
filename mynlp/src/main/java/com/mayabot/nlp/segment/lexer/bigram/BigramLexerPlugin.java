@@ -1,4 +1,4 @@
-package com.mayabot.nlp.segment.lexer.core;
+package com.mayabot.nlp.segment.lexer.bigram;
 
 import com.mayabot.nlp.Mynlp;
 import com.mayabot.nlp.Mynlps;
@@ -9,19 +9,19 @@ import com.mayabot.nlp.segment.plugins.atom.AtomSplitAlgorithm;
 /**
  * @author jimichan
  */
-public class CoreLexerPlugin implements PipelineLexerPlugin {
+public class BigramLexerPlugin implements PipelineLexerPlugin {
 
     private CoreDictionary dictionaryMatcher;
 
-    public CoreLexerPlugin(CoreDictionary dictionaryMatcher) {
+    public BigramLexerPlugin(CoreDictionary dictionaryMatcher) {
         this.dictionaryMatcher = dictionaryMatcher;
     }
 
-    public CoreLexerPlugin(Mynlp mynlp) {
+    public BigramLexerPlugin(Mynlp mynlp) {
         this.dictionaryMatcher = mynlp.getInstance(CoreDictionary.class);
     }
 
-    public CoreLexerPlugin() {
+    public BigramLexerPlugin() {
         this(Mynlps.get());
     }
 

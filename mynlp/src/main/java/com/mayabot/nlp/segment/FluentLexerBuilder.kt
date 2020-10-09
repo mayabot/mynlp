@@ -1,8 +1,9 @@
 package com.mayabot.nlp.segment
 
+import com.mayabot.nlp.Mynlp
 import com.mayabot.nlp.Mynlps
-import com.mayabot.nlp.segment.lexer.core.CoreDictionary
-import com.mayabot.nlp.segment.lexer.core.CoreLexerPlugin
+import com.mayabot.nlp.segment.lexer.bigram.BigramLexerPlugin
+import com.mayabot.nlp.segment.lexer.bigram.CoreDictionary
 import com.mayabot.nlp.segment.lexer.perceptron.PerceptronSegmentPlugin
 import com.mayabot.nlp.segment.pipeline.PipelineLexerBuilder
 import com.mayabot.nlp.segment.pipeline.PipelineLexerPlugin
@@ -17,30 +18,37 @@ import com.mayabot.nlp.segment.plugins.pos.PosPlugin
  * Fluent style
  * @author jimichan
  */
-open class FluentLexerBuilder : LexerBuilder {
+open class FluentLexerBuilder(mynlp: Mynlp = Mynlp.singleton()) : LexerBuilder {
 
-    companion object {
-        @JvmStatic
-        fun builder() = FluentLexerBuilder()
-    }
+    private val builder = PipelineLexerBuilder(mynlp)
 
     override fun build(): Lexer {
         return builder.build()
     }
 
-    private val builder = PipelineLexerBuilder.builder()
-
     fun install(plugin: PipelineLexerPlugin) {
         builder.install(plugin)
     }
 
+    @Deprecated(message = "使用bigram方法", replaceWith = ReplaceWith("bigram"), level = DeprecationLevel.WARNING)
     fun core(): FluentLexerBuilder {
-        builder.install(CoreLexerPlugin())
+        builder.install(BigramLexerPlugin())
         return this@FluentLexerBuilder
     }
 
+    @Deprecated(message = "使用bigram方法", replaceWith = ReplaceWith("bigram(dict)"), level = DeprecationLevel.WARNING)
     fun coreByDict(dict: CoreDictionary): FluentLexerBuilder {
-        builder.install(CoreLexerPlugin(dict))
+        builder.install(BigramLexerPlugin(dict))
+        return this@FluentLexerBuilder
+    }
+
+    fun bigram(): FluentLexerBuilder {
+        builder.install(BigramLexerPlugin())
+        return this@FluentLexerBuilder
+    }
+
+    fun bigram(dict: CoreDictionary): FluentLexerBuilder {
+        builder.install(BigramLexerPlugin(dict))
         return this@FluentLexerBuilder
     }
 
@@ -83,7 +91,7 @@ open class FluentLexerBuilder : LexerBuilder {
      * 保持字符原样输出
      */
     fun keepOriCharOutput() : FluentLexerBuilder {
-        builder.setKeepOriCharOutput(true)
+        builder.isKeepOriCharOutput = true
         return this
     }
 
@@ -139,7 +147,6 @@ open class FluentLexerBuilder : LexerBuilder {
             return this@FluentLexerBuilder
         }
     }
-
 }
 
 

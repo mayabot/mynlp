@@ -5,7 +5,7 @@ import com.mayabot.nlp.algorithm.collection.dat.DoubleArrayTrieMap
 import com.mayabot.nlp.common.Lists
 import com.mayabot.nlp.common.ParagraphReaderSmart
 import com.mayabot.nlp.common.utils.Characters
-import com.mayabot.nlp.segment.lexer.core.CoreDictionary
+import com.mayabot.nlp.segment.lexer.bigram.CoreDictionary
 import java.io.StringReader
 import java.util.*
 import kotlin.math.log2

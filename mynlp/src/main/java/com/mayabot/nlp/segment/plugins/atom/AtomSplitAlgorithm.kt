@@ -1,6 +1,6 @@
 package com.mayabot.nlp.segment.plugins.atom
 
-import com.mayabot.nlp.Mynlps
+import com.mayabot.nlp.Mynlp
 import com.mayabot.nlp.algorithm.collection.dat.DoubleArrayTrieStringIntMap
 import com.mayabot.nlp.algorithm.collection.dat.FastDatCharSet
 import com.mayabot.nlp.common.injector.ImplementedBy
@@ -26,7 +26,7 @@ class DefaultAtomSplitAlgorithmTemplateProvider : AtomSplitAlgorithmTemplateProv
     private val defaultTemplates = defaultTemplates()
 
     override fun load(): DoubleArrayTrieStringIntMap {
-        Mynlps.logger.info("Load Default AtomSplitAlgorithm Template")
+        Mynlp.logger.info("Load Default AtomSplitAlgorithm Template")
         return defaultTemplates
     }
 

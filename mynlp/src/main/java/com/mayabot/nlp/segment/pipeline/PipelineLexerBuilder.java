@@ -21,7 +21,7 @@ import com.mayabot.nlp.Mynlps;
 import com.mayabot.nlp.common.Lists;
 import com.mayabot.nlp.segment.*;
 import com.mayabot.nlp.segment.common.DefaultCharNormalize;
-import com.mayabot.nlp.segment.lexer.core.ViterbiBestPathAlgorithm;
+import com.mayabot.nlp.segment.lexer.bigram.ViterbiBestPathAlgorithm;
 import com.mayabot.nlp.segment.plugins.collector.SentenceCollector;
 import com.mayabot.nlp.segment.plugins.collector.WordTermCollector;
 import com.mayabot.nlp.segment.wordnet.BestPathAlgorithm;
@@ -84,6 +84,11 @@ public class PipelineLexerBuilder implements LexerBuilder {
     @NotNull
     public static PipelineLexerBuilder builder() {
         return new PipelineLexerBuilder();
+    }
+
+    @NotNull
+    public static PipelineLexerBuilder builder(Mynlp mynlp) {
+        return new PipelineLexerBuilder(mynlp);
     }
 
     public PipelineLexerBuilder() {
