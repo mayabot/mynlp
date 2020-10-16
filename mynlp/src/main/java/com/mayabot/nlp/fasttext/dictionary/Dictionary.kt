@@ -96,7 +96,7 @@ class Dictionary(
      * words里面存放了
      */
     fun getLine(tokens: Iterable<String>, words: IntArrayList, labels: IntArrayList): Int {
-        val word_hashes = LongArrayList()
+        val word_hashes = IntArrayList()
         var ntokens = 0
 
         words.clear()
@@ -111,7 +111,7 @@ class Dictionary(
 
             if (type == EntryType.word) {
                 addSubwords(words, token, wid)
-                word_hashes.add(h.toLong())
+                word_hashes.add(h.toInt())
             } else if (type == EntryType.label && wid >= 0) {
                 labels.add(wid - nwords)
             }
