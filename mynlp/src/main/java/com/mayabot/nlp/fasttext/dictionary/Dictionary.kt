@@ -146,7 +146,7 @@ class Dictionary(
 
 
     private fun addWordNgrams(line: IntArrayList,
-                              hashes: LongArrayList,
+                              hashes: IntArrayList,
                               n: Int) {
 
         val hashSize = hashes.size()
