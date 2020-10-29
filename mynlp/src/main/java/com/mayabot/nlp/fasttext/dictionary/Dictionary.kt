@@ -402,11 +402,12 @@ class Dictionary(
                     nlabels
             )
 
+            dict.pruneidxSize = pruneidxSize
+            dict.pruneidx = pruneidx
+
             dict.initTableDiscard()
             dict.initNgrams()
 
-            dict.pruneidxSize = pruneidxSize
-            dict.pruneidx = pruneidx
 
             dict.onehotMap.initWordHash2WordId()
 
