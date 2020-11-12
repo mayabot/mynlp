@@ -51,6 +51,7 @@ class InjectorImpl(
         return this.getInstance(clazz, "")
     }
 
+    //TODO 需要线程同步？
     override fun <T> getInstance(
             clazz: Class<T>,
             tag: String

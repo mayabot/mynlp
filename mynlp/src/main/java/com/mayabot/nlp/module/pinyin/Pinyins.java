@@ -1,24 +1,25 @@
 package com.mayabot.nlp.module.pinyin;
 
-import static com.mayabot.nlp.Mynlp.getInstance;
+import com.mayabot.nlp.Mynlp;
 
 /**
  * @author jimichan
  */
 public class Pinyins {
 
-    private static PinyinService pinyinService = service();
+    private static PinyinService pinyinService = Mynlp.instance().getInstance(PinyinService.class);
 
+    @Deprecated
     public static PinyinResult convert(String text) {
         return pinyinService.text2Pinyin(text);
     }
 
-    public static void reset() {
-        pinyinService = service();
-    }
-
-    public static PinyinService service() {
-        return getInstance(PinyinService.class);
-    }
+//    public static void reset() {
+//        pinyinService = service();
+//    }
+//
+//    public static PinyinService service() {
+//        return Mynlp.instance().getInstance(PinyinService.class);
+//    }
 
 }

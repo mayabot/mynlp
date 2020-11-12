@@ -71,7 +71,7 @@ public abstract class BasePinyinDictionary {
         logger.info("Pinyin Dictionary rebuild use time {} ms", t2 - t1);
     }
 
-    abstract TreeMap<String, Pinyin[]> load();
+    protected abstract TreeMap<String, Pinyin[]> load();
 
     /**
      * 转化为拼音
@@ -80,6 +80,14 @@ public abstract class BasePinyinDictionary {
      */
     public PinyinResult text2Pinyin(String text) {
         return new PinyinResult(segLongest(text.toCharArray()), text);
+    }
+
+    /**
+     * @param text 原始中文文本
+     * @return
+     */
+    public PinyinResult convert(String text) {
+        return this.text2Pinyin(text);
     }
 
     /**

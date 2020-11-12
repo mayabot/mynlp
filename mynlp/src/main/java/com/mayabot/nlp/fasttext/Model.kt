@@ -2,8 +2,8 @@ package com.mayabot.nlp.fasttext
 
 import com.mayabot.nlp.blas.DenseVector
 import com.mayabot.nlp.blas.Matrix
+import com.mayabot.nlp.common.IntArrayList
 import com.mayabot.nlp.fasttext.loss.Loss
-import com.mayabot.nlp.fasttext.utils.IntArrayList
 import kotlin.random.Random
 
 typealias Predictions = MutableList<ScoreIdPair>

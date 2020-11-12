@@ -1,7 +1,6 @@
 package com.mayabot.nlp.module.pinyin.split
 
 import com.mayabot.nlp.MynlpEnv
-import com.mayabot.nlp.Mynlps
 import com.mayabot.nlp.common.injector.Singleton
 import com.mayabot.nlp.common.utils.CharNormUtils
 import com.mayabot.nlp.perceptron.PerceptronFileFormat
@@ -9,13 +8,13 @@ import com.mayabot.nlp.perceptron.PerceptronModel
 import com.mayabot.nlp.perceptron.PerceptronRunner
 import java.io.File
 
-object PinyinSplits{
-
-    val service by lazy { Mynlps.instanceOf<PinyinSplitService>() }
-
-    @JvmStatic
-    fun split(text: String) = service.split(text)
-}
+//object PinyinSplits{
+//
+//    val service by lazy { Mynlps.instanceOf<PinyinSplitService>() }
+//
+//    @JvmStatic
+//    fun split(text: String) = service.split(text)
+//}
 
 @Singleton
 class PinyinSplitService(env: MynlpEnv) {

@@ -25,7 +25,7 @@ public abstract class BaseTransformDictionary {
 
         try {
 
-            Mynlp mynlp = Mynlp.singleton();
+            Mynlp mynlp = Mynlp.instance();
 
             CharSourceLineReader charSourceLineReader =
                     UseLines.lineReader(mynlp.getEnv().loadResource(resourceName).inputStream());

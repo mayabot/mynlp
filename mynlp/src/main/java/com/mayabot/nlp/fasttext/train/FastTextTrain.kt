@@ -1,16 +1,15 @@
 package com.mayabot.nlp.fasttext.train
 
+import com.mayabot.nlp.common.IntArrayList
 import com.mayabot.nlp.fasttext.FastText
 import com.mayabot.nlp.fasttext.Model
 import com.mayabot.nlp.fasttext.args.Args
 import com.mayabot.nlp.fasttext.args.ModelName
 import com.mayabot.nlp.fasttext.loss.LossName
-import com.mayabot.nlp.fasttext.utils.IntArrayList
 import com.mayabot.nlp.fasttext.utils.logger
 import com.mayabot.nlp.fasttext.utils.loggerln
 import java.lang.Thread.sleep
 import java.util.concurrent.atomic.AtomicLong
-
 
 
 class FastTextTrain(

@@ -1,8 +1,8 @@
-package com.mayabot.nlp.fasttext.utils
+package com.mayabot.nlp.common
 
 import java.util.*
 
-class IntArrayList (
+class LongArrayList (
         expectedElements: Int = 4,
         private val resizer: ArraySizingStrategy = BoundedProportionalArraySizingStrategy()
 ) {
@@ -11,7 +11,7 @@ class IntArrayList (
      * Internal array for storing the list. The array may be larger than the current size
      * ([.size]).
      */
-    var buffer: IntArray = EMPTY_ARRAY
+    var buffer: LongArray = EMPTY_ARRAY
 
     /**
      * Current number of elements stored in [.buffer].
@@ -25,7 +25,7 @@ class IntArrayList (
         ensureCapacity(expectedElements)
     }
 
-    inline fun forEach(action: (num: Int) -> Unit) {
+    inline fun forEach(action: (num: Long) -> Unit) {
         val buffer = this.buffer
         var i = 0
         val size = this.size()
@@ -35,20 +35,12 @@ class IntArrayList (
         }
     }
 
-    fun add(e1: Int) {
+    fun add(e1: Long) {
         ensureBufferSpace(1)
         buffer[elementsCount++] = e1
     }
 
-
-    fun addAll(ngrams: IntArrayList) {
-        ensureBufferSpace(ngrams.size())
-        ngrams.forEach { x->
-            buffer[elementsCount++] = x
-        }
-    }
-
-    operator fun get(index: Int): Int {
+    operator fun get(index: Int): Long {
 
         assert(index >= 0 && index < size()){
             "Index " + index + " out of bounds [" + 0 + ", " + size() + ")."
@@ -57,7 +49,7 @@ class IntArrayList (
         return buffer[index]
     }
 
-    operator fun set(index: Int, e1: Int): Int {
+    operator fun set(index: Int, e1: Long): Long {
         assert(index >= 0 && index < size()) {
             "Index " + index + " out of bounds [" + 0 + ", " + size() + ")."
         }
@@ -67,11 +59,11 @@ class IntArrayList (
         return v
     }
 
-    operator fun contains(e1: Int): Boolean {
+    operator fun contains(e1: Long): Boolean {
         return indexOf(e1) >= 0
     }
 
-    fun indexOf(e1: Int): Int {
+    fun indexOf(e1: Long): Int {
         for (i in 0 until elementsCount) {
             if (buffer[i] == e1) {
                 return i
@@ -167,24 +159,15 @@ class IntArrayList (
         elementsCount = 0
     }
 
-    fun toArray(): IntArray {
+    fun toArray(): LongArray {
         return buffer.copyOf(elementsCount)
     }
-
 
     companion object {
         /**
          * An immutable empty buffer (array).
          */
-        val EMPTY_ARRAY = IntArray(0)
-
-        fun from(vararg elements: Int): IntArrayList {
-            val list: IntArrayList = IntArrayList(elements.size)
-            for (x in elements) {
-                list.add(x)
-            }
-            return list
-        }
+        val EMPTY_ARRAY = LongArray(0)
     }
 
 }

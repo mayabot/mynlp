@@ -2,10 +2,10 @@ package com.mayabot.nlp.fasttext.loss
 
 import com.mayabot.nlp.blas.Matrix
 import com.mayabot.nlp.blas.Vector
+import com.mayabot.nlp.common.IntArrayList
 import com.mayabot.nlp.fasttext.Model
 import com.mayabot.nlp.fasttext.Predictions
 import com.mayabot.nlp.fasttext.ScoreIdPair
-import com.mayabot.nlp.fasttext.utils.IntArrayList
 import java.util.*
 import kotlin.math.exp
 

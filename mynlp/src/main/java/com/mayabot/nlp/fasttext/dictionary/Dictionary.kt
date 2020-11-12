@@ -1,5 +1,6 @@
 package com.mayabot.nlp.fasttext.dictionary
 
+import com.mayabot.nlp.common.IntArrayList
 import com.mayabot.nlp.fasttext.args.Args
 import com.mayabot.nlp.fasttext.args.ModelName
 import com.mayabot.nlp.fasttext.utils.*
@@ -402,6 +403,7 @@ class Dictionary(
                     nlabels
             )
 
+            // saber 把这两个调整到下面两句之前，在之前fix模型加载错误的时候，是漏掉了这两句
             dict.pruneidxSize = pruneidxSize
             dict.pruneidx = pruneidx
 

@@ -30,25 +30,24 @@ import java.util.*
  * @author jimichan
  */
 @Singleton
-class PinyinService constructor(private val mynlp: MynlpEnv) : BasePinyinDictionary() {
+class PinyinService constructor(private val env: MynlpEnv) : BasePinyinDictionary() {
 
     init {
         rebuild()
     }
 
-    internal override fun load(): TreeMap<String, Array<Pinyin>> {
+    override fun load(): TreeMap<String, Array<Pinyin>> {
         val list = ArrayList<NlpResource?>()
 
-        list.add(mynlp.loadResource(mynlp.get(pinyinSetting)))
+        list.add(env.loadResource(env.get(pinyinSetting)))
 
-        val ext = mynlp.tryLoadResource(pinyinExtDicSetting)
+        val ext = env.tryLoadResource(pinyinExtDicSetting)
         if (ext != null) {
             list.add(ext)
         }
 
         val map = TreeMap<String, Array<Pinyin>>()
         for (dictResource in list.filterNotNull()) {
-
             dictResource.inputStream()
                     .bufferedReader()
                     .forEachLine { line ->
@@ -67,9 +66,9 @@ class PinyinService constructor(private val mynlp: MynlpEnv) : BasePinyinDiction
                         }
                     }
         }
+
         return map
     }
-
 
     override fun toString(): String {
         return super.toString()

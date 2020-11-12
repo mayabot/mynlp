@@ -1,7 +1,7 @@
 package com.mayabot.nlp.fasttext
 
+import com.mayabot.nlp.common.IntArrayList
 import com.mayabot.nlp.fasttext.dictionary.Dictionary
-import com.mayabot.nlp.fasttext.utils.IntArrayList
 
 class Meter(
         val metrics: Metrics = Metrics(),

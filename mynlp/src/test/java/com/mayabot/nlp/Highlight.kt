@@ -7,7 +7,7 @@ import org.junit.Test
 
 class HighlightTest {
 
-    val words = listOf<String>("居住证", "居住", "住宅")
+    private val words = listOf<String>("居住证", "居住", "住宅")
 
     @Test
     fun test() {

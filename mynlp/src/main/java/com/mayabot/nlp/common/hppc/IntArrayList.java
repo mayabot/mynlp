@@ -1,5 +1,8 @@
 package com.mayabot.nlp.common.hppc;
 
+import com.mayabot.nlp.common.ArraySizingStrategy;
+import com.mayabot.nlp.common.BoundedProportionalArraySizingStrategy;
+
 import java.util.Arrays;
 
 /**

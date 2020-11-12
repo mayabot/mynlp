@@ -14,9 +14,7 @@
  * limitations under the License.
  */
 
-package com.mayabot.nlp;
-
-import com.mayabot.nlp.common.Guava;
+package com.mayabot.nlp.common;
 
 import java.util.HashMap;
 import java.util.List;

@@ -3,7 +3,6 @@ package com.mayabot.nlp.module.summary;
 import com.mayabot.nlp.algorithm.TopMaxK;
 import com.mayabot.nlp.common.Pair;
 import com.mayabot.nlp.segment.LexerReader;
-import com.mayabot.nlp.segment.Lexers;
 
 import java.io.Reader;
 import java.io.StringReader;
@@ -32,8 +31,11 @@ public class KeywordSummary {
 
     private float minDiff = 0.001f;
 
-    private LexerReader lexerReader = Lexers.core().filterReader(true, true);
+    private LexerReader lexerReader;
 
+    public KeywordSummary(LexerReader lexerReader) {
+        this.lexerReader = lexerReader;
+    }
 
     public List<String> keyword(String text, int top) {
         return keywordWithScore(new StringReader(text), top).stream().map(it -> it.first).collect(Collectors.toList());

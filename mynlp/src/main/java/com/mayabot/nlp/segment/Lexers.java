@@ -30,7 +30,7 @@ public class Lexers {
      * @since 3.0.0
      */
     public static FluentLexerBuilder builder() {
-        return Mynlp.singleton().lexerBuilder();
+        return Mynlp.instance().lexerBuilder();
     }
 
     public static Lexer core() {

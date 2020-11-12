@@ -2,9 +2,9 @@ package classification;
 
 import com.mayabot.nlp.common.utils.DownloadUtils;
 import com.mayabot.nlp.fasttext.FastText;
+import com.mayabot.nlp.fasttext.FasttextTranUtils;
 import com.mayabot.nlp.fasttext.args.InputArgs;
 import com.mayabot.nlp.fasttext.loss.LossName;
-import com.mayabot.nlp.module.classification.FasttextClassification;
 
 import java.io.File;
 
@@ -15,9 +15,12 @@ public class HotelCommentExampleTrain {
 
     public static void main(String[] args) throws Exception {
 
-
+        File dir = new File("example.data");
+        if (!dir.exists()) {
+            dir.mkdir();
+        }
         File trainFileSource = new File("example.data/hotel-train.txt");
-        File testFileSource= new File("example.data/hotel-test.txt");
+        File testFileSource = new File("example.data/hotel-test.txt");
 
         if (!trainFileSource.exists()) {
             File trainZipFile = new File("example.data/hotel-train.txt.zip");
@@ -38,10 +41,10 @@ public class HotelCommentExampleTrain {
         File testFile = new File("example.data/hotel-test-seg.txt");
 
         if (!trainFile.exists()) {
-            FasttextClassification.prepareBySegment(trainFileSource,trainFile);
+            FasttextTranUtils.prepareBySegment(trainFileSource, trainFile);
         }
         if (!testFile.exists()) {
-            FasttextClassification.prepareBySegment(testFileSource,testFile);
+            FasttextTranUtils.prepareBySegment(testFileSource, testFile);
         }
 
         InputArgs trainArgs = new InputArgs();

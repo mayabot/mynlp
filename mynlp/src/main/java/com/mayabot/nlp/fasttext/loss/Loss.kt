@@ -2,6 +2,7 @@ package com.mayabot.nlp.fasttext.loss
 
 import com.mayabot.nlp.blas.DenseVector
 import com.mayabot.nlp.blas.Matrix
+import com.mayabot.nlp.common.IntArrayList
 import com.mayabot.nlp.fasttext.Model
 import com.mayabot.nlp.fasttext.Predictions
 import com.mayabot.nlp.fasttext.ScoreIdPair
@@ -9,7 +10,6 @@ import com.mayabot.nlp.fasttext.args.Args
 import com.mayabot.nlp.fasttext.args.ModelName
 import com.mayabot.nlp.fasttext.dictionary.Dictionary
 import com.mayabot.nlp.fasttext.dictionary.EntryType
-import com.mayabot.nlp.fasttext.utils.IntArrayList
 import kotlin.math.exp
 import kotlin.math.ln
 
@@ -50,6 +50,7 @@ abstract class Loss(val wo: Matrix) {
     }
 
     private fun findKBest(k: Int, threshold: Float, heap: MutableList<ScoreIdPair>, output: DenseVector) {
+        //TODO 采用堆来实现TOPK
         for (i in 0 until output.length()) {
             if (output[i] < threshold) {
                 continue

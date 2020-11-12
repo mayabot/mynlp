@@ -2,6 +2,8 @@ package com.mayabot.nlp.fasttext
 
 import com.mayabot.nlp.blas.*
 import com.mayabot.nlp.blas.Vector
+import com.mayabot.nlp.common.IntArrayList
+import com.mayabot.nlp.common.TagAndScore
 import com.mayabot.nlp.fasttext.args.Args
 import com.mayabot.nlp.fasttext.args.InputArgs
 import com.mayabot.nlp.fasttext.args.ModelName
@@ -14,6 +16,8 @@ import com.mayabot.nlp.fasttext.train.FileSampleLineIterable
 import com.mayabot.nlp.fasttext.train.SampleLine
 import com.mayabot.nlp.fasttext.train.loadPreTrainVectors
 import com.mayabot.nlp.fasttext.utils.*
+import com.mayabot.nlp.segment.Lexer
+import com.mayabot.nlp.segment.LexerReader
 import java.io.DataInputStream
 import java.io.File
 import java.io.IOException
@@ -25,7 +29,6 @@ import kotlin.collections.ArrayList
 import kotlin.math.abs
 import kotlin.math.exp
 
-
 class FastText(
         val args: Args,
         val dict: Dictionary,
@@ -34,7 +37,28 @@ class FastText(
 ) {
 
     private val input: Matrix = model.wi
+
     val output: Matrix = model.wo
+
+    /**
+     * 指定分词器,进行分类预测
+     */
+    @JvmOverloads
+    fun predict(lexer: LexerReader, text: String, k: Int = 5, threshold: Float = 0.0f): List<TagAndScore> {
+        val words = lexer.scan(text).toWordSequence()
+        val target = this.predict(words, k, threshold)
+        return target.map { TagAndScore(it.label, it.score) }
+    }
+
+    /**
+     * 指定分词器,进行分类预测
+     */
+    @JvmOverloads
+    fun predict(lexer: Lexer, text: String, k: Int = 5, threshold: Float = 0.0f): List<TagAndScore> {
+        val words = lexer.scan(text).toWordList()
+        val target = this.predict(words, k, threshold)
+        return target.map { TagAndScore(it.label, it.score) }
+    }
 
     /**
      * 预测分类标签
@@ -61,8 +85,8 @@ class FastText(
 
         val result = predict(k, words, threshold)
 
-
         return result.map { x -> ScoreLabelPair(exp(x.score), dict.getLabel(x.id)) }
+
     }
 
     fun predict(k: Int, words: IntArrayList, threshold: Float): List<ScoreIdPair> {
@@ -235,29 +259,6 @@ class FastText(
     }
 
 
-//    fun sentenceSimilarity(s1: List<String>,s2: List<String>): Float {
-//        fun List<String>.sv(): Vector?{
-//            val vec = floatArrayVector(args.dim)
-//            var c = 0
-//            for (word in this) {
-//                c++
-//                vec += getWordVector(word)
-//            }
-//            if(c ==0){
-//                return null
-//            }
-//            val norm = vec.norm2()
-//            vec.divAssign(norm)
-//            return vec
-//        }
-//        val v1 = s1.sv()
-//        val v2 = s2.sv()
-//        if(v1!=null && v2!=null){
-//            return cosine(v1,v2)
-//        }
-//        return 0f
-//    }
-
     /**
      * 句子向量
      *
@@ -401,32 +402,6 @@ class FastText(
                  qnorm: Boolean = false,
                  qout: Boolean = false): FastText {
 
-//        fun selectEmbedding(): IntArray{
-//            val norms = floatArrayVector(input.row)
-//            (input as DenseMatrix).l2NormRow(norms)
-//            val idx = IntArray(input.row){0}
-//            iota(idx)
-//            val eosid = dict.getWordId(EOS)
-//
-//            idx.sortedWith(Comparator { i1, i2 ->
-//                if (i1 == eosid && i2 == eosid) {
-//                    1
-//                }else{
-//                    if(eosid == i1){
-//                        -1
-//                    }else{
-//                        if(eosid !=i2){
-//                            -(norms[i1].compareTo(i2))
-//                        }else{
-//                            -1
-//                        }
-//                    }
-//                }
-//            })
-//
-//            return idx.takeLast(idx.size-cutoff).toIntArray()
-//        }
-
         if (this.args.model != ModelName.sup) {
             error("For now we only support quantization of supervised models")
         }
@@ -462,7 +437,6 @@ class FastText(
 
         @JvmStatic
         fun trainSkipgram(file: File, inputArgs: InputArgs = InputArgs()) = train(file, ModelName.sg, inputArgs)
-
 
         @JvmStatic
         fun train(file: File, modelName: ModelName, inputArgs: InputArgs): FastText {

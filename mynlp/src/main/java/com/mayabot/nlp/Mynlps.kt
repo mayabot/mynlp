@@ -16,6 +16,7 @@
 
 package com.mayabot.nlp
 
+import com.mayabot.nlp.common.SettingItem
 import com.mayabot.nlp.common.logging.InternalLoggerFactory
 import java.util.function.Consumer
 
@@ -38,7 +39,7 @@ object Mynlps {
     @JvmStatic
     @Deprecated("")
     fun install(consumer: Consumer<MynlpBuilder>) {
-        Mynlp.init {
+        Mynlp.config {
             consumer.accept(it)
         }
     }
@@ -46,14 +47,14 @@ object Mynlps {
     @Deprecated("")
     @JvmStatic
     fun config(consumer: Consumer<MynlpBuilder>) {
-        Mynlp.init {
+        Mynlp.config {
             consumer.accept(it)
         }
     }
 
     @Deprecated("")
     fun install(consumer: (MynlpBuilder) -> Unit) {
-        Mynlp.init {
+        Mynlp.config {
             consumer(it)
         }
     }
@@ -72,13 +73,13 @@ object Mynlps {
     @JvmStatic
     @Deprecated("")
     fun setDataDir(dataDir: String) {
-        Mynlp.setDataDir(dataDir)
+        Mynlp.configer().setDataDir(dataDir)
     }
 
     @JvmStatic
     @Deprecated("")
     fun setCacheDir(dir: String) {
-        Mynlp.setCacheDir(dir)
+        Mynlp.configer().setCacheDir(dir)
     }
 
     @JvmStatic
@@ -100,7 +101,7 @@ object Mynlps {
     @JvmStatic
     @Deprecated(message = "use mynlp", replaceWith = ReplaceWith("Mynlp.singleton()"))
     fun get(): Mynlp {
-        return Mynlp.singleton()
+        return Mynlp.instance()
     }
 
 
@@ -114,12 +115,12 @@ object Mynlps {
     @JvmStatic
     @Deprecated("")
     fun <T> instanceOf(clazz: Class<T>): T {
-        return Mynlp.getInstance(clazz)
+        return Mynlp.instance().getInstance(clazz)
     }
 
     @Deprecated("")
     inline fun <reified T> instanceOf(): T {
-        return Mynlp.getInstance(T::class.java)
+        return Mynlp.instance().getInstance(T::class.java)
     }
 
 }

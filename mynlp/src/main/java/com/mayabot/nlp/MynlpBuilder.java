@@ -17,6 +17,8 @@ package com.mayabot.nlp;
 
 import com.mayabot.nlp.common.GuavaKt;
 import com.mayabot.nlp.common.Lists;
+import com.mayabot.nlp.common.SettingItem;
+import com.mayabot.nlp.common.Settings;
 import com.mayabot.nlp.common.injector.AbstractModule;
 import com.mayabot.nlp.common.injector.Injector;
 import com.mayabot.nlp.common.injector.Module;

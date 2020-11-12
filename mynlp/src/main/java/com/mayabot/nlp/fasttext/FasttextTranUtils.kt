@@ -1,23 +1,12 @@
-package com.mayabot.nlp.module.classification
+package com.mayabot.nlp.fasttext
 
-import com.mayabot.nlp.fasttext.FastText
 import com.mayabot.nlp.segment.LexerReader
 import com.mayabot.nlp.segment.Lexers
 import java.io.File
 
-class FasttextClassification(val lexer: LexerReader,val fastText: FastText) {
+class FasttextTranUtils {
 
-    /**
-     * 文本分类
-     */
-    @JvmOverloads
-    fun classification(text: String,k:Int = 5,threshold:Float=0.0f): List<Pair<String,Float>> {
-        val words = lexer.scan(text).toWordSequence()
-        val target = fastText.predict(words,k,threshold)
-        return target.map { it.label to it.score }
-    }
-
-    companion object{
+    companion object {
 
         /**
          * 处理没有分词的语料
@@ -27,7 +16,7 @@ class FasttextClassification(val lexer: LexerReader,val fastText: FastText) {
         @JvmStatic
         fun prepareBySegment(from: File,
                              to: File,
-                             label:String = "__label__",
+                             label: String = "__label__",
                              lexer: LexerReader = Lexers.coreBuilder().build().filterReader(true, true)) {
 
             fun processLine(line:String): String{
@@ -43,6 +32,7 @@ class FasttextClassification(val lexer: LexerReader,val fastText: FastText) {
                 }
                 return list.joinToString(" ")
             }
+
             from.useLines { lines->
                 to.bufferedWriter(Charsets.UTF_8).use { writer->
                     lines.forEach { line->

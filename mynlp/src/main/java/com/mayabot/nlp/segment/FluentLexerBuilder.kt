@@ -18,7 +18,7 @@ import com.mayabot.nlp.segment.plugins.pos.PosPlugin
  * Fluent style
  * @author jimichan
  */
-open class FluentLexerBuilder(mynlp: Mynlp = Mynlp.singleton()) : LexerBuilder {
+open class FluentLexerBuilder(mynlp: Mynlp = Mynlp.instance()) : LexerBuilder {
 
     private val builder = PipelineLexerBuilder(mynlp)
 

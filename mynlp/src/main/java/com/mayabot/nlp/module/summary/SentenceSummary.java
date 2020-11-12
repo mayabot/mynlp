@@ -3,7 +3,6 @@ package com.mayabot.nlp.module.summary;
 import com.mayabot.nlp.common.Guava;
 import com.mayabot.nlp.common.Lists;
 import com.mayabot.nlp.segment.LexerReader;
-import com.mayabot.nlp.segment.Lexers;
 
 import java.util.*;
 import java.util.regex.Pattern;
@@ -18,7 +17,11 @@ public class SentenceSummary {
     private static Pattern lineSplitter = Pattern.compile("[\r\n]");
     private static Pattern sentenceSplitter = Pattern.compile("[，,。:：“”？?！!；;]");
 
-    private LexerReader lexerReader = Lexers.core().filterReader(true, true);
+    private LexerReader lexerReader;
+
+    public SentenceSummary(LexerReader lexerReader) {
+        this.lexerReader = lexerReader;
+    }
 
     /**
      * 对文章进行摘要

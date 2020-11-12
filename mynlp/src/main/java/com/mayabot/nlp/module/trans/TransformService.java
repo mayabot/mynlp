@@ -1,29 +1,16 @@
 package com.mayabot.nlp.module.trans;
 
-import com.mayabot.nlp.Mynlps;
+import com.mayabot.nlp.Mynlp;
 
 /**
  * 繁简体转换
  *
  * @author jimichan
  */
+@Deprecated
 public class TransformService {
 
-    private static Simplified2Traditional simplified2Traditional;
-
-    private static Traditional2Simplified traditional2Simplified;
-
-    /**
-     * 简体转换为繁体
-     *
-     * @return Simplified2Traditional
-     */
-    public static Simplified2Traditional simplified2Traditional() {
-        if (simplified2Traditional == null) {
-            simplified2Traditional = Mynlps.instanceOf(Simplified2Traditional.class);
-        }
-        return simplified2Traditional;
-    }
+    private static Mynlp mynlp = Mynlp.instance();
 
     /**
      * 简体转繁体
@@ -31,21 +18,9 @@ public class TransformService {
      * @param text 简体文字
      * @return 繁体文字
      */
+    @Deprecated
     public static String s2t(String text) {
-        return simplified2Traditional().transform(text);
-    }
-
-
-    /**
-     * 简体转换为繁体
-     *
-     * @return Traditional2Simplified
-     */
-    public static Traditional2Simplified traditional2Simplified() {
-        if (traditional2Simplified == null) {
-            traditional2Simplified = Mynlps.instanceOf(Traditional2Simplified.class);
-        }
-        return traditional2Simplified;
+        return mynlp.s2t(text);
     }
 
     /**
@@ -54,7 +29,8 @@ public class TransformService {
      * @param text 繁体内容
      * @return 简体字符串
      */
+    @Deprecated
     public static String t2s(String text) {
-        return traditional2Simplified().transform(text);
+        return mynlp.t2s(text);
     }
 }

@@ -20,18 +20,7 @@ package com.mayabot.nlp.common.utils;
  * @author jimichan
  */
 public class MyInts {
-//    public static byte[] toByteArray(int value) {
-//        return new byte[]{(byte) (value >> 24), (byte) (value >> 16),
-//                (byte) (value >> 8), (byte) value};
-//    }
-//
-//    public static int fromByteArray(byte[] bytes) {
-//        return fromBytes(bytes[0], bytes[1], bytes[2], bytes[3]);
-//    }
-//
-//    public static int fromBytes(byte b1, byte b2, byte b3, byte b4) {
-//        return b1 << 24 | (b2 & 0xFF) << 16 | (b3 & 0xFF) << 8 | (b4 & 0xFF);
-//    }
+
 
     public static byte[] toByteArray(int[] value, int fromIndex, int toIndex) {
         toIndex = Math.min(value.length, toIndex);
@@ -47,18 +36,6 @@ public class MyInts {
         return bytes;
     }
 
-//    public static byte[] toByteArray(int[] value) {
-//        byte[] bytes = new byte[value.length * 4];
-//        for (int i = 0, len = value.length; i < len; i++) {
-//            int from = i * 4;
-//            int v = value[i];
-//            bytes[from++] = (byte) (v >> 24);
-//            bytes[from++] = (byte) (v >> 16);
-//            bytes[from++] = (byte) (v >> 8);
-//            bytes[from++] = (byte) v;
-//        }
-//        return bytes;
-//    }
 
     public static int[] fromByteArrayToArray(byte[] bytes) {
         return fromByteArrayToArray(bytes, new int[bytes.length / 4], bytes.length);

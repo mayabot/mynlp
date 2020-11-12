@@ -1,5 +1,6 @@
 package com.mayabot.nlp.fasttext.utils
 
+import com.mayabot.nlp.common.IntArrayList
 import java.io.DataInputStream
 import java.io.File
 import java.io.IOException

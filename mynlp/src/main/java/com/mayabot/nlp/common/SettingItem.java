@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.mayabot.nlp;
+package com.mayabot.nlp.common;
 
 
 import java.util.function.Function;

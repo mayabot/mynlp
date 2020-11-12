@@ -1,6 +1,7 @@
 package com.mayabot.nlp
 
-import com.mayabot.nlp.SettingItem.stringSetting
+import com.mayabot.nlp.common.SettingItem
+import com.mayabot.nlp.common.SettingItem.stringSetting
 
 object MynlpConfigs {
 
@@ -10,14 +11,12 @@ object MynlpConfigs {
     @JvmField
     val cwsModelItem: SettingItem<String> = stringSetting("cws.model", "cws-model")
 
-
     /**
      * value可以是用逗号分隔的多个值
      */
     @JvmField
     val dictPathSetting: SettingItem<String> = stringSetting(
             "custom.dictionary.path", "custom-dict/CustomDictionary.txt")
-
 
     @JvmField
     val pinyinSetting: SettingItem<String> = stringSetting("pinyin.dict", "mynlp-pinyin.txt")

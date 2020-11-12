@@ -37,6 +37,7 @@ public class TokenizerSplitter {
     private int toIndex = -1;
 
     private CharSequence sequence;
+
     private int length;
 
     public static TokenizerSplitter create(CharSequence sequence) {
@@ -117,21 +118,4 @@ public class TokenizerSplitter {
         }
         return list;
     }
-
-    public static void main(String[] args) {
-        System.out.println(parts(""));
-        System.out.println(parts(",abc,efg"));
-        System.out.println(parts(",,abc,efg."));
-        System.out.println(parts(",,abc efg."));
-        System.out.println(parts("abcefg"));
-        System.out.println(parts("ou may skip through a book, reading only those passages concerned  "));
-        System.out.println(parts("你可以跳读一本书，只拣那些有关的段落读一下即可。"));
-        long t1 = System.currentTimeMillis();
-        for (int i = 0; i < 100000; i++) {
-            parts("你可以跳读一本书，只拣那些有关的段落读一下即可。");
-        }
-        long t2 = System.currentTimeMillis();
-        System.out.println(t2 - t1);
-    }
-
 }

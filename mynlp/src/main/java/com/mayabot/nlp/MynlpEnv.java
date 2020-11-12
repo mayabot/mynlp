@@ -15,6 +15,8 @@
  */
 package com.mayabot.nlp;
 
+import com.mayabot.nlp.common.SettingItem;
+import com.mayabot.nlp.common.Settings;
 import com.mayabot.nlp.common.logging.InternalLogger;
 import com.mayabot.nlp.common.logging.InternalLoggerFactory;
 import com.mayabot.nlp.common.resources.NlpResource;
