@@ -55,14 +55,13 @@ abstract class Loss(val wo: Matrix) {
                 continue
             }
 
-            if (heap.size == k && stdLog(output[i]) < heap.first().score) {
+            if (heap.size == k && stdLog(output[i]) < heap.last().score) {
                 continue
             }
 
             heap += ScoreIdPair(stdLog(output[i]).toFloat(), i)
             heap.sortByDescending { it.score } // 从高到低排序
             if (heap.size > k) {
-                heap.sortByDescending { it.score }
                 heap.removeAt(heap.size - 1)
             }
         }
