@@ -29,6 +29,5 @@ class SegmentModule(private val env: MynlpEnv) : AbstractModule() {
         }
     }
 
-
 }
 
