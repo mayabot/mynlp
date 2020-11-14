@@ -5,6 +5,8 @@
 image:https://img.shields.io/github/license/mayabot/mynlp.svg[]
 image:https://maven-badges.herokuapp.com/maven-central/com.mayabot.mynlp/mynlp/badge.svg[link=https://maven-badges.herokuapp.com/maven-central/com.mayabot.mynlp/mynlp]
 image:https://img.shields.io/github/release/mayabot/mynlp/all.svg[link=https://github.com/mayabot/mynlp/releases/latest]
+image:https://img.shields.io/github/repo-size/mayabot/mynlp[link=https://github.com/mayabot/mynlp]
+image:https://img.shields.io/github/issues-raw/mayabot/mynlp.svg[link=https://github.com/mayabot/mynlp/issues]
 
 image::https://cdn.mayabot.com/mynlp/mynlp-banner.png[,500,align=center,link=https://mynlp.mayabot.com]
 
