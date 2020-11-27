@@ -48,13 +48,18 @@ public class MemCorrectionDictionary implements CorrectionDictionary {
         trie = new DoubleArrayTrieMap<>(dict);
     }
 
-    public void addWord(String rule) {
+    /**
+     * 第几套/房
+     *
+     * @param rule
+     */
+    public void addRule(String rule) {
         CorrectionWord adjustWord = CorrectionWord.parse(rule
         );
         dict.put(adjustWord.path, adjustWord);
     }
 
-    public void removeWord(String word) {
+    public void removeRule(String word) {
         dict.remove(word);
     }
 

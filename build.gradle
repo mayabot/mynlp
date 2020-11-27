@@ -1,5 +1,5 @@
 plugins {
-    id "org.jetbrains.kotlin.jvm" version "1.4.0" apply false
+    id "org.jetbrains.kotlin.jvm" version "1.4.20" apply false
 }
 
 apply plugin: 'idea'
@@ -7,7 +7,7 @@ apply plugin: 'eclipse'
 
 description = "mynlp是mayabot开源的中文自然语言处理工具集"
 
-def buildVersion = "3.3.0-BETA1"
+def buildVersion = "3.3.0-BETA2"
 def snapShot = false
 
 allprojects {

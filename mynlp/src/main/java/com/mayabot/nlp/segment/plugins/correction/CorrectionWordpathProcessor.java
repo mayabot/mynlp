@@ -18,7 +18,6 @@ package com.mayabot.nlp.segment.plugins.correction;
 
 import com.mayabot.nlp.algorithm.collection.dat.DATMapMatcher;
 import com.mayabot.nlp.algorithm.collection.dat.DoubleArrayTrieMap;
-import com.mayabot.nlp.common.injector.Singleton;
 import com.mayabot.nlp.segment.WordpathProcessor;
 import com.mayabot.nlp.segment.common.BaseSegmentComponent;
 import com.mayabot.nlp.segment.wordnet.Wordpath;
@@ -35,7 +34,6 @@ import com.mayabot.nlp.segment.wordnet.Wordpath;
  *
  * @author jimichan
  */
-@Singleton
 public class CorrectionWordpathProcessor extends BaseSegmentComponent implements WordpathProcessor {
 
     private final CorrectionDictionary dictionary;

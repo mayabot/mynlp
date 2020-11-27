@@ -8,6 +8,8 @@ import com.mayabot.nlp.segment.lexer.perceptron.PerceptronSegmentPlugin
 import com.mayabot.nlp.segment.pipeline.PipelineLexerBuilder
 import com.mayabot.nlp.segment.pipeline.PipelineLexerPlugin
 import com.mayabot.nlp.segment.plugins.collector.*
+import com.mayabot.nlp.segment.plugins.correction.CorrectionDictionary
+import com.mayabot.nlp.segment.plugins.correction.CorrectionPlugin
 import com.mayabot.nlp.segment.plugins.customwords.CustomDictionary
 import com.mayabot.nlp.segment.plugins.customwords.CustomDictionaryPlugin
 import com.mayabot.nlp.segment.plugins.ner.NerPlugin
@@ -18,7 +20,7 @@ import com.mayabot.nlp.segment.plugins.pos.PosPlugin
  * Fluent style
  * @author jimichan
  */
-open class FluentLexerBuilder(mynlp: Mynlp = Mynlp.instance()) : LexerBuilder {
+open class FluentLexerBuilder(val mynlp: Mynlp = Mynlp.instance()) : LexerBuilder {
 
     private val builder = PipelineLexerBuilder(mynlp)
 
@@ -55,6 +57,16 @@ open class FluentLexerBuilder(mynlp: Mynlp = Mynlp.instance()) : LexerBuilder {
     fun perceptron(): FluentLexerBuilder {
         builder.install(PerceptronSegmentPlugin())
         return this@FluentLexerBuilder
+    }
+
+    fun withCorrection(): FluentLexerBuilder {
+        builder.install(CorrectionPlugin())
+        return this;
+    }
+
+    fun withCorrection(dict: CorrectionDictionary): FluentLexerBuilder {
+        builder.install(CorrectionPlugin(dict))
+        return this;
     }
 
     fun withPos(): FluentLexerBuilder {
@@ -101,7 +113,7 @@ open class FluentLexerBuilder(mynlp: Mynlp = Mynlp.instance()) : LexerBuilder {
 
     inner class CollectorBlock {
 
-        val collector: WordTermCollector = SentenceCollector()
+        val collector: WordTermCollector = SentenceCollector(mynlp)
 
         fun pickUpSubword(pickUpSubword: WordTermCollector.PickUpSubword): CollectorBlock {
             collector.pickUpSubword = pickUpSubword
@@ -125,7 +137,7 @@ open class FluentLexerBuilder(mynlp: Mynlp = Mynlp.instance()) : LexerBuilder {
         fun smartPickup(block: (x: WordTermCollector.PickUpSubword) -> Unit
                         = { _ -> Unit }
         ): CollectorBlock {
-            val p = SmartPickUpSubword()
+            val p = SmartPickUpSubword(mynlp)
             block(p)
             collector.pickUpSubword = p
             return this

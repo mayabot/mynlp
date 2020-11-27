@@ -6,6 +6,11 @@ description = '自动依赖必要的资源'
 dependencies {
     compile(project(':mynlp'))
 
+    compile ("org.jetbrains.kotlin:kotlin-stdlib") {
+        exclude module:"kotlin-stdlib-jdk7"
+        exclude module:"kotlin-stdlib-jdk8"
+    }
+
     // 核心词典
     implementation 'com.mayabot.mynlp.resource:mynlp-resource-coredict:1.0.0'
 

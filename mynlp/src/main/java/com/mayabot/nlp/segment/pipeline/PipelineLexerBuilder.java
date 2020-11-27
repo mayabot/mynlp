@@ -79,7 +79,7 @@ public class PipelineLexerBuilder implements LexerBuilder {
     /**
      * 最终结构收集器
      */
-    private WordTermCollector termCollector = new SentenceCollector();
+    private WordTermCollector termCollector;
 
     @NotNull
     public static PipelineLexerBuilder builder() {
@@ -98,6 +98,7 @@ public class PipelineLexerBuilder implements LexerBuilder {
     public PipelineLexerBuilder(Mynlp mynlp) {
         this.mynlp = mynlp;
         this.bestPathAlgorithm = mynlp.getInstance(ViterbiBestPathAlgorithm.class);
+        this.termCollector = new SentenceCollector(mynlp);
     }
 
     public void install(PipelineLexerPlugin plugin) {
@@ -381,5 +382,10 @@ public class PipelineLexerBuilder implements LexerBuilder {
     public PipelineLexerBuilder setKeepOriCharOutput(boolean keepOriCharOutput) {
         this.keepOriCharOutput = keepOriCharOutput;
         return this;
+    }
+
+    @NotNull
+    public Mynlp getMynlp() {
+        return mynlp;
     }
 }

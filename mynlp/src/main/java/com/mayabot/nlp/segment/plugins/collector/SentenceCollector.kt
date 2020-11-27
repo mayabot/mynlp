@@ -1,5 +1,6 @@
 package com.mayabot.nlp.segment.plugins.collector
 
+import com.mayabot.nlp.Mynlp
 import com.mayabot.nlp.common.utils.StringUtils
 import com.mayabot.nlp.segment.WordTerm
 import com.mayabot.nlp.segment.wordnet.Wordnet
@@ -12,7 +13,7 @@ import java.util.function.Consumer
  *
  * @author jimichan
  */
-class SentenceCollector : WordTermCollector {
+class SentenceCollector(val mynlp: Mynlp) : WordTermCollector {
 
     /**
      * 从wordnet中计算出子词的方法。
