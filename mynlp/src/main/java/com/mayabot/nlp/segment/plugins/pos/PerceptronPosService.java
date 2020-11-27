@@ -19,7 +19,6 @@ import java.util.List;
  * <p>
  * 该服务可以独立调用
  * <p>
- * PerceptronPosService service = Mynlps.instanceOf(PerceptronPosService.class);
  */
 @Singleton
 public class PerceptronPosService {

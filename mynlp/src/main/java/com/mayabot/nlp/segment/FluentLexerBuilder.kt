@@ -1,7 +1,6 @@
 package com.mayabot.nlp.segment
 
 import com.mayabot.nlp.Mynlp
-import com.mayabot.nlp.Mynlps
 import com.mayabot.nlp.segment.lexer.bigram.BigramLexerPlugin
 import com.mayabot.nlp.segment.lexer.bigram.CoreDictionary
 import com.mayabot.nlp.segment.lexer.perceptron.PerceptronSegmentPlugin
@@ -34,7 +33,7 @@ open class FluentLexerBuilder(val mynlp: Mynlp = Mynlp.instance()) : LexerBuilde
 
     @Deprecated(message = "使用bigram方法", replaceWith = ReplaceWith("bigram"), level = DeprecationLevel.WARNING)
     fun core(): FluentLexerBuilder {
-        builder.install(BigramLexerPlugin())
+        builder.install(BigramLexerPlugin(mynlp))
         return this@FluentLexerBuilder
     }
 
@@ -45,7 +44,7 @@ open class FluentLexerBuilder(val mynlp: Mynlp = Mynlp.instance()) : LexerBuilde
     }
 
     fun bigram(): FluentLexerBuilder {
-        builder.install(BigramLexerPlugin())
+        builder.install(BigramLexerPlugin(mynlp))
         return this@FluentLexerBuilder
     }
 
@@ -144,7 +143,7 @@ open class FluentLexerBuilder(val mynlp: Mynlp = Mynlp.instance()) : LexerBuilde
         }
 
         @JvmOverloads
-        fun fillSubwordDict(dbcms: CoreDictionary = Mynlps.instanceOf(CoreDictionary::class.java)): CollectorBlock {
+        fun fillSubwordDict(dbcms: CoreDictionary = mynlp.getInstance(CoreDictionary::class.java)): CollectorBlock {
             collector.fillSubword = DictBasedFillSubword(dbcms)
             return this
         }

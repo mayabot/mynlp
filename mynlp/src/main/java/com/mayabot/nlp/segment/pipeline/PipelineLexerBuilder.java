@@ -17,7 +17,6 @@
 package com.mayabot.nlp.segment.pipeline;
 
 import com.mayabot.nlp.Mynlp;
-import com.mayabot.nlp.Mynlps;
 import com.mayabot.nlp.common.Lists;
 import com.mayabot.nlp.segment.*;
 import com.mayabot.nlp.segment.common.DefaultCharNormalize;
@@ -92,7 +91,7 @@ public class PipelineLexerBuilder implements LexerBuilder {
     }
 
     public PipelineLexerBuilder() {
-        this(Mynlps.get());
+        this(Mynlp.instance());
     }
 
     public PipelineLexerBuilder(Mynlp mynlp) {

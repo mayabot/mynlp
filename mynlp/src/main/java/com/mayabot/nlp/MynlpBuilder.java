@@ -45,7 +45,7 @@ import java.util.stream.Collectors;
  */
 public class MynlpBuilder {
 
-    public static InternalLogger logger = InternalLoggerFactory.getInstance("com.mayabot.nlp.Mynlps");
+    public static InternalLogger logger = InternalLoggerFactory.getInstance("com.mayabot.nlp.Mynlp");
 
     /**
      * 数据目录默认在当前工作目录.
@@ -131,7 +131,7 @@ public class MynlpBuilder {
 
                 resourceFactoryList.add(new FileNlpResourceFactory(dataDirFile));
                 resourceFactoryList.add(new JarNlpResourceFactory(dataDirFile));
-                resourceFactoryList.add(new ClasspathNlpResourceFactory(Mynlps.class.getClassLoader()));
+                resourceFactoryList.add(new ClasspathNlpResourceFactory(Mynlp.class.getClassLoader()));
 
                 MynlpEnv env = new MynlpEnv(dataDirFile, cacheDirFile, resourceFactoryList, settings);
 

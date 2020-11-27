@@ -8,14 +8,6 @@ import com.mayabot.nlp.perceptron.PerceptronModel
 import com.mayabot.nlp.perceptron.PerceptronRunner
 import java.io.File
 
-//object PinyinSplits{
-//
-//    val service by lazy { Mynlps.instanceOf<PinyinSplitService>() }
-//
-//    @JvmStatic
-//    fun split(text: String) = service.split(text)
-//}
-
 @Singleton
 class PinyinSplitService(env: MynlpEnv) {
 

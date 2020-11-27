@@ -1,6 +1,6 @@
 package com.mayabot.nlp.module.nwd
 
-import com.mayabot.nlp.Mynlps
+import com.mayabot.nlp.Mynlp
 import com.mayabot.nlp.algorithm.collection.dat.DoubleArrayTrieMap
 import com.mayabot.nlp.common.Lists
 import com.mayabot.nlp.common.ParagraphReaderSmart
@@ -28,7 +28,7 @@ class NewWordFindEngine(
 
     var docCount = 0
 
-    val coreDictionary = Mynlps.instanceOf(CoreDictionary::class.java)
+    val coreDictionary = Mynlp.instance().getInstance<CoreDictionary>()
 
     /**
      * 语料中总共有多少字

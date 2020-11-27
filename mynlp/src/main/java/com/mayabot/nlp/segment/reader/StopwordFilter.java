@@ -16,7 +16,7 @@
 
 package com.mayabot.nlp.segment.reader;
 
-import com.mayabot.nlp.Mynlps;
+import com.mayabot.nlp.Mynlp;
 import com.mayabot.nlp.segment.LexerReader;
 import com.mayabot.nlp.segment.WordTerm;
 
@@ -40,7 +40,7 @@ public class StopwordFilter extends BaseFilterLexerReader {
      * @param source
      */
     public StopwordFilter(LexerReader source) {
-        this(source, Mynlps.instanceOf(SystemStopWordDict.class));
+        this(source, Mynlp.instance().getInstance(SystemStopWordDict.class));
 
     }
 

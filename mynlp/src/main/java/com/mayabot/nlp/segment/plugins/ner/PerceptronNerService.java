@@ -1,7 +1,6 @@
 package com.mayabot.nlp.segment.plugins.ner;
 
 import com.mayabot.nlp.MynlpEnv;
-import com.mayabot.nlp.Mynlps;
 import com.mayabot.nlp.common.Lists;
 import com.mayabot.nlp.common.injector.Singleton;
 import com.mayabot.nlp.common.logging.InternalLogger;
@@ -155,11 +154,11 @@ public class PerceptronNerService {
         return perceptron;
     }
 
-    public static void main(String[] args) {
-        PerceptronNerService service = Mynlps.instanceOf(PerceptronNerService.class);
-
-        System.out.println(service.ner(Lists.newArrayList("上海 万行 信息 科技 有限 公司 在 上海 注册 成功".split(" "))));
-        System.out.println(service.ner(Lists.newArrayList("上海 华 安 工业 （ 集团 ） 公司 董事长 谭旭光 和 秘书 胡花蕊 来 到 美国 纽约 现代 艺术 博物馆 参观".split(" "))));
-        System.out.println(service.ner(Lists.newArrayList("这|是|上海|万|行|信息|科技|有限公司|的|财务|报表".split("\\|"))));
-    }
+//    public static void main(String[] args) {
+//        PerceptronNerService service = Mynlp.instance().getInstance(PerceptronNerService.class);
+//
+//        System.out.println(service.ner(Lists.newArrayList("上海 万行 信息 科技 有限 公司 在 上海 注册 成功".split(" "))));
+//        System.out.println(service.ner(Lists.newArrayList("上海 华 安 工业 （ 集团 ） 公司 董事长 谭旭光 和 秘书 胡花蕊 来 到 美国 纽约 现代 艺术 博物馆 参观".split(" "))));
+//        System.out.println(service.ner(Lists.newArrayList("这|是|上海|万|行|信息|科技|有限公司|的|财务|报表".split("\\|"))));
+//    }
 }
