@@ -17,6 +17,7 @@ package com.mayabot.nlp.segment.plugins.correction;
 
 import com.mayabot.nlp.algorithm.collection.dat.DoubleArrayTrieMap;
 
+import java.util.Map;
 import java.util.TreeMap;
 
 /**
@@ -30,14 +31,18 @@ public class MemCorrectionDictionary implements CorrectionDictionary {
 
     private DoubleArrayTrieMap<CorrectionWord> trie;
 
-    public MemCorrectionDictionary(TreeMap<String, CorrectionWord> dict) {
-        this.dict = dict;
+    public MemCorrectionDictionary(Map<String, CorrectionWord> dict) {
+        this.dict = new TreeMap<>(dict);
         rebuild();
     }
 
     public MemCorrectionDictionary() {
         this.dict = new TreeMap<>();
         rebuild();
+    }
+
+    public void clear() {
+        dict.clear();
     }
 
     public void rebuild() {
