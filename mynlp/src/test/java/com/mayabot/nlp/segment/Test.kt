@@ -7,16 +7,35 @@ fun main() {
     val mynlp = Mynlp.instance()
     val mem = MemCorrectionDictionary()
 
-    mem.addRule("安徽省/政府")
-    mem.rebuild()
+//    mem.addRule("安徽省/政府")
+//    mem.rebuild()
 
     val lexer = mynlp.lexerBuilder()
             .bigram()
             .withPos()
             .withPersonName()
-            .collector().smartPickup().done()
+            .collector().smartPickup {
+                it.setBlackListCallback {
+                    it[0] == '副' && it[it.length - 1] == '长'
+                }
+            }
+            .done()
 //            .withCorrection(mem)
             .build()
 
-    println(lexer.scan("安徽省政府网站居住证办理身份证办理"))
+    lexer.scan("副市长 副省长").forEach {
+        print(it)
+        println("\t has sub " + it.hasSubword())
+    }
+
+
+    //default core
+//    val lexer2 = Lexers.coreBuilder()
+//            .withPersonName()
+////            .withPos()
+//            .collector().smartPickup()
+//            .done()
+//            .build()
+//
+//    println(lexer2.scan("基础设施"))
 }

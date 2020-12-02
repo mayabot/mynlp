@@ -51,13 +51,19 @@ public class PosPerceptronProcessor extends BaseSegmentComponent implements Word
 
         for (int i = 0; i < vertices.size(); i++) {
             Vertex vertex = vertices.get(i);
-            Nature nr = posList.get(i);
 
+            Nature nature = posList.get(i);
+            // 一个普通的词汇(不是由人名识别构造而成的)，被判断为人名，而且长度大于3
+            // case is 基础设施/nr
+            if (Nature.nr.equals(nature) && vertex.nature == null && vertex.length > 3) {
+                vertex.nature = Nature.n;
+                continue;
+            }
             //人名识别，的优先级不能高于词性分析器。
             if (vertex.nature == null
                     || vertex.nature == Nature.newWord ||
                     vertex.nature == Nature.nr) {
-                vertex.nature = nr;
+                vertex.nature = nature;
             }
         }
 

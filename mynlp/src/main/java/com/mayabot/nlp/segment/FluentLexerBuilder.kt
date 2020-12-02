@@ -133,7 +133,7 @@ open class FluentLexerBuilder(val mynlp: Mynlp = Mynlp.instance()) : LexerBuilde
         }
 
         @JvmOverloads
-        fun smartPickup(block: (x: WordTermCollector.PickUpSubword) -> Unit
+        fun smartPickup(block: (x: SmartPickUpSubword) -> Unit
                         = { _ -> Unit }
         ): CollectorBlock {
             val p = SmartPickUpSubword(mynlp)
