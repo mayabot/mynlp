@@ -15,16 +15,14 @@ public class HotelCommentExampleTrain {
 
     public static void main(String[] args) throws Exception {
 
-        File dir = new File("example.data");
-        if (!dir.exists()) {
-            dir.mkdir();
-        }
-        File trainFileSource = new File("example.data/hotel-train.txt");
-        File testFileSource = new File("example.data/hotel-test.txt");
+        File trainFileSource = new File("example.data/hotel/hotel-train.txt");
+        File testFileSource = new File("example.data/hotel/hotel-test.txt");
+
+        trainFileSource.getParentFile().mkdirs();
 
         if (!trainFileSource.exists()) {
-            File trainZipFile = new File("example.data/hotel-train.txt.zip");
-            File testZipFile = new File("example.data/hotel-test.txt.zip");
+            File trainZipFile = new File("example.data/hotel/hotel-train.txt.zip");
+            File testZipFile = new File("example.data/hotel/hotel-test.txt.zip");
 
             DownloadUtils.download("http://cdn.mayabot.com/nlp/hotel-train.txt.zip",
                     trainZipFile);
@@ -37,8 +35,8 @@ public class HotelCommentExampleTrain {
             testZipFile.delete();
         }
 
-        File trainFile = new File("example.data/hotel-train-seg.txt");
-        File testFile = new File("example.data/hotel-test-seg.txt");
+        File trainFile = new File("example.data/hotel/hotel-train-seg.txt");
+        File testFile = new File("example.data/hotel/hotel-test-seg.txt");
 
         if (!trainFile.exists()) {
             FasttextTranUtils.prepareBySegment(trainFileSource, trainFile);
