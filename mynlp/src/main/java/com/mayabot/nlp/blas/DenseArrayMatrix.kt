@@ -212,13 +212,24 @@ class ByteBufferMatrix(row: Int, col: Int, val data: ByteBuffer) : BasicDenseMat
     //TODO direct的bytebuffer 怎么回收
     constructor(rows: Int, cols: Int, direct: Boolean = true)
             : this(
-            rows,
-            cols,
-            if (direct)
-                ByteBuffer.allocateDirect((rows * cols) shl 2)
-            else
-                ByteBuffer.allocate((rows * cols) shl 2)
+        rows,
+        cols,
+        if (direct)
+            ByteBuffer.allocateDirect((rows * cols) shl 2)
+        else
+            ByteBuffer.allocate((rows * cols) shl 2)
     )
+
+    /**
+     * 均值为0
+     * @param sd 标准差
+     */
+    fun gaussRandom(number: Number) {
+        val sd = number.toFloat()
+        for (i in 0 until length step 4) {
+            data.putFloat((rnd.nextGaussian() * sd).toFloat())
+        }
+    }
 
 
     // impl Dense Matrix
