@@ -47,6 +47,16 @@ public abstract class AbstractInternalLogger implements InternalLogger, Serializ
         return name;
     }
 
+    /**
+     * 默认不实现
+     *
+     * @param level
+     */
+    @Override
+    public void setLogLevel(InternalLogLevel level) {
+
+    }
+
     @Override
     public boolean isEnabled(InternalLogLevel level) {
         switch (level) {
