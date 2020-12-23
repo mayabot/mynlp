@@ -6,14 +6,19 @@ import java.util.*
 import kotlin.collections.HashMap
 import kotlin.math.log10
 
+/**
+ * BM25相关度评分和检索。
+ *
+ * 结论：BM25和向量模型，没法转换为 0~1的的归一化的相似度。
+ */
 class BM25(
-        private val k: Float,
-        private val b: Float,
-        private val avgDocLength: Float,
-        private val totalDocCount: Int,
-        private val termInfoMap: Map<String, TermInfo>,
-        private val docLenMap: Map<Int, Int>,
-        private val lexer: LexerReader
+    private val k: Float,
+    private val b: Float,
+    private val avgDocLength: Float,
+    private val totalDocCount: Int,
+    private val termInfoMap: Map<String, TermInfo>,
+    private val docLenMap: Map<Int, Int>,
+    private val lexer: LexerReader
 ) {
 
     private val MockIDF = ((totalDocCount - 1 + 0.5) / (1 + 0.5f)).toFloat()
@@ -94,17 +99,17 @@ class BM25(
     }
 
     data class HitResult(
-            val docId: Int,
-            val bm25Score: Float,
-            val score: Float
+        val docId: Int,
+        val bm25Score: Float,
+        val score: Float
     )
 
     class TermInfo(
-            val word: String,
-            val docFreq: Int,
-            val docFreqMap: Map<Int, Int>,
-            val freq: Int,
-            val N: Int
+        val word: String,
+        val docFreq: Int,
+        val docFreqMap: Map<Int, Int>,
+        val freq: Int,
+        val N: Int
     ) {
         /**
          * 预先计算好IDF部分
