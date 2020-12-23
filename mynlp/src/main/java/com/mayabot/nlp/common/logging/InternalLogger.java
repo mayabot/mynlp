@@ -475,4 +475,6 @@ public interface InternalLogger {
      * @param t the exception (throwable) to log
      */
     void log(InternalLogLevel level, Throwable t);
+
+    void setLogLevel(InternalLogLevel level);
 }

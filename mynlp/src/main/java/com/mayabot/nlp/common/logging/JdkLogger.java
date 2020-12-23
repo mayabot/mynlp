@@ -25,15 +25,39 @@ import java.util.logging.Logger;
  * <a href="http://java.sun.com/javase/6/docs/technotes/guides/logging/index.html">java.util.logging</a>
  * logger.
  */
-class JdkLogger extends AbstractInternalLogger {
+public class JdkLogger extends AbstractInternalLogger {
 
     private static final long serialVersionUID = -1767272577989225979L;
 
     final transient Logger logger;
 
+    public static InternalLogLevel defaultLevel = InternalLogLevel.INFO;
+
     JdkLogger(Logger logger) {
         super(logger.getName());
         this.logger = logger;
+        setLogLevel(defaultLevel);
+    }
+
+    @Override
+    public void setLogLevel(InternalLogLevel level) {
+        switch (level) {
+            case TRACE:
+                logger.setLevel(Level.FINEST);
+                break;
+            case DEBUG:
+                logger.setLevel(Level.FINE);
+                break;
+            case INFO:
+                logger.setLevel(Level.INFO);
+                break;
+            case WARN:
+                logger.setLevel(Level.WARNING);
+                break;
+            case ERROR:
+                logger.setLevel(Level.SEVERE);
+                break;
+        }
     }
 
     /**

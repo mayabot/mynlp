@@ -112,6 +112,11 @@ class Log4J2Logger extends ExtendedLoggerWrapper implements InternalLogger {
         log(toLevel(level), EXCEPTION_MESSAGE, t);
     }
 
+    @Override
+    public void setLogLevel(InternalLogLevel level) {
+
+    }
+
     protected Level toLevel(InternalLogLevel level) {
         switch (level) {
             case INFO:
