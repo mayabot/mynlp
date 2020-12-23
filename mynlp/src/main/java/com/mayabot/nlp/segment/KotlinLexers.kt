@@ -1,8 +1,10 @@
 package com.mayabot.nlp.segment
 
+import com.mayabot.nlp.Mynlp
 import java.io.File
 
-private val defaultLexer = Lexers.core()
+private val defaultLexer = Mynlp.instance().lexerBuilder()
+    .bigram().withPersonName().build()
 
 fun String.segment(): List<String> = defaultLexer.scan(this).toWordList()
 fun String.lexer(): Sentence = defaultLexer.scan(this)

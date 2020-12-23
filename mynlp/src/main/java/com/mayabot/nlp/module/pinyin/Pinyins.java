@@ -5,6 +5,7 @@ import com.mayabot.nlp.Mynlp;
 /**
  * @author jimichan
  */
+@Deprecated
 public class Pinyins {
 
     private static PinyinService pinyinService = Mynlp.instance().getInstance(PinyinService.class);

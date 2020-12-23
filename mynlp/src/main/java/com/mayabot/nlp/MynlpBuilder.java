@@ -58,6 +58,8 @@ public class MynlpBuilder {
      */
     private String cacheDir;
 
+    private boolean autoDownloadResource = false;
+
     private ArrayList<NlpResourceFactory> resourceFactoryList = new ArrayList<>();
 
     private Settings settings = Settings.createEmpty();
@@ -133,7 +135,7 @@ public class MynlpBuilder {
                 resourceFactoryList.add(new JarNlpResourceFactory(dataDirFile));
                 resourceFactoryList.add(new ClasspathNlpResourceFactory(Mynlp.class.getClassLoader()));
 
-                MynlpEnv env = new MynlpEnv(dataDirFile, cacheDirFile, resourceFactoryList, settings);
+                MynlpEnv env = new MynlpEnv(autoDownloadResource, dataDirFile, cacheDirFile, resourceFactoryList, settings);
 
                 Injector injector = createInject(env);
 
@@ -216,7 +218,11 @@ public class MynlpBuilder {
         return this;
     }
 
-//    public Settings getSettings() {
+    public void setAutoDownloadResource(boolean autoDownloadResource) {
+        this.autoDownloadResource = autoDownloadResource;
+    }
+
+    //    public Settings getSettings() {
 //        return settings;
 //    }
 

@@ -41,10 +41,9 @@ public class PerceptronPersonNameService {
             FeatureSet featureSet = FeatureSet.readFromText(new BufferedInputStream(featureResource.inputStream()));
             featureSet.save(featureDatFile, null);
         }
-
         this.perceptron = PersonNamePerceptron.load(
                 parameterResource.inputStream(),
-                new FileInputStream(featureDatFile));
+                new BufferedInputStream(new FileInputStream(featureDatFile), 8 * 1024));
 
         long t2 = System.currentTimeMillis();
 

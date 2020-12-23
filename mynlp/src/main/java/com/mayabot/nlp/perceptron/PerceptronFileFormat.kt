@@ -119,9 +119,11 @@ object PerceptronFileFormat {
 
             parameter = FloatArray(pSize)
 
-            val buffer = ByteArray(4 * 1024 * 4)
+            val buffer = ByteArray(1024 * 1024 * 4)
             val wrap = ByteBuffer.wrap(buffer)
+
             var point = 0
+
             while (true) {
                 val n = input.read(buffer)
                 if (n == -1) {
@@ -137,6 +139,7 @@ object PerceptronFileFormat {
                 for (i in 0 until n / 4) {
                     parameter[point++] = wrap.float
                 }
+
             }
         }
 

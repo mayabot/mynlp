@@ -32,7 +32,10 @@ dependencies {
 
     compile group: 'org.fusesource.jansi', name: 'jansi', version: '1.16'
     compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
-    
 
+    compile ("org.jetbrains.kotlin:kotlin-stdlib") {
+        exclude module:"kotlin-stdlib-jdk7"
+        exclude module:"kotlin-stdlib-jdk8"
+    }
     // compile group: 'org.ansj', name: 'ansj_seg', version: '5.1.6'
 }

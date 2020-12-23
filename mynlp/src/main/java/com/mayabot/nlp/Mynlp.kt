@@ -165,6 +165,8 @@ constructor(
 
         fun setCacheDir(dir: String): CommonConfig
 
+        fun setAutoDownloadRes(isAuto: Boolean): CommonConfig
+
         fun set(settingItem: SettingItem<*>, value: String): CommonConfig
 
         fun set(key: String, value: String): CommonConfig
@@ -216,6 +218,13 @@ constructor(
                 override fun setCacheDir(dir: String): CommonConfig {
                     this@Companion.config(Consumer {
                         it.cacheDir = dir
+                    })
+                    return this
+                }
+
+                override fun setAutoDownloadRes(isAuto: Boolean): CommonConfig {
+                    this@Companion.config(Consumer {
+                        it.setAutoDownloadResource(isAuto)
                     })
                     return this
                 }

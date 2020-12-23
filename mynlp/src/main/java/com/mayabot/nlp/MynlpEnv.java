@@ -17,17 +17,20 @@ package com.mayabot.nlp;
 
 import com.mayabot.nlp.common.SettingItem;
 import com.mayabot.nlp.common.Settings;
+import com.mayabot.nlp.common.logging.InternalLogLevel;
 import com.mayabot.nlp.common.logging.InternalLogger;
 import com.mayabot.nlp.common.logging.InternalLoggerFactory;
 import com.mayabot.nlp.common.resources.NlpResource;
 import com.mayabot.nlp.common.resources.NlpResourceFactory;
 import com.mayabot.nlp.common.utils.DictResDesc;
 import com.mayabot.nlp.common.utils.DictResources;
+import com.mayabot.nlp.common.utils.DownloadUtils;
 import kotlin.text.Charsets;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.charset.Charset;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
@@ -59,11 +62,17 @@ public class MynlpEnv {
 
     private Settings settings;
 
-    MynlpEnv(File dataDir, File cacheDir, List<NlpResourceFactory> resourceFactory, Settings settings) {
+    /**
+     * 自定下载缺失的资源
+     */
+    private boolean autoDownloadResource = false;
+
+    MynlpEnv(boolean autoDownloadResource, File dataDir, File cacheDir, List<NlpResourceFactory> resourceFactory, Settings settings) {
         this.dataDir = dataDir;
         this.cacheDir = cacheDir;
         this.resourceFactory = Collections.unmodifiableList(new ArrayList<>(resourceFactory));
         this.settings = settings;
+        this.autoDownloadResource = autoDownloadResource;
     }
 
     public <T> T get(SettingItem<T> setting) {
@@ -86,6 +95,7 @@ public class MynlpEnv {
         return this.loadResource(resourcePath, Charsets.UTF_8);
     }
 
+
     /**
      * 加载资源
      *
@@ -102,6 +112,11 @@ public class MynlpEnv {
 
         return AccessController.doPrivileged((PrivilegedAction<NlpResource>) () -> {
             NlpResource resource = loadNlpResource(resourcePath, charset);
+
+            if (resource == null && autoDownloadResource) {
+                tryDownload(resourcePath);
+                resource = loadNlpResource(resourcePath, charset);
+            }
 
             if (resource == null) {
                 StringBuilder info = new StringBuilder();
@@ -205,6 +220,30 @@ public class MynlpEnv {
             }
         }
         return resource;
+    }
+
+    @Nullable
+    private void tryDownload(String resourcePath) {
+        if (DictResources.INSTANCE.getMap().containsKey(resourcePath)) {
+            DictResDesc desc = DictResources.INSTANCE.getMap().get(resourcePath);
+
+            String group = desc.getGroup().replace('.', '/');
+            String jarName = desc.getArtifactId();
+            String version = desc.getVersion();
+            String path = "https://repo.huaweicloud.com/repository/maven/" + group + "/" + jarName + "/" + version + "/" + jarName + "-" + version + ".jar";
+            File to = new File(dataDir, jarName + "-" + version + ".jar");
+            if (logger.isEnabled(InternalLogLevel.INFO)) {
+                logger.info("Download " + jarName + ".jar From " + path + " --to--> " + to.getAbsolutePath());
+            } else {
+                System.out.println("Download " + jarName + ".jar From " + path + " --to--> " + to.getAbsolutePath());
+            }
+
+            try {
+                DownloadUtils.download(path, to);
+            } catch (IOException e) {
+                logger.error(path + " download error", e);
+            }
+        }
     }
 
 

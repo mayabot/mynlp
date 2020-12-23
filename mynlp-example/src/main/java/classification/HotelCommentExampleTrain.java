@@ -13,8 +13,34 @@ import java.io.File;
  */
 public class HotelCommentExampleTrain {
 
+
     public static void main(String[] args) throws Exception {
 
+        prepare();
+
+        File trainFile = new File("example.data/hotel/hotel-train-seg.txt");
+        File testFile = new File("example.data/hotel/hotel-test-seg.txt");
+
+        InputArgs trainArgs = new InputArgs();
+        trainArgs.setLoss(LossName.hs);
+        trainArgs.setEpoch(10);
+        trainArgs.setDim(100);
+        trainArgs.setLr(0.2);
+
+        FastText fastText = FastText.trainSupervised(trainFile, trainArgs);
+
+        fastText.test(testFile, 1, 0.0f, true);
+
+        // 乘积量化压缩模型和测试
+        //FastText qFastText = fastText.quantize();
+        //qFastText.test(testFile, 1, 0.0f, true);
+
+        // 保存模型
+        //fastText.saveModel("example.data/hotel.model");
+
+    }
+
+    private static void prepare() throws Exception {
         File trainFileSource = new File("example.data/hotel/hotel-train.txt");
         File testFileSource = new File("example.data/hotel/hotel-test.txt");
 
@@ -44,21 +70,6 @@ public class HotelCommentExampleTrain {
         if (!testFile.exists()) {
             FasttextTranUtils.prepareBySegment(testFileSource, testFile);
         }
-
-        InputArgs trainArgs = new InputArgs();
-        trainArgs.setLoss(LossName.hs);
-        trainArgs.setEpoch(10);
-        trainArgs.setDim(100);
-        trainArgs.setLr(0.2);
-
-        FastText fastText = FastText.trainSupervised(trainFile, trainArgs);
-        FastText qFastText = fastText.quantize();
-
-        //fastText.saveModel("example.data/hotel.model");
-
-        fastText.test(testFile,1,0.0f,true);
-        qFastText.test(testFile,1,0.0f,true);
-
     }
 
 }

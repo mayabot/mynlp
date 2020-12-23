@@ -14,14 +14,19 @@
  * limitations under the License.
  */
 
+plugins {
+    id 'com.github.johnrengelman.shadow' version '6.1.0'
+    id 'org.mikeneck.graalvm-native-image' version 'v1.0.0'
+}
+
 description = '中文分词'
 
 dependencies {
 
     // kotlin core lib
-    compile ("org.jetbrains.kotlin:kotlin-stdlib") {
-        exclude module:"kotlin-stdlib-jdk7"
-        exclude module:"kotlin-stdlib-jdk8"
+    compile("org.jetbrains.kotlin:kotlin-stdlib") {
+        exclude module: "kotlin-stdlib-jdk7"
+        exclude module: "kotlin-stdlib-jdk8"
     }
 
     compileOnly 'org.apache.lucene:lucene-core:5.0.0'
@@ -34,7 +39,7 @@ dependencies {
 
     compileOnly 'net.openhft:zero-allocation-hashing:0.12'
     compileOnly group: 'org.fusesource.jansi', name: 'jansi', version: '1.16'
-    
+
     testCompile 'junit:junit:4.12'
     testCompile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
     testCompile 'com.mayabot.mynlp.resource:mynlp-resource-cws:1.0.0'
@@ -53,14 +58,43 @@ dependencies {
     // 繁简体转换
     testImplementation 'com.mayabot.mynlp.resource:mynlp-resource-transform:1.0.0'
     // 感知机分词模型
-   testImplementation 'com.mayabot.mynlp.resource:mynlp-resource-cws:1.0.0'
+    testImplementation 'com.mayabot.mynlp.resource:mynlp-resource-cws:1.0.0'
     // 自定义扩展词库
-   testImplementation 'com.mayabot.mynlp.resource:mynlp-resource-custom:1.0.0'
-
+    testImplementation 'com.mayabot.mynlp.resource:mynlp-resource-custom:1.0.0'
 
 }
 
-test{
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'com.mayabot.nlp.cli.MynlpCliKt'
+    }
+}
+
+shadowJar {
+    archiveClassifier.set('bin')
+}
+
+test {
     // 默认单个Test的内存是500M左右
     maxHeapSize("1g")
 }
+
+//nativeImage {
+//    graalVmHome = '/Library/Java/JavaVirtualMachines/graalvm/Contents/Home'
+//    mainClass = 'ccom.mayabot.nlp.cli.MynlpMainKt'
+//    executableName = 'my-native-application'
+//    outputDirectory = file("$buildDir/bin")
+//    arguments {
+//        add '--no-fallback'
+//        add '--enable-all-security-services'
+////        add options.traceClassInitialization('com.example.MyDataProvider,com.example.MyDataConsumer')
+////        add '--initialize-at-run-time=com.example.runtime'
+//        add '--report-unsupported-elements-at-runtime'
+//    }
+//}
+//
+////generateNativeImageConfig {
+////    enabled = true
+////    byRunningApplicationWithoutArguments()
+////}
