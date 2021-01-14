@@ -16,7 +16,6 @@
 
 plugins {
     id 'com.github.johnrengelman.shadow' version '6.1.0'
-    id 'org.mikeneck.graalvm-native-image' version 'v1.0.0'
 }
 
 description = '中文分词'
@@ -79,22 +78,3 @@ test {
     // 默认单个Test的内存是500M左右
     maxHeapSize("1g")
 }
-
-//nativeImage {
-//    graalVmHome = '/Library/Java/JavaVirtualMachines/graalvm/Contents/Home'
-//    mainClass = 'ccom.mayabot.nlp.cli.MynlpMainKt'
-//    executableName = 'my-native-application'
-//    outputDirectory = file("$buildDir/bin")
-//    arguments {
-//        add '--no-fallback'
-//        add '--enable-all-security-services'
-////        add options.traceClassInitialization('com.example.MyDataProvider,com.example.MyDataConsumer')
-////        add '--initialize-at-run-time=com.example.runtime'
-//        add '--report-unsupported-elements-at-runtime'
-//    }
-//}
-//
-////generateNativeImageConfig {
-////    enabled = true
-////    byRunningApplicationWithoutArguments()
-////}

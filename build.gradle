@@ -7,7 +7,7 @@ apply plugin: 'eclipse'
 
 description = "mynlp是mayabot开源的中文自然语言处理工具集"
 
-def buildVersion = "3.3.1"
+def buildVersion = "3.4.0"
 def snapShot = true
 
 allprojects {
@@ -17,10 +17,6 @@ allprojects {
 }
 
 subprojects {
-
-    if (project.path == ":modules") {
-        return
-    }
 
     description = "Maya Nlp subproject ${project.path}"
 
@@ -56,8 +52,6 @@ subprojects {
         main.kotlin.srcDirs = main.java.srcDirs
         test.kotlin.srcDirs = test.java.srcDirs
     }
-
-    
 
     compileKotlin {
         kotlinOptions {
