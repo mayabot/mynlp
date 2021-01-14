@@ -29,7 +29,7 @@ mynlp_work/**
 **/temp/
 data/
 /data_dir/
-**/data
+**/data/
 example.data
 
 /dependency-reduced-pom.xml
@@ -40,7 +40,6 @@ example.data
 /.gradle
 **/*.iml
 *.ipr
-
 
 data.work/
 **/model/dependency
