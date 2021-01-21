@@ -16,7 +16,7 @@ dependencies {
 
     compileOnly("org.apache.lucene:lucene-core:5.0.0")
 
-    //    // logs
+    //logs
     compileOnly(group = "org.slf4j", name = "slf4j-api", version = "1.7.21")
     compileOnly(group = "commons-logging", name = "commons-logging", version = "1.2")
     compileOnly(group = "org.apache.logging.log4j", name = "log4j-api", version = "2.6.2")
@@ -24,6 +24,8 @@ dependencies {
 
     compileOnly("net.openhft:zero-allocation-hashing:0.12")
     compileOnly(group = "org.fusesource.jansi", name = "jansi", version = "1.16")
+
+
 
     testImplementation("junit:junit:4.12")
     testImplementation("ch.qos.logback:logback-classic:1.2.3")

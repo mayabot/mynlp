@@ -107,7 +107,7 @@ public class SmartPickUpSubword implements WordTermCollector.PickUpSubword {
      * 外部程序控制是否进一步拆分.返回true表示不再拆分
      *
      * @param blackListCallback
-     * @return
+     * @return SmartPickUpSubword
      */
     public SmartPickUpSubword setBlackListCallback(Function<String, Boolean> blackListCallback) {
         this.blackListCallback = blackListCallback;

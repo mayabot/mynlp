@@ -41,7 +41,6 @@ public class StopwordFilter extends BaseFilterLexerReader {
      */
     public StopwordFilter(LexerReader source) {
         this(source, Mynlp.instance().getInstance(SystemStopWordDict.class));
-
     }
 
     @Override

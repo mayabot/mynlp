@@ -68,7 +68,7 @@ public abstract class BasePinyinDictionary {
         this.trie = builder.build(map);
         long t2 = System.currentTimeMillis();
 
-        logger.info("Pinyin Dictionary rebuild use time {} ms", t2 - t1);
+        logger.info("PinyinModule Dictionary rebuild use time {} ms", t2 - t1);
     }
 
     protected abstract TreeMap<String, Pinyin[]> load();
@@ -84,7 +84,7 @@ public abstract class BasePinyinDictionary {
 
     /**
      * @param text 原始中文文本
-     * @return
+     * @return PinyinResult
      */
     public PinyinResult convert(String text) {
         return this.text2Pinyin(text);
@@ -94,7 +94,7 @@ public abstract class BasePinyinDictionary {
      * 来自Hanlp的拼音方法
      *
      * @param charArray
-     * @return List<Pinyin>
+     * @return List<PinyinModule>
      */
     private List<Pinyin> segLongest(char[] charArray) {
         final Pinyin[][] wordNet = new Pinyin[charArray.length][];

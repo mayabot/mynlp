@@ -1,16 +1,15 @@
-import org.jetbrains.kotlin.backend.common.phaser.namedUnitPhase
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.4.20" apply false
+    kotlin("jvm") version "1.4.21" apply false
     id("idea")
     id("eclipse")
 }
 
 description = "mynlp是mayabot开源的中文自然语言处理工具集"
 
-val buildVersion = "3.4.0"
-val snapShot = true
+val buildVersion = "4.0.0-beta1"
+val snapShot = false
 
 allprojects {
     repositories {
@@ -56,6 +55,7 @@ subprojects {
 
                 create<MavenPublication>("java") {
                     from(components["java"])
+
                     versionMapping {
                         usage("java-api") {
                             fromResolutionOf("runtimeClasspath")
@@ -67,7 +67,7 @@ subprojects {
 
                     repositories {
 
-                        if (project.hasProperty("maya_pri_user")) {
+                        if (project.hasProperty("maya_pri_user") && !buildVersion.endsWith("-local")) {
                             maven {
                                 name = "MayaPrivate"
                                 if (snapShot) {
@@ -82,7 +82,7 @@ subprojects {
                             }
                         }
 
-                        if (!snapShot && project.hasProperty("oss_user")) {
+                        if (!snapShot && project.hasProperty("oss_user")&& !buildVersion.endsWith("-local")) {
                             maven {
                                 name = "OssPublic"
                                 if (snapShot) {

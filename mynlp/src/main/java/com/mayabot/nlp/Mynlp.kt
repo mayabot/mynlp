@@ -97,6 +97,8 @@ constructor(
         getInstance(PinyinSplitService::class.java)
     }
 
+    fun pinyinSplit() = pinyinSplit
+
     /**
      * [text]连续的拼音流
      */

@@ -50,6 +50,8 @@ abstract class BaseExternalizable implements Externalizable {
      */
     public abstract void loadFromSource() throws Exception;
 
+
+
     /**
      * @throws Exception
      */

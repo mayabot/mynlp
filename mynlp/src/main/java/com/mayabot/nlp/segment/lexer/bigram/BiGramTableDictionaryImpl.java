@@ -44,6 +44,7 @@ import java.util.List;
 public class BiGramTableDictionaryImpl extends BaseExternalizable implements BiGramTableDictionary {
 
     private final MynlpEnv mynlp;
+
     private final CoreDictPatch coreDictPatch;
     private CSRSparseMatrix matrix;
 
@@ -54,6 +55,8 @@ public class BiGramTableDictionaryImpl extends BaseExternalizable implements BiG
     @Nullable
     private final CoreDictionary coreDictionary;
 
+    private boolean loadFromBinCache = true;
+
     public BiGramTableDictionaryImpl(CoreDictionary coreDictionary,
                                      MynlpEnv mynlp,
                                      CoreDictPathWrap coreDictPathWrap) throws Exception {
@@ -61,7 +64,12 @@ public class BiGramTableDictionaryImpl extends BaseExternalizable implements BiG
         this.coreDictionary = coreDictionary;
         this.mynlp = mynlp;
         coreDictPatch = coreDictPathWrap.getCoreDictPatch();
-        this.restore();
+
+        if(coreDictPathWrap != null){
+            loadFromBinCache = false;
+        }
+
+        this.refresh();
     }
 
     /**
@@ -71,7 +79,11 @@ public class BiGramTableDictionaryImpl extends BaseExternalizable implements BiG
      */
     @Override
     public void refresh() throws Exception {
-        this.restore();
+        if(loadFromBinCache){
+            this.restore();
+        }else{
+            loadFromSource();
+        }
     }
 
     @Override
@@ -81,9 +93,9 @@ public class BiGramTableDictionaryImpl extends BaseExternalizable implements BiG
         sb.append(mynlp.hashResource(path));
         sb.append("v2");
 
-        if (coreDictPatch != null) {
-            sb.append(coreDictPatch.biGramVersion());
-        }
+//        if (coreDictPatch != null) {
+//            sb.append(coreDictPatch.biGramVersion());
+//        }
 
         return EncryptionUtil.md5(sb.toString());
 
@@ -99,8 +111,6 @@ public class BiGramTableDictionaryImpl extends BaseExternalizable implements BiG
         }
 
         TreeBasedTable table = new TreeBasedTable();
-
-//        Splitter splitter = Splitter.on(" ").omitEmptyStrings().trimResults();
 
         String firstWord = null;
         int count = 0;
@@ -141,7 +151,7 @@ public class BiGramTableDictionaryImpl extends BaseExternalizable implements BiG
 
 
         if (coreDictPatch != null) {
-            List<BiGram> list = coreDictPatch.addBiGram();
+            List<BiGram> list = coreDictPatch.appendBiGram();
             if (list != null) {
                 for (BiGram item : list) {
                     int idA = coreDictionary.wordId(item.getWordA());
@@ -197,5 +207,9 @@ public class BiGramTableDictionaryImpl extends BaseExternalizable implements BiG
     @Override
     public final int getBiFrequency(int idA, int idB) {
         return matrix.get(idA, idB);
+    }
+
+    public CoreDictPatch getCoreDictPatch() {
+        return coreDictPatch;
     }
 }

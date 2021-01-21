@@ -49,6 +49,7 @@ import java.util.TreeMap;
 public class CoreDictionaryImpl extends BaseExternalizable implements CoreDictionary {
 
     private final MynlpEnv env;
+
     private InternalLogger logger = InternalLoggerFactory.getInstance(CoreDictionaryImpl.class);
 
     private final String path = "core-dict/CoreDict.txt";
@@ -63,11 +64,18 @@ public class CoreDictionaryImpl extends BaseExternalizable implements CoreDictio
     private @Nullable
     CoreDictPatch coreDictPatch;
 
+    private boolean loadFromBinCache = true;
+
     public CoreDictionaryImpl(MynlpEnv env, CoreDictPathWrap coreDictPathWrap) throws Exception {
         super(env);
         this.env = env;
         this.coreDictPatch = coreDictPathWrap.getCoreDictPatch();
-        this.restore();
+        // coreDictPathWrap 注定是个可配置且变化的数据，那么就不要指望cache加速了
+        if (this.coreDictPatch != null) {
+            loadFromBinCache = false;
+        }
+
+        this.refresh();
     }
 
     /**
@@ -77,7 +85,11 @@ public class CoreDictionaryImpl extends BaseExternalizable implements CoreDictio
      */
     @Override
     public void refresh() throws Exception {
-        this.restore();
+        if(loadFromBinCache){
+            this.restore();
+        }else{
+            loadFromSource();
+        }
     }
 
     @Override
@@ -117,7 +129,7 @@ public class CoreDictionaryImpl extends BaseExternalizable implements CoreDictio
 
         // apply dict patch
         if (coreDictPatch != null) {
-            List<Pair<String, Integer>> list = coreDictPatch.addDict();
+            List<Pair<String, Integer>> list = coreDictPatch.appendDict();
 
             if (list != null) {
                 for (Pair<String, Integer> pair : list) {
@@ -161,9 +173,9 @@ public class CoreDictionaryImpl extends BaseExternalizable implements CoreDictio
         StringBuilder sb = new StringBuilder();
         sb.append(version).append("v2");
 
-        if (coreDictPatch != null) {
-            sb.append(coreDictPatch.dictVersion());
-        }
+//        if (coreDictPatch != null) {
+//            sb.append(coreDictPatch.dictVersion());
+//        }
 
         return EncryptionUtil.md5(sb.toString());
     }
@@ -256,5 +268,14 @@ public class CoreDictionaryImpl extends BaseExternalizable implements CoreDictio
     @Override
     public int size() {
         return trie.size();
+    }
+
+    @Nullable
+    public CoreDictPatch getCoreDictPatch() {
+        return coreDictPatch;
+    }
+
+    public void setCoreDictPatch(@Nullable CoreDictPatch coreDictPatch) {
+        this.coreDictPatch = coreDictPatch;
     }
 }

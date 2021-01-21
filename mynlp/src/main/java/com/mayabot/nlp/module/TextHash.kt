@@ -17,6 +17,37 @@ object TextHash {
 
     val l1Replace = QuickReplacer(loadL1StopWords())
 
+
+
+    private fun loadStopWords(): List<String> {
+        val list = ArrayList<String>()
+
+        list += TextHash::class.java.classLoader.getResourceAsStream(
+                "stopwords.txt").reader(Charsets.UTF_8).readLines().map { it.trim() }.filter {
+            it.isNotEmpty()
+        }
+
+        list += " "
+
+        return list
+    }
+
+    @JvmStatic
+    fun hash1(string: String): Long {
+        val text = l1Replace.replace(string, replaceFun)
+        return xXHasher.hashChars(text)
+    }
+
+    /**
+     * 去除停用词、标点符号后，进行hash
+     */
+    @JvmStatic
+    fun hash2(string: String): Long {
+        val text = stopwordQuickReplacer.replace(string, replaceFun)
+        return xXHasher.hashChars(text.trim())
+    }
+
+    private val replaceFun = { _: String -> "" }
     private fun loadL1StopWords(): List<String> {
         val list = ArrayList<String>()
         list += " "
@@ -136,36 +167,6 @@ object TextHash {
         """.trimIndent()
         list += fuhao.splitToSequence("\n").filter { it.isNotBlank() }.toList()
         return list;
-    }
-
-    private fun loadStopWords(): List<String> {
-        val list = ArrayList<String>()
-
-        list += TextHash::class.java.classLoader.getResourceAsStream(
-                "stopwords.txt").reader(Charsets.UTF_8).readLines().map { it.trim() }.filter {
-            it.isNotEmpty()
-        }
-
-        list += " "
-
-        return list
-    }
-
-    @JvmStatic
-    fun hash1(string: String): Long {
-        val text = l1Replace.replace(string, replaceFun)
-        return xXHasher.hashChars(text)
-    }
-
-    private val replaceFun = { _: String -> "" }
-
-    /**
-     * 去除停用词、标点符号后，进行hash
-     */
-    @JvmStatic
-    fun hash2(string: String): Long {
-        val text = stopwordQuickReplacer.replace(string, replaceFun)
-        return xXHasher.hashChars(text.trim())
     }
 }
 

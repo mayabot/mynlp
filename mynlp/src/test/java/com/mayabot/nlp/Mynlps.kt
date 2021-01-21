@@ -25,7 +25,6 @@ import java.util.function.Consumer
  *
  * @author jimichan
  */
-@Deprecated("Use Mynlp")
 object Mynlps {
 
     @JvmStatic

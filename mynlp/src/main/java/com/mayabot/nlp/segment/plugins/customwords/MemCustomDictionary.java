@@ -56,6 +56,10 @@ public class MemCustomDictionary implements CustomDictionary {
         dict.remove(word);
     }
 
+    public void clear() {
+        dict.clear();
+    }
+
     @Override
     public DoubleArrayTrieStringIntMap getTrie() {
         return trie;

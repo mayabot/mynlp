@@ -215,7 +215,7 @@ public class MynlpEnv {
                 }
                 long t2 = System.currentTimeMillis();
 
-                logger.debug("load resource {} ,use time {} ms", string, t2 - t1);
+                logger.info("load resource {} ,use time {} ms", string, t2 - t1);
                 break;
             }
         }

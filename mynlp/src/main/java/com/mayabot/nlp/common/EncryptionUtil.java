@@ -16,13 +16,6 @@ public class EncryptionUtil {
     static char hexDigits[] =
             {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
 
-    public static void main(String[] args) throws NoSuchAlgorithmException {
-        MessageDigest md = MessageDigest.getInstance("MD5");
-//        md.update(new byte[]{1, 2});
-//        md.update(new byte[]{2, 2});
-        byte[] encryptStr = md.digest();
-        System.out.println(byte2String(encryptStr));
-    }
 
     public static String md5(String source) {
         try {
