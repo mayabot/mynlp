@@ -1,6 +1,6 @@
 package com.mayabot.nlp.segment.lexer.perceptron.inner
 
-import com.mayabot.nlp.perceptron.PerceptronRunner
+import com.mayabot.nlp.perceptron.PerceptronComputer
 import com.mayabot.nlp.segment.lexer.perceptron.PerceptronSegmentDefinition
 import java.io.File
 
@@ -11,7 +11,7 @@ import java.io.File
  */
 fun main() {
 
-    val runner = PerceptronRunner(PerceptronSegmentDefinition())
+    val runner = PerceptronComputer(PerceptronSegmentDefinition())
 
 //        val trainFile = File("data.work/corpus.segment/backoff2005/msr_training.txt")
 //        val evaluateFile = File("data.work/corpus.segment/backoff2005/msr_test_gold.txt")

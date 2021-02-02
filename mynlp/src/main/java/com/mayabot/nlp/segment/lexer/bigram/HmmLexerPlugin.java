@@ -8,15 +8,15 @@ import com.mayabot.nlp.segment.plugins.atom.AtomSplitAlgorithm;
 /**
  * @author jimichan
  */
-public class BigramLexerPlugin implements PipelineLexerPlugin {
+public class HmmLexerPlugin implements PipelineLexerPlugin {
 
     private CoreDictionary dictionaryMatcher;
 
-    public BigramLexerPlugin(CoreDictionary dictionaryMatcher) {
+    public HmmLexerPlugin(CoreDictionary dictionaryMatcher) {
         this.dictionaryMatcher = dictionaryMatcher;
     }
 
-    public BigramLexerPlugin(Mynlp mynlp) {
+    public HmmLexerPlugin(Mynlp mynlp) {
         this.dictionaryMatcher = mynlp.getInstance(CoreDictionary.class);
     }
 

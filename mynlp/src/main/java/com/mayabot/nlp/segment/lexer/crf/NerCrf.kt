@@ -17,7 +17,6 @@ package com.mayabot.nlp.segment.lexer.crf
 
 import com.mayabot.nlp.common.hppc.IntArrayList
 import com.mayabot.nlp.perceptron.FeatureSet
-import com.mayabot.nlp.perceptron.PerceptronFileFormat
 import com.mayabot.nlp.perceptron.PerceptronModel
 import com.mayabot.nlp.segment.WordTerm
 import com.mayabot.nlp.segment.lexer.crf.FeatureTemplateGroup.Companion.BOS
@@ -74,7 +73,7 @@ class NerCrf(val model: PerceptronModel, val labels: Array<String>, val featureT
                  labelText: InputStream,
                  featureTemplate: InputStream
         ): NerCrf {
-            val model = PerceptronFileFormat.loadWithFeatureBin(parameterBin, featureBin)
+            val model = PerceptronModel.loadWithFeatureBin(parameterBin, featureBin)
             val labelList = labelText.use { it.bufferedReader().readLines() }
 
             val featureTemplateGroup = FeatureTemplateGroup(featureTemplate.use { it.bufferedReader().readLines() })

@@ -1,7 +1,7 @@
 package com.mayabot.nlp.segment.plugins.pos
 
 import com.mayabot.nlp.perceptron.PerceptronModel
-import com.mayabot.nlp.perceptron.PerceptronRunner
+import com.mayabot.nlp.perceptron.PerceptronComputer
 import java.io.File
 
 /**
@@ -15,7 +15,7 @@ open class CommonPosModel(val labels: Array<String>,
         perceptron.decodeQuickMode(true)
     }
 
-    protected val runner = PerceptronRunner(PosPerceptronDef(labels))
+    protected val runner = PerceptronComputer(PosPerceptronDef(labels))
 
     /**
      * 解码
@@ -47,7 +47,7 @@ open class CommonPosModel(val labels: Array<String>,
                   evaluateFile: File?,
                   iter: Int,
                   threadNum: Int): PerceptronModel {
-            val runner = PerceptronRunner(PosPerceptronDef(labels.toTypedArray()))
+            val runner = PerceptronComputer(PosPerceptronDef(labels.toTypedArray()))
             return runner.train(trainFile, evaluateFile, iter, threadNum, true)
         }
     }

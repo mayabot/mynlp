@@ -10,13 +10,15 @@ import com.mayabot.nlp.perceptron.*
  */
 class PinyinSplitDefinition : PerceptronDefinition<Char, CharArray>{
 
+    companion object{
+        const val CHAR_NULL = '\u0000'
+    }
+
     override fun labels() = arrayOf("B", "M", "E", "S")
 
     override fun featureMaxSize() = 4
 
     override fun featureFunction(sentence: CharArray, size: Int, position: Int, buffer: FastStringBuilder, emit: () -> Unit) {
-
-        val CHAR_NULL = '\u0000'
 
         val lastIndex = size - position - 1
 

@@ -16,6 +16,8 @@
 package com.mayabot.nlp.perceptron
 
 import com.mayabot.nlp.common.FastStringBuilder
+import java.io.File
+import java.io.InputStream
 
 /**
  * 一个被训练的原始文本。解析为(X,Label)序列。
@@ -69,36 +71,41 @@ interface PerceptronDefinition<E, InputSequence>{
      * 评估函数逻辑
      */
     fun evaluateFunction(perceptron: PerceptronModel) : EvaluateFunction?
-}
-
-
-
-/**
- * 评估结果
- */
-data class EvaluateResult(
-        /**
-         * 正确率
-         */
-        val precision: Float,
-        /**
-         * 召回率
-         */
-        val recall: Float
-) {
-
-    constructor(goldTotal: Int, predTotal: Int, correct: Int) : this(
-            (correct * 100.0 / predTotal).toFloat(),
-            (correct * 100.0 / goldTotal).toFloat()
-    )
 
     /**
-     * F1综合指标
+     * 计算器对象
      */
-    val f1: Float
-        get() = (2.0 * precision * recall / (precision + recall)).toFloat()
+    fun modelComputer(model: PerceptronModel): PerceptronModelComputer<E,InputSequence> {
+        val computer = PerceptronComputer(this)
+        return object :PerceptronModelComputer<E,InputSequence>{
+            override fun decodeModel(input: InputSequence): List<String> {
+                return computer.decodeModel(model,input)
+            }
 
-    override fun toString(): String {
-        return "正确率(P) %.2f , 召回率(R) %.2f , F1 %.2f".format(precision, recall, f1)
+            override fun decode(input: InputSequence, prepare: Boolean): IntArray {
+                return computer.decode(model,input,prepare)
+            }
+
+            override fun learnModel(sample: String) {
+                computer.learnModel(model,sample)
+            }
+
+            override fun evaluateModel(file: File): EvaluateResult {
+               return computer.evaluateModel(model,file)
+            }
+        }
     }
+
+    /**
+     * 模型训练入口
+     */
+    fun train(trainFile: File,
+              evaluateFile: File?,
+              iter: Int,
+              threadNum: Int,
+              quickDecode: Boolean = false)
+            : PerceptronModel{
+        return PerceptronComputer(this).train(trainFile,evaluateFile, iter, threadNum,quickDecode)
+    }
+
 }

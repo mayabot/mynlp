@@ -1,7 +1,7 @@
 package com.mayabot.nlp.segment
 
 import com.mayabot.nlp.Mynlp
-import com.mayabot.nlp.segment.lexer.bigram.BigramLexerPlugin
+import com.mayabot.nlp.segment.lexer.bigram.HmmLexerPlugin
 import com.mayabot.nlp.segment.lexer.bigram.CoreDictionary
 import com.mayabot.nlp.segment.lexer.perceptron.PerceptronSegmentPlugin
 import com.mayabot.nlp.segment.pipeline.PipelineLexerBuilder
@@ -33,23 +33,33 @@ open class FluentLexerBuilder(val mynlp: Mynlp = Mynlp.instance()) : LexerBuilde
 
     @Deprecated(message = "使用bigram方法", replaceWith = ReplaceWith("bigram"), level = DeprecationLevel.WARNING)
     fun core(): FluentLexerBuilder {
-        builder.install(BigramLexerPlugin(mynlp))
+        builder.install(HmmLexerPlugin(mynlp))
         return this@FluentLexerBuilder
     }
 
     @Deprecated(message = "使用bigram方法", replaceWith = ReplaceWith("bigram(dict)"), level = DeprecationLevel.WARNING)
     fun coreByDict(dict: CoreDictionary): FluentLexerBuilder {
-        builder.install(BigramLexerPlugin(dict))
+        builder.install(HmmLexerPlugin(dict))
+        return this@FluentLexerBuilder
+    }
+
+    fun hmm(): FluentLexerBuilder {
+        builder.install(HmmLexerPlugin(mynlp))
+        return this@FluentLexerBuilder
+    }
+
+    fun hmm(dict: CoreDictionary): FluentLexerBuilder {
+        builder.install(HmmLexerPlugin(dict))
         return this@FluentLexerBuilder
     }
 
     fun bigram(): FluentLexerBuilder {
-        builder.install(BigramLexerPlugin(mynlp))
+        builder.install(HmmLexerPlugin(mynlp))
         return this@FluentLexerBuilder
     }
 
     fun bigram(dict: CoreDictionary): FluentLexerBuilder {
-        builder.install(BigramLexerPlugin(dict))
+        builder.install(HmmLexerPlugin(dict))
         return this@FluentLexerBuilder
     }
 

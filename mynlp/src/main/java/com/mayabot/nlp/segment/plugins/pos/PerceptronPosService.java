@@ -4,7 +4,6 @@ import com.mayabot.nlp.MynlpEnv;
 import com.mayabot.nlp.common.injector.Singleton;
 import com.mayabot.nlp.common.logging.InternalLogger;
 import com.mayabot.nlp.common.logging.InternalLoggerFactory;
-import com.mayabot.nlp.perceptron.PerceptronFileFormat;
 import com.mayabot.nlp.perceptron.PerceptronModel;
 import com.mayabot.nlp.segment.Nature;
 import com.mayabot.nlp.segment.WordTerm;
@@ -30,7 +29,7 @@ public class PerceptronPosService {
     public PerceptronPosService(MynlpEnv mynlp) throws Exception {
         long t1 = System.currentTimeMillis();
 
-        PerceptronModel model = PerceptronFileFormat.loadFromNlpResource("pos-model", mynlp);
+        PerceptronModel model = PerceptronModel.loadFromNlpResource("pos-model", mynlp);
         this.perceptron = new POSPerceptron(model);
         long t2 = System.currentTimeMillis();
 

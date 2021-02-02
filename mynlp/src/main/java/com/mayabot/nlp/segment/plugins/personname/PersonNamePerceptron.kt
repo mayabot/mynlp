@@ -19,7 +19,6 @@ import com.mayabot.nlp.common.FastStringBuilder
 import com.mayabot.nlp.common.hppc.IntArrayList
 import com.mayabot.nlp.common.utils.CharNormUtils
 import com.mayabot.nlp.perceptron.FeatureSet
-import com.mayabot.nlp.perceptron.PerceptronFileFormat
 import com.mayabot.nlp.perceptron.PerceptronModel
 import com.mayabot.nlp.perceptron.TrainSample
 import com.mayabot.nlp.segment.plugins.personname.NRPerceptronFeature.extractFeatureVector
@@ -149,7 +148,7 @@ class PersonNamePerceptron(val model: PerceptronModel) {
 
         @JvmStatic
         fun load(parameterBin: InputStream, featureBin: InputStream): PersonNamePerceptron {
-            val model = PerceptronFileFormat.loadWithFeatureBin(parameterBin, featureBin)
+            val model = PerceptronModel.loadWithFeatureBin(parameterBin, featureBin)
             return PersonNamePerceptron(model)
         }
 

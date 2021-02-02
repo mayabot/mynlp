@@ -72,6 +72,13 @@ constructor(
                 .withPersonName().build()
     }
 
+    fun hmmLexer(): Lexer {
+        return lexerBuilder()
+            .bigram()
+            .withPos()
+            .withPersonName().build()
+    }
+
     fun perceptronLexer(): Lexer {
         return lexerBuilder().perceptron().withPos().build()
     }

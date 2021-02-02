@@ -15,9 +15,8 @@
  */
 package com.mayabot.nlp.segment.lexer.perceptron
 
-import com.mayabot.nlp.perceptron.PerceptronFileFormat
 import com.mayabot.nlp.perceptron.PerceptronModel
-import com.mayabot.nlp.perceptron.PerceptronRunner
+import com.mayabot.nlp.perceptron.PerceptronComputer
 import java.io.File
 import java.io.InputStream
 
@@ -27,7 +26,7 @@ import java.io.InputStream
  */
 class PerceptronSegment(val model: PerceptronModel) {
 
-    val runner = PerceptronRunner(PerceptronSegmentDefinition())
+    val runner = PerceptronComputer(PerceptronSegmentDefinition())
 
     /**
      * 保存分词模型
@@ -82,7 +81,7 @@ class PerceptronSegment(val model: PerceptronModel) {
 
         @JvmStatic
         fun load(parameterBin: InputStream, featureBin: InputStream): PerceptronSegment {
-            val model = PerceptronFileFormat.loadWithFeatureBin(parameterBin, featureBin)
+            val model = PerceptronModel.loadWithFeatureBin(parameterBin, featureBin)
             return PerceptronSegment(model)
         }
 

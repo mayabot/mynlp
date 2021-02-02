@@ -1,7 +1,7 @@
 package com.mayabot.nlp.segment.plugins.pos
 
 import com.mayabot.nlp.perceptron.PerceptronModel
-import com.mayabot.nlp.perceptron.PerceptronRunner
+import com.mayabot.nlp.perceptron.PerceptronComputer
 import com.mayabot.nlp.segment.Nature
 import java.io.File
 
@@ -21,7 +21,7 @@ class POSPerceptron(
     val natureList = labels.map { Nature.parse(it) }.toTypedArray()
 
 
-    val runner = PerceptronRunner(PosPerceptronDef(labels))
+    val runner = PerceptronComputer(PosPerceptronDef(labels))
 
 
     init {
@@ -72,7 +72,7 @@ class POSPerceptron(
                   evaluateFile: File?,
                   iter: Int,
                   threadNum: Int): PerceptronModel {
-            val runner = PerceptronRunner(PosPerceptronDef(labels.toTypedArray()))
+            val runner = PerceptronComputer(PosPerceptronDef(labels.toTypedArray()))
             return runner.train(trainFile, evaluateFile, iter, threadNum, true)
         }
     }

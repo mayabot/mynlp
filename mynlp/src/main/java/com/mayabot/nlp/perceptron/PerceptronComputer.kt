@@ -5,33 +5,36 @@ import com.mayabot.nlp.common.FastStringBuilder
 import com.mayabot.nlp.common.hppc.IntArrayList
 import java.io.File
 
+interface PerceptronModelComputer<E, InputSequence>{
+    fun decodeModel(input: InputSequence): List<String>
+    fun decode(input: InputSequence, prepare: Boolean=true): IntArray
+    fun learnModel(sample: String)
+    fun evaluateModel(file: File): EvaluateResult
+}
+
 /**
  * PerceptronRunner
  * @author jimi
  */
-class PerceptronRunner<E, InputSequence>
-@JvmOverloads
-constructor(
-        val definition: PerceptronDefinition<E, InputSequence>,
-        val convertChar: Boolean = true
-) {
+class PerceptronComputer<E, InputSequence>(
+        private val definition: PerceptronDefinition<E, InputSequence>
+){
 
-    fun decodeModel(model: PerceptronModel, input: InputSequence): List<String> {
+     fun decodeModel(model: PerceptronModel, input: InputSequence): List<String> {
         val sentence = prepare(input)
         val vectorSequence = inputSeq2VectorSequence(sentence, model.featureSet())
         val pre = model.decode(vectorSequence)
         return pre.map { labels[it] }
     }
 
-    @JvmOverloads
-    fun decode(model: PerceptronModel, input: InputSequence, prepare: Boolean=true): IntArray {
+     fun decode(model: PerceptronModel, input: InputSequence, prepare: Boolean=true): IntArray {
         val sentence = if(prepare) prepare(input) else input
         val vectorSequence = inputSeq2VectorSequence(sentence, model.featureSet())
         val pre = model.decode(vectorSequence)
         return pre
     }
 
-    fun learnModel(model: PerceptronModel, sample: String) {
+     fun learnModel(model: PerceptronModel, sample: String) {
         val id = makeSureFeatureSet(sample, model.featureSet())
         model.makeSureParameter(id)
         val x = sampleText2TrainSample(sample, model.featureSet())
@@ -41,7 +44,7 @@ constructor(
     /**
      *  评估
      */
-    fun evaluateModel(model: PerceptronModel, file: File): EvaluateResult {
+     fun evaluateModel(model: PerceptronModel, file: File): EvaluateResult {
         val evaluateSampleList =  files(file).flatMap { it.readLines() }
             val function = definition.evaluateFunction(model) ?: EvaluateFunction { samples ->
                 simpleEvaluate(model, samples)
@@ -52,8 +55,7 @@ constructor(
     /**
      * 训练一个感知机模型
      */
-    @JvmOverloads
-    fun train(trainFile: File,
+     internal fun train(trainFile: File,
               evaluateFile: File?,
               iter: Int,
               threadNum: Int,
@@ -163,17 +165,6 @@ constructor(
     private fun labelIndex(label: String): Int {
         return labelMap.getValue(label)
     }
-
-//    /**
-//     * 加载训练语料的时候可以预处理InputSequence
-//     *
-//     * 子类可以覆盖实现.
-//     */
-//    private fun preProcessInputSequence(sentence: InputSequence,conv: Boolean=true) {
-//        if (convertChar && sentence is CharArray && conv) {
-//            CharNormUtils.convert(sentence)
-//        }
-//    }
 
     private fun prepare(sentence: InputSequence): InputSequence{
         return definition.preProcessInputSequence(sentence)

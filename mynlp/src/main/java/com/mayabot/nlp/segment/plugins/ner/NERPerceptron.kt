@@ -97,7 +97,7 @@ class NERPerceptron(val model: PerceptronModel, private val labels: List<String>
          */
         @JvmStatic
         fun load(parameterBin: InputStream, featureBin: InputStream, labelText: InputStream): NERPerceptron {
-            val model = PerceptronFileFormat.loadWithFeatureBin(parameterBin, featureBin)
+            val model = PerceptronModel.loadWithFeatureBin(parameterBin, featureBin)
             val labelList = labelText.use { it.bufferedReader().readLines() }
             return NERPerceptron(model, labelList)
         }

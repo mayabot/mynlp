@@ -56,12 +56,13 @@ class DefaultStopWordDict(val includeSystemStopWord: Boolean = true) : StopWordD
         rebuild()
     }
 
-    fun reset() {
+    fun reset():Set<String> {
         val stopWordSet = HashSet<String>()
         if (includeSystemStopWord) {
             stopWordSet += SystemStopWordDict.loadSystemStopword(Mynlp.instance().env)
         }
         this.stopWordSet = stopWordSet
+        return this.stopWordSet
     }
 
     override fun rebuild() {

@@ -3,9 +3,8 @@ package com.mayabot.nlp.module.pinyin.split
 import com.mayabot.nlp.MynlpEnv
 import com.mayabot.nlp.common.injector.Singleton
 import com.mayabot.nlp.common.utils.CharNormUtils
-import com.mayabot.nlp.perceptron.PerceptronFileFormat
 import com.mayabot.nlp.perceptron.PerceptronModel
-import com.mayabot.nlp.perceptron.PerceptronRunner
+import com.mayabot.nlp.perceptron.PerceptronComputer
 import java.io.File
 
 @Singleton
@@ -18,7 +17,7 @@ class PinyinSplitService(env: MynlpEnv) {
 
 class PinyinSplitApp(val model: PerceptronModel) {
 
-    private val logic = PerceptronRunner(PinyinSplitDefinition())
+    private val logic = define.modelComputer(model)
 
     fun decodeToWordList(sentence: String, convert: Boolean = true): List<String> {
         val result = ArrayList<String>()
@@ -27,7 +26,7 @@ class PinyinSplitApp(val model: PerceptronModel) {
             CharNormUtils.convert(input)
         }
 
-        val output = logic.decodeModel(model, input)
+        val output = logic.decodeModel(input)
 
         var p = 0
         for (i in 0 until output.size) {
@@ -48,12 +47,14 @@ class PinyinSplitApp(val model: PerceptronModel) {
 
         const val modelPrefix = "pinyin-split-model"
 
+        val define = PinyinSplitDefinition()
+
         fun load(file: File): PinyinSplitApp {
-            return PinyinSplitApp(PerceptronFileFormat.load(file))
+            return PinyinSplitApp(PerceptronModel.load(file))
         }
 
         fun loadDefault(env: MynlpEnv): PinyinSplitApp {
-            return PinyinSplitApp(PerceptronFileFormat.loadFromNlpResource(modelPrefix, env))
+            return PinyinSplitApp(PerceptronModel.loadFromNlpResource(modelPrefix, env))
         }
     }
 }
