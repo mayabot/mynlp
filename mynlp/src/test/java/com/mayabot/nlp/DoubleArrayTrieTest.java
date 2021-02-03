@@ -1,4 +1,4 @@
-package com.mayabot.nlp.collection.dat;
+package com.mayabot.nlp;
 
 import com.mayabot.nlp.algorithm.collection.dat.DoubleArrayTrieMap;
 import org.junit.Assert;

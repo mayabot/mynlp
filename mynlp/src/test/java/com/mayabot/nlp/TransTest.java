@@ -1,9 +1,9 @@
-package com.mayabot.nlp.trans;
+package com.mayabot.nlp;
 
 import com.mayabot.nlp.Mynlp;
 import org.junit.Assert;
 
-public class Test {
+public class TransTest {
 
     @org.junit.Test
     public void test() {

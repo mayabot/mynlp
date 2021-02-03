@@ -2,8 +2,6 @@ package com.mayabot.nlp
 
 import com.mayabot.nlp.similarity.BM25ModelBuilder
 
-class BM25Test {
-}
 
 fun main() {
     val doc = listOf<String>(

@@ -2,7 +2,7 @@ package com.mayabot.nlp;
 
 import org.junit.Test;
 
-public class TestSentenceSummary {
+public class SentenceSummaryTest {
 
 
     @Test

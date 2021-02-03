@@ -31,6 +31,26 @@ class InjectTest {
         assertTrue(dao === dao2)
     }
 
+    @Test
+    fun test() {
+
+        val models = ArrayList<Module>()
+
+        models += object : AbstractModule() {
+            override fun configure() {
+                bind(DbService::class.java).toInstance(MysqlService())
+                bind(BissService::class.java).toClass(BissServiceImpl::class.java)
+            }
+        }
+
+        val injector = Injector.create(models)
+
+        val controller = injector.getInstance(SprintUIController::class.java)!!
+
+        controller.hi()
+
+    }
+
 }
 
 @ImplementedBy(UserDaoImpl::class)
@@ -78,21 +98,3 @@ class SprintUIController(val bissService: BissService) {
 }
 
 
-fun main() {
-
-    val models = ArrayList<Module>()
-
-    models += object : AbstractModule() {
-        override fun configure() {
-            bind(DbService::class.java).toInstance(MysqlService())
-            bind(BissService::class.java).toClass(BissServiceImpl::class.java)
-        }
-    }
-
-    val injector = Injector.create(models)
-
-    val controller = injector.getInstance(SprintUIController::class.java)!!
-
-    controller.hi()
-
-}
