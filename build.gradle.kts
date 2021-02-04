@@ -8,7 +8,7 @@ plugins {
 
 description = "mynlp是mayabot开源的中文自然语言处理工具集"
 
-val buildVersion = "4.0.0-beta2"
+val buildVersion = "4.0.0-beta3"
 val snapShot = false
 
 allprojects {

@@ -283,7 +283,7 @@ public final class Wordnet implements CharSequence {
     ////////////// 顶点操作////////////////
 
     /**
-     * 添加顶点,重复添加就忽略 返回被替换的节点
+     * 添加顶点 返回被替换的节点
      *
      * @param charOffset sindex 下标和char对应
      * @param vertex     顶点

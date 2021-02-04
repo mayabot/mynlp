@@ -23,7 +23,7 @@ fun main() {
 //            .withCorrection(mem)
             .build()
 
-    lexer.scan("副市长 副省长").forEach {
+    lexer.scan("十一推送内容").forEach {
         print(it)
         println("\t has sub " + it.hasSubword())
     }
