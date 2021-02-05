@@ -26,7 +26,6 @@ dependencies {
     compileOnly(group = "org.fusesource.jansi", name = "jansi", version = "1.16")
 
 
-
     testImplementation("junit:junit:4.12")
     testImplementation("ch.qos.logback:logback-classic:1.2.3")
     testImplementation("com.mayabot.mynlp.resource:mynlp-resource-cws:1.0.0")
