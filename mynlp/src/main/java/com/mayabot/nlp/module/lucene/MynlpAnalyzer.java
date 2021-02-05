@@ -9,23 +9,24 @@ import org.apache.lucene.analysis.Analyzer;
  */
 public class MynlpAnalyzer extends Analyzer {
 
-    private MynlpTokenizer tokenizer;
+    private final LexerReader lexerReader;
 
-    public MynlpAnalyzer(MynlpTokenizer tokenizer) {
-        this.tokenizer = tokenizer;
+    private WordTermIterableMode mode = WordTermIterableMode.TOP;
+
+
+    public MynlpAnalyzer(LexerReader lexerReader) {
+        this.lexerReader = lexerReader;
     }
 
-    public MynlpAnalyzer(LexerReader reader) {
-        this.tokenizer = new MynlpTokenizer(reader);
+    public MynlpAnalyzer(LexerReader lexerReader, WordTermIterableMode mode) {
+        this.lexerReader = lexerReader;
+        this.mode = mode;
     }
 
-    public MynlpAnalyzer(LexerReader reader, WordTermIterableMode mode) {
-        this.tokenizer = new MynlpTokenizer(reader, mode);
-    }
 
     @Override
     protected TokenStreamComponents createComponents(final String fieldName) {
-        return new TokenStreamComponents(tokenizer);
+        return new TokenStreamComponents(new MynlpTokenizer(lexerReader, mode));
     }
 
 }
