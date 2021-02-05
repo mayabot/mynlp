@@ -1,5 +1,6 @@
 package com.mayabot.nlp.module.lucene;
 
+import com.mayabot.nlp.Mynlp;
 import com.mayabot.nlp.segment.*;
 import org.apache.lucene.analysis.Tokenizer;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
@@ -48,7 +49,7 @@ final public class MynlpTokenizer extends Tokenizer {
 
 //    private final PositionLengthAttribute positionLenAttr = addAttribute(PositionLengthAttribute.class);
 
-    private Iterator<WordTerm> iterator;
+    private Iterator<WordTerm> iterator = null;
 
     private final LexerReader lexerReader;
 
@@ -77,6 +78,21 @@ final public class MynlpTokenizer extends Tokenizer {
      */
     @Override
     public boolean incrementToken() {
+
+        if(iterator == null){
+            switch (mode) {
+                case Overlap:
+                    iterator = new OverlapIterator(lexerReader.scan(this.input).iterator());
+                    break;
+                case ATOM:
+                    iterator = new AtomIterator(lexerReader.scan(this.input).iterator());
+                    break;
+                case TOP:
+                default:
+                    iterator = lexerReader.scan(this.input).iterator();
+            }
+        }
+
         clearAttributes();
 
         if (iterator.hasNext()) {
@@ -120,19 +136,7 @@ final public class MynlpTokenizer extends Tokenizer {
     @Override
     public void reset() throws IOException {
         super.reset();
-
-        switch (mode) {
-            case Overlap:
-                iterator = new OverlapIterator(lexerReader.scan(this.input).iterator());
-                break;
-            case ATOM:
-                iterator = new AtomIterator(lexerReader.scan(this.input).iterator());
-                break;
-            case TOP:
-            default:
-                iterator = lexerReader.scan(this.input).iterator();
-        }
-
+        this.iterator = null;
     }
 
 }
