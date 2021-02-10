@@ -53,6 +53,8 @@ final public class MynlpTokenizer extends Tokenizer {
 
     private final LexerReader lexerReader;
 
+    private int lastOffset = 0;
+
     /**
      * Lucene Tokenizer的Mynlp插件实现
      *
@@ -104,7 +106,9 @@ final public class MynlpTokenizer extends Tokenizer {
 
             positionAttr.setPositionIncrement(next.getPosInc());
             termAtt.setEmpty().append(next.word);
-            offsetAtt.setOffset(correctOffset(next.offset), correctOffset(next.offset + next.length()));
+            int startOffset = correctOffset(next.offset);
+            lastOffset = correctOffset(next.offset + next.length());
+            offsetAtt.setOffset(startOffset,lastOffset );
 //            offsetAtt.setOffset(next.offset, next.offset + next.length());
 
 //            if (mode == IterableMode.GRAPH) {
@@ -137,6 +141,7 @@ final public class MynlpTokenizer extends Tokenizer {
     public void reset() throws IOException {
         super.reset();
         this.iterator = null;
+        lastOffset = 0;
     }
 
 }
