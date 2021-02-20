@@ -1,5 +1,6 @@
 package com.mayabot.nlp;
 
+import com.mayabot.nlp.algorithm.collection.dat.DATMapMatcher;
 import com.mayabot.nlp.algorithm.collection.dat.DoubleArrayTrieMap;
 import org.junit.Assert;
 import org.junit.Test;
@@ -34,6 +35,33 @@ public class DoubleArrayTrieTest {
         DoubleArrayTrieMap<String> trie = new DoubleArrayTrieMap<String>(map);
 
         return trie;
+    }
+
+    @Test
+    public void testDict(){
+        TreeMap<String, String> map = new TreeMap<>();
+        map.put("快乐大本营","节目--0000c463bbf9");
+        map.put("快乐","节目--0000c463bbf9sw");
+        map.put("奔跑吧","节目--2");
+        map.put("雪山惊魂3","节目--3");
+
+        map.put("张学友","歌手-id123");
+        map.put("何炅","人物-23");
+
+        DoubleArrayTrieMap<String> trie = new DoubleArrayTrieMap(map);
+
+        String text = "我要看何炅主持的快乐大本营综艺节目";
+
+        DATMapMatcher<String> result = trie.match(text, 0);
+
+        while(result.next()){
+            int offset = result.getBegin();
+            int len = result.getLength();
+            System.out.println(text.substring(offset,offset+len)+"----"+result.getValue());
+        }
+
+        //TODO 快乐大本营 在位置上是 "快乐" ，你要自己解决这个覆盖的问题
+        // 通过map的value，你可以存放一个VO，不用String
     }
 
 
