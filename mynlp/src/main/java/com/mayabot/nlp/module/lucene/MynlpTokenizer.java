@@ -125,6 +125,11 @@ final public class MynlpTokenizer extends Tokenizer {
         }
     }
 
+    @Override
+    public void end() throws IOException {
+        super.end();
+        this.offsetAtt.setOffset(lastOffset,lastOffset);
+    }
 
     /**
      * This method is called by a consumer before it begins consumption using
