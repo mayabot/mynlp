@@ -22,8 +22,6 @@ import com.mayabot.nlp.common.logging.InternalLogger;
 import com.mayabot.nlp.common.logging.InternalLoggerFactory;
 import com.mayabot.nlp.module.pinyin.model.Pinyin;
 
-import java.io.DataInput;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -131,48 +129,43 @@ public abstract class BasePinyinDictionary {
         }
     }
 
-    public static Pinyin[] read(DataInput in) {
-        try {
-            String line = in.readUTF();
-            String[] split = line.split(",");
+//    public static Pinyin[] read(DataInput in) {
+//        try {
+//            String line = in.readUTF();
+//            String[] split = line.split(",");
+//
+//            Pinyin[] pinyins = new Pinyin[split.length];
+//
+//            for (int i = 0; i < split.length; i++) {
+//                Integer xx = Integer.parseInt(split[i]);
+//                Pinyin pinyin = pinyinByOrdinal[xx];
+//                pinyins[i] = pinyin;
+//            }
+//
+//            return pinyins;
+//
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+//
+//    }
 
-            Pinyin[] pinyins = new Pinyin[split.length];
-
-            for (int i = 0; i < split.length; i++) {
-                Integer xx = Integer.parseInt(split[i]);
-                Pinyin pinyin = pinyinByOrdinal[xx];
-                pinyins[i] = pinyin;
-            }
-
-            return pinyins;
-
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-    }
-
+    // yi1,ge4
     Pinyin[] parse(String text) {
         String[] values = text.split(",");
 
-
         Pinyin[] pinyins = new Pinyin[values.length];
-        boolean error = false;
         for (int i = 0; i < values.length; i++) {
             try {
+                String pp = values[i];
                 Pinyin pinyin = Pinyin.valueOf(values[i]);
                 pinyins[i] = pinyin;
 
             } catch (IllegalArgumentException e) {
-                logger.warn("读取拼音词典，解析" + text + "错误");
-                error = true;
+                throw new IllegalArgumentException("读取拼音词典，解析" + text + "错误");
             }
         }
-        if (!error) {
-            return pinyins;
-        } else {
-            return null;
-        }
+        return pinyins;
     }
 
     public CustomPinyin getCustomPinyin() {

@@ -70,7 +70,5 @@ class PinyinService constructor(private val env: MynlpEnv) : BasePinyinDictionar
         return map
     }
 
-    override fun toString(): String {
-        return super.toString()
-    }
+
 }

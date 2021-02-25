@@ -61,6 +61,10 @@ public class PinyinResult {
 
     }
 
+    public List<Pinyin> getPinyinList() {
+        return pinyinList;
+    }
+
     public PinyinResult fuzzy(boolean fuzzy) {
         this.fuzzy = fuzzy;
         return this;
@@ -107,9 +111,6 @@ public class PinyinResult {
         return map;
     }
 
-    public static void main(String[] args) {
-
-    }
 
     public List<String> asList() {
         List<String> list = Lists.newArrayListWithCapacity(pinyinList.size());

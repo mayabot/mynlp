@@ -1,0 +1,12 @@
+# - 表示互换
+# -> 表示单向变化
+# 大概的逻辑是 前面是嘴瓢的说法，后面是正确的音。
+# 比如 灰机 --> 飞机  huiji,feiji
+hua - fa
+huan - fan
+hui -> fei
+jie -> zhe
+kou -> ke
+gou -> ge
+zhong -> zen
+san -> shang

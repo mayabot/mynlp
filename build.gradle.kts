@@ -8,7 +8,7 @@ plugins {
 
 description = "mynlp是mayabot开源的中文自然语言处理工具集"
 
-val buildVersion = "4.0.0-beta8"
+val buildVersion = "4.0.0-local"
 val snapShot = false
 
 allprojects {
@@ -39,7 +39,7 @@ subprojects {
     }
 
 
-    val publishIt = this.name != "mynlp-example"
+    val publishIt = this.name != "mynlp-example" && this.version.toString().endsWith("-local")
 
     if (publishIt) {
         apply(plugin="maven-publish")

@@ -711,7 +711,7 @@ public enum Pinyin {
     luo3(Shengmu.l, Yunmu.uo, 3, "luǒ", "luo", PinyinHead.l, 'l'),
     luo4(Shengmu.l, Yunmu.uo, 4, "luò", "luo", PinyinHead.l, 'l'),
     luo5(Shengmu.l, Yunmu.uo, 5, "luo", "luo", PinyinHead.l, 'l'),
-    lv2(Shengmu.l, Yunmu.u, 2, "lǘ", "lv", PinyinHead.l, 'l'),
+    lv2(Shengmu.l, Yunmu.v, 2, "lǘ", "lv", PinyinHead.l, 'l'),
     lv3(Shengmu.l, Yunmu.v, 3, "lǚ", "lv", PinyinHead.l, 'l'),
     lv4(Shengmu.l, Yunmu.v, 4, "lǜ", "lv", PinyinHead.l, 'l'),
     lve3(Shengmu.l, Yunmu.ve, 3, "lüě", "lve", PinyinHead.l, 'l'),
@@ -1492,8 +1492,9 @@ public enum Pinyin {
     zuo4(Shengmu.z, Yunmu.uo, 4, "zuò", "zuo", PinyinHead.z, 'z'),
     zuo5(Shengmu.z, Yunmu.uo, 5, "zuo", "zuo", PinyinHead.z, 'z'),
     none5(Shengmu.none, Yunmu.none, 5, "none", "none", PinyinHead.none, ' '),
-
     ;
+
+
 
     /**
      * 构造一个拼音
@@ -1512,7 +1513,19 @@ public enum Pinyin {
         this.pinyinWithoutTone = pinyinWithoutTone;
         this.head = head;
         this.firstChar = firstChar;
+
+        if (this.shengmu == Shengmu.none && this.yunmu == Yunmu.none) {
+            this.simple = SimplePinyin.none;
+        } else {
+            this.simple = SimplePinyin.valueOf(this.pinyinWithoutTone);
+        }
+
     }
+
+//    /**
+//     * 音码 18 bit
+//     */
+//    private int code = 0;
 
     /**
      * 声母
@@ -1547,6 +1560,9 @@ public enum Pinyin {
      * 声母+韵母不含音调，纯字母
      */
     private String pinyinWithoutTone;
+
+
+    private SimplePinyin simple;
 
     /**
      * 获取声母
@@ -1618,5 +1634,9 @@ public enum Pinyin {
      */
     public char getFirstChar() {
         return firstChar;
+    }
+
+    public SimplePinyin getSimple() {
+        return simple;
     }
 }
