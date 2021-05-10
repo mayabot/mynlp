@@ -1,12 +1,16 @@
 package classification;
 
+import com.mayabot.nlp.Mynlp;
+import com.mayabot.nlp.common.TagAndScore;
 import com.mayabot.nlp.common.utils.DownloadUtils;
 import com.mayabot.nlp.fasttext.FastText;
 import com.mayabot.nlp.fasttext.FasttextTranUtils;
 import com.mayabot.nlp.fasttext.args.InputArgs;
 import com.mayabot.nlp.fasttext.loss.LossName;
+import com.mayabot.nlp.segment.Lexer;
 
 import java.io.File;
+import java.util.List;
 
 /**
  * 酒店评论的分类测试
@@ -36,9 +40,32 @@ public class HotelCommentExampleTrain {
         //qFastText.test(testFile, 1, 0.0f, true);
 
         // 保存模型
-        //fastText.saveModel("example.data/hotel.model");
+        fastText.saveModel("example.data/hotel.model");
+
+        FastText fastText1 = FastText.loadModel(new File("example.data/hotel.model"), false);
+
+        Lexer lexer = Mynlp.instance().hmmLexer();
+
+        List<TagAndScore> predict = fastText1.predict(lexer, "自己的加盟酒店总是这样我们还怎么相信携程这样的品牌总体来说我很郁闷！也特别的伤心");
+
+        System.out.println("分类结果");
+        for (TagAndScore score : predict) {
+            System.out.println(score.getTag() + ": " + score.getScore());
+        }
+
+        for (int i = 0; i < 10000; i++) {
+            fastText1.predict(lexer, "自己的加盟酒店总是这样我们还怎么相信携程这样的品牌总体来说我很郁闷！也特别的伤心");
+        }
+
+        long t1 = System.currentTimeMillis();
+        for (int i = 0; i < 10000; i++) {
+            fastText1.predict(lexer, "自己的加盟酒店总是这样我们还怎么相信携程这样的品牌总体来说我很郁闷！也特别的伤心");
+        }
+        long t2 = System.currentTimeMillis();
+        System.out.println(t2 - t1);
 
     }
+
 
     private static void prepare() throws Exception {
         File trainFileSource = new File("example.data/hotel/hotel-train.txt");

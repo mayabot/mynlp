@@ -18,6 +18,7 @@ package com.mayabot.nlp.segment.plugins.customwords;
 
 import com.mayabot.nlp.algorithm.collection.dat.DoubleArrayTrieStringIntMap;
 import com.mayabot.nlp.common.Guava;
+import com.mayabot.nlp.common.utils.CharNormUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -45,7 +46,11 @@ public class FileCustomDictionary implements CustomDictionary {
 
             String[] params = line.split("\\s");
 
-            dict.put(params[0], 1000);
+            String w = params[0];
+            String n = CharNormUtils.convert(params[0]);
+
+            dict.put(w, 1000);
+            dict.put(n, 1000);
 
         }
 

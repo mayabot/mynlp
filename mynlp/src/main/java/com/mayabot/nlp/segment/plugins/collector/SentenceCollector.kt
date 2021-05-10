@@ -8,8 +8,7 @@ import com.mayabot.nlp.segment.wordnet.Wordpath
 import java.util.function.Consumer
 
 /**
- * Nlp收集方式，不处理子词
- * 按照WordPath里面描述的唯一切分路径，构建WordTerm序列
+ * WordTermCollector的默认实现，从各种数据结构中收集和生成词序列
  *
  * @author jimichan
  */
@@ -23,20 +22,26 @@ class SentenceCollector(val mynlp: Mynlp) : WordTermCollector {
     /**
      * 给一个初始化wordnet的机会，填充更多的可能性
      */
-    override var fillSubword: WordTermCollector.FillSubword? = null
+    private val fillSubword = ArrayList<WordTermCollector.FillSubword>()
+
+    override fun addFillSubword(fs: WordTermCollector.FillSubword) {
+        fillSubword += fs
+    }
 
     override fun collect(txtChars: CharArray?, wordnet: Wordnet, wordPath: Wordpath, consumer: Consumer<WordTerm>) {
 
         val vertexIterator = wordPath.iteratorVertex()
 
-        fillSubword?.fill(wordnet, wordPath)
+        fillSubword.forEach {
+            it.fill(wordnet, wordPath)
+        }
 
         while (vertexIterator.hasNext()) {
             val vertex = vertexIterator.next()
 
-            val word = if(txtChars==null){
+            val word = if (txtChars == null) {
                 vertex.realWord()
-            }else {
+            } else {
                 String(txtChars, vertex.offset(), vertex.length)
             }
 

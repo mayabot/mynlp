@@ -16,6 +16,7 @@
 package com.mayabot.nlp.segment.plugins.customwords;
 
 import com.mayabot.nlp.algorithm.collection.dat.DoubleArrayTrieStringIntMap;
+import com.mayabot.nlp.common.utils.CharNormUtils;
 
 import java.util.TreeMap;
 
@@ -49,7 +50,9 @@ public class MemCustomDictionary implements CustomDictionary {
     }
 
     public void addWord(String word) {
+        String n = CharNormUtils.convert(word);
         dict.put(word, 1000);
+        dict.put(n, 1000);
     }
 
     public void removeWord(String word) {

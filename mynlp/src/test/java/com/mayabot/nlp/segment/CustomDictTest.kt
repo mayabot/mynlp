@@ -9,13 +9,28 @@ class CustomDictTest {
     @Test
     fun test() {
         val mem = MemCustomDictionary()
-        mem.addWord("科学之门");
+        mem.addWord("长江1号");
+        mem.addWord("ECS固收");
+        mem.addWord("固收");
         mem.rebuild()
 
         val lexer = Lexers.coreBuilder()
-                .withCustomDictionary(mem)
-                .build()
+            .withCustomDictionary(mem)
+            .collector()
+            .smartPickup()
+            .fillSubwordCustomDict(mem)
+            .done()
+            .build()
+        println("-----")
+        for (wordTerm in lexer.scan("长江1号")) {
+            println(wordTerm)
+        }
+        println("-----")
 
-        println(lexer.scan("科学之门"))
+        println(lexer.scan("ECS固收"))
+        println("----")
+        lexer.scan("ECS固收").forEach { w ->
+            println(w.subword)
+        }
     }
 }

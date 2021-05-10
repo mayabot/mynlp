@@ -31,7 +31,7 @@ interface WordTermCollector {
 
     var pickUpSubword: PickUpSubword?
 
-    var fillSubword: FillSubword?
+    fun addFillSubword(fs: FillSubword)
 
 
     /**

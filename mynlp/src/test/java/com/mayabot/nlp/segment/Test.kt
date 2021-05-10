@@ -7,23 +7,23 @@ fun main() {
     val mynlp = Mynlp.instance()
     val mem = MemCorrectionDictionary()
 
-//    mem.addRule("安徽省/政府")
-//    mem.rebuild()
+    mem.addRule("近期/待还")
+    mem.rebuild()
 
     val lexer = mynlp.lexerBuilder()
-            .bigram()
-            .withPos()
-            .withPersonName()
-            .collector().smartPickup {
-                it.setBlackListCallback {
-                    it[0] == '副' && it[it.length - 1] == '长'
-                }
+        .bigram()
+        .withPos()
+        .withPersonName()
+        .collector().smartPickup {
+            it.setBlackListCallback {
+                it[0] == '副' && it[it.length - 1] == '长'
             }
-            .done()
-//            .withCorrection(mem)
+        }
+        .done()
+        .withCorrection(mem)
             .build()
 
-    lexer.scan("十一推送内容").forEach {
+    lexer.scan("近期待还").forEach {
         print(it)
         println("\t has sub " + it.hasSubword())
     }
