@@ -48,7 +48,7 @@ public class BiGramTableDictionaryImpl extends BaseExternalizable implements BiG
     private final CoreDictPatch coreDictPatch;
     private CSRSparseMatrix matrix;
 
-    private final String path = "core-dict/CoreDict.bigram.txt";
+    public static final String path = "core-dict/CoreDict.bigram.txt";
 
     protected InternalLogger logger = InternalLoggerFactory.getInstance(this.getClass());
 
@@ -114,10 +114,6 @@ public class BiGramTableDictionaryImpl extends BaseExternalizable implements BiG
 
         String firstWord = null;
         int count = 0;
-
-        UseLines.forEachLine(source.inputStream(), line -> {
-
-        });
 
         try (CharSourceLineReader reader = UseLines.lineReader(source.inputStream())) {
             while (reader.hasNext()) {

@@ -2,7 +2,6 @@ package com.mayabot.nlp.starspace
 
 import java.io.File
 import java.nio.file.Files
-import java.util.*
 
 fun String.toFile() = File(this)
 
@@ -13,7 +12,7 @@ fun File.forEachLine(action: (String) -> Unit) = Files.lines(this.toPath()).forE
 fun File.firstLine(): String? = Files.lines(this.toPath()).findFirst().orElse(null)
 
 
-inline fun checkArgument(expression: Boolean) {
+fun checkArgument(expression: Boolean) {
     if (!expression) {
         throw IllegalArgumentException()
     }

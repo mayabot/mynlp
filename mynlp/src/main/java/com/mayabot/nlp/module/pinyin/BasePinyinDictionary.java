@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.mayabot.nlp.module.pinyin;
 
 import com.mayabot.nlp.algorithm.collection.ahocorasick.AhoCoraickDoubleArrayTrieBuilder;
@@ -129,27 +128,6 @@ public abstract class BasePinyinDictionary {
         }
     }
 
-//    public static Pinyin[] read(DataInput in) {
-//        try {
-//            String line = in.readUTF();
-//            String[] split = line.split(",");
-//
-//            Pinyin[] pinyins = new Pinyin[split.length];
-//
-//            for (int i = 0; i < split.length; i++) {
-//                Integer xx = Integer.parseInt(split[i]);
-//                Pinyin pinyin = pinyinByOrdinal[xx];
-//                pinyins[i] = pinyin;
-//            }
-//
-//            return pinyins;
-//
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
-//
-//    }
-
     // yi1,ge4
     Pinyin[] parse(String text) {
         String[] values = text.split(",");
@@ -157,7 +135,6 @@ public abstract class BasePinyinDictionary {
         Pinyin[] pinyins = new Pinyin[values.length];
         for (int i = 0; i < values.length; i++) {
             try {
-                String pp = values[i];
                 Pinyin pinyin = Pinyin.valueOf(values[i]);
                 pinyins[i] = pinyin;
 

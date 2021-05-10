@@ -1,11 +1,27 @@
 package com.mayabot.nlp.module.pinyin
 
 import com.mayabot.nlp.Mynlp
-import com.mayabot.nlp.module.pinyin.model.Pinyin
-import com.mayabot.nlp.module.pinyin.model.Shengmu
-import com.mayabot.nlp.module.pinyin.model.SimplePinyin
-import com.mayabot.nlp.module.pinyin.model.Yunmu
+import com.mayabot.nlp.module.pinyin.model.*
 import kotlin.math.abs
+
+//fun main() {
+////    var dsl = 0.0
+////    SimplePinyin.values().forEach { p1->
+////        SimplePinyin.values().forEach { p2->
+////            if(p1!=SimplePinyin.none && p2 !=SimplePinyin.none ){
+////                val x = PinyinDistance.distance(p1,p2)
+////                if (x<=1){
+////                    println("$p1 @ $p2 $x")
+////                }
+////            }
+////        }
+////    }
+////    println(dsl)
+//    println(PinyinDistance.distanceSimple(
+//        listOf(SimplePinyin.lu, SimplePinyin.lu),
+//        listOf(SimplePinyin.ru, SimplePinyin.ru)
+//    ))
+//}
 
 object PinyinDistance {
 
@@ -38,30 +54,58 @@ object PinyinDistance {
     fun distance(sen1: String, sen2: String): Float {
         val t1 = Mynlp.instance().convertPinyin(sen1).pinyinList
         val t2 = Mynlp.instance().convertPinyin(sen2).pinyinList
-        return distance(t1, t2)
+        return distance(sen1, sen2, t1, t2)
     }
 
-    fun distance(a: Pinyin, b: Pinyin): Float {
-        return distance(listOf(a), listOf(b))
+//    fun distance(a: Pinyin, b: Pinyin): Float {
+//        return distance(listOf(a), listOf(b))
+//    }
+//
+//    fun distance(a: SimplePinyin, b: SimplePinyin): Float {
+//        return distanceSimple(listOf(a), listOf(b))
+//    }
+
+    fun distanceSimple(text1: String, text2: String): Float {
+        var res = Double.MAX_VALUE
+        for (group1 in text1.textAllPinyin()) {
+            for (group2 in text2.textAllPinyin()) {
+                val dis = distanceSimple(text1, text2, group1, group2)
+                if (dis < res) {
+                    res = dis.toDouble()
+                }
+            }
+        }
+        return res.toFloat()
     }
 
-    fun distanceSimple(a: List<SimplePinyin>, b: List<SimplePinyin>): Float {
-        check(a.size == b.size)
-        val tot = a.size * 2
+    /**
+     *
+     */
+    fun distanceSimple(aText: String, bText: String, aPy: List<SimplePinyin>, bPy: List<SimplePinyin>): Float {
+        check(aPy.size == bPy.size)
+        check(aText.length == bText.length)
+
+        val tot = aPy.size * 2
         var numDiff = 0.0
         var res = 0.0
-        for (i in 0 until a.size) {
-            val apy = a[i]
-            val bpy = b[i]
+        for (i in 0 until aPy.size) {
+            val apy = aPy[i]
+            val bpy = bPy[i]
 
-            res += editDistanceClose2dCode(apy, bpy)
+            if (apy == SimplePinyin.none || bpy == SimplePinyin.none) {
+                if (aText[i] != bText[i]) {
+                    numDiff += 2
+                }
+            } else {
+                res += editDistanceClose2dCode(apy, bpy)
 
-            if (apy.shengmu != bpy.shengmu) {
-                numDiff += 1
-            }
+                if (apy.shengmu != bpy.shengmu) {
+                    numDiff += 1
+                }
 
-            if (apy.yunmu != bpy.yunmu) {
-                numDiff += 1
+                if (apy.yunmu != bpy.yunmu) {
+                    numDiff += 1
+                }
             }
         }
 
@@ -69,7 +113,7 @@ object PinyinDistance {
         return (res * diffRatio).toFloat()
     }
 
-    fun distance(a: List<Pinyin>, b: List<Pinyin>): Float {
+    fun distance(aText: String, bText: String, a: List<Pinyin>, b: List<Pinyin>): Float {
         check(a.size == b.size)
         val tot = a.size * 2.1
         var numDiff = 0.0
@@ -78,18 +122,25 @@ object PinyinDistance {
             val apy = a[i]
             val bpy = b[i]
 
-            res += editDistanceClose2dCode(apy, bpy)
+            if (apy == Pinyin.none5 || bpy == Pinyin.none5) {
+                if (aText[i] != bText[i]) {
+                    numDiff += 2.1
+                }
+            } else {
+                res += editDistanceClose2dCode(apy, bpy)
 
-            if (apy.shengmu != bpy.shengmu) {
-                numDiff += 1
+                if (apy.shengmu != bpy.shengmu) {
+                    numDiff += 1
+                }
+
+                if (apy.yunmu != bpy.yunmu) {
+                    numDiff += 1
+                }
+                if (apy.tone != bpy.tone) {
+                    numDiff += 0.1
+                }
             }
 
-            if (apy.yunmu != bpy.yunmu) {
-                numDiff += 1
-            }
-            if (apy.tone != bpy.tone) {
-                numDiff += 0.1
-            }
         }
 
         val diffRatio = numDiff / tot
@@ -181,6 +232,7 @@ object PinyinDistance {
      * return math.sqrt( x1d**2 + x2d**2)
      */
     private fun get_distance_2d_code(x: Shengmu, y: Shengmu): Double {
+        if (x == y) return 0.0
         val x1 = x.twoDCode1.toDouble()
         val x2 = x.twoDCode2.toDouble()
         val y1 = y.twoDCode1.toDouble()
@@ -189,6 +241,7 @@ object PinyinDistance {
     }
 
     private fun get_distance_2d_code(x: Yunmu, y: Yunmu): Double {
+        if (x == y) return 0.0
         val x1 = x.twoDCode1.toDouble()
         val x2 = x.twoDCode2.toDouble()
         val y1 = y.twoDCode1.toDouble()

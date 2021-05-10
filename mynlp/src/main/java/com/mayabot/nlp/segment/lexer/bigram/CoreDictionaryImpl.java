@@ -18,14 +18,12 @@ package com.mayabot.nlp.segment.lexer.bigram;
 import com.mayabot.nlp.MynlpEnv;
 import com.mayabot.nlp.algorithm.collection.dat.DoubleArrayTrieStringIntMap;
 import com.mayabot.nlp.common.EncryptionUtil;
-import com.mayabot.nlp.common.Guava;
 import com.mayabot.nlp.common.injector.Singleton;
 import com.mayabot.nlp.common.logging.InternalLogger;
 import com.mayabot.nlp.common.logging.InternalLoggerFactory;
-import com.mayabot.nlp.common.resources.NlpResource;
-import com.mayabot.nlp.common.resources.UseLines;
-import com.mayabot.nlp.common.utils.CharSourceLineReader;
 import kotlin.Pair;
+import kotlin.Unit;
+import kotlin.jvm.functions.Function2;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
@@ -52,7 +50,7 @@ public class CoreDictionaryImpl extends BaseExternalizable implements CoreDictio
 
     private InternalLogger logger = InternalLoggerFactory.getInstance(CoreDictionaryImpl.class);
 
-    private final String path = "core-dict/CoreDict.txt";
+    public static final String path = "core-dict/CoreDict.txt";
 
     /**
      * 词频总和
@@ -100,32 +98,21 @@ public class CoreDictionaryImpl extends BaseExternalizable implements CoreDictio
     @Override
     @SuppressWarnings(value = "rawtypes")
     public void loadFromSource() throws Exception {
-        NlpResource dictResource = env.loadResource(path);
-
-        if (dictResource == null) {
-            throw new RuntimeException("Not Found dict resource " + path);
-        }
 
         //词和词频
         TreeMap<String, Integer> map = new TreeMap<>();
 
-        int maxFreq = 0;
+        CoreDictionaryReader reader = new CoreDictionaryReader(env);
 
-
-        //Splitter splitter = Splitter.on(' ').omitEmptyStrings().trimResults();
-
-        try (CharSourceLineReader reader = UseLines.lineReader(dictResource.inputStream())) {
-            while (reader.hasNext()) {
-                String line = reader.next();
-
-                List<String> param = Guava.split(line, " ");
-                if (param.size() == 2) {
-                    Integer count = Integer.valueOf(param.get(1));
-                    map.put(param.get(0), count);
-                    maxFreq += count;
-                }
+        reader.read(new Function2<String, Integer, Unit>() {
+            @Override
+            public Unit invoke(String word, Integer count) {
+                map.put(word, count);
+                return Unit.INSTANCE;
             }
-        }
+        });
+
+        int maxFreq = reader.getTotalFreq();
 
         // apply dict patch
         if (coreDictPatch != null) {

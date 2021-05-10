@@ -1,8 +1,8 @@
 package com.mayabot.nlp.segment
 
 import com.mayabot.nlp.Mynlp
-import com.mayabot.nlp.segment.lexer.bigram.HmmLexerPlugin
 import com.mayabot.nlp.segment.lexer.bigram.CoreDictionary
+import com.mayabot.nlp.segment.lexer.bigram.HmmLexerPlugin
 import com.mayabot.nlp.segment.lexer.perceptron.PerceptronSegmentPlugin
 import com.mayabot.nlp.segment.pipeline.PipelineLexerBuilder
 import com.mayabot.nlp.segment.pipeline.PipelineLexerPlugin
@@ -130,7 +130,18 @@ open class FluentLexerBuilder(val mynlp: Mynlp = Mynlp.instance()) : LexerBuilde
         }
 
         fun fillSubword(fillSubword: WordTermCollector.FillSubword): CollectorBlock {
-            collector.fillSubword = fillSubword
+            collector.addFillSubword(fillSubword)
+            return this
+        }
+
+        @JvmOverloads
+        fun fillSubwordDict(dbcms: CoreDictionary = mynlp.getInstance(CoreDictionary::class.java)): CollectorBlock {
+            collector.addFillSubword(DictBasedFillSubword(dbcms))
+            return this
+        }
+
+        fun fillSubwordCustomDict(dict: CustomDictionary): CollectorBlock {
+            collector.addFillSubword(CustomDictFillSubword(dict))
             return this
         }
 
@@ -152,11 +163,6 @@ open class FluentLexerBuilder(val mynlp: Mynlp = Mynlp.instance()) : LexerBuilde
             return this
         }
 
-        @JvmOverloads
-        fun fillSubwordDict(dbcms: CoreDictionary = mynlp.getInstance(CoreDictionary::class.java)): CollectorBlock {
-            collector.fillSubword = DictBasedFillSubword(dbcms)
-            return this
-        }
 
         fun with(collector: WordTermCollector): CollectorBlock {
             builder.termCollector = collector

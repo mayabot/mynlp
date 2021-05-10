@@ -168,7 +168,7 @@ constructor(
          * 设置DataDir。
          * 在调用install和其他任何Mynlp方式之前调用
          *
-         * @param dataDir 数据目录。默认在当前用户目录下.mynlp.data文件夹
+         * @param dataDir 数据目录。默认在当前用户目录下mynlp.data文件夹
          */
         fun setDataDir(dataDir: String): CommonConfig
 

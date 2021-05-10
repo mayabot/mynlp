@@ -2,12 +2,11 @@ package com.mayabot.nlp.module.nwd
 
 import java.io.File
 import java.nio.charset.Charset
-import java.util.*
 
 fun main() {
-    val x = FilesNewWordFind(File("data.work/newword/data-shanghai"))
+    val x = FilesNewWordFind(File("data/source/test/newword/data-shanghai"))
 
-    x.runSaveToFile(File("data.work/newword/out.csv"))
+    x.runSaveToFile(File("data/output/test/newword/data-shanghai-out.csv"))
 }
 
 /**
