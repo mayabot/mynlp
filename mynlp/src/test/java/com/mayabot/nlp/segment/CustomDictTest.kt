@@ -14,6 +14,11 @@ class CustomDictTest {
         mem.addWord("固收");
         mem.rebuild()
 
+        mem.clear()
+
+        mem.addWord("固收");
+        mem.rebuild()
+
         val lexer = Lexers.coreBuilder()
             .withCustomDictionary(mem)
             .collector()
@@ -21,11 +26,6 @@ class CustomDictTest {
             .fillSubwordCustomDict(mem)
             .done()
             .build()
-        println("-----")
-        for (wordTerm in lexer.scan("长江1号")) {
-            println(wordTerm)
-        }
-        println("-----")
 
         println(lexer.scan("ECS固收"))
         println("----")

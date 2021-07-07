@@ -22,6 +22,9 @@ public class CustomDictFillSubword implements WordTermCollector.FillSubword {
     @Override
     public void fill(@NotNull Wordnet wordnet, @NotNull Wordpath wordPath) {
         DoubleArrayTrieStringIntMap trie = dictionary.getTrie();
+        if (trie == null) {
+            return;
+        }
         char[] text = wordnet.getCharArray();
         DoubleArrayTrieStringIntMap.DATMapMatcherInt searcher = trie.match(text, 0);
 

@@ -8,7 +8,7 @@ plugins {
 
 description = "mynlp是mayabot开源的中文自然语言处理工具集"
 
-val buildVersion = "4.0.0-beta16"
+val buildVersion = "4.0.0"
 //val buildVersion = "4.0.0-local"
 val snapShot = false
 
@@ -154,9 +154,8 @@ subprojects {
                     quiet()
                     charset("UTF-8")
                 }
-
-
             }
+
             tasks.withType<JavaCompile>{
                 options.encoding = "UTF-8"
                 options.compilerArgs = options.compilerArgs + listOf("-Xdoclint:none", "-Xlint:none", "-nowarn")

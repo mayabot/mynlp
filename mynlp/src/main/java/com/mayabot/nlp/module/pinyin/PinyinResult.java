@@ -23,7 +23,6 @@ import com.mayabot.nlp.module.pinyin.model.Pinyin;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -98,6 +97,39 @@ public class PinyinResult {
 
     private static Map<String, String> fuzzyMap = fmap();
 
+    private static Map<String, String> fuzzyPinyinMap = fzMap();
+
+    public static Map<String, String> fzMap() {
+        Map<String, String> map = new HashMap<>();
+
+        for (Pinyin value : Pinyin.values()) {
+            String sm = value.getShengmu().toString();
+            String ym = value.getYunmu().toString();
+
+            if (sm.equals("zh")) {
+                sm = "z";
+            } else if (sm.equals("ch")) {
+                sm = "c";
+            } else if (sm.equals("sh")) {
+                sm = "s";
+            }
+
+            if (ym.equals("eng")) {
+                ym = "en";
+            } else if (ym.equals("ang")) {
+                ym = "an";
+            } else if (ym.equals("ing")) {
+                ym = "in";
+            } else if (ym.equals("iang")) {
+                ym = "ian";
+            } else if (ym.equals("uang")) {
+                ym = "uan";
+            }
+            map.put(value.getPinyinWithoutTone(), sm + ym);
+        }
+        return map;
+    }
+
     private static Map<String, String> fmap() {
         HashMap<String, String> map = new HashMap<>();
         map.put("zh", "z");
@@ -110,6 +142,7 @@ public class PinyinResult {
         map.put("uang", "uan");
         return map;
     }
+
 
 
     public List<String> asList() {
@@ -138,16 +171,17 @@ public class PinyinResult {
 
             } else {
                 String withoutTone = pinyin.getPinyinWithoutTone();
-
                 if (fuzzy) {
-                    Matcher matcher = pattern.matcher(withoutTone);
-                    StringBuffer sb = new StringBuffer();
-                    if (matcher.find()) {
-                        String part = matcher.group();
-                        matcher.appendReplacement(sb, fuzzyMap.get(part));
-                    }
-                    matcher.appendTail(sb);
-                    list.add(sb.toString());
+
+                    list.add(fuzzyPinyinMap.getOrDefault(withoutTone, withoutTone));
+//                    Matcher matcher = pattern.matcher(withoutTone);
+//                    StringBuffer sb = new StringBuffer();
+//                    if (matcher.find()) {
+//                        String part = matcher.group();
+//                        matcher.appendReplacement(sb, fuzzyMap.get(part));
+//                    }
+//                    matcher.appendTail(sb);
+//                    list.add(sb.toString());
                 } else {
                     list.add(withoutTone);
                 }

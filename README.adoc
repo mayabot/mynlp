@@ -1,5 +1,5 @@
 = Mynlp: 高性能、可扩展的中文NLP工具包
-:version: 3.3.0
+:version: 4.0.0
 :icons: font
 
 image:https://img.shields.io/github/license/mayabot/mynlp.svg[]
