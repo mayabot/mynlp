@@ -1,15 +1,15 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.4.21" apply false
+    kotlin("jvm") version "1.5.32" apply false
     id("idea")
     id("eclipse")
 }
 
 description = "mynlp是mayabot开源的中文自然语言处理工具集"
 
-val buildVersion = "4.0.0"
-//val buildVersion = "4.0.0-local"
+val buildVersion = "4.1.0-local"
+//val buildVersion = "4.0.1-local"
 val snapShot = false
 
 allprojects {

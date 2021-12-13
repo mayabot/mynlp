@@ -20,5 +20,13 @@ class PinyinTest {
         )
     }
 
+//    @Test
+//    fun test3() {
+//        var pinyin = Mynlp.instance().pinyin()
+//        for (py in pinyin.charPinyin('行')) {
+//            println(py)
+//        }
+//    }
+
     private fun String.py() = Mynlp.instance().convertPinyin(this).asList().toString()
 }
