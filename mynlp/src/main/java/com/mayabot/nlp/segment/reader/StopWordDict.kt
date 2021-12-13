@@ -31,6 +31,11 @@ const val MergeStopWordDictPath = "merge_stopwords.txt"
 interface StopWordDict {
     fun contains(word: String): Boolean
     fun add(word: String)
+
+    /**
+     * 非停用词
+     */
+    fun addNoStop(word: String)
     fun remove(word: String)
     fun rebuild()
 }
@@ -43,57 +48,56 @@ interface StopWordDict {
  *
  * @author jimichan
  */
-class DefaultStopWordDict(val includeSystemStopWord: Boolean = true) : StopWordDict {
+class DefaultStopWordDict : StopWordDict {
 
-    private var stopWordSet:HashSet<String> = HashSet()
+    // value true 表示是停用词，false 表示不是停用词
+    private val map: TreeMap<String, Boolean> = TreeMap()
 
     private var dat: DoubleArrayTrieMap<Boolean> = DoubleArrayTrieMap(
         TreeMap<String, Boolean>().apply { put("This Is Empty Flag", true) })
-    private var isEmpty = false
 
-    init {
-        reset()
-        rebuild()
-    }
+    private var isEmpty = true
 
-    fun reset():Set<String> {
-        val stopWordSet = HashSet<String>()
-        if (includeSystemStopWord) {
-            stopWordSet += SystemStopWordDict.loadSystemStopword(Mynlp.instance().env)
-        }
-        this.stopWordSet = stopWordSet
-        return this.stopWordSet
+    fun clear() {
+        map.clear()
     }
 
     override fun rebuild() {
-        if (stopWordSet.isEmpty()) {
+        if (map.isEmpty()) {
             isEmpty = true
             return
         }
+
         isEmpty = false
-        val treeMap = TreeMap<String, Boolean>()
 
-        stopWordSet.forEach {
-            treeMap[it] = true
-        }
-
-        dat = DoubleArrayTrieMap(treeMap)
+        dat = DoubleArrayTrieMap(map)
     }
 
     fun add(words: Set<String>) {
-        this.stopWordSet.addAll(words)
+        words.forEach {
+            map[it] = true
+        }
     }
 
     override fun add(word: String) {
-        stopWordSet.add(word)
+        map[word] = true
+    }
+
+    override fun addNoStop(word: String) {
+        map[word] = false
     }
 
     override fun remove(word: String) {
-        stopWordSet.remove(word)
+        map.remove(word)
     }
 
-
-    override fun contains(word: String) = dat.containsKey(word)
+    override fun contains(word: String): Boolean {
+        return if (isEmpty) {
+            false
+        } else {
+            return dat.get(word) ?: false
+        }
+    }
 
 }
 
@@ -105,28 +109,55 @@ class DefaultStopWordDict(val includeSystemStopWord: Boolean = true) : StopWordD
 @Singleton
 class SystemStopWordDict constructor(val env: MynlpEnv) : StopWordDict {
 
-    private val stopDict = DefaultStopWordDict(true)
+    private val stopDict = DefaultStopWordDict()
+
+    init {
+        stopDict.add(loadSystemStopword(env))
+        stopDict.rebuild()
+    }
 
     override fun contains(word: String): Boolean {
         return stopDict.contains(word)
     }
 
     override fun rebuild() {
-        stopDict.rebuild()
+        throw IllegalAccessException("系统词典不能变更")
     }
 
     override fun add(word: String) {
-        stopDict.add(word)
+        throw IllegalAccessException("系统词典不能变更")
     }
 
     override fun remove(word: String) {
-        stopDict.remove(word)
+        throw IllegalAccessException("系统词典不能变更")
+    }
+
+    override fun addNoStop(word: String) {
+        throw IllegalAccessException("系统词典不能变更")
     }
 
     companion object {
+
         @JvmStatic
         fun loadSystemStopword(env: MynlpEnv): Set<String> {
-            val wordSet = loadStopword2(env).toMutableSet()
+
+            fun readStopDict(env: MynlpEnv): Set<String> {
+                try {
+                    val resource = env.tryLoadResource(StopWordDictPath)
+
+                    resource?.let { re ->
+                        return re.inputStream().bufferedReader().readLines().asSequence()
+                            .map { it.trim() }.filter { it.isNotBlank() }.toSet()
+
+                    }
+                } catch (e: Exception) {
+                    Mynlp.logger.error("", e)
+                }
+
+                return emptySet()
+            }
+
+            val wordSet = readStopDict(env).toMutableSet()
 
             // 如果存在merge_stopwords.txt资源的话
             val resource = env.tryLoadResource(MergeStopWordDictPath)
@@ -146,21 +177,6 @@ class SystemStopWordDict constructor(val env: MynlpEnv) : StopWordDict {
             return wordSet
         }
 
-        private fun loadStopword2(env: MynlpEnv): Set<String> {
-            try {
-                val resource = env.tryLoadResource(StopWordDictPath)
-
-                resource?.let { re ->
-                    return re.inputStream().bufferedReader().readLines().asSequence()
-                        .map { it.trim() }.filter { it.isNotBlank() }.toSet()
-
-                }
-            } catch (e: Exception) {
-                Mynlp.logger.error("", e)
-            }
-
-            return emptySet()
-        }
     }
 
 }

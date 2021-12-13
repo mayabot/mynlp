@@ -20,22 +20,38 @@ import com.mayabot.nlp.Mynlp;
 import com.mayabot.nlp.segment.LexerReader;
 import com.mayabot.nlp.segment.WordTerm;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * 过滤停用词
+ * <p>
+ * 可以指定一个或多个停用词词典
  *
  * @author jimichan
  */
 public class StopwordFilter extends BaseFilterLexerReader {
 
-    StopWordDict stopWords;
+    private List<StopWordDict> stopWords;
 
-    public StopwordFilter(LexerReader source, StopWordDict stopWords) {
+    public StopwordFilter(LexerReader source, StopWordDict stopWord) {
         super(source);
-        this.stopWords = stopWords;
+        this.stopWords = Arrays.asList(stopWord);
     }
 
+    public StopwordFilter(LexerReader source, List<StopWordDict> stopWords) {
+        super(source);
+        ArrayList list = new ArrayList();
+        for (StopWordDict stopWord : stopWords) {
+            list.add(stopWord);
+        }
+        this.stopWords = list;
+    }
+
+
     /**
-     * 默认使用系统自带的停用词
+     * 默认使用系统自带的停用词词典
      *
      * @param source
      */
@@ -45,6 +61,11 @@ public class StopwordFilter extends BaseFilterLexerReader {
 
     @Override
     public boolean test(WordTerm term) {
-        return !stopWords.contains(term.word);
+        for (StopWordDict stopWord : stopWords) {
+            if (stopWord.contains(term.word)) {
+                return false;
+            }
+        }
+        return true;
     }
 }

@@ -21,6 +21,7 @@ import com.mayabot.nlp.segment.reader.StopWordDict;
 import com.mayabot.nlp.segment.reader.StopwordFilter;
 
 import java.io.Reader;
+import java.util.List;
 
 /**
  * 面向Reader的词法分析器。主要解决从Reader返回分词结果。
@@ -69,6 +70,17 @@ public interface LexerReader {
     }
 
     static LexerReader filter(Lexer lexer, boolean punctuation, StopWordDict stopWord) {
+
+        LexerReader reader = new DefaultLexerReader(lexer);
+        if (punctuation) {
+            reader = new PunctuationFilter(reader);
+        }
+
+        reader = new StopwordFilter(reader, stopWord);
+        return reader;
+    }
+
+    static LexerReader filter(Lexer lexer, boolean punctuation, List<StopWordDict> stopWord) {
 
         LexerReader reader = new DefaultLexerReader(lexer);
         if (punctuation) {
