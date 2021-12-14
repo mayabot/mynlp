@@ -52,23 +52,24 @@ public class SmartSubwordComputer implements SubwordComputer {
      * @param wordPath
      */
     @Override
-    public void pickup(WordTerm term, Wordnet wordnet, Wordpath wordPath) {
+    public boolean run(WordTerm term, Wordnet wordnet, Wordpath wordPath) {
 
         //2个字的不拆
         //3.3.0版本开始变成2个字不拆。但是三字是否切分，需要看是否存在bigram搭配（要求严格点）
         if (term.length() <= 2) {
-            return;
+            return false;
         }
 
 
         // 人名不拆
         if (term.getNature() == Nature.nr) {
-            return;
+            return false;
         }
 
         //时间怎么拆
 
         //
+        boolean result = false;
 
         List<Vertex> list = algorithm.selectSub(wordnet, term.offset, term.length());
         if (list != null) {
@@ -87,31 +88,24 @@ public class SmartSubwordComputer implements SubwordComputer {
 
                 if (blackListCallback != null) {
                     if (blackListCallback.apply(term.word)) {
-                        return;
+                        return false;
                     }
                 }
 
                 if (len == 3 && subList.size() == 2) {
                     if (this.biGramTableDictionary.getBiFrequency(list.get(0).wordID, list.get(1).wordID) > 0) {
                         term.setSubword(subList);
+                        result = true;
                     }
                 } else {
                     term.setSubword(subList);
+                    result = true;
                 }
 
             }
 
         }
+        return result;
     }
 
-    /**
-     * 外部程序控制是否进一步拆分.返回true表示不再拆分
-     *
-     * @param blackListCallback
-     * @return SmartPickUpSubword
-     */
-    public SmartSubwordComputer setBlackListCallback(Function<String, Boolean> blackListCallback) {
-        this.blackListCallback = blackListCallback;
-        return this;
-    }
 }

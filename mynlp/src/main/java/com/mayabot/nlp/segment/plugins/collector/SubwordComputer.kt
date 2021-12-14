@@ -16,7 +16,12 @@ interface SubwordComputer {
     /**
      * [term] 一个待切分的子词
      * [wordnet] 当前
+     * @return 如果处理了当前term返回true，没有返回false
      */
-    fun pickup(@NotNull term: WordTerm, @NotNull wordnet: Wordnet, @NotNull wordPath: Wordpath)
+    fun run(
+        @NotNull term: WordTerm,
+        @NotNull wordnet: Wordnet,
+        @NotNull wordPath: Wordpath
+    ): Boolean
 
 }

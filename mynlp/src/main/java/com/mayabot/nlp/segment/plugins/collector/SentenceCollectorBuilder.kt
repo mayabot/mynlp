@@ -11,7 +11,8 @@ class SentenceCollectorBuilder(
     val mynlp: Mynlp
 ) {
 
-    var subwordComputer: SubwordComputer? = null
+    private val subwordComputer = ArrayList<SubwordComputer>()
+
 
     private val setupList = ArrayList<SubwordInfoSetup>()
 
@@ -27,7 +28,7 @@ class SentenceCollectorBuilder(
      */
     @JvmOverloads
     fun indexSubword(minWordLen: Int = 2): SentenceCollectorBuilder {
-        subwordComputer = IndexSubwordComputer().apply {
+        subwordComputer += IndexSubwordComputer().apply {
             minWordLength = minWordLen
         }
         return this
@@ -36,16 +37,20 @@ class SentenceCollectorBuilder(
     /**
      * 安装智能子词切分算法
      */
-    @JvmOverloads
-    fun smartSubword(
-        block: (x: SmartSubwordComputer) -> Unit = { _ -> Unit }
-    ): SentenceCollectorBuilder {
+    fun smartSubword(): SentenceCollectorBuilder {
         val p = SmartSubwordComputer(mynlp)
-        block(p)
-        subwordComputer = p
+        subwordComputer += p
         return this
     }
 
+    /**
+     * 安装基于词典的切分算法
+     */
+    fun ruleBaseSubword(dict: List<SubwordRuleDict>): SentenceCollectorBuilder {
+        val p = RuleDictSubwordComputer(dict)
+        subwordComputer += p
+        return this
+    }
 
     @JvmOverloads
     fun fillCoreDict(dbcms: CoreDictionary = mynlp.getInstance(CoreDictionary::class.java)): SentenceCollectorBuilder {

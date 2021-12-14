@@ -14,7 +14,7 @@ import java.util.function.Consumer
  */
 class SentenceCollector(
     private val mynlp: Mynlp,
-    private val subwordComputer: SubwordComputer? = null,
+    private val subwordComputer: List<SubwordComputer> = emptyList(),
     private val setupList: List<SubwordInfoSetup> = emptyList()
 ) : WordTermCollector {
 
@@ -41,10 +41,12 @@ class SentenceCollector(
                 continue
             }
 
-            val pick = subwordComputer
-
-            //给当前的term计算子词
-            pick?.pickup(term, wordnet, wordPath)
+            // 如果运行成功，后面的就不运行了
+            subwordComputer.forEach {
+                if (it.run(term, wordnet, wordPath)) {
+                    return@forEach
+                }
+            }
 
             consumer.accept(term)
         }

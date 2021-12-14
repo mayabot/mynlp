@@ -26,7 +26,8 @@ public class IndexSubwordComputer implements SubwordComputer {
     private int minWordLength = 2;
 
     @Override
-    public void pickup(WordTerm term, @NotNull Wordnet wordnet, @NotNull Wordpath wordPath) {
+    public boolean run(WordTerm term, @NotNull Wordnet wordnet, @NotNull Wordpath wordPath) {
+        boolean result = false;
         if (term.length() >= 3) {
             int from = term.offset;
             int to = from + term.length();
@@ -61,8 +62,10 @@ public class IndexSubwordComputer implements SubwordComputer {
             }
             if (!list.isEmpty()) {
                 term.setSubword(list);
+                result = true;
             }
         }
+        return result;
     }
 
     public int getMinWordLength() {
