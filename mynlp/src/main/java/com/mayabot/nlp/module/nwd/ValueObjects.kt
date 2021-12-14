@@ -16,17 +16,23 @@ class WordCount(val word: String, val count: Int) : Comparable<WordCount> {
 }
 
 data class NewWord(
-        val word: String,
-        val len: Int,
-        val freq: Int,
-        val docFreq: Int,
-        val mi: Float,
-        val avg_mi: Float,
-        val entropy: Float,
-        val le: Float,
-        val re: Float,
-        val idf: Float,
-        val isBlock: Boolean
+    val word: String,
+    val len: Int,
+    val freq: Int,
+    val docFreq: Int,
+    /**
+     * 互信息。内聚程度
+     */
+    val mi: Float,
+    val avg_mi: Float,
+    /**
+     * 左右最低熵.和两侧的黏连程度
+     */
+    val entropy: Float,
+    val le: Float,
+    val re: Float,
+    val idf: Float,
+    val isBlock: Boolean
 ) {
     var score: Float = 0f
 

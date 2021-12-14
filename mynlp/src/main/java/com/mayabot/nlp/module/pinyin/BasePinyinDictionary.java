@@ -20,11 +20,10 @@ import com.mayabot.nlp.algorithm.collection.ahocorasick.AhoCorasickDoubleArrayTr
 import com.mayabot.nlp.common.logging.InternalLogger;
 import com.mayabot.nlp.common.logging.InternalLoggerFactory;
 import com.mayabot.nlp.module.pinyin.model.Pinyin;
+import com.mayabot.nlp.module.pinyin.model.SimplePinyin;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.TreeMap;
+import java.util.*;
 
 /**
  * 拼音的词典
@@ -41,7 +40,14 @@ public abstract class BasePinyinDictionary {
 
     private TreeMap<String, Pinyin[]> system;
 
+    private SimplePinyin[][] charPinyin;
+
     public BasePinyinDictionary() {
+    }
+
+    @Nullable
+    public SimplePinyin[] charPinyin(char ch) {
+        return charPinyin[ch];
     }
 
     public void rebuild() {
@@ -63,6 +69,29 @@ public abstract class BasePinyinDictionary {
         }
         AhoCoraickDoubleArrayTrieBuilder<Pinyin[]> builder = new AhoCoraickDoubleArrayTrieBuilder<>();
         this.trie = builder.build(map);
+
+        // 统计单子的拼音
+        int max = -1;
+        for (String s : map.keySet()) {
+            if (s.length() == 1) {
+                int c = s.charAt(0);
+                if (c > max) {
+                    max = c;
+                }
+            }
+        }
+
+        charPinyin = new SimplePinyin[max + 1][];
+        for (Map.Entry<String, Pinyin[]> entry : map.entrySet()) {
+            if (entry.getKey().length() == 1) {
+                Pinyin[] value = entry.getValue();
+                SimplePinyin[] value2 = new SimplePinyin[value.length];
+                for (int i = 0; i < value.length; i++) {
+                    value2[i] = value[i].getSimple();
+                }
+                charPinyin[(int) entry.getKey().charAt(0)] = value2;
+            }
+        }
         long t2 = System.currentTimeMillis();
 
         logger.info("PinyinModule Dictionary rebuild use time {} ms", t2 - t1);

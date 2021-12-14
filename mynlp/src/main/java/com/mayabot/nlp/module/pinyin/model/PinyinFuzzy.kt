@@ -80,6 +80,7 @@ object PinyinFuzzy {
         }
 
         //TODO 这里可以加载自定义模糊拼音 hui->fei
+        pinyinFuzzyArray[SimplePinyin.fei.ordinal].add(SimplePinyin.hui)
 
         this.pinyinFuzzyArray = pinyinFuzzyArray.toList().map { it.toList() }.toTypedArray()
 
@@ -104,11 +105,17 @@ object PinyinFuzzy {
         return yummuMap[a] ?: listOf()
     }
 
+    /**
+     * 不包含自己
+     */
     @JvmStatic
     fun fuzzy(py: SimplePinyin): List<SimplePinyin> {
         return pinyinFuzzyArray[py.ordinal]
     }
 
+    /**
+     * 包含自己
+     */
     @JvmStatic
     fun fuzzy2(py: SimplePinyin): List<SimplePinyin> {
         return pinyinFuzzyArray2[py.ordinal]

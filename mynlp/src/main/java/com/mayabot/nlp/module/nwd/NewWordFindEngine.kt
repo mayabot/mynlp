@@ -93,7 +93,7 @@ class NewWordFindEngine(
 
         "˦�来将就这的了和与想我你他为或是对并以于由有个之在把等再从及"
         .toCharArray().forEach {
-            filterStartChar[it.toInt()] = 1
+            filterStartChar[it.code] = 1
         }
 
     }
@@ -143,12 +143,12 @@ class NewWordFindEngine(
 
             //字频
             line.forEach { ch ->
-                ziFreqArray[ ch.toInt() ]++
+                ziFreqArray[ch.code]++
             }
 
             //NGram 循环
             for (i in 0 until len) {
-                val firstChar = charArray[i].toInt()
+                val firstChar = charArray[i].code
                 if (filterStartChar[firstChar] == 1) {
                     continue
                 }
@@ -156,7 +156,7 @@ class NewWordFindEngine(
                     val endIndex = i + s
                     if (endIndex <= len) {
                         //最后一个字也要过滤
-                        if (filterStartChar[charArray[endIndex - 1].toInt()] == 1) {
+                        if (filterStartChar[charArray[endIndex - 1].code] == 1) {
                             continue
                         }
 
@@ -164,7 +164,7 @@ class NewWordFindEngine(
 
                         if (s <= 5) {
                             for (j in i until endIndex) {
-                                if (filterStartChar[charArray[j].toInt()] == 1) {
+                                if (filterStartChar[charArray[j].code] == 1) {
                                     toSkip = true
                                     break
                                 }
@@ -176,7 +176,7 @@ class NewWordFindEngine(
                         }
 
                         for (j in i until endIndex) {
-                            if (filterContainsChar[charArray[j].toInt()] == 1) {
+                            if (filterContainsChar[charArray[j].code] == 1) {
                                 toSkip = true
                                 break
                             }
@@ -235,7 +235,7 @@ class NewWordFindEngine(
 
             //NGram 循环
             for (i in 0 until len) {
-                val firstChar = line[i].toInt()
+                val firstChar = line[i].code
                 if (filterStartChar[firstChar] == 1) {
                     continue
                 }
@@ -284,7 +284,7 @@ class NewWordFindEngine(
             val fenzi = info.count.toFloat() / ziCountTotal
             var fenmu = 1f
             info.word.forEach { ch ->
-                fenmu *= ziFreqArray[ch.toInt()].toFloat() / ziCountTotal
+                fenmu *= ziFreqArray[ch.code].toFloat() / ziCountTotal
             }
 
             info.mi = log2(fenzi / fenmu)

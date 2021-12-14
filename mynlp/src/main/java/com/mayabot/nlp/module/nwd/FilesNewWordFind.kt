@@ -3,21 +3,21 @@ package com.mayabot.nlp.module.nwd
 import java.io.File
 import java.nio.charset.Charset
 
-fun main() {
-    val x = FilesNewWordFind(File("data/source/test/newword/data-shanghai"))
-
-    x.runSaveToFile(File("data/output/test/newword/data-shanghai-out.csv"))
-}
+//fun main() {
+//    val x = FilesNewWordFind(File("data/source/test/newword/data-shanghai"))
+//
+//    x.runSaveToFile(File("data/output/test/newword/data-shanghai-out.csv"))
+//}
 
 /**
  * 扫描指定文件夹下面的所有文本文件，计算发现的新词
  *
  */
 class FilesNewWordFind(
-        private val dir: java.io.File,
-        private val charset: Charset = Charset.forName("UTF-8"),
-        private val minGroup: Int = 3,
-        private val maxGroup: Int = 12,
+    private val dir: java.io.File,
+    private val charset: Charset = Charset.forName("UTF-8"),
+    private val minGroup: Int = 3,
+    private val maxGroup: Int = 12,
         private val minOccurCount: Int = 10,
         private val minMi: Float = 2.0f,
         private val minEntropy: Float = 1.0f,
