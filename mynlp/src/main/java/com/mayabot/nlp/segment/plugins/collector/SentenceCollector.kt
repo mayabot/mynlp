@@ -12,27 +12,17 @@ import java.util.function.Consumer
  *
  * @author jimichan
  */
-class SentenceCollector(val mynlp: Mynlp) : WordTermCollector {
-
-    /**
-     * 从wordnet中计算出子词的方法。
-     */
-    override var pickUpSubword: WordTermCollector.PickUpSubword? = null
-
-    /**
-     * 给一个初始化wordnet的机会，填充更多的可能性
-     */
-    private val fillSubword = ArrayList<WordTermCollector.FillSubword>()
-
-    override fun addFillSubword(fs: WordTermCollector.FillSubword) {
-        fillSubword += fs
-    }
+class SentenceCollector(
+    private val mynlp: Mynlp,
+    private val subwordComputer: SubwordComputer? = null,
+    private val setupList: List<SubwordInfoSetup> = emptyList()
+) : WordTermCollector {
 
     override fun collect(txtChars: CharArray?, wordnet: Wordnet, wordPath: Wordpath, consumer: Consumer<WordTerm>) {
 
         val vertexIterator = wordPath.iteratorVertex()
 
-        fillSubword.forEach {
+        setupList.forEach {
             it.fill(wordnet, wordPath)
         }
 
@@ -42,7 +32,7 @@ class SentenceCollector(val mynlp: Mynlp) : WordTermCollector {
             val word = if (txtChars == null) {
                 vertex.realWord()
             } else {
-                String(txtChars, vertex.offset(), vertex.length)
+                String(chars = txtChars, vertex.offset(), vertex.length)
             }
 
             val term = WordTerm(word, vertex.nature, vertex.offset())
@@ -51,7 +41,7 @@ class SentenceCollector(val mynlp: Mynlp) : WordTermCollector {
                 continue
             }
 
-            val pick = pickUpSubword
+            val pick = subwordComputer
 
             //给当前的term计算子词
             pick?.pickup(term, wordnet, wordPath)

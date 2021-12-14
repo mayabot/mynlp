@@ -6,7 +6,8 @@ import com.mayabot.nlp.segment.lexer.bigram.HmmLexerPlugin
 import com.mayabot.nlp.segment.lexer.perceptron.PerceptronSegmentPlugin
 import com.mayabot.nlp.segment.pipeline.PipelineLexerBuilder
 import com.mayabot.nlp.segment.pipeline.PipelineLexerPlugin
-import com.mayabot.nlp.segment.plugins.collector.*
+import com.mayabot.nlp.segment.plugins.collector.SentenceCollectorBuilder
+import com.mayabot.nlp.segment.plugins.collector.WordTermCollector
 import com.mayabot.nlp.segment.plugins.correction.CorrectionDictionary
 import com.mayabot.nlp.segment.plugins.correction.CorrectionPlugin
 import com.mayabot.nlp.segment.plugins.customwords.CustomDictionary
@@ -14,166 +15,131 @@ import com.mayabot.nlp.segment.plugins.customwords.CustomDictionaryPlugin
 import com.mayabot.nlp.segment.plugins.ner.NerPlugin
 import com.mayabot.nlp.segment.plugins.personname.PersonNamePlugin
 import com.mayabot.nlp.segment.plugins.pos.PosPlugin
+import java.util.function.Consumer
 
 /**
  * Fluent style
  * @author jimichan
  */
-open class FluentLexerBuilder(val mynlp: Mynlp = Mynlp.instance()) : LexerBuilder {
+open class FluentLexerBuilder(private val mynlp: Mynlp) : LexerBuilder {
 
-    private val builder = PipelineLexerBuilder(mynlp)
+    private val pipeline = PipelineLexerBuilder(mynlp)
 
     override fun build(): Lexer {
-        return builder.build()
+        return pipeline.build()
     }
 
     fun install(plugin: PipelineLexerPlugin) {
-        builder.install(plugin)
-    }
-
-    @Deprecated(message = "使用bigram方法", replaceWith = ReplaceWith("bigram"), level = DeprecationLevel.WARNING)
-    fun core(): FluentLexerBuilder {
-        builder.install(HmmLexerPlugin(mynlp))
-        return this@FluentLexerBuilder
-    }
-
-    @Deprecated(message = "使用bigram方法", replaceWith = ReplaceWith("bigram(dict)"), level = DeprecationLevel.WARNING)
-    fun coreByDict(dict: CoreDictionary): FluentLexerBuilder {
-        builder.install(HmmLexerPlugin(dict))
-        return this@FluentLexerBuilder
+        pipeline.install(plugin)
     }
 
     fun hmm(): FluentLexerBuilder {
-        builder.install(HmmLexerPlugin(mynlp))
+        pipeline.install(HmmLexerPlugin(mynlp))
         return this@FluentLexerBuilder
     }
 
     fun hmm(dict: CoreDictionary): FluentLexerBuilder {
-        builder.install(HmmLexerPlugin(dict))
+        pipeline.install(HmmLexerPlugin(dict))
         return this@FluentLexerBuilder
     }
 
+    @Deprecated(message = "使用hmm方法", replaceWith = ReplaceWith("hmm"), level = DeprecationLevel.WARNING)
+    fun core(): FluentLexerBuilder {
+        pipeline.install(HmmLexerPlugin(mynlp))
+        return this@FluentLexerBuilder
+    }
+
+    @Deprecated(message = "使用hmm方法", replaceWith = ReplaceWith("hmm(dict)"), level = DeprecationLevel.WARNING)
+    fun coreByDict(dict: CoreDictionary): FluentLexerBuilder {
+        pipeline.install(HmmLexerPlugin(dict))
+        return this@FluentLexerBuilder
+    }
+
+    @Deprecated(message = "使用hmm方法", replaceWith = ReplaceWith("hmm"), level = DeprecationLevel.WARNING)
     fun bigram(): FluentLexerBuilder {
-        builder.install(HmmLexerPlugin(mynlp))
+        pipeline.install(HmmLexerPlugin(mynlp))
         return this@FluentLexerBuilder
     }
 
+    @Deprecated(message = "使用hmm方法", replaceWith = ReplaceWith("hmm(dict)"), level = DeprecationLevel.WARNING)
     fun bigram(dict: CoreDictionary): FluentLexerBuilder {
-        builder.install(HmmLexerPlugin(dict))
+        pipeline.install(HmmLexerPlugin(dict))
         return this@FluentLexerBuilder
     }
 
+    /**
+     * 感知机分词器
+     */
     fun perceptron(): FluentLexerBuilder {
-        builder.install(PerceptronSegmentPlugin())
+        pipeline.install(PerceptronSegmentPlugin())
         return this@FluentLexerBuilder
     }
 
     fun withCorrection(): FluentLexerBuilder {
-        builder.install(CorrectionPlugin())
+        pipeline.install(CorrectionPlugin())
         return this;
     }
 
     fun withCorrection(dict: CorrectionDictionary): FluentLexerBuilder {
-        builder.install(CorrectionPlugin(dict))
+        pipeline.install(CorrectionPlugin(dict))
         return this;
     }
 
     fun withPos(): FluentLexerBuilder {
-        builder.install(PosPlugin())
+        pipeline.install(PosPlugin())
         return this
     }
 
     fun withPersonName(): FluentLexerBuilder {
-        builder.install(PersonNamePlugin())
+        pipeline.install(PersonNamePlugin())
         return this
     }
 
     fun withNer(): FluentLexerBuilder {
-        builder.install(NerPlugin())
+        pipeline.install(NerPlugin())
         return this
     }
 
     fun withCustomDictionary(dict: CustomDictionary): FluentLexerBuilder {
-        builder.install(CustomDictionaryPlugin(dict))
+        pipeline.install(CustomDictionaryPlugin(dict))
         return this
     }
 
     fun withCustomDictionary(): FluentLexerBuilder {
-        builder.install(CustomDictionaryPlugin())
+        pipeline.install(CustomDictionaryPlugin())
         return this
     }
 
-    fun with(plugin: PipelineLexerPlugin) : FluentLexerBuilder {
-        builder.install(plugin)
+    fun with(plugin: PipelineLexerPlugin): FluentLexerBuilder {
+        pipeline.install(plugin)
         return this
     }
 
     /**
      * 保持字符原样输出
      */
-    fun keepOriCharOutput() : FluentLexerBuilder {
-        builder.isKeepOriCharOutput = true
+    fun keepOriCharOutput(): FluentLexerBuilder {
+        pipeline.isKeepOriCharOutput = true
         return this
     }
 
-    fun collector(): CollectorBlock {
-        return CollectorBlock()
+    /**
+     * 配置默认SentenceCollector
+     */
+    fun customSentenceCollector(consumer: Consumer<SentenceCollectorBuilder>) {
+        val builder = SentenceCollectorBuilder(mynlp)
+
+        consumer.accept(builder)
+
+        pipeline.termCollector = builder.build()
     }
 
-    inner class CollectorBlock {
-
-        val collector: WordTermCollector = SentenceCollector(mynlp)
-
-        fun pickUpSubword(pickUpSubword: WordTermCollector.PickUpSubword): CollectorBlock {
-            collector.pickUpSubword = pickUpSubword
-            return this
-        }
-
-        fun fillSubword(fillSubword: WordTermCollector.FillSubword): CollectorBlock {
-            collector.addFillSubword(fillSubword)
-            return this
-        }
-
-        @JvmOverloads
-        fun fillSubwordDict(dbcms: CoreDictionary = mynlp.getInstance(CoreDictionary::class.java)): CollectorBlock {
-            collector.addFillSubword(DictBasedFillSubword(dbcms))
-            return this
-        }
-
-        fun fillSubwordCustomDict(dict: CustomDictionary): CollectorBlock {
-            collector.addFillSubword(CustomDictFillSubword(dict))
-            return this
-        }
-
-        @JvmOverloads
-        fun indexPickup(minWordLen: Int = 2): CollectorBlock {
-            val indexd = IndexPickUpSubword()
-            indexd.minWordLength = minWordLen
-            collector.pickUpSubword = indexd
-            return this
-        }
-
-        @JvmOverloads
-        fun smartPickup(block: (x: SmartPickUpSubword) -> Unit
-                        = { _ -> Unit }
-        ): CollectorBlock {
-            val p = SmartPickUpSubword(mynlp)
-            block(p)
-            collector.pickUpSubword = p
-            return this
-        }
-
-
-        fun with(collector: WordTermCollector): CollectorBlock {
-            builder.termCollector = collector
-            return this
-        }
-
-        fun done(): FluentLexerBuilder {
-            builder.termCollector = collector
-            return this@FluentLexerBuilder
-        }
+    /**
+     * 安装自定义的WordTermCollector
+     */
+    fun withCollector(collector: WordTermCollector): FluentLexerBuilder {
+        pipeline.termCollector = collector
+        return this
     }
 }
-
 

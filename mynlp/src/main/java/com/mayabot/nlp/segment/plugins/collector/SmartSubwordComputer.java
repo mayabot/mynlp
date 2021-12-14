@@ -16,13 +16,14 @@ import java.util.List;
 import java.util.function.Function;
 
 /**
- * Nlp收集方式，不处理子词
- * 按照WordPath里面描述的唯一切分路径，构建WordTerm序列
+ * 智能的子词二次切分算法。
+ * <p>
+ * 通过mini的Viterbi算法，选择一个最佳的切分方式。
  *
  * @author jimichan
  */
 
-public class SmartPickUpSubword implements WordTermCollector.PickUpSubword {
+public class SmartSubwordComputer implements SubwordComputer {
 
     //    private Mynlp  mynlp;
     private AtomWordViterbiBestPathAlgorithm algorithm;
@@ -35,7 +36,7 @@ public class SmartPickUpSubword implements WordTermCollector.PickUpSubword {
      */
     private Function<String, Boolean> blackListCallback;
 
-    public SmartPickUpSubword(@NotNull Mynlp mynlp) {
+    public SmartSubwordComputer(@NotNull Mynlp mynlp) {
 //        this.mynlp = mynlp;
         algorithm = mynlp.getInstance(AtomWordViterbiBestPathAlgorithm.class);
         coreDictionary = mynlp.getInstance(CoreDictionary.class);
@@ -109,7 +110,7 @@ public class SmartPickUpSubword implements WordTermCollector.PickUpSubword {
      * @param blackListCallback
      * @return SmartPickUpSubword
      */
-    public SmartPickUpSubword setBlackListCallback(Function<String, Boolean> blackListCallback) {
+    public SmartSubwordComputer setBlackListCallback(Function<String, Boolean> blackListCallback) {
         this.blackListCallback = blackListCallback;
         return this;
     }

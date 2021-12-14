@@ -19,7 +19,8 @@ import java.util.function.Consumer
 interface WordTermCollector {
 
     /**
-     * 收集分词结构
+     * 收集分词结果，最终发送到consumer中。
+     * 这样外面是流水线还是list保存结果，由外部决定。
      *
      * @param txtChars  词图
      * @param KeepChar  词图
@@ -28,28 +29,6 @@ interface WordTermCollector {
      * @param consumer 接受WordTerm的消费者
      */
     fun collect(txtChars:CharArray?,wordnet: Wordnet, wordPath: Wordpath, consumer: Consumer<WordTerm>)
-
-    var pickUpSubword: PickUpSubword?
-
-    fun addFillSubword(fs: FillSubword)
-
-
-    /**
-     * 感知机、crf等分词，wordnet中没有子词信息。那么通过这个接口在收集结果之前，通过词典新增子词信息。
-     * @author jimichan
-     */
-    interface FillSubword {
-        fun fill(wordnet: Wordnet, wordPath: Wordpath)
-    }
-
-    /**
-     * 从wordnet中计算出子词的方法。
-     * @author jimichan
-     */
-    interface PickUpSubword {
-
-        fun pickup(term: WordTerm, wordnet: Wordnet, wordPath: Wordpath)
-    }
 
 
 }

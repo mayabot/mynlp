@@ -97,7 +97,7 @@ public class PipelineLexerBuilder implements LexerBuilder {
     public PipelineLexerBuilder(Mynlp mynlp) {
         this.mynlp = mynlp;
         this.bestPathAlgorithm = mynlp.getInstance(ViterbiBestPathAlgorithm.class);
-        this.termCollector = new SentenceCollector(mynlp);
+        this.termCollector = new SentenceCollector(mynlp, null, Collections.emptyList());
     }
 
     public void install(PipelineLexerPlugin plugin) {
