@@ -1,6 +1,5 @@
 package com.mayabot.nlp.module.lucene;
 
-import com.mayabot.nlp.Mynlp;
 import com.mayabot.nlp.segment.*;
 import org.apache.lucene.analysis.Tokenizer;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
@@ -127,6 +126,7 @@ final public class MynlpTokenizer extends Tokenizer {
 
     @Override
     public void end() throws IOException {
+        // 这个非常有必要，
         super.end();
         this.offsetAtt.setOffset(lastOffset,lastOffset);
     }
