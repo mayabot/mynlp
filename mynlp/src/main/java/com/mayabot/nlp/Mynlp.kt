@@ -72,6 +72,7 @@ constructor(
                 .withPersonName().build()
     }
 
+    @Deprecated("use bigramLexer ")
     fun hmmLexer(): Lexer {
         return lexerBuilder()
             .bigram()

@@ -7,7 +7,6 @@ import java.io.OutputStreamWriter
 import java.util.*
 import java.util.regex.Pattern
 import java.util.stream.Collectors.toList
-import kotlin.collections.ArrayList
 
 /**
  * 存放训练数据的地方
@@ -83,9 +82,9 @@ open class InternDataHandler(val parser: DataParser, val args: Args) : DataHandl
     /**
      * 随机挑选一个list里面的值
      */
-    protected inline fun <T> List<out T>.rand() = this[random.nextInt(size)]
+    protected fun <T> List<T>.rand() = this[random.nextInt(size)]
 
-    protected inline fun <T> List<out T>.randIndex() = random.nextInt(size)
+    protected fun <T> List<T>.randIndex() = random.nextInt(size)
 
     // In the case of trainMode=1, a random Label from r.h.s will be selected
     override fun convert(example: ParseResult, rslt: ParseResult) {
@@ -389,29 +388,29 @@ class LayerDataHandler(parser: DataParser, args: Args) : InternDataHandler(parse
     }
 
 
-    override fun getRandomRHS(result: MutableList<XPair>, trainWord: Boolean) {
+    override fun getRandomRHS(results: MutableList<XPair>, trainWord: Boolean) {
         assert(size > 0)
         val ex = examples.rand()
 
         val r = ex.rhsFeatures.randIndex()
 
-        result.clear()
+        results.clear()
         val trainMode = args.trainMode
 
         if (trainMode === Mode5 || trainWord) {
             // pick random Word
             val wid = ex.rhsFeatures[r].randIndex()
-            result.add(ex.rhsFeatures[r][wid])
+            results.add(ex.rhsFeatures[r][wid])
 
         } else if (trainMode === Mode2) {
             // pick one random, the rest is rhs features
             for (i in ex.rhsFeatures.indices) {
                 if (i != r) {
-                    insert(result, ex.rhsFeatures[i], dropoutRHS)
+                    insert(results, ex.rhsFeatures[i], dropoutRHS)
                 }
             }
         } else {
-            insert(result, ex.rhsFeatures[r], dropoutLHS)
+            insert(results, ex.rhsFeatures[r], dropoutLHS)
         }
     }
 

@@ -36,6 +36,7 @@
 package com.mayabot.nlp.algorithm.collection.dat;
 
 import com.mayabot.nlp.algorithm.collection.Trie;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -227,7 +228,8 @@ public class DoubleArrayTrieMap<T> implements Trie<T> {
      * @return 值
      */
     @Override
-    public T get(CharSequence key) {
+    public @Nullable
+    T get(CharSequence key) {
         int index = indexOf(key);
         if (index >= 0) {
             return getValueAt(index);

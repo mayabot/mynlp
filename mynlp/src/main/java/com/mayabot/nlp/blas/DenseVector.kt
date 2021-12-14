@@ -7,12 +7,13 @@ import kotlin.math.sqrt
  * FloatArray的向量
  */
 class DenseVector(
-        /**
-         * 底层的Float Array
-         */
-        private val data: FloatArray,
-        private val offset: Int,
-        private val length: Int) : Vector {
+    /**
+     * 底层的Float Array
+     */
+    private val data: FloatArray,
+    private val offset: Int,
+    private val length: Int
+) : Vector {
 
 
     /**
@@ -68,14 +69,14 @@ class DenseVector(
 
     override fun length(): Int = length
 
-    override fun times(v: Vector) = this.prod(v)
+    override fun times(vector: Vector) = this.prod(vector)
 
-    override fun prod(v: Vector): Float {
+    override fun prod(vector: Vector): Float {
         //checkArgument(this.length() == v.length())
         var result = 0f
         var j = 0
         for (i in offset until offset + length) {
-            result += data[i] * v[j++]
+            result += data[i] * vector[j++]
         }
         return result
     }
@@ -146,8 +147,8 @@ class DenseVector(
         return DenseVector(dest, 0, length)
     }
 
-    override fun fill(v: Number) {
-        val value = v.toFloat()
+    override fun fill(value: Number) {
+        val value = value.toFloat()
         for (i in offset until offset + length) {
             data[i] = value
         }
@@ -164,12 +165,12 @@ class DenseVector(
         fill(0)
     }
 
-    override fun invoke(v: Vector) {
-        check(this.length() == v.length())
+    override fun invoke(vector: Vector) {
+        check(this.length() == vector.length())
 
         var j = offset
-        for (i in 0 until v.length()) {
-            data[j++] = v[i]
+        for (i in 0 until vector.length()) {
+            data[j++] = vector[i]
         }
     }
 
@@ -177,27 +178,27 @@ class DenseVector(
         data[index + offset] = value
     }
 
-    override fun putAll(v: FloatArray) {
-        check(length == v.size)
+    override fun putAll(array: FloatArray) {
+        check(length == array.size)
         var j = 0
 
         for (i in offset until (offset + length)) {
-            data[i] = v[j++]
+            data[i] = array[j++]
         }
     }
 
-    override fun plusAssign(v: Vector) {
+    override fun plusAssign(vector: Vector) {
         var j = 0
         for (i in offset until offset + length) {
-            data[i] = data[i] + v[j++]
+            data[i] = data[i] + vector[j++]
         }
     }
 
-    override fun plusAssign(v: Pair<Number, Vector>) {
-        val scale = v.first.toFloat()
-        val vector = v.second
+    override fun plusAssign(pair: Pair<Number, Vector>) {
+        val scale = pair.first.toFloat()
+        val vector = pair.second
         if (scale == 1.0f) {
-            plusAssign(v.second)
+            plusAssign(pair.second)
         } else {
             var j = 0
             for (i in offset until offset + length) {
@@ -213,9 +214,9 @@ class DenseVector(
         }
     }
 
-    override fun minusAssign(x: Pair<Number, Vector>) {
-        val scale = x.first.toFloat()
-        val vector = x.second
+    override fun minusAssign(pair: Pair<Number, Vector>) {
+        val scale = pair.first.toFloat()
+        val vector = pair.second
         var j = 0
         for (i in offset until offset + length) {
             data[i] = data[i] - vector[j++] * scale
@@ -242,9 +243,11 @@ class DenseVector(
  * 基于ByteBuffer存储的Vector实现
  * @author jimichan
  */
-class ByteBufferDenseVector(private val data: ByteBuffer,
-                            private val offset: Int,
-                            private val length: Int) : Vector {
+class ByteBufferDenseVector(
+    private val data: ByteBuffer,
+    private val offset: Int,
+    private val length: Int
+) : Vector {
 
     companion object {
         private const val serialVersionUID: Long = 1234234218L
@@ -408,19 +411,19 @@ class ByteBufferDenseVector(private val data: ByteBuffer,
         }
     }
 
-    override fun plusAssign(v: Pair<Number, Vector>) {
-        val scale = v.first.toFloat()
-        val vector = v.second
+    override fun plusAssign(pair: Pair<Number, Vector>) {
+        val scale = pair.first.toFloat()
+        val vector = pair.second
         var j = 0
         for (i in (offset * 4 until (offset + length) * 4 step 4)) {
             data.putFloat(i, data.getFloat(i) + vector[j++] * scale)
         }
     }
 
-    override fun minusAssign(x: Vector) {
+    override fun minusAssign(vector: Vector) {
         var j = 0
         for (i in (offset * 4 until (offset + length) * 4 step 4)) {
-            data.putFloat(i, data.getFloat(i) - x[j++])
+            data.putFloat(i, data.getFloat(i) - vector[j++])
         }
     }
 

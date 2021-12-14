@@ -16,7 +16,6 @@ import java.io.File
 import java.io.InputStream
 import java.util.*
 import java.util.function.Consumer
-import kotlin.collections.ArrayList
 
 class NERPerceptron(val model: PerceptronModel, private val labels: List<String>) {
 
@@ -552,7 +551,7 @@ object NERCorpus {
 
                         if (foundNER) {
                             count++
-                            writers[random.nextInt(writers.size)].appendln(line)
+                            writers[random.nextInt(writers.size)].appendLine(line)
                         }
 
                     }

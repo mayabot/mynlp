@@ -45,11 +45,11 @@ object NormalizeText {
 
             containsDigits = containsDigits or Character.isDigit(c)
 
-            if (!Character.isAlphabetic(c.toInt())) {
+            if (!Character.isAlphabetic(c.code)) {
                 allNumeric = false
                 continue
             }
-            if (!Character.isAlphabetic(c.toInt())) continue
+            if (!Character.isAlphabetic(c.code)) continue
             allNumeric = false
         }
 
@@ -63,7 +63,7 @@ object NormalizeText {
             if (flattenNum && Character.isDigit(c)) {
                 chars[i] = '0'
             }
-            if (Character.isAlphabetic(c.toInt())) {
+            if (Character.isAlphabetic(c.code)) {
                 chars[i] = Character.toLowerCase(c)
             }
         }

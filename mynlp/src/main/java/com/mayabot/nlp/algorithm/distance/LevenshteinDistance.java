@@ -113,9 +113,13 @@ public final class LevenshteinDistance implements StringDistance {
 
   @Override
   public boolean equals(Object obj) {
-    if (this == obj) return true;
-    if (null == obj) return false;
-    return (getClass() == obj.getClass());
+      if (this == obj) {
+          return true;
+      }
+      if (null == obj) {
+          return false;
+      }
+      return (getClass() == obj.getClass());
   }
 
   @Override

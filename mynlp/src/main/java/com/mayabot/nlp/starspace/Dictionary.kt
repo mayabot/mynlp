@@ -4,7 +4,6 @@ import java.io.*
 import java.util.*
 import java.util.function.Consumer
 import java.util.regex.Pattern
-import kotlin.Comparator
 
 const val HASH_C = 116049371
 const val MAX_VOCAB_SIZE = 30000000
@@ -32,7 +31,7 @@ class Dictionary(val args: Args) {
     private val bucket: Int = args.bucket
 
 
-    private inline fun hash(str: String): Long {
+    private fun hash(str: String): Long {
         // 0xffffffc5;
         var h = 2166136261L.toInt()
         for (strByte in str.toByteArray()) {
