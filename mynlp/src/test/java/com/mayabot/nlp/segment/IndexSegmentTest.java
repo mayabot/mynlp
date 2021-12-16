@@ -1,5 +1,6 @@
 package com.mayabot.nlp.segment;
 
+import com.mayabot.nlp.segment.plugins.collector.SentenceCollectorBuilder;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -11,7 +12,7 @@ public class IndexSegmentTest {
 
         Lexer mynlpTokenizer = Lexers.
                 coreBuilder()
-                .collector().indexPickup().done()
+                .customSentenceCollector(SentenceCollectorBuilder::indexSubword)
                 .build();
 
         String str = mynlpTokenizer.scan("中华人民共和国的利益").toString();

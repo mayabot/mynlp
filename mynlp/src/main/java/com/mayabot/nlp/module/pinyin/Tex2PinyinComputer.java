@@ -20,7 +20,6 @@ import com.mayabot.nlp.algorithm.collection.ahocorasick.AhoCorasickDoubleArrayTr
 import com.mayabot.nlp.common.logging.InternalLogger;
 import com.mayabot.nlp.common.logging.InternalLoggerFactory;
 import com.mayabot.nlp.module.pinyin.model.Pinyin;
-import com.mayabot.nlp.module.pinyin.model.SimplePinyin;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -30,74 +29,56 @@ import java.util.*;
  *
  * @author jimichan
  */
-public abstract class BasePinyinDictionary {
+public class Tex2PinyinComputer {
 
-    InternalLogger logger = InternalLoggerFactory.getInstance(BasePinyinDictionary.class);
+    InternalLogger logger = InternalLoggerFactory.getInstance(Tex2PinyinComputer.class);
 
     private AhoCorasickDoubleArrayTrie<Pinyin[]> trie = null;
 
-    private CustomPinyin customPinyin = new CustomPinyin();
-
-    private TreeMap<String, Pinyin[]> system;
-
-    private SimplePinyin[][] charPinyin;
-
-    public BasePinyinDictionary() {
-    }
-
     @Nullable
-    public SimplePinyin[] charPinyin(char ch) {
-        return charPinyin[ch];
+    private Map<String, Pinyin[]> customPinyin;
+
+    PinyinInnerDict systemDict;
+
+    public Tex2PinyinComputer(PinyinInnerDict systemDict, @Nullable Map<String, Pinyin[]> customPinyin) {
+        this.systemDict = systemDict;
+        this.customPinyin = customPinyin;
+        rebuild();
     }
 
-    public void rebuild() {
+    public Tex2PinyinComputer(PinyinInnerDict systemDict) {
+        this.systemDict = systemDict;
+        rebuild();
+    }
+
+    public void setUpCustomPinyin(Map<String, String> map) {
+        this.customPinyin = convert(map);
+        rebuild();
+    }
+
+    public void setCustomPinyin(
+            @Nullable Map<String, Pinyin[]> customPinyin) {
+        this.customPinyin = customPinyin;
+        rebuild();
+    }
+
+    private void rebuild() {
 
         long t1 = System.currentTimeMillis();
-        if (system == null) {
-            system = load();
-        }
-        TreeMap<String, Pinyin[]> map = new TreeMap<>();
-        if (customPinyin != null && !customPinyin.getMap().isEmpty()) {
-            map.putAll(system);
 
-            final TreeMap<String, Pinyin[]> map2 = map;
-            customPinyin.getMap().forEach((key, value) -> {
-                map2.put(key, parse(value));
-            });
-        } else {
-            map = system;
+        final TreeMap<String, Pinyin[]> map = new TreeMap<>();
+        map.putAll(systemDict.getPinyinTable());
+        if (customPinyin != null) {
+            map.putAll(customPinyin);
         }
+
         AhoCoraickDoubleArrayTrieBuilder<Pinyin[]> builder = new AhoCoraickDoubleArrayTrieBuilder<>();
         this.trie = builder.build(map);
 
-        // 统计单子的拼音
-        int max = -1;
-        for (String s : map.keySet()) {
-            if (s.length() == 1) {
-                int c = s.charAt(0);
-                if (c > max) {
-                    max = c;
-                }
-            }
-        }
-
-        charPinyin = new SimplePinyin[max + 1][];
-        for (Map.Entry<String, Pinyin[]> entry : map.entrySet()) {
-            if (entry.getKey().length() == 1) {
-                Pinyin[] value = entry.getValue();
-                SimplePinyin[] value2 = new SimplePinyin[value.length];
-                for (int i = 0; i < value.length; i++) {
-                    value2[i] = value[i].getSimple();
-                }
-                charPinyin[(int) entry.getKey().charAt(0)] = value2;
-            }
-        }
         long t2 = System.currentTimeMillis();
 
         logger.info("PinyinModule Dictionary rebuild use time {} ms", t2 - t1);
     }
-
-    protected abstract TreeMap<String, Pinyin[]> load();
 
     /**
      * 转化为拼音
@@ -145,7 +126,6 @@ public abstract class BasePinyinDictionary {
         return pinyinList;
     }
 
-
     static Pinyin[] pinyinByOrdinal;
 
     static {
@@ -158,7 +138,8 @@ public abstract class BasePinyinDictionary {
     }
 
     // yi1,ge4
-    Pinyin[] parse(String text) {
+
+    public static Pinyin[] parse(String text) {
         String[] values = text.split(",");
 
         Pinyin[] pinyins = new Pinyin[values.length];
@@ -174,8 +155,15 @@ public abstract class BasePinyinDictionary {
         return pinyins;
     }
 
-    public CustomPinyin getCustomPinyin() {
-        return customPinyin;
+    public static Map<String, Pinyin[]> convert(Map<String, String> map) {
+        if (map == null) {
+            return null;
+        }
+        HashMap<String, Pinyin[]> cs = new HashMap<>();
+        for (Map.Entry<String, String> e : map.entrySet()) {
+            cs.put(e.getKey(), parse(e.getValue()));
+        }
+        return cs;
     }
 
 }

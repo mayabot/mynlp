@@ -21,10 +21,10 @@ class CustomDictTest {
 
         val lexer = Lexers.coreBuilder()
             .withCustomDictionary(mem)
-            .collector()
-            .smartPickup()
-            .fillSubwordCustomDict(mem)
-            .done()
+            .customSentenceCollector {
+                it.smartSubword()
+                it.fillCustomDict(mem)
+            }
             .build()
 
         println(lexer.scan("ECS固收"))

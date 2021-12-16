@@ -127,7 +127,3 @@ class PinyinSplitDefinition : PerceptronDefinition<Char, CharArray>{
         return input
     }
 }
-//
-//fun pinyinSplitEvaluateFun(id:Int, model:PerceptronModel, sampleList:List<String>) : EvaluateResult {
-//
-//}

@@ -126,12 +126,13 @@ open class FluentLexerBuilder(private val mynlp: Mynlp) : LexerBuilder {
     /**
      * 配置默认SentenceCollector
      */
-    fun customSentenceCollector(consumer: Consumer<SentenceCollectorBuilder>) {
+    fun customSentenceCollector(consumer: Consumer<SentenceCollectorBuilder>): FluentLexerBuilder {
         val builder = SentenceCollectorBuilder(mynlp)
 
         consumer.accept(builder)
 
         pipeline.termCollector = builder.build()
+        return this
     }
 
     /**

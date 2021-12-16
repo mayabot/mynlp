@@ -1,6 +1,5 @@
 package com.mayabot.nlp;
 
-import com.mayabot.nlp.Mynlp;
 import com.mayabot.nlp.module.lucene.MynlpAnalyzer;
 import com.mayabot.nlp.segment.FluentLexerBuilder;
 import com.mayabot.nlp.segment.Lexer;
@@ -71,8 +70,7 @@ public class LuceneAnalyzerTest {
     public void test() throws Exception {
         FluentLexerBuilder builder = Lexers.coreBuilder();
 
-        FluentLexerBuilder.CollectorBlock collector = builder.collector();
-        collector.indexPickup().done();
+        builder.customSentenceCollector(it -> it.indexSubword());
 
         Lexer lexer = builder.build();
 

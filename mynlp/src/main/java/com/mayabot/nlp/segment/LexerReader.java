@@ -87,7 +87,13 @@ public interface LexerReader {
             reader = new PunctuationFilter(reader);
         }
 
-        reader = new StopwordFilter(reader, stopWord);
+        if (stopWord.isEmpty()) {
+            reader = new StopwordFilter(reader);
+        } else {
+            reader = new StopwordFilter(reader, stopWord);
+        }
+
+
         return reader;
     }
 

@@ -15,8 +15,10 @@ class TestPosAndSubWord {
 
         val lexer = mynlp.lexerBuilder().hmm()
             .withPos()
-
-            .collector().smartPickup().fillSubwordDict().done()
+            .customSentenceCollector {
+                it.smartSubword()
+                it.fillCoreDict()
+            }
             .build()
 
         val result = lexer.scan("这次是北京大学拿到第一名").toString()
