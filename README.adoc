@@ -13,6 +13,7 @@ image::https://cdn.mayabot.com/mynlp/mynlp-banner.png[,500,align=center,link=htt
 [NOTE]
 访问完整在线文档link:https://mynlp.mayabot.com/[ mynlp.mayabot.com]
 
+== QQ群（2）：747892793
 
 == 安装
 
