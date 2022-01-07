@@ -1,6 +1,5 @@
 package com.mayabot.nlp.segment.plugins.collector
 
-import com.mayabot.nlp.segment.Nature
 import com.mayabot.nlp.segment.WordTerm
 import com.mayabot.nlp.segment.wordnet.Wordnet
 import com.mayabot.nlp.segment.wordnet.Wordpath
@@ -18,10 +17,19 @@ class RuleDictSubwordComputer(val dictList: List<SubwordRuleDict>) : SubwordComp
             if (mt != null) {
                 val word = term.word
                 var offset = 0
+                if (mt.size == 1) {
+                    // 不切分
+                    term.subword = null
+                    return@forEach
+                }
+
                 val sublist = ArrayList<WordTerm>(mt.size)
                 mt.forEach { len ->
+
                     val row = wordnet.getRow(term.offset + offset)
-                    val nature = row.get(len)?.nature ?: Nature.newWord
+
+                    val nature = row.get(len)?.nature ?: null
+
                     sublist += WordTerm(word.substring(offset, offset + len), nature, offset + term.offset)
                     offset += len
                 }
@@ -61,11 +69,16 @@ class DefaultSubwordRuleDict : SubwordRuleDict {
     )
 
     fun addAll(rule: List<String>) {
-        this.rules += rule
+        rule.forEach { add(it) }
     }
 
     fun add(rule: String) {
-        this.rules += rule
+        this.rules += process(rule)
+    }
+
+    private fun process(rule: String): String {
+        return rule.trim().replace("\\", "/")
+            .replace("*", "?")
     }
 
     fun clear() {
