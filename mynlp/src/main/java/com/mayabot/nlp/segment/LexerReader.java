@@ -15,10 +15,7 @@
  */
 package com.mayabot.nlp.segment;
 
-import com.mayabot.nlp.segment.reader.DefaultLexerReader;
-import com.mayabot.nlp.segment.reader.PunctuationFilter;
-import com.mayabot.nlp.segment.reader.StopWordDict;
-import com.mayabot.nlp.segment.reader.StopwordFilter;
+import com.mayabot.nlp.segment.reader.*;
 
 import java.io.Reader;
 import java.util.List;
@@ -68,6 +65,20 @@ public interface LexerReader {
         }
         return reader;
     }
+
+    /**
+     * 关闭停用词过滤功能
+     */
+    public default void disableStopwordFilter() {
+        LexerReader reader = this;
+        while (reader instanceof BaseFilterLexerReader) {
+            if (reader instanceof StopwordFilter) {
+                ((StopwordFilter) reader).setEnable(false);
+            }
+            reader = ((BaseFilterLexerReader) reader).getSource();
+        }
+    }
+
 
     static LexerReader filter(Lexer lexer, boolean punctuation, StopWordDict stopWord) {
 

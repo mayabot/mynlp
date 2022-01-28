@@ -12,21 +12,43 @@ public abstract class BaseFilterLexerReader implements LexerReader, Predicate<Wo
 
     private final LexerReader source;
 
+    private boolean enable = true;
+
     public BaseFilterLexerReader(LexerReader source) {
         this.source = source;
     }
 
+    public LexerReader getSource() {
+        return source;
+    }
+
     @Override
     public WordTermSequence scan(Reader reader) {
-        Iterator<WordTerm> iterator = source.scan(reader).iterator();
+        WordTermSequence wts = source.scan(reader);
+        if (!enable) {
+            return wts;
+        }
+        Iterator<WordTerm> iterator = wts.iterator();
         Iterator<WordTerm> change = new FilterWordItemIterator(iterator, this);
         return new WordTermSequence(change);
     }
 
     @Override
     public WordTermSequence scan(String text) {
-        Iterator<WordTerm> iterator = source.scan(text).iterator();
+        WordTermSequence wts = source.scan(text);
+        if (!enable) {
+            return wts;
+        }
+        Iterator<WordTerm> iterator = wts.iterator();
         Iterator<WordTerm> change = new FilterWordItemIterator(iterator, this);
         return new WordTermSequence(change);
+    }
+
+    public boolean isEnable() {
+        return enable;
+    }
+
+    public void setEnable(boolean enable) {
+        this.enable = enable;
     }
 }

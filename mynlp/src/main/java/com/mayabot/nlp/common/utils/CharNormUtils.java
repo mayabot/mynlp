@@ -9,6 +9,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * @author jimichan
+ */
 public class CharNormUtils {
 
     private static char[] table = new char[65535];

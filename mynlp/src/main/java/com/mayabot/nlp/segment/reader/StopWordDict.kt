@@ -29,15 +29,10 @@ const val MergeStopWordDictPath = "merge_stopwords.txt"
  */
 @ImplementedBy(SystemStopWordDict::class)
 interface StopWordDict {
-    fun contains(word: String): Boolean
-    fun add(word: String)
-
     /**
-     * 非停用词
+     * 判断当前输入word是否是停用词。true表示是停用词
      */
-    fun addNoStop(word: String)
-    fun remove(word: String)
-    fun rebuild()
+    fun contains(word: String): Boolean
 }
 
 
@@ -62,7 +57,7 @@ class DefaultStopWordDict : StopWordDict {
         map.clear()
     }
 
-    override fun rebuild() {
+    fun rebuild() {
         if (map.isEmpty()) {
             isEmpty = true
             return
@@ -79,15 +74,15 @@ class DefaultStopWordDict : StopWordDict {
         }
     }
 
-    override fun add(word: String) {
+    fun add(word: String) {
         map[word] = true
     }
 
-    override fun addNoStop(word: String) {
+    fun addNoStop(word: String) {
         map[word] = false
     }
 
-    override fun remove(word: String) {
+    fun remove(word: String) {
         map.remove(word)
     }
 
@@ -118,22 +113,6 @@ class SystemStopWordDict constructor(val env: MynlpEnv) : StopWordDict {
 
     override fun contains(word: String): Boolean {
         return stopDict.contains(word)
-    }
-
-    override fun rebuild() {
-        throw IllegalAccessException("系统词典不能变更")
-    }
-
-    override fun add(word: String) {
-        throw IllegalAccessException("系统词典不能变更")
-    }
-
-    override fun remove(word: String) {
-        throw IllegalAccessException("系统词典不能变更")
-    }
-
-    override fun addNoStop(word: String) {
-        throw IllegalAccessException("系统词典不能变更")
     }
 
     companion object {
