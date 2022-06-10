@@ -179,7 +179,7 @@ object PinyinDistance {
      * @param ba1
      * @return
      */
-    private fun editDistanceClose2dCode(a: SimplePinyin, b: SimplePinyin): Float {
+    fun editDistanceClose2dCode(a: SimplePinyin, b: SimplePinyin): Float {
 
         if (a == SimplePinyin.none || b == SimplePinyin.none) {
             error("editDistanceClose2dCode not for none")
@@ -196,7 +196,7 @@ object PinyinDistance {
         return res.toFloat()
     }
 
-    private fun editDistanceClose2dCode(a: Pinyin, b: Pinyin): Float {
+    fun editDistanceClose2dCode(a: Pinyin, b: Pinyin): Float {
 
         if (a.simple == SimplePinyin.none || b.simple == SimplePinyin.none) {
             error("editDistanceClose2dCode not for none")

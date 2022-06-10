@@ -65,7 +65,11 @@ class PinyinInnerDict(private val env: MynlpEnv) {
     }
 
     fun charPinyin(char: Char): Array<SimplePinyin>? {
-        return charPinyin[char.code]
+        val code = char.code
+        if (code >= charPinyin.size) {
+            return null
+        }
+        return charPinyin[code]
     }
 
     private fun load(): Map<String, Array<Pinyin>> {

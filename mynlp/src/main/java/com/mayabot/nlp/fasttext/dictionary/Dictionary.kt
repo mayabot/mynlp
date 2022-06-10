@@ -7,8 +7,6 @@ import com.mayabot.nlp.fasttext.utils.*
 import java.io.IOException
 import java.nio.ByteBuffer
 import java.nio.channels.FileChannel
-import java.util.*
-import kotlin.collections.HashMap
 import kotlin.math.min
 import kotlin.random.Random
 
@@ -378,11 +376,17 @@ class Dictionary(
             val ntokens = buffer.readLong()
             val pruneidxSize = buffer.readLong()
 
+            println("size:$size")
+            println("nwords:$nwords")
+            println("nlabels:$nlabels")
+            println("ntokens:$ntokens")
+
             //        word_hash_2_id = new LongIntScatterMap(size_);
             val wordList = ArrayList<Entry>(size)
 
             for (i in 0 until size) {
-                val e = Entry(buffer.readUTF(), buffer.readLong(), EntryType.fromValue(buffer.readUnsignedByte().toInt()))
+                val e =
+                    Entry(buffer.readUTF(), buffer.readLong(), EntryType.fromValue(buffer.readUnsignedByte().toInt()))
                 wordList.add(e)
             }
 
