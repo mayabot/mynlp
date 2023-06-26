@@ -40,6 +40,13 @@ public class StopwordFilter extends BaseFilterLexerReader {
         this.stopWords = Arrays.asList(stopWord);
     }
 
+
+    /**
+     * 使用指定的停用词词典，和系统自带的通用词无关
+     *
+     * @param source
+     * @param stopWords
+     */
     public StopwordFilter(LexerReader source, List<StopWordDict> stopWords) {
         super(source);
         ArrayList list = new ArrayList();

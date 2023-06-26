@@ -70,7 +70,7 @@ open class InternDataHandler(val parser: DataParser, val args: Args) : DataHandl
         val sep = Pattern.compile("[\t ]")
 
         examples =
-            fileName.toFile().lines().parallel().map { parser.parse(it, sep) }.filter({ it != null }).collect(toList())
+            fileName.toFile().lines().parallel().map { parser.parse(it, sep) }.filter { it != null }.collect(toList())
 
         println("Total number of examples loaded : " + examples.size)
         size = examples.size

@@ -16,7 +16,7 @@ dependencies {
     // pinyin
     implementation("com.mayabot.mynlp.resource:mynlp-resource-pinyin:1.1.0")
     // 繁简体转换
-    implementation("com.mayabot.mynlp.resource:mynlp-resource-transform:1.0.0")
+    implementation("com.mayabot.mynlp.resource:mynlp-resource-transform:1.0.1")
 
 
     // 感知机分词模型
