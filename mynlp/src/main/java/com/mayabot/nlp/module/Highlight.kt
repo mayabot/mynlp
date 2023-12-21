@@ -16,10 +16,11 @@ class QuickReplacer(words: List<String>) {
 
     private val dict =
             BinTrieTreeBuilder.miniArray
-                    .build(words.map { it to "1" }.toMap())
+                .build(words.map { it.lowercase() }.map { it to "1" }.toMap())
 
     fun replace(text: String, replace: (String) -> String): String {
-        val matcher = dict.newForwardMatcher(text)
+        val lowText = text.lowercase();
+        val matcher = dict.newForwardMatcher(lowText)
 
         // 如若没有匹配，那么直接返回text
         var m: String? = matcher.next() ?: return text
@@ -32,7 +33,8 @@ class QuickReplacer(words: List<String>) {
             if (offset - point > 0) {
                 sb.append(text.substring(point, offset))
             }
-            val rep = replace(m)
+            val raw = text.substring(matcher.offset, matcher.offset + m.length)
+            val rep = replace(raw)
             if (rep.isNotEmpty()) {
                 sb.append(rep)
             }

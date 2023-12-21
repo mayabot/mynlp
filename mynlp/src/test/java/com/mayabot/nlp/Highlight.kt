@@ -7,7 +7,7 @@ import org.junit.Test
 
 class HighlightTest {
 
-    private val words = listOf<String>("居住证", "居住", "住宅")
+    private val words = listOf<String>("居住证", "居住", "住宅", "hello")
 
     @Test
     fun test() {
@@ -33,5 +33,29 @@ class HighlightTest {
         val result = text.highlight(words)
 
         Assert.assertEquals(result, "这个<em>居住证</em>，怎么办，<em>居住</em>和<em>住宅</em>----")
+    }
+
+    /**
+     * 大小写
+     */
+    @Test
+    fun test4() {
+        val text = "Hello word !"
+
+        val result = text.highlight(words)
+
+        Assert.assertEquals("<em>Hello</em> word !", result)
+    }
+
+    /**
+     * 大小写
+     */
+    @Test
+    fun test5() {
+        val text = "HEllo word !"
+
+        val result = text.highlight(words)
+
+        Assert.assertEquals("<em>HEllo</em> word !", result)
     }
 }
